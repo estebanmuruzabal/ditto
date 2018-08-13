@@ -9,9 +9,9 @@
  * The server will also broadcast the login/logout events to connected clients via socket.io.
  * 
  */
-var express = require("../../../Library/Caches/typescript/2.9/node_modules/@types/express");
-var bodyParser = require("../../../Library/Caches/typescript/2.9/node_modules/@types/body-parser");
-var jwt = require("../../../Library/Caches/typescript/2.9/node_modules/@types/jsonwebtoken");
+var express = require("express");
+var bodyParser = require("body-parser");
+var jwt = require("jsonwebtoken");
 var port = 3001;
 
 // Configure app to use bodyParser to parse json data
@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // and support socket io
-var io = require("../../../Library/Caches/typescript/2.9/node_modules/@types/socket.io")(server);
+var io = require("socket.io")(server);
 
 // Test server is working (GET http://localhost:3001/api)
 app.get("/api/", function(req, res) {
