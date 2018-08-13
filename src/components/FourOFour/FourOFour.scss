@@ -1,0 +1,19 @@
+.four-o-four-component {
+  margin: 85px;
+  height:auto;
+  min-height:100%;
+  color: #444; margin:0;font: normal 14px/20px Arial, Helvetica, sans-serif; height:100%; background-color: #fff;
+  .text-container {
+    text-align: center; width:800px; margin-left: -400px; position:absolute; top: 30%; left:50%;
+    .fourofour-text {
+      margin: 0;
+      font-size: 150px;
+      line-height: 150px;
+      font-weight: bold;
+    }
+    .not-found-text {
+      margin:20px 0px;
+      font-size: 30px;
+    }
+  }
+}

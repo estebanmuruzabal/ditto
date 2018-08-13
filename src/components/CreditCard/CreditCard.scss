@@ -1,0 +1,139 @@
+.credit-card-container {
+  width: 356px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .credit-card-input {
+    //image stuff
+    background-image: url('assets/common/cc-icon.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-origin: content-box;
+    background-size: 23px 23px;
+    text-indent: 30px;
+  }
+
+  .credit-card-details {
+    font-weight: lighter;
+    font-size: 12px;
+
+    .select-custom {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-repeat: no-repeat;
+      background-image: url('assets/common/Triangle_down.png');
+      background-size: 12px 8px;
+      background-position: right center;
+      background-origin: content-box;
+    }
+
+    .year {
+      .form-control {
+        width: 98%;
+        margin-left: 2%;
+      }
+      .control-label {
+        margin-left: 2%;
+      }
+      .error-block-container .help-block {
+        margin-left: 8px;
+      }
+    }
+
+    .month {
+      .form-control {
+        width: 98%;
+        margin-right: 2%;
+      }
+    }
+
+    .cvv {
+      .form-control {
+        width: 98%;
+        margin-right: 2%;
+      }
+      .cvv-tooltip {
+        border: 1px solid #b1acac;
+        height: 15px;
+        color: #443f3f;
+        font-weight: 400;
+        width: 15px;
+        padding-top: 2px;
+        border-radius: 90px;
+        font-size: 10px;
+        text-align: center;
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 5px;
+      }
+      .cvv-tooltip .cvv-tooltip-text {
+        visibility: hidden;
+        width: 150px;
+        margin-left: 10px;
+        margin-top: -20px;
+        opacity: 0.8;
+        background-color: #b1acac;
+        color: #443f3f;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+
+        /* Position the tooltip text - see examples below! */
+        position: absolute;
+        z-index: 1;
+      }
+      .cvv-tooltip:hover .cvv-tooltip-text {
+        visibility: visible;
+      }
+    }
+
+    .zip-code {
+      .form-control {
+        width: 98%;
+        margin-left: 2%;
+      }
+      .control-label {
+        margin-left: 2%;
+      }
+      .error-block-container .help-block {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .control-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #575757;
+  }
+
+  .form-control {
+    height: 44px;
+    color: $gray-51;
+    font-weight: normal;
+    font-size: 12px;
+    border: 1px solid $divider-border;
+  }
+
+  .add-credit-card-container {
+    text-align: center;
+    .btn {
+      padding: 10px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 15px;
+      height: 40px;
+      width: 200px;
+      color: $gray-51;
+      border-radius: 0px;
+      letter-spacing: 2px;
+      background-color: $brand-primary;
+      border-color: $brand-primary;
+      &:hover {
+        background-color: $brand-secondary;
+        border-color: $brand-secondary;
+      }
+    }
+  }
+}

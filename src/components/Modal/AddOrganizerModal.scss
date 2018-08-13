@@ -1,0 +1,99 @@
+.add-organizer-modal {
+  padding: 55px;
+  width: 695px;
+  -webkit-box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
+
+  .modal-close-image {
+    background: url('assets/modal/x-light-small@2x.png');
+    background-size: 100%;
+    width: 24px;
+    height: 24px;
+    float: right;
+    margin: -20px -20px;
+    cursor: pointer;
+  }
+
+  .title-with-top-padding {
+    font-size: 13px;
+    font-weight: lighter;
+    padding-top: 40px;
+  }
+
+  .title-divider {
+    margin: 5px 0px 10px 0px;
+    border-top: 1px solid $divider-border;
+  }
+
+  .add-organizer-modal-form, .add-payment-method-modal-form {
+    width: 285px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .form-control {
+      height: 44px;
+      color: $gray-51;
+      font-size: 12px;
+      border: 1px solid $divider-border;
+    }
+
+    .control-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #575757;
+    }
+    .disclaimer-container {
+      background-color: $gray-238;
+      width: 550px;
+      font-size: 13px;
+      margin: 30px 0 20px -45%;
+      padding: 30px;
+      text-align: left;
+    }
+    .add-organizer-botton-container {
+      text-align: center;
+
+      .add-organizer-btn {
+        padding: 10px 10px;
+        font-size: 12px;
+        margin-top: 15px;
+        height: 40px;
+        width: 200px;
+        color: $gray-51;
+        border-radius: 0px;
+        letter-spacing: 2px;
+        background-color: $brand-primary;
+        border-color: $brand-primary;
+        &:hover {
+          background-color: $brand-secondary;
+          border-color: $brand-secondary;
+        }
+      }
+    }
+  }
+
+  .add-payment-method-modal-form {
+    width: 285px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .credit-card-details {
+      font-weight: lighter;
+      font-size: 12px;
+
+     .col-xs-3 {
+        .form-control {
+          width: 88px;
+          margin: 0px 15px;
+        }
+      }
+
+      .col-xs-2 {
+        .form-control {
+          width: 57px;
+          margin: 0px 15px;
+        }
+      }
+   }
+  }
+}

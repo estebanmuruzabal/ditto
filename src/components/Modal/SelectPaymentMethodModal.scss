@@ -1,0 +1,72 @@
+.select-payment-method-modal {
+  padding: 55px;
+  width: 695px;
+  // height: 590px;
+  -webkit-box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
+
+  .select-custom {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-image: url('assets/common/Triangle_down.png');
+    background-size: 12px 8px;
+    background-position: right center;
+    background-origin: content-box;
+  }
+
+  .modal-close-image {
+    background: url('assets/modal/x-light-small@2x.png');
+    background-size: 100%;
+    width: 24px;
+    height: 24px;
+    float: right;
+    margin: -20px -20px;
+    cursor: pointer;
+  }
+
+  .title-with-top-padding {
+    font-size: 13px;
+    font-weight: lighter;
+    padding-top: 40px;
+  }
+
+  .title-divider {
+    margin: 5px 0px 10px 0px;
+    border-top: 1px solid $divider-border;
+  }
+  
+  .form-control {
+    height: 44px;
+    color: $gray-51;
+    font-size: 12px;
+    border: 1px solid $divider-border;
+  }
+
+  .btn-wrapper {
+    text-align: center;
+    .btn-select-card {
+      padding: 10px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 15px;
+      height: 40px;
+      width: 200px;
+      border-radius: 0px;
+      letter-spacing: 2px;
+      background-color: $brand-primary;
+      border-color: $brand-primary;
+    }
+  }
+}
+
+/*
+.select-payment-method-modal {
+  .title {
+    font-size: 13px;
+    font-weight: lighter;
+    padding-top: 10px;
+  }
+}
+*/
