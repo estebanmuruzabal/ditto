@@ -1,56 +1,13 @@
 import React, { Component } from "react";
-import { Button, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
+import LoginForm from 'components/forms/login/LoginForm';
 
 import { login } from "actions/auth.actions";
-import LoadingSpinner from 'components/loading/LoadingSpinner';
-import { required, email } from 'utils/validators';
-import Input from 'components/input/Input';
 import "./LoginPage.css";
 
-const LOGIN_FORM = 'LoginForm';
-
-const LoginForm = reduxForm({
-  form: LOGIN_FORM,
-})((props) => {
-  return (
-    <form>
-      <div className="form-container">
-        <Field
-          name="username"
-          type="email"
-          component={Input}
-          placeholder="Enter Email"
-          validate={[required, email]}
-        />
-
-        <Field
-          type="password"
-          name="password"
-          component={Input}
-          placeholder="Enter Password"
-          validate={[required]}
-        />
-
-        <Button
-          type="submit"
-          className="login-button"
-          bsStyle="primary"
-          disabled={props.loggingIn}
-          onClick={(e) => (
-            props.handleSubmit(e)
-          )}
-        >
-          LOGIN { props.loggingIn && <LoadingSpinner /> }
-        </Button>
-      </div>
-    </form>
-  );
-});
-
-class LoginComponent extends Component {
+class LoginPage extends Component {
   
   handleSubmit = values => {
     this.props.dispatch(login(values.username, values.password));
@@ -87,16 +44,15 @@ const mapStateToProps = state => ({
   loginError: state.auth ? state.auth.loginError : null,
 });
 
-LoginComponent.propTypes = {
+LoginPage.propTypes = {
   user: PropTypes.string,
   loginError: PropTypes.object,
   dispatch: PropTypes.func.isRequired
 };
 
-LoginComponent.contextTypes = {
+LoginPage.contextTypes = {
   store: PropTypes.object.isRequired
 };
 
-export default reduxForm({
-  form: 'loginForm',
-})(connect(mapStateToProps)(LoginComponent));
+export default connect(mapStateToProps)(LoginPage);
+

@@ -6,6 +6,8 @@ import {
   removeIdToken,
   decodeUserProfile
 } from "../utils/apiUtils";
+import history from 'utils/history';
+import configs from 'configs';
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -24,12 +26,13 @@ function loginRequest(user) {
 
 function loginSuccess(payload) {
   const idToken = payload[ID_TOKEN];
-  setIdToken(idToken);
-  const profile = decodeUserProfile(idToken);
+  const decodedResponse = decodeUserProfile(idToken);
+  setIdToken(decodedResponse.user.confirmationTokens["0"].token);
+  history.push('/');
   return {
     type: LOGIN_SUCCESS,
-    user: profile.user,
-    role: profile.role
+    user: decodedResponse.user.name,
+    role: decodedResponse.user.scope[0],
   };
 }
 
@@ -41,7 +44,8 @@ function loginFailure(error) {
   };
 }
 
-export function login(user, password) {
+export function login(email, password) {
+  console.log('acaaa:::', configs.default.api.ditto_backend.baseUrl);
   const config = {
     method: "post",
     headers: {
@@ -49,15 +53,15 @@ export function login(user, password) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      user,
+      email,
       password
     })
   };
 
   return callApi(
-    "/api/login",
+    `${configs.default.api.ditto_backend.baseUrl}/account/login`,
     config,
-    loginRequest(user),
+    loginRequest(email),
     loginSuccess,
     loginFailure
   );

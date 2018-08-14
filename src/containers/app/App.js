@@ -6,20 +6,21 @@ import PropTypes from "prop-types";
 // would require configuring the server. So we will use HashRouter here.
 // Please change to BrowserRouter if you have your own backend server.
 ///////////////////////////////////////////////////////////////////////////
-import { HashRouter as Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 
 import { connect } from "react-redux";
 import Header from "components/header/Header";
 import Footer from "components/footer/Footer";
-import Login from "../login/Login";
 import PrivateRoute from "../misc/PrivateRoute";
 import Home from "../home/Home";
 import UsersPage from "../user/UsersPage";
 import ReposPage from "../repo/ReposPage";
 import AdminPage from "containers/admin/Admin/AdminPage";
-import LoginComponent from "containers/login/LoginPage";
+import LoginPage from "containers/login/LoginPage";
+import SignupPage from "containers/signup/SignupPage";
 import About from "../about/About";
 import NotFound from "../misc/NotFound";
+import history from 'utils/history';
 
 import { logout } from "../../actions/auth.actions";
 
@@ -35,15 +36,15 @@ class App extends Component {
     const { user } = this.props;
     const isAuthenticated = true && user;
     return (
-      <Router>
+      <Router history={history}>
         <div className="container">
           <Header user={user} handleLogout={() => this.handleLogout()} />
           <div className="appContent">
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/about" component={About} />
-              <Route path="/login" component={Login} />
-              <Route path="/user-login" component={LoginComponent} />
+              <Route path="/login" component={LoginPage} />
+              <Route path="/signup" component={SignupPage} />
               <PrivateRoute path="/admin" isAuthenticated={isAuthenticated} component={AdminPage} />
               <PrivateRoute path="/users" isAuthenticated={isAuthenticated} component={UsersPage} />
               <PrivateRoute path="/repos" isAuthenticated={isAuthenticated} component={ReposPage} />

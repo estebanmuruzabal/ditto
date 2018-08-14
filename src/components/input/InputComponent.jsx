@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormGroup, FormControl, HelpBlock, ControlLabel } from 'react-bootstrap';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 
 const InputComponent = ({
@@ -20,13 +20,13 @@ const InputComponent = ({
       { label && <ControlLabel>{label}</ControlLabel> }
       <FormControl {...input} onChange={e => handleChange(e, index)} placeholder={placeholder} name={name} value={value} disabled={disabled} />
       <div className="error-block-container">
-        <CSSTransitionGroup
+        <CSSTransition
           transitionName="error-block"
           transitionEnterTimeout={300}
           transitionLeaveTimeout={300}
         >
           <HelpBlock key={hasError && error.key}>{hasError && error.message}</HelpBlock>
-        </CSSTransitionGroup>
+        </CSSTransition>
       </div>
     </FormGroup>
   );

@@ -3,10 +3,11 @@ import { Button } from 'react-bootstrap';
 import { Field, reduxForm } from 'redux-form';
 import ReactPhoneInput from 'react-phone-input-2';
 
-import ErrorInput from 'components/common/input/ErrorInput';
-import { required, email, password, validPassword, phoneNumber } from 'helpers/validators';
-import LoadingSpinner from 'components/common/loading/LoadingSpinner';
-import Input from 'components/common/input/Input';
+import ErrorInput from 'components/input/ErrorInput';
+import { required, email, password, validPassword, phoneNumber } from 'utils/validators';
+import LoadingSpinner from 'components/loading/LoadingSpinner';
+import Input from 'components/input/Input';
+import "./SignupForm.css";
 
 const confirmPassword = password('password');
 const SIGNUP_FORM = 'SignupForm';

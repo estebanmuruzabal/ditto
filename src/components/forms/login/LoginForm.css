@@ -1,0 +1,121 @@
+.login-text {
+    margin: 30px 43px;
+    cursor: pointer;
+    font-size: 10px;
+    color: #404032;
+    flex: 2 0 0;
+    width: 108px;
+    height: 30px;
+  }
+  
+  .modal-backdrop.in {
+    opacity: 1;
+  }
+  
+  .login-modal {
+    text-align: center;
+    padding: 35px;
+    margin: 0px 31%;
+    width: 38%;
+    height: 493px;
+    box-shadow: 0 2px 34px 0 rgba(0,0,0,0.08);
+  
+    .close-image {
+      /* background: url('assets/modal/x-light-small@2x.png'); */
+      background-size: 100%;
+      width: 24px;
+      height: 24px;
+      float: right;
+      margin: -20px -20px;
+      cursor: pointer;
+    }
+  
+    .modal-title {
+      font-size: 22px;
+      font-weight: bold;
+      color: $gray-51;
+      padding: 30px 0px 45px 0px;
+    }
+  
+    .btn {
+      padding: 5px 70px;
+      font-size: 14px;
+      margin-top: 15px;
+    }
+  
+    .error-text {
+      padding-top: 15px;
+      font-weight: lighter;
+    }
+  
+    .example-enter {
+    opacity: 0.01;
+    }
+  
+    .example-enter.example-enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
+  
+    .example-leave {
+      opacity: 1;
+    }
+  
+    .example-leave.example-leave-active {
+      opacity: 0.01;
+      transition: opacity 300ms ease-in;
+    }
+  
+    .divider {
+      margin: 32px 39.50% 37px 39.50%;
+      width: 21%;
+      border-bottom: 1px solid #9B9B9B
+    }
+  
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+  
+      .login-button {
+        font-size: 13px;
+        color: #404032;
+        width: 250px;
+        height: 46px;
+        border-radius: 0px;
+        &:hover {
+          border-color: $brand-secondary;
+          background-color: $brand-secondary;
+        }
+      }
+    }
+  
+    .form-control {
+      height: 44px;
+      color: black;
+      font-size: 14px;
+      width: 285px;
+      border-color: $divider-border;
+    }
+  
+    input::placeholder {
+      font-size: 12px
+    }
+  
+    .links {
+      font-weight: lighter;
+      font-size: 12px;
+  
+      > .link {
+  
+        color: #9c9c9c;
+        cursor: pointer;
+  
+        & + .link {
+          border-left: 1px solid $black-235;
+        }
+      }
+    }
+  }
+  

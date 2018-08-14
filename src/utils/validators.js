@@ -55,8 +55,12 @@ export const creditCard = (value) => {
 export const phoneNumber = (value) => {
   if (!(value.length === 12 && /^\d+$/.test(value.substring(1, 12))) && value.length !== 17) {
     return 'invalid length';
-  } else if (validUsAreaCodes.indexOf(value.substring(4, 7)) === -1) {
-    return 'Invalid area code';
+  } else if (value.length === 12) {
+    if (validUsAreaCodes.indexOf(value.substring(2, 5)) === -1) {
+      return 'Invalid area code';
+    } else if (validUsAreaCodes.indexOf(value.substring(4, 7)) === -1) {
+     return 'Invalid area code'; 
+    }
   }
   return null;
 };

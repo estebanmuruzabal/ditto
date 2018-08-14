@@ -1,18 +1,18 @@
 import React from 'react';
-import { CSSTransitionGroup } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import { HelpBlock } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 const ErrorInput = ({ errorMessage }) => {
   return (
     <div className="error-block-container-independent">
-      <CSSTransitionGroup
+      <CSSTransition
         transitionName="error-block"
         transitionEnterTimeout={300}
         transitionLeaveTimeout={300}
       >
         <HelpBlock key={errorMessage}>{errorMessage}</HelpBlock>
-      </CSSTransitionGroup>
+      </CSSTransition>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import LoadingSpinner from 'components/common/loading/LoadingSpinner';
+import LoadingSpinner from 'components/loading/LoadingSpinner';
 
 const ConfirmWhateverModal = ({
   handleCancelClick, handleConfirmClick, loading, title, subtitle, confirmButtonText, showCancel,
