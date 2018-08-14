@@ -1,5 +1,4 @@
 # TODO:
 
-- login component
-- register component
-- hit backend
+- hit create account
+- add scss and make login and register look good

@@ -1,6 +1,6 @@
 {
-  "short_name": "React Redux Starter Kit",
-  "name": "React Redux Starter Kit",
+  "short_name": "Ditto",
+  "name": "Ditto Frontent Store",
   "icons": [
     {
       "src": "favicon.ico",

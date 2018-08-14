@@ -2,7 +2,7 @@
 // Do not require this directly. Use ./src/config instead.
 export default {
     app: {
-        title: 'Ditto Frontend',
+        title: 'Ditto Frontent Store',
         locale: {
             available: ['en', 'es'],
             default: 'es'
