@@ -1,100 +1,83 @@
 .signup-form {
-    display: inline-block;
-    width: 270px;
-    .form-control {
-        height: 45px;
-        width: 285px;
-        color: $gray-51;
-        font-size: 14px;
-        line-height: 17px;
-        border-color: $divider-border;
-    }
-    input::placeholder {
-        font-size: 12px
-    }
-    .form-group {
-        margin-bottom: 10px;
-    }
-    .terms-and-conditions-title {
-        font-weight: 100;
-        font-size: 14px;
-    }
-    .terms-and-conditions {
-        height: 250px;
-        overflow-y: scroll;
-        font-size: 13px;
-        color: #1A1919;
-        font-weight: 100;
-        border: 1px solid #dddddd;
-        padding: 10px;
-    }
-    .create-account-title {
-        padding: 50px 0 15px 0;
-        font-size: 12px;
-        font-weight: bold;
-        letter-spacing: 2px;
-        text-align: center;
-    }
-    .tooltips-container {
-        display: flex;
-        .tooltip {
-            border: 1px solid #b1acac;
-            height: 15px;
-            color: #443f3f;
-            font-weight: 400;
-            width: 15px;
-            margin: 15px 290px;
-            border-radius: 90px;
-            font-size: 10px;
-            text-align: center;
-            display: inline-block;
-            cursor: pointer;
-            opacity: 1;
-        }
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 250px;
-            margin-left: 10px;
-            margin-top: -20px;
-            opacity: 0.8;
-            background-color: #b1acac;
-            color: #443f3f;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-        }
-    }
-    .error-text {
-        font-weight: lighter;
-    }
-    .text {
-        font-weight: lighter;
-        font-size: 14px;
-        letter-spacing: 1.1px;
-    }
-    .signin-text {
-        margin: 28px 0px 36px 0px;
-        cursor: pointer;
-        font-size: 12px;
-        letter-spacing: 1px;
-        color: #404032;
-        width: 285px;
-        height: 45px;
-    }
-
-    .divider {
-        margin-top: 20px;
-        width: 46%;
-        margin-left: 27%;
-        border-top: 1px solid #aaaaaa;
-        border-bottom: 1px solid #9c9c9c;
-        display: flex;
-    }    
-}
+  display: inline-block;
+  width: 280px; }
+  .signup-form .form-control {
+    height: 45px;
+    width: 285px;
+    color: #333333;
+    font-size: 14px;
+    line-height: 17px;
+    border-color: #979797; }
+  .signup-form input::placeholder {
+    font-size: 12px; }
+  .signup-form .form-group {
+    margin-bottom: 10px; }
+  .signup-form .terms-and-conditions-title {
+    font-weight: 100;
+    font-size: 14px; }
+  .signup-form .terms-and-conditions {
+    height: 250px;
+    overflow-y: scroll;
+    font-size: 13px;
+    color: #1A1919;
+    font-weight: 100;
+    border: 1px solid #dddddd;
+    padding: 10px; }
+  .signup-form .create-account-title {
+    padding: 50px 0 15px 0;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-align: center; }
+  .signup-form .tooltips-container {
+    display: flex; }
+    .signup-form .tooltips-container .tooltip {
+      border: 1px solid #b1acac;
+      height: 15px;
+      color: #443f3f;
+      font-weight: 400;
+      width: 15px;
+      margin: 15px 290px;
+      border-radius: 90px;
+      font-size: 10px;
+      text-align: center;
+      display: inline-block;
+      cursor: pointer;
+      opacity: 1; }
+    .signup-form .tooltips-container .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 250px;
+      margin-left: 10px;
+      margin-top: -20px;
+      opacity: 0.8;
+      background-color: #b1acac;
+      color: #443f3f;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 6px;
+      /* Position the tooltip text - see examples below! */
+      position: absolute;
+      z-index: 1; }
+    .signup-form .tooltips-container .tooltip:hover .tooltip-text {
+      visibility: visible; }
+  .signup-form .error-text {
+    font-weight: lighter; }
+  .signup-form .text {
+    font-weight: lighter;
+    font-size: 14px;
+    letter-spacing: 1.1px; }
+  .signup-form .signin-text {
+    margin: 28px 0px 36px 0px;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #404032;
+    width: 285px;
+    height: 45px; }
+  .signup-form .divider {
+    margin-top: 20px;
+    width: 46%;
+    margin-left: 27%;
+    border-top: 1px solid #aaaaaa;
+    border-bottom: 1px solid #9c9c9c;
+    display: flex; }

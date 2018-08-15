@@ -24,8 +24,6 @@ import history from 'utils/history';
 
 import { logout } from "../../actions/auth.actions";
 
-import "./app.css";
-
 class App extends Component {
   handleLogout() {
     const { user } = this.props;
@@ -37,9 +35,9 @@ class App extends Component {
     const isAuthenticated = true && user;
     return (
       <Router history={history}>
-        <div className="container">
+        <div className="appContent">
           <Header user={user} handleLogout={() => this.handleLogout()} />
-          <div className="appContent">
+          <div className="bodyContent">
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/about" component={About} />

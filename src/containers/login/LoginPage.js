@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import LoginForm from 'components/forms/login/LoginForm';
 
 import { login } from "actions/auth.actions";
-import "./LoginPage.css";
 
 class LoginPage extends Component {
   

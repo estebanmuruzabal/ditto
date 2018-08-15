@@ -1,41 +1,31 @@
-.organizer-registration-page-container {
-    text-align: center;
-    margin: 0 auto;
-
-    .rider-login-container {
-        display: inline-block;
-        text-align: center;
-
-        .organizer-title {
-        font-size: 22px;
-        font-weight: 600;
-        color: $gray-51;
-        margin-top: 155px;
-        }
-
-        .rider-title {
-        padding-top: 40px;
-        font-size: 12px;
-        font-weight: bold;
-        letter-spacing: 2px;
-        }
-    }
-    .signin-text {
-        margin: 28px 0px 36px 0px;
-        cursor: pointer;
-        font-size: 12px;
-        letter-spacing: 1px;
-        color: #404032;
-        width: 285px;
-        height: 45px;
-    }
-
-    .divider {
-        margin-top: 20px;
-        width: 46%;
-        margin-left: 27%;
-        border-top: 1px solid #aaaaaa;
-        border-bottom: 1px solid #9c9c9c;
-        display: flex;
-    }
-}
+.signup-page-container {
+  text-align: center;
+  margin: 0 auto; }
+  .signup-page-container .rider-login-container {
+    display: inline-block;
+    text-align: center; }
+    .signup-page-container .rider-login-container .organizer-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333333;
+      margin-top: 155px; }
+    .signup-page-container .rider-login-container .rider-title {
+      padding-top: 40px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px; }
+  .signup-page-container .signin-text {
+    margin: 28px 0px 36px 0px;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #404032;
+    width: 285px;
+    height: 45px; }
+  .signup-page-container .divider {
+    margin-top: 20px;
+    width: 46%;
+    margin-left: 27%;
+    border-top: 1px solid #aaaaaa;
+    border-bottom: 1px solid #9c9c9c;
+    display: flex; }

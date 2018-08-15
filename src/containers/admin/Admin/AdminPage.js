@@ -5,8 +5,6 @@ import AdminUsersPage from "containers/admin/AdminUsers/AdminUsersPage";
 import AdminOrdersPage from "containers/admin/AdminOrders/AdminOrdersPage";
 import AdminProductsPage from "containers/admin/AdminProducts/AdminProductsPage";
 
-import "./AdminPage.css";
-
 const AdminPage = ({ match }) => {
   return (
     <div className="container">

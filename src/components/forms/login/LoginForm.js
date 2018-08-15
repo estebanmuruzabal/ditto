@@ -4,7 +4,6 @@ import { Button } from 'react-bootstrap';
 import LoadingSpinner from 'components/loading/LoadingSpinner';
 import { required, email } from 'utils/validators';
 import Input from 'components/input/Input';
-import "./LoginForm.css";
 
 const LOGIN_FORM = 'LoginForm';
 

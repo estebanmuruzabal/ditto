@@ -7,7 +7,6 @@ import ConfirmWhateverModal from 'components/Modal/ConfirmWhateverModal';
 import SignupForm from 'components/forms/signup/SignupForm';
 import { phoneNumber } from 'utils/validators';
 import { login } from "actions/auth.actions";
-import "./SignupPage.css";
 
 class SignupPage extends React.Component {
   constructor(props) {
@@ -57,7 +56,7 @@ class SignupPage extends React.Component {
 
   render() {
     return (
-      <div className="organizer-registration-page-container">
+      <div className="signup-page-container">
         <div className="rider-login-container">
           <div className="organizer-title">Organizer Registration</div>
           <div className="rider-title">ALREADY A RIDER?</div>

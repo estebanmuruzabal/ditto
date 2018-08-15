@@ -15,3 +15,11 @@ npm-debug.log
 .vscode/
 typings.json
 jsconfig.json
+
+# Dev configs
+config/config.js
+
+# compiled css
+src/index.css
+
+*.css

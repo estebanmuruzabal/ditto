@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 
-import "./home.css";
-
 export default class Home extends Component {
   render() {
     return (
       <div>
-        <div className="jumbotron">
+        <div className="home-container">
           <div className="container">
             <h1 className="display-3">Ditto Web App Template</h1>
             <p className="lead">

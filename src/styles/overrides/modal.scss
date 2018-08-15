@@ -1,0 +1,82 @@
+@import '../variables.scss';
+.modal-dialog {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  width: 0px;
+
+  .modal-content {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding-top: 20px;
+  }
+
+  .modal-title {
+    color: $white;
+    font-size: 46px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .modal-body, .modal-footer {
+    background: $white;
+  }
+}
+
+.modal-backdrop {
+  background: rgba(220, 220, 220, 0.8);
+
+  &.in {
+    opacity: 1;
+  }
+}
+
+.error-block-container {
+  font-size: 12px;
+  height: 7px;
+
+  .help-block {
+    margin: 1px 5px;
+    transition: 0.3s ease-in all;
+    position: absolute;
+
+    &.error-block-enter {
+      opacity: 0;
+      transform: translateY(-100%);
+
+      &.error-block-enter-active {
+        opacity: 1;
+        transform: translateY(0%);
+      }
+    }
+
+    &.error-block-leave {
+      opacity: 1;
+      transform: translateY(0%);
+
+      &.error-block-leave.error-block-leave-active {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+    }
+  }
+}
+
+.btn.btn-plain {
+  background: none;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 2px;
+  box-shadow: none;
+
+  .glyphicon {
+    background: $brand-primary;
+    padding: 7px 6px 8px 8px;
+    border-radius: 15px;
+    font-size: 7px;
+    color: $white;
+  }
+}
