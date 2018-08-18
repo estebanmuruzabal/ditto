@@ -2,21 +2,21 @@ import {
   CONNECT_SUCCESS,
   CONNECT_ERROR,
   ALERT,
-  DISMISS
-} from "../actions/alerts";
+  DISMISS,
+} from '../actions/alerts';
 
 const initialState = {
   alerts: [],
-  hasError: false
+  hasError: false,
 };
 
 export default function alerts(state = initialState, action = {}) {
   switch (action.type) {
     case CONNECT_SUCCESS: {
       const payload = {
-        type: "info",
-        message: "Socket connection success. Waiting for alerts.",
-        time: new Date().toString()
+        type: 'info',
+        message: 'Socket connection success. Waiting for alerts.',
+        time: new Date().toString(),
       };
       const alerts = state.alerts || [];
       return Object.assign(
@@ -24,15 +24,15 @@ export default function alerts(state = initialState, action = {}) {
         state,
         { hasError: false },
         {
-          alerts: [payload, ...alerts]
-        }
+          alerts: [payload, ...alerts],
+        },
       );
     }
     case CONNECT_ERROR: {
       const payload = {
-        type: "error",
-        message: "Socket connection error.",
-        time: new Date().toString()
+        type: 'error',
+        message: 'Socket connection error.',
+        time: new Date().toString(),
       };
       const alerts = state.alerts || [];
       return Object.assign(
@@ -40,8 +40,8 @@ export default function alerts(state = initialState, action = {}) {
         state,
         { hasError: true },
         {
-          alerts: [payload, ...alerts]
-        }
+          alerts: [payload, ...alerts],
+        },
       );
     }
     case ALERT: {
@@ -51,8 +51,8 @@ export default function alerts(state = initialState, action = {}) {
         state,
         { hasError: false },
         {
-          alerts: [action.payload, ...alerts]
-        }
+          alerts: [action.payload, ...alerts],
+        },
       );
     }
     case DISMISS: {

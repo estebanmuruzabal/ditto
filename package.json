@@ -22,6 +22,8 @@
     "bootstrap": "^4.0.0-beta.2",
     "bootstrap-sass": "^3.3.7",
     "classnames": "^2.2.5",
+    "compass-mixins": "^0.12.10",
+    "eslint-plugin-prettier": "^2.6.2",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
     "isomorphic-fetch": "^2.2.1",

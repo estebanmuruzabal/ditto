@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import LoginForm from 'components/forms/login/LoginForm';
-
+import { Link } from 'react-router-dom';
 import { login } from "actions/auth.actions";
 
 class LoginPage extends Component {
@@ -17,7 +17,10 @@ class LoginPage extends Component {
       <div className="backdropClass">
         <Modal.Body>
           <div className="login-modal">
-            <div className="modal-title">Corporate Login</div>
+            <Link to="/">
+              <div className="close-image" role="presentation" />
+            </Link>
+            <div className="modal-title">Login</div>
             <LoginForm
               onSubmit={this.handleSubmit}
             />

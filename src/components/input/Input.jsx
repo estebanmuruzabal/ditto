@@ -18,12 +18,9 @@ const Input = ({
   return (
     <FormGroup validationState={hasError ? 'error' : null}>
       { label && <ControlLabel>{label}</ControlLabel> }
-      {showToolTip &&
-        <div className="cvv-tooltip">?
-          <span className="cvv-tooltip-text">CVV is the last three digits on the back of your credit card</span>
-        </div>
-      }
-      { initialValue ? <FormControl {...input} className={className} type={type} value={initialValue} placeholder={placeholder} disabled={disabled} /> : <FormControl {...input} className={className} placeholder={placeholder} type={type} disabled={disabled} />}
+      { initialValue
+        ? <FormControl {...input} className={className} type={type} value={initialValue} placeholder={placeholder} disabled={disabled} />
+        : <FormControl {...input} className={className} placeholder={placeholder} type={type} disabled={disabled} />}
       <div className="error-block-container">
         <CSSTransition
             transitionName="error-block"

@@ -1,6 +1,65 @@
-.header-container {
+.header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 9999;
-  height: 60px; }
+  height: 4.125em;
+  margin-bottom: 4.125em;
+  background-color: white;
+  border-bottom: 1px solid #eeeeee;
+  display: flex;
+  flex-direction: row; }
+  .header .left-container {
+    flex: 2 0 0;
+    width: 200px;
+    padding: 20px 0px 0px 50px; }
+    .header .left-container .company-logo-container {
+      cursor: pointer;
+      text-decoration: none; }
+      .header .left-container .company-logo-container .company-logo-text {
+        font-size: 23px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        color: #1a1919; }
+  .header .right-container .header-login-btn {
+    height: 4.125em;
+    border-radius: 0px; }
+  .header .right-container .settings-dropdown-container {
+    width: 200px;
+    padding: 23px 30px 0px 50px;
+    font-weight: lighter; }
+    .header .right-container .settings-dropdown-container .user-menu {
+      position: relative;
+      display: inline-block;
+      font-size: 14px;
+      color: #32302e;
+      font-weight: lighter;
+      padding-right: 15px;
+      height: 100%;
+      align-items: center; }
+      .header .right-container .settings-dropdown-container .user-menu .user-menu-trigger {
+        height: 100%;
+        display: inline-block;
+        cursor: pointer;
+        background-image: url("assets/header/arrow-right-dark-small@2x.png");
+        background-repeat: no-repeat;
+        background-position: center right;
+        background-size: 15px;
+        padding-right: 25px; }
+      .header .right-container .settings-dropdown-container .user-menu .user-menu-content {
+        display: block;
+        position: absolute;
+        top: 61px;
+        right: 0;
+        width: 200px;
+        padding: 20px 0;
+        background-color: white;
+        box-shadow: 0 2px 4px 0 0, 0, 0, 0.2; }
+        .header .right-container .settings-dropdown-container .user-menu .user-menu-content .user-menu-content-option {
+          display: block;
+          padding: 10px 0;
+          text-indent: 25px;
+          cursor: pointer;
+          color: #32302e; }
+          .header .right-container .settings-dropdown-container .user-menu .user-menu-content .user-menu-content-option.active {
+            font-weight: bold; }

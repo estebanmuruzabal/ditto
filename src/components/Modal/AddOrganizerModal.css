@@ -3,34 +3,10 @@
   width: 695px;
   -webkit-box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08); }
-  .add-organizer-modal .modal-close-image {
-    background: url("assets/modal/x-light-small@2x.png");
-    background-size: 100%;
-    width: 24px;
-    height: 24px;
-    float: right;
-    margin: -20px -20px;
-    cursor: pointer; }
-  .add-organizer-modal .title-with-top-padding {
-    font-size: 13px;
-    font-weight: lighter;
-    padding-top: 40px; }
-  .add-organizer-modal .title-divider {
-    margin: 5px 0px 10px 0px;
-    border-top: 1px solid #979797; }
   .add-organizer-modal .add-organizer-modal-form, .add-organizer-modal .add-payment-method-modal-form {
     width: 285px;
     margin-left: auto;
     margin-right: auto; }
-    .add-organizer-modal .add-organizer-modal-form .form-control, .add-organizer-modal .add-payment-method-modal-form .form-control {
-      height: 44px;
-      color: #333333;
-      font-size: 12px;
-      border: 1px solid #979797; }
-    .add-organizer-modal .add-organizer-modal-form .control-label, .add-organizer-modal .add-payment-method-modal-form .control-label {
-      font-size: 11px;
-      font-weight: 500;
-      color: #575757; }
     .add-organizer-modal .add-organizer-modal-form .disclaimer-container, .add-organizer-modal .add-payment-method-modal-form .disclaimer-container {
       background-color: #eeeeee;
       width: 550px;

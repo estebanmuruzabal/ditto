@@ -21,5 +21,5 @@ config/config.js
 
 # compiled css
 src/index.css
-
+*/**/*.css
 *.css

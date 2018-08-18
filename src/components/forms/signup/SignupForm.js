@@ -139,7 +139,7 @@ const SignupForm = reduxForm({
       <Button type="submit" className="signin-text" bsStyle="primary">
         FINISH UP &nbsp; { props.signingUpAccount && <LoadingSpinner /> }
       </Button>
-      { props.errorMessage &&
+      { (props.errorMessage || props.submitFailed) &&
         <ErrorInput errorMessage={props.errorMessage} />
       }
     </form>

@@ -1,13 +1,81 @@
 
-.header-container {
+@import 'styles/variables.scss';
+
+.header {
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 9999;
-  height: 60px;
-  .left-container{
+  height: $header-height;
+  margin-bottom: $header-height; // THIS SHOULD BE THE TOTAL HEIGHT OF THE HEADER
+  background-color: $header-background-color;
+  border-bottom: 1px solid $gray-238;
+  display: flex;
+  flex-direction: row;
+  .left-container {
+    flex: 2 0 0;
+    width: 200px;
+    padding: 20px 0px 0px 50px;
     .company-logo-container {
-      
+      cursor: pointer;
+      text-decoration: none;
+      .company-logo-text {
+        font-size: 23px;
+        font-weight: bold;
+        letter-spacing: -1px;
+        color: #1a1919;
+      }
+    }
+  }
+  .right-container {
+    .header-login-btn {
+      height: $header-height;
+      border-radius: 0px;
+    }
+    .settings-dropdown-container {
+      width: 200px;
+      padding: 23px 30px 0px 50px;
+      font-weight: lighter;
+      .user-menu {
+        position: relative;
+        display: inline-block;
+        font-size: 14px;
+        color: $black-50;
+        font-weight: lighter;
+        padding-right: 15px;
+        height: 100%;
+        align-items: center;
+        .user-menu-trigger {
+          height: 100%;
+          display: inline-block;
+          cursor: pointer;
+          background-image: url('assets/header/arrow-right-dark-small@2x.png');
+          background-repeat: no-repeat;
+          background-position: center right;
+          background-size: 15px;
+          padding-right: 25px;
+        }
+        .user-menu-content {
+          display: block;
+          position: absolute;
+          top: 61px;
+          right: 0;
+          width: 200px;
+          padding: 20px 0;
+          background-color: white;
+          box-shadow: 0 2px 4px 0(0,0,0,0.2);
+          .user-menu-content-option {
+            display: block;
+            padding: 10px 0;
+            text-indent: 25px;
+            cursor: pointer;
+            color: $black-50;
+            &.active {
+              font-weight: bold;
+            }
+          }
+        }
+      }
     }
   }
 }

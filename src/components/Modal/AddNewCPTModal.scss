@@ -6,22 +6,6 @@
   -webkit-box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
 
-  .modal-close-image {
-    background: url('assets/modal/x-light-small@2x.png');
-    background-size: 100%;
-    width: 24px;
-    height: 24px;
-    float: right;
-    margin: -20px -20px;
-    cursor: pointer;
-  }
-
-  .title-with-top-padding {
-    font-size: 13px;
-    font-weight: lighter;
-    padding-top: 40px;
-  }
-
   .add-cpt-btn {
     padding: 10px 10px;
     font-size: 12px;
@@ -37,11 +21,6 @@
       background-color: $brand-secondary;
       border-color: $brand-secondary;
     }
-  }
-
-  .title-divider {
-    margin: 5px 0px 10px 0px;
-    border-top: 1px solid $divider-border;
   }
 
   .add-organizer-modal-form, .add-payment-method-modal-form {

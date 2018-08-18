@@ -1,0 +1,12 @@
+# /node_modules/* and /bower_components/* ignored by default
+
+# Ignore built files except build/index.js
+build/*
+!build/index.js
+
+# Ignore application config template
+public/config/app.config.js
+
+
+# Ignore test coverage files
+tests/coverage/**

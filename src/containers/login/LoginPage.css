@@ -18,7 +18,7 @@
   height: 493px;
   box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08); }
   .login-modal .close-image {
-    /* background: url('assets/modal/x-light-small@2x.png'); */
+    background: url("assets/modal/x-light-small@2x.png");
     background-size: 100%;
     width: 24px;
     height: 24px;
@@ -65,14 +65,6 @@
       .login-modal .form-container .login-button:hover {
         border-color: #fedc00;
         background-color: #fedc00; }
-  .login-modal .form-control {
-    height: 44px;
-    color: black;
-    font-size: 14px;
-    width: 285px;
-    border-color: #979797; }
-  .login-modal input::placeholder {
-    font-size: 12px; }
   .login-modal .links {
     font-weight: lighter;
     font-size: 12px; }

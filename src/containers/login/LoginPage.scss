@@ -22,7 +22,7 @@
     box-shadow: 0 2px 34px 0 rgba(0,0,0,0.08);
   
     .close-image {
-      /* background: url('assets/modal/x-light-small@2x.png'); */
+      background: url('assets/modal/x-light-small@2x.png');
       background-size: 100%;
       width: 24px;
       height: 24px;
@@ -90,18 +90,6 @@
           background-color: $brand-secondary;
         }
       }
-    }
-  
-    .form-control {
-      height: 44px;
-      color: black;
-      font-size: 14px;
-      width: 285px;
-      border-color: $divider-border;
-    }
-  
-    input::placeholder {
-      font-size: 12px
     }
   
     .links {

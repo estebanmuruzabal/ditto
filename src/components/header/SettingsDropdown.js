@@ -1,45 +1,49 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import history from 'utils/history';
 
-const SettingsDropdown = ({ userInfo, dropdownIsOpen }) => {
-    if (userInfo) {
-        return (
-            <div className="right-container">
-            <div className="user-menu logout-container-right">
-                <span className="user-menu-trigger" role="presentation" onKeyPress={this.handleDropdownClick} onClick={this.handleDropdownClick}>Hi, {this.props.userInfo.name}</span>
-                    { dropdownIsOpen &&
-                    <div
-                    onKeyPress={this.handleDropdownClick}
-                    className="user-menu-content"
-                    role="presentation"
-                    onClick={this.handleDropdownClick}
-                    ref={this.setDropdownRef}
-                    >
-            <div className="user-menu-content-option" onKeyPress={() => this.handleTransitionClick('settings')} role="presentation" onClick={() => this.handleTransitionClick('settings')}>
+const SettingsDropdown = ({ userInfo, dropdownIsOpen, handleDropdownClick, handleLogoutClick, handleLoginClick }) => {
+  if (userInfo) {
+    return (
+      <div className="settings-dropdown-container">
+        <div className="user-menu">
+          <span className="user-menu-trigger" role="presentation" onKeyPress={handleDropdownClick} onClick={handleDropdownClick}>Hi, {userInfo.name}</span>
+          { dropdownIsOpen &&
+            <div
+              onKeyPress={handleDropdownClick}
+              className="user-menu-content"
+              role="presentation"
+              onClick={this.handleDropdownClick}
+              ref={this.setDropdownRef}
+            >
+              <div onKeyPress={() => history.push('/admin')} className="user-menu-content-option active" role="presentation" onClick={() => history.push('/admin')}>
                 settings
-            </div>
-            <div onKeyPress={() => this.handleTransitionClick('logout')} className="user-menu-content-option active" role="presentation" onClick={() => this.handleTransitionClick('logout')}>
+              </div>
+              <div onKeyPress={(e) => handleLogoutClick(e)} className="user-menu-content-option active" role="presentation" onClick={(e) => handleLogoutClick(e)}>
                 logout
+              </div>
             </div>
-        </div>
-        }
-    </div>
-            </div>
-        );
-    } else {
-        return (
-            <div className="right-container">
-            </div>
-        );
-    }
+          }
+        </div>  
+      </div>
+    );
+  } else {
+    return (
+      <div className="">
+        <button type="button" className="primary-btn header-login-btn" onClick={handleLoginClick}>LOGIN</button>
+      </div>
+    );
+  }
 };
 
 SettingsDropdown.propTypes = {
-    clearClassesAction: PropTypes.func.isRequired,
-};
-
-SettingsDropdown.defaultProps = {
-    isOrgUser: false,
+  userInfo: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }),
+  handleDropdownClick: PropTypes.func.isRequired,
+  dropdownIsOpen: PropTypes.bool.isRequired,
+  handleLoginClick: PropTypes.func.isRequired,
+  handleLogoutClick: PropTypes.func.isRequired,
 };
 
 export default SettingsDropdown;

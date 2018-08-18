@@ -4,10 +4,10 @@ import {
   LOGIN_FAILURE,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
-  LOGOUT_FAILURE
-} from "../actions/auth.actions";
+  LOGOUT_FAILURE,
+} from '../actions/auth.actions';
 
-import { loadUserProfile } from "../utils/apiUtils";
+import { loadUserProfile } from '../utils/apiUtils';
 
 const initialState = {
   user: null,
@@ -15,7 +15,7 @@ const initialState = {
   userRole: null,
   loggingIn: false,
   loggingOut: false,
-  loginError: null
+  loginError: null,
 };
 
 function initializeState() {
@@ -31,7 +31,7 @@ export default function auth(state = initializeState(), action = {}) {
       return Object.assign({}, state, {
         loggingIn: false,
         user: action.user,
-        role: action.role
+        role: action.role,
       });
     case LOGIN_FAILURE:
       return {
@@ -39,12 +39,12 @@ export default function auth(state = initializeState(), action = {}) {
         loggingIn: false,
         user: null,
         role: null,
-        loginError: action.error
+        loginError: action.error,
       };
     case LOGOUT_REQUEST:
       return {
         ...state,
-        loggingOut: true
+        loggingOut: true,
       };
     case LOGOUT_SUCCESS:
       return {
@@ -52,13 +52,13 @@ export default function auth(state = initializeState(), action = {}) {
         loggingOut: false,
         user: null,
         userRole: null,
-        loginError: null
+        loginError: null,
       };
     case LOGOUT_FAILURE:
       return {
         ...state,
         loggingOut: false,
-        logoutError: action.error
+        logoutError: action.error,
       };
     default:
       return state;

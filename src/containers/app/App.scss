@@ -1,4 +1,7 @@
+@import 'styles/variables.scss';
+
 .appContent {
   .bodyContent {
+    margin: $header-height 200px;
   }
 }

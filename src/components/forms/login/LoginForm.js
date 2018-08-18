@@ -1,6 +1,5 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Button } from 'react-bootstrap';
 import LoadingSpinner from 'components/loading/LoadingSpinner';
 import { required, email } from 'utils/validators';
 import Input from 'components/input/Input';
@@ -12,7 +11,7 @@ const LoginForm = reduxForm({
 })((props) => {
   return (
     <form>
-      <div className="form-container">
+      <div className="login-form-container">
         <Field
           name="username"
           type="email"
@@ -29,17 +28,16 @@ const LoginForm = reduxForm({
           validate={[required]}
         />
 
-        <Button
+        <button
           type="submit"
-          className="login-button"
-          bsStyle="primary"
+          className="primary-btn"
           disabled={props.loggingIn}
           onClick={(e) => (
             props.handleSubmit(e)
           )}
         >
           LOGIN { props.loggingIn && <LoadingSpinner /> }
-        </Button>
+        </button>
       </div>
     </form>
   );

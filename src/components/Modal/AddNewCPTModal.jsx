@@ -23,9 +23,9 @@ class AddNewCPTModal extends React.Component {
         category: 'Add User Modal',
         action: 'CPT user has been created',
       });
-    } else if (nextProps.errorMessage.ok === false) {
+    } else if (nextProps.errorMessage.ok === false && nextProps.errorMessage.errors && nextProps.errorMessage.errors[0] && nextProps.errorMessage.errors[0].message) {
       this.props.toggleAddNewCPTModal();
-      this.props.toggleFailureModalToggle();
+      this.props.toggleFailureModalToggle(nextProps.errorMessage.errors[0].message);
       this.props.clearErrorMessagesAction();
     }
   }

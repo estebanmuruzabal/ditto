@@ -15,7 +15,7 @@ import PrivateRoute from "../misc/PrivateRoute";
 import Home from "../home/Home";
 import UsersPage from "../user/UsersPage";
 import ReposPage from "../repo/ReposPage";
-import AdminPage from "containers/admin/Admin/AdminPage";
+import AdminPage from "containers/admin/AdminPage";
 import LoginPage from "containers/login/LoginPage";
 import SignupPage from "containers/signup/SignupPage";
 import About from "../about/About";

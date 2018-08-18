@@ -1,4 +1,3 @@
-
 // COLORS
 $brand-primary: rgb(254, 224, 0);
 $brand-secondary: rgb(254, 220, 0);
@@ -16,14 +15,29 @@ $gray-238: rgb(238, 238, 238);
 $gray-151: rgb(151, 151, 151);
 $gray-216: rgb(216, 216, 216);
 
+// TABLES
+
+$background-color-table-info: #d9edf7;
+$background-color-table-success: #dff0d8;
+$background-color-table-warning: #fcf8e3;
+$background-color-table-error: #f2dede;
+
 // BUTTONS
-$btn-cancel-color: $gray-216;
-$btn-yellow-color: $brand-primary;
+$buttons-font-color: $gray-51;
+$btn-primary-color: $brand-primary;
+$btn-primary-hover-color: $brand-secondary;
+$btn-cancel-color: $gray-151;
+$btn-cancel-hover-color: $black-185;
+$btn-error-color: red;
+$btn-error-hover-color: red;
 
 // INPUTS
 $input-border: $black;
 $input-border-focus: $brand-primary;
 
+// HEADER
+$header-height: 4.125em; // 66px to em
+$header-background-color: $white;
 //divider color
 $divider-border: $gray-151;
 ///////////////////////

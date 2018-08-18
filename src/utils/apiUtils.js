@@ -1,5 +1,5 @@
-import "isomorphic-fetch";
-import jwt_decode from "jwt-decode";
+import 'isomorphic-fetch';
+import jwt_decode from 'jwt-decode';
 
 export function checkStatus(response) {
   if (!response.ok) {
@@ -31,25 +31,25 @@ export function callApi(
   config,
   request,
   onRequestSuccess,
-  onRequestFailure
+  onRequestFailure,
 ) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request);
 
     return fetch(url, config)
       .then(checkStatus)
       .then(parseJSON)
-      .then(json => {
+      .then((json) => {
         dispatch(onRequestSuccess(json));
       })
-      .catch(error => {
-        const response = error.response;
+      .catch((error) => {
+        const { response } = error;
         if (response === undefined) {
           dispatch(onRequestFailure(error));
         } else {
           error.status = response.status;
           error.statusText = response.statusText;
-          response.text().then(text => {
+          response.text().then((text) => {
             try {
               const json = JSON.parse(text);
               error.message = json.message;
@@ -63,11 +63,27 @@ export function callApi(
   };
 }
 
-export const ID_TOKEN = "id_token";
+export const ID_TOKEN = 'id_token';
+export const USER_INFO = 'user_info';
 
 export function setIdToken(idToken) {
+  localStorage.removeItem(ID_TOKEN);
   localStorage.setItem(ID_TOKEN, idToken);
 }
+
+
+export const setItemInLocalStorage = (keyName, object) => {
+  localStorage.removeItem(keyName);
+  localStorage.setItem(keyName, JSON.stringify(object));
+};
+
+export const getItemInLocalStorage = keyName => {
+  return JSON.parse(localStorage.getItem(keyName));
+};
+
+export const deleteItemInLocalStorage = keyName => {
+  localStorage.removeItem(keyName);
+};
 
 export function removeIdToken() {
   localStorage.removeItem(ID_TOKEN);
@@ -84,7 +100,7 @@ export function decodeUserProfile(idToken) {
     return null;
   }
 }
-
+// GuJxOyUxLaUdKS17coYwdwEvAl5L0Du2zeA8NOTLNQ4
 export function loadUserProfile() {
   try {
     const idToken = localStorage.getItem(ID_TOKEN);

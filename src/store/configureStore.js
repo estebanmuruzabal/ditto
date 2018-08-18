@@ -1,11 +1,13 @@
-import { createStore, applyMiddleware, combineReducers, compose } from "redux";
-import thunkMiddleware from "redux-thunk";
-import { createLogger } from "redux-logger";
+import {
+  createStore, applyMiddleware, combineReducers, compose,
+} from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createLogger } from 'redux-logger';
 import { reducer as formReducer } from 'redux-form';
-import auth from "../reducers/auth.reducer";
-import alerts from "../reducers/alerts";
-import { selectedUsersPage, usersByPage } from "../reducers/users";
-import { selectedReposPage, reposByPage } from "../reducers/repos";
+import auth from '../reducers/auth.reducer';
+import alerts from '../reducers/alerts';
+import { selectedUsersPage, usersByPage } from '../reducers/users';
+import { selectedReposPage, reposByPage } from '../reducers/repos';
 
 const logger = createLogger();
 const rootReducer = combineReducers({
@@ -29,14 +31,14 @@ export default function configureStore() {
       initialState,
       compose(
         applyMiddleware(thunkMiddleware, logger),
-        window.devToolsExtension ? window.devToolsExtension() : f => f
-      )
+        window.devToolsExtension ? window.devToolsExtension() : f => f,
+      ),
     );
   } else {
     store = createStore(
       rootReducer,
       initialState,
-      compose(applyMiddleware(thunkMiddleware), f => f)
+      compose(applyMiddleware(thunkMiddleware), f => f),
     );
   }
 

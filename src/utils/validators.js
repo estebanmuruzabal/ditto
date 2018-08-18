@@ -20,81 +20,95 @@ export const required = (value) => {
     // We can return string or jsx as the 'error' prop for the validated Component
     return { key: 'required', message: 'required' };
   }
+  return null;
 };
 
 export const email = (value) => {
   if (!validator.isEmail(value)) {
     return { key: 'email', message: `${value} is not a valid email` };
   }
+  return null;
 };
 
 export const cvvValidation = (value) => {
   if (value.length !== 3) {
     return { key: 'cvv', message: 'CVV should have 3 digits' };
   }
+  return null;
 };
 
 export const min0max100 = (value) => {
   if (value < 0 || value > 100) {
     return { key: 'minmax', message: 'Discount should be between 0 and 100' };
   }
+  return null;
 };
 
 export const zip = (value) => {
   if (!validator.isPostalCode(value, 'US')) {
     return { key: 'zip', message: `${value} is not a valid zip code` };
   }
+  return null;
 };
 
 export const creditCard = (value) => {
   if (!validator.isCreditCard(value)) {
     return { key: 'card', message: `${value} is not a valid credit card` };
   }
+  return null;
 };
 
 export const phoneNumber = (value) => {
   if (!(value.length === 12 && /^\d+$/.test(value.substring(1, 12))) && value.length !== 17) {
     return 'invalid length';
-  } else if (value.length === 12) {
+  } if (value.length === 12) {
     if (validUsAreaCodes.indexOf(value.substring(2, 5)) === -1) {
       return 'Invalid area code';
-    } else if (validUsAreaCodes.indexOf(value.substring(4, 7)) === -1) {
-     return 'Invalid area code'; 
+    } if (validUsAreaCodes.indexOf(value.substring(4, 7)) === -1) {
+      return 'Invalid area code';
     }
   }
   return null;
 };
 
-export const password = (passwordDescriptor) => (value, values) => {
+export const password = passwordDescriptor => (value, values) => {
   if (value !== values[passwordDescriptor]) {
     return { key: 'password', message: 'Passwords do not match' };
   }
+  return null;
 };
 
 export const validPassword = (value) => {
   if (value.length < 8) {
     return { key: 'passwordLength', message: 'Password must have at least eight characters' };
-  } else if (!(/[A-Z]/.test(value))) {
+  } if (!(/[A-Z]/.test(value))) {
     return { key: 'passwordUppercase', message: 'Password must include at least one uppercase letter' };
-  } else if (!(/[a-z]/.test(value))) {
+  } if (!(/[a-z]/.test(value))) {
     return { key: 'passwordLowercase', message: 'Password must include at least one lowercase letter' };
-  } else if (!value.search(/[0-9]/) < 0) {
+  } if (!value.search(/[0-9]/) < 0) {
     return { key: 'passwordNumber', message: 'Password must include at least one number' };
   }
+  return null;
 };
 
-export const min = (minValueDescriptor) => (value, values) => {
-  const minValue = Number.isNaN(minValueDescriptor) ? parseInt(values[minValueDescriptor], 10) : minValueDescriptor;
+export const min = minValueDescriptor => (value, values) => {
+  const minValue = Number.isNaN(minValueDescriptor)
+    ? parseInt(values[minValueDescriptor], 10)
+    : minValueDescriptor;
 
   if (!value || (minValue && value < minValue)) {
-    return { key: 'min', message: 'Must be greater than ' + minValue };
+    return { key: 'min', message: `Must be greater than ${minValue}` };
   }
+  return null;
 };
 
-export const max = (maxValueDescriptor) => (value, values) => {
-  const maxValue = Number.isNaN(maxValueDescriptor) ? parseInt(values[maxValueDescriptor], 10) : maxValueDescriptor;
+export const max = maxValueDescriptor => (value, values) => {
+  const maxValue = Number.isNaN(maxValueDescriptor)
+    ? parseInt(values[maxValueDescriptor], 10)
+    : maxValueDescriptor;
 
   if (!value || (maxValue && value > maxValue)) {
-    return { key: 'max', message: 'Must be less than ' + maxValue };
+    return { key: 'max', message: `Must be less than ${maxValue}` };
   }
+  return null;
 };

@@ -1,3 +1,5 @@
+@import "node_modules/compass-mixins/lib/_compass.scss";
+
 @import "styles/variables.scss";
 @import "styles/mediaQueryMixins.scss";
 @import "styles/overrides/select.scss";
@@ -9,8 +11,8 @@
 @import "components/FourOFour/FourOFour.scss";
 @import "components/header/Header.scss";
 @import "components/Modal/ConfirmWhateverModal.scss";
-@import "components/Header/Header.scss";
 @import "components/input/ErrorInput.scss";
+@import "components/tables/Table.scss";
 @import "components/CreditCard/CreditCard.scss";
 @import "components/forms/signup/SignupForm.scss";
 @import "components/forms/login/LoginForm.scss";
@@ -19,7 +21,13 @@
 @import "containers/signup/SignupPage.scss";
 @import "containers/home/Home.scss";
 @import "containers/app/App.scss";
-@import "containers/admin/Admin/AdminPage.scss";
+@import "containers/admin/AdminPage.scss";
+@import "containers/admin/Collections/AdminCollectionsPage.scss";
+@import "containers/admin/Contents/AdminContentsPage.scss";
+@import "containers/admin/Users/AdminUsersPage.scss";
+@import "containers/admin/Products/AdminProductsPage.scss";
+@import "containers/admin/Dashboard/AdminDashboardPage.scss";
+@import "containers/admin/Orders/AdminOrdersPage.scss";
 
 @font-face {
   font-family: HelveticaNeue;
@@ -38,3 +46,33 @@
   src: url("styles/fonts/HelveticaNeueLTStd-Bd.otf") format("opentype");
   font-weight: 700;
 }
+
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $color;
+    -moz-box-shadow:inset $top $left $blur $color;
+    box-shadow:inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+
+.title-divider {
+  margin: 5px 0px 10px 0px;
+  border-top: 1px solid $divider-border;
+}
+
+.title-with-top-padding {
+  font-size: 13px;
+  font-weight: lighter;
+  padding-top: 40px;
+}
+
+body {
+  font-family: HelveticaNeue;
+  padding: 0;
+  margin: 0;
+}
+

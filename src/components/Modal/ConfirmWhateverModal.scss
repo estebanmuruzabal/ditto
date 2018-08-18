@@ -1,44 +1,11 @@
 @import 'styles/variables.scss';
-.backdropClass {
-  background-color: white;
-  background-clip: padding-box;
-  border-top: 85px solid rgba(255,255,255,.5);
-}
 
-.modal-backdrop.in {
-  opacity: 0;
-}
-
-.modal-dialog .modal-body, .modal-dialog .modal-footer {
-  background: white;
-  opacity: 0.94;
-  padding: 0px;
-}
-.modal-body {
-
-}
 .confirm-modal-container {
   padding: 40px 90px;
   width: 557px;
   -webkit-box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
   border-top: 26px solid $brand-primary;
-
-  .modal-close-image {
-    background: url('assets/modal/x-light-small@2x.png');
-    background-size: 100%;
-    width: 24px;
-    height: 24px;
-    float: right;
-    margin: -20px -20px;
-    cursor: pointer;
-  }
-
-  .title-modal {
-    font-size: 26px;
-    font-weight: bold;
-    text-align: center;
-  }
 
   .subtitle-modal {
     font-size: 20px;

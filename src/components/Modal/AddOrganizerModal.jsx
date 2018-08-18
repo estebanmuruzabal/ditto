@@ -41,9 +41,9 @@ class AddOrganizerModal extends React.Component {
       this.props.toggleSuccessOrganizerAddedModalToggle();
       this.props.refresh();
       this.props.clearErrorMessagesAction();
-    } else if (nextProps.errorMessage.ok === false) {
+    } else if (nextProps.errorMessage.ok === false && nextProps.errorMessage.errors && nextProps.errorMessage.errors[0] &&  nextProps.errorMessage.errors[0].message) {
       this.props.toggleAddOrganizerModal();
-      this.props.toggleFailureModalToggle();
+      this.props.toggleFailureModalToggle(nextProps.errorMessage.errors[0].message);
       this.props.clearErrorMessagesAction();
     }
   }
