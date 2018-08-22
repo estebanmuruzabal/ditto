@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormControl, FormGroup, HelpBlock, ControlLabel } from 'react-bootstrap';
-import { CSSTransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
 
 const Select = ({
@@ -24,13 +23,7 @@ const Select = ({
       </FormControl>
 
       <div className="error-block-container">
-        <CSSTransitionGroup
-          transitionName="error-block"
-          transitionEnterTimeout={300}
-          transitionLeaveTimeout={300}
-        >
-          <HelpBlock key={hasError && error.key}>{hasError && error.message}</HelpBlock>
-        </CSSTransitionGroup>
+        <HelpBlock key={hasError && error.key}>{hasError && error.message}</HelpBlock>
       </div>
     </FormGroup>
   );

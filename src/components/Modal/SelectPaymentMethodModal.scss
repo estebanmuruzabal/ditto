@@ -17,16 +17,6 @@
     background-origin: content-box;
   }
 
-  .modal-close-image {
-    background: url('assets/modal/x-light-small@2x.png');
-    background-size: 100%;
-    width: 24px;
-    height: 24px;
-    float: right;
-    margin: -20px -20px;
-    cursor: pointer;
-  }
-  
   .form-control {
     height: 44px;
     color: $gray-51;

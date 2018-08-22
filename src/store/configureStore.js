@@ -4,14 +4,16 @@ import {
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import { reducer as formReducer } from 'redux-form';
-import auth from '../reducers/auth.reducer';
+import authReducer from '../reducers/auth.reducer';
+import collectionReducer from '../reducers/collection.reducer';
 import alerts from '../reducers/alerts';
 import { selectedUsersPage, usersByPage } from '../reducers/users';
 import { selectedReposPage, reposByPage } from '../reducers/repos';
 
 const logger = createLogger();
 const rootReducer = combineReducers({
-  auth,
+  authReducer,
+  collectionReducer,
   alerts,
   selectedUsersPage,
   usersByPage,

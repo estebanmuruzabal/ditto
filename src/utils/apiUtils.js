@@ -64,11 +64,12 @@ export function callApi(
 }
 
 export const ID_TOKEN = 'id_token';
+export const USER_TOKEN = 'user_token';
 export const USER_INFO = 'user_info';
 
-export function setIdToken(idToken) {
+export function setIdToken(authToken) {
   localStorage.removeItem(ID_TOKEN);
-  localStorage.setItem(ID_TOKEN, idToken);
+  localStorage.setItem(ID_TOKEN, authToken);
 }
 
 

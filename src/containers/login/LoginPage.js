@@ -42,8 +42,8 @@ class LoginPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.auth ? state.auth.user : null,
-  loginError: state.auth ? state.auth.loginError : null,
+  user: state.authReducer ? state.authReducer.user : null,
+  loginError: state.authReducer ? state.authReducer.loginError : null,
 });
 
 LoginPage.propTypes = {

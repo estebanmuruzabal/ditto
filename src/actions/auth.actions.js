@@ -3,6 +3,7 @@ import configs from 'configs';
 import {
   callApi,
   ID_TOKEN,
+  USER_TOKEN,
   setIdToken,
   removeIdToken,
   decodeUserProfile,
@@ -25,7 +26,8 @@ function loginRequest(user) {
 
 function loginSuccess(payload) {
   const idToken = payload[ID_TOKEN];
-  const decodedResponse = decodeUserProfile(idToken);
+  const userToken = payload[USER_TOKEN];
+  const decodedResponse = decodeUserProfile(userToken);
   setIdToken(idToken);
   history.push('/');
   return {
@@ -66,6 +68,13 @@ export function login(email, password) {
   );
 }
 
+function logoutRequest() {
+  removeIdToken();
+  return {
+    type: LOGOUT_REQUEST,
+  };
+}
+
 function logoutSuccess() {
   removeIdToken();
   return {
@@ -73,6 +82,7 @@ function logoutSuccess() {
   };
 }
 
-export function logout(user) {
+export function logout() {
+  logoutRequest();
   logoutSuccess();
 }

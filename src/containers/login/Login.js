@@ -108,9 +108,9 @@ Login.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { auth } = state;
-  if (auth) {
-    return { user: auth.user, loginError: auth.loginError };
+  const { authReducer } = state;
+  if (authReducer) {
+    return { user: authReducer.user, loginError: authReducer.loginError };
   }
 
   return { user: null };

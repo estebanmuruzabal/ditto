@@ -22,12 +22,11 @@ import About from "../about/About";
 import NotFound from "../misc/NotFound";
 import history from 'utils/history';
 
-import { logout } from "../../actions/auth.actions";
+import { logout } from 'actions/auth.actions';
 
 class App extends Component {
   handleLogout() {
-    const { user } = this.props;
-    this.props.dispatch(logout(user));
+    this.props.dispatch(logout());
   }
 
   render() {
@@ -66,9 +65,9 @@ App.contextTypes = {
 };
 
 const mapStateToProps = state => {
-  const { auth } = state;
+  const { authReducer } = state;
   return {
-    user: auth ? auth.user : null
+    user: authReducer ? authReducer.user : null
   };
 };
 

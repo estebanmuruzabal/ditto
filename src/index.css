@@ -57,10 +57,11 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 12.500em;
-  height: 2.500em;
+  width: 14em;
+  height: 3em;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: none;
+  margin: 10px;
   cursor: pointer;
   font-size: 1.000em;
   font-weight: bold;
@@ -75,10 +76,10 @@ button {
     background-color: #fedc00;
     border-color: #fedc00; }
 
-.btn-cancel {
+.cancel-btn {
   background-color: #979797;
   border-color: #979797; }
-  .btn-cancel:hover {
+  .cancel-btn:hover {
     background-color: #b9b9b9;
     border-color: #b9b9b9; }
 
@@ -97,55 +98,63 @@ button {
 .modal-backdrop {
   background: rgba(220, 220, 220, 0.8); }
   .modal-backdrop.in {
-    opacity: 1; }
+    opacity: 0.8; }
 
-.modal-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 60px);
-  width: 0px; }
-  .modal-container .modal-dialog .modal-body, .modal-container .modal-footer {
-    background: white;
-    opacity: 0.94;
-    padding: 0px; }
-  .modal-container .confirm-modal-container {
-    padding: 40px 90px;
-    width: 557px;
-    -webkit-box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
-    box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
-    border-top: 26px solid #fee000; }
-    .modal-container .confirm-modal-container .modal-close-image {
-      background: url("assets/modal/x-light-small@2x.png");
-      background-size: 100%;
-      width: 24px;
-      height: 24px;
-      float: right;
-      margin: -20px -20px;
-      cursor: pointer; }
-    .modal-container .confirm-modal-container .title-modal {
-      font-size: 26px;
-      font-weight: bold;
-      text-align: center; }
-    .modal-container .confirm-modal-container .subtitle-modal {
-      font-size: 20px;
-      font-weight: lighter;
-      padding-top: 40px;
-      text-align: center; }
-    .modal-container .confirm-modal-container .buttons-container, .modal-container .confirm-modal-container .button-container {
-      padding-top: 20px;
-      margin: 0 -15px 0 0px; }
-    .modal-container .confirm-modal-container .modal-content {
-      background: transparent;
-      box-shadow: none;
-      border: none;
-      padding-top: 20px; }
-    .modal-container .confirm-modal-container .modal-title {
-      color: white;
-      font-size: 46px;
-      font-weight: bold;
-      text-align: center; }
+.modal-content {
+  margin-top: 5.375em;
+  border-radius: 0px;
+  box-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.08);
+  border-color: #fee000;
+  border-width: 26px 0px 0px 0px;
+  border-style: solid;
+  text-align: center;
+  padding: 35px; }
+
+.modal-dialog .modal-body, .modal-footer {
+  background: white;
+  opacity: 0.94;
+  padding: 0px; }
+
+.modal-close-image {
+  background: url("assets/modal/x-light-small@2x.png");
+  background-size: 100%;
+  width: 24px;
+  height: 24px;
+  float: right;
+  margin: -20px -20px;
+  cursor: pointer; }
+
+.disclaimer-container {
+  background-color: #eeeeee;
+  width: 450px;
+  font-size: 13px;
+  margin: 30px -30%;
+  padding: 30px;
+  text-align: left; }
+
+.modal-form {
+  padding: 0 25%; }
+
+.title-modal {
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center; }
+
+.subtitle-modal {
+  font-size: 20px;
+  font-weight: lighter;
+  padding-top: 40px;
+  text-align: center; }
+
+.buttons-container {
+  display: inline-flex;
+  margin-left: -60px; }
+
+.modal-title {
+  color: white;
+  font-size: 46px;
+  font-weight: bold;
+  text-align: center; }
 
 .four-o-four-component {
   margin: 85px;

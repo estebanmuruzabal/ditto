@@ -16,6 +16,14 @@ class Header extends Component {
     this.state = { dropdownIsOpen: false };
   }
 
+  componentDidMount() {
+    window.addEventListener('click', this.handleWindowClick);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('click', this.handleWindowClick);
+  }
+
   handleLogoutClick = event => {
     event.preventDefault();
     this.props.handleLogout();
@@ -29,6 +37,15 @@ class Header extends Component {
     }));
   }
 
+  handleWindowClick = e => {
+    e.stopPropagation();
+    if (!this.state.dropdownIsOpen) return;
+    if (this.dropdownRef.contains(e.target)) return;
+
+    this.setState({ dropdownIsOpen: false });
+  }
+
+
   render() {
     return (
       <div className="header">
@@ -38,6 +55,7 @@ class Header extends Component {
         <div className="right-container">
           <SettingsDropdown
             userInfo={this.props.userInfo}
+            setDropdownRef={this.setDropdownRef}
             dropdownIsOpen={this.state.dropdownIsOpen}
             handleDropdownClick={this.handleDropdownClick}
             handleLogoutClick={this.handleLogoutClick}
@@ -50,7 +68,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-  userInfo: state.auth ? state.auth.user : null,
+  userInfo: state.authReducer ? state.authReducer.user : null,
 });
 
 Header.propTypes = {

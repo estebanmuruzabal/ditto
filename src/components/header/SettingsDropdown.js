@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import history from 'utils/history';
 
-const SettingsDropdown = ({ userInfo, dropdownIsOpen, handleDropdownClick, handleLogoutClick, handleLoginClick }) => {
+const SettingsDropdown = ({ userInfo, dropdownIsOpen, handleDropdownClick, handleLogoutClick, handleLoginClick, setDropdownRef }) => {
   if (userInfo) {
     return (
       <div className="settings-dropdown-container">
@@ -13,8 +13,8 @@ const SettingsDropdown = ({ userInfo, dropdownIsOpen, handleDropdownClick, handl
               onKeyPress={handleDropdownClick}
               className="user-menu-content"
               role="presentation"
-              onClick={this.handleDropdownClick}
-              ref={this.setDropdownRef}
+              onClick={handleDropdownClick}
+              ref={setDropdownRef}
             >
               <div onKeyPress={() => history.push('/admin')} className="user-menu-content-option active" role="presentation" onClick={() => history.push('/admin')}>
                 settings
@@ -41,6 +41,7 @@ SettingsDropdown.propTypes = {
     name: PropTypes.string.isRequired,
   }),
   handleDropdownClick: PropTypes.func.isRequired,
+  setDropdownRef: PropTypes.func.isRequired,
   dropdownIsOpen: PropTypes.bool.isRequired,
   handleLoginClick: PropTypes.func.isRequired,
   handleLogoutClick: PropTypes.func.isRequired,

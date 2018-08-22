@@ -1,36 +1,57 @@
 import React, { Component } from "react";
 import Table from 'components/tables/Table';
-
-export default class AdminCollectionsPage extends Component {
+import AddNewCollectionModal from "containers/admin/Collections/AddNewCollectionModal";
+import { addCollectionAction } from 'actions/collection.actions';
+import { connect } from 'react-redux';
+class AdminCollectionsPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      showNewCollectionModal: false,
       collections: [],
-      loading: false,
     };
   }
 
-  toggleAddNewCollectionClick = () => {
+  toggleAddCollectionModal = () => {
     this.setState(prevState => ({
       showNewCollectionModal: !prevState.showNewCollectionModal,
     }));
   };
 
-  handleNewCollectionSubmitClick = () => {
-    console.log('adding new collection');
+  handleNewCollectionSubmit = collection => {
+    this.props.dispatch(addCollectionAction({
+      name: collection.name,
+      tags: [collection.tag],
+    }));
   };
 
   render() {
     const headings = [ 'Nombre', 'Colección Padre', 'Tags', 'Activa' ];
     const rows = [];
+
+    const newCollectionModal = () => {
+      if (this.state.showNewCollectionModal) {
+        return (
+          <AddNewCollectionModal
+            title="Add new collection"
+            onCloseClick={this.toggleAddCollectionModal}
+            loading={this.props.loading}
+            onCancelClick={this.toggleAddCollectionModal}
+            handleSubmit={this.handleNewCollectionSubmit}
+          />
+        );
+      }
+    };
+
     return (
       <div className="admin-collections__container">
+        {newCollectionModal()}
         <div className="admin-collections__header">
           <h1 className="admin-collections__title">Admin Collections Page</h1>
           <div className="admin-collections__toolbar">
             <div className="admin-collections__add-button">
-              <button type="btn-primary" onClick={this.handleNewCollectionClick}>Agregar</button>
+              <button type="btn-primary" onClick={this.toggleAddCollectionModal}>Agregar</button>
             </div>
           </div>
         </div>
@@ -45,3 +66,14 @@ export default class AdminCollectionsPage extends Component {
     );
   }
 }
+
+AdminCollectionsPage.defaultProps = {
+  paymentProfile: {},
+};
+
+const mapStateToProps = state => ({
+  loading: state.collectionReducer.addingNewCollection,
+  addNewCollectionResponse: state.collectionReducer.addNewCollectionResponse,
+});
+
+export default connect(mapStateToProps)(AdminCollectionsPage);
