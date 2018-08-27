@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Table from 'components/tables/Table';
+import { Link } from 'react-router-dom';
 import AddNewCollectionModal from "containers/admin/Collections/AddNewCollectionModal";
-import { addCollectionAction } from 'actions/collection.actions';
+import { addCollectionAction, clearCollectionResponsesAction, fetchCollectionsIfNeeded } from 'actions/collection.actions';
+import { setMessageAction } from  'actions/messages.actions';
 import { connect } from 'react-redux';
 class AdminCollectionsPage extends Component {
   constructor(props) {
@@ -13,6 +15,26 @@ class AdminCollectionsPage extends Component {
     };
   }
 
+  componentDidMount() {
+    const { dispatch, collectionReducer } = this.props;
+    dispatch(fetchCollectionsIfNeeded(collectionReducer));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { dispatch, collections } = nextProps;
+    dispatch(fetchCollectionsIfNeeded(collections));
+    if (nextProps.addNewCollectionResponse.id) {
+      this.props.dispatch(clearCollectionResponsesAction());
+      this.props.dispatch(setMessageAction({
+        redirectTo: `/edit-collection/${nextProps.addNewCollectionResponse.id}`,
+        showCancel: true,
+        title: 'Confirmation',
+        confirmButtonText: 'ACCEPT',
+        subtitle: 'Collection created successfully. Would you like to edit it right now?',
+      }));
+    }
+  }
+
   toggleAddCollectionModal = () => {
     this.setState(prevState => ({
       showNewCollectionModal: !prevState.showNewCollectionModal,
@@ -20,6 +42,7 @@ class AdminCollectionsPage extends Component {
   };
 
   handleNewCollectionSubmit = collection => {
+    this.toggleAddCollectionModal();
     this.props.dispatch(addCollectionAction({
       name: collection.name,
       tags: [collection.tag],
@@ -28,8 +51,6 @@ class AdminCollectionsPage extends Component {
 
   render() {
     const headings = [ 'Nombre', 'Colección Padre', 'Tags', 'Activa' ];
-    const rows = [];
-
     const newCollectionModal = () => {
       if (this.state.showNewCollectionModal) {
         return (
@@ -43,7 +64,37 @@ class AdminCollectionsPage extends Component {
         );
       }
     };
-
+    const rows = this.props.collections && this.props.collections.map((collection) => {
+      return {
+        data: [
+          <span className="admin-collections__link">
+            <Link to={`/edit-collection/${collection.id}`}>
+              {collection.name.toString()}
+            </Link>
+          </span>,
+          <div>
+            {collection.parentId ?
+              <span>
+                {collection.parentId}
+              </span>
+              :
+              <span>-</span>
+            }
+          </div>,
+          <div className="admin-collections__labels">
+            {collection.tags.map((section, idx) => {
+              return (
+                <div key={idx} className="admin-collections__label">
+                  {section}
+                </div>
+              );
+            })}
+          </div>,
+          <div>{collection.enabled.toString()}</div>,
+        ]
+      };
+    });
+    console.log(rows);    
     return (
       <div className="admin-collections__container">
         {newCollectionModal()}
@@ -55,12 +106,12 @@ class AdminCollectionsPage extends Component {
             </div>
           </div>
         </div>
-        {!this.state.loading && this.state.collections.length === 0 ?
-          <div className="admin-collections__no-results">No hay colleciones disponibles</div>
-          :
+        {rows && rows.length > 0 ?
           <div className="admin-collections__list">
             <Table headings={headings} rows={rows} />
           </div>
+          :
+          <div className="admin-collections__no-results">No hay colleciones disponibles</div>
         }
       </div>
     );
@@ -68,12 +119,13 @@ class AdminCollectionsPage extends Component {
 }
 
 AdminCollectionsPage.defaultProps = {
-  paymentProfile: {},
+  addNewCollectionResponse: {},
 };
 
 const mapStateToProps = state => ({
   loading: state.collectionReducer.addingNewCollection,
   addNewCollectionResponse: state.collectionReducer.addNewCollectionResponse,
+  collections: state.collectionReducer.collections,
 });
 
 export default connect(mapStateToProps)(AdminCollectionsPage);

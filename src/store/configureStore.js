@@ -6,6 +6,9 @@ import { createLogger } from 'redux-logger';
 import { reducer as formReducer } from 'redux-form';
 import authReducer from '../reducers/auth.reducer';
 import collectionReducer from '../reducers/collection.reducer';
+import messagesReducer from 'reducers/messages.reducer';
+import adminUsersReducer from 'reducers/admin-users.reducer';
+import accountReducer from 'reducers/account.reducer';
 import alerts from '../reducers/alerts';
 import { selectedUsersPage, usersByPage } from '../reducers/users';
 import { selectedReposPage, reposByPage } from '../reducers/repos';
@@ -16,6 +19,9 @@ const rootReducer = combineReducers({
   collectionReducer,
   alerts,
   selectedUsersPage,
+  messagesReducer,
+  accountReducer,
+  adminUsersReducer,
   usersByPage,
   selectedReposPage,
   reposByPage,

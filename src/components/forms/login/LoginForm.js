@@ -13,7 +13,7 @@ const LoginForm = reduxForm({
     <form>
       <div className="login-form-container">
         <Field
-          name="username"
+          name="email"
           type="email"
           component={Input}
           placeholder="Enter Email"

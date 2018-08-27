@@ -10,7 +10,7 @@ export default {
     },
     api: {
         ditto_backend: {
-            baseUrl: 'http://localhost:8000/v1'
+            baseUrl: 'http://localhost:7000/v1'
         }
     },
     googleAnalytics: {

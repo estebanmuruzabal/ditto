@@ -14,6 +14,14 @@ export function checkStatus(response) {
 export function parseJSON(response) {
   return response.json();
 }
+export const requestOptionsHeader = (method, body = null) => {
+  const token = loadAuthToken();
+  return {
+    method: method.toUpperCase(),
+    headers: { 'authorization': token, 'Content-Type': 'application/json' },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  };
+};
 
 /**
  * A utility to call a restful service.
@@ -63,15 +71,15 @@ export function callApi(
   };
 }
 
-export const ID_TOKEN = 'id_token';
 export const USER_TOKEN = 'user_token';
-export const USER_INFO = 'user_info';
+export const AUTH_TOKEN = 'auth_token';
 
-export function setIdToken(authToken) {
-  localStorage.removeItem(ID_TOKEN);
-  localStorage.setItem(ID_TOKEN, authToken);
+export function setTokens(authToken, userToken) {
+  localStorage.removeItem(AUTH_TOKEN);
+  localStorage.removeItem(USER_TOKEN);
+  localStorage.setItem(AUTH_TOKEN, authToken);
+  localStorage.setItem(USER_TOKEN, userToken);
 }
-
 
 export const setItemInLocalStorage = (keyName, object) => {
   localStorage.removeItem(keyName);
@@ -86,31 +94,34 @@ export const deleteItemInLocalStorage = keyName => {
   localStorage.removeItem(keyName);
 };
 
-export function removeIdToken() {
-  localStorage.removeItem(ID_TOKEN);
+export function removeTokens() {
+  localStorage.removeItem(AUTH_TOKEN);
+  localStorage.removeItem(USER_TOKEN);
 }
 
-export function loadIdToken() {
-  return localStorage.getItem(ID_TOKEN);
+export function loadAuthToken() {
+  return localStorage.getItem(AUTH_TOKEN);
 }
 
-export function decodeUserProfile(idToken) {
+export function decodeUserProfile(authToken) {
   try {
-    return jwt_decode(idToken);
+    return jwt_decode(authToken);
   } catch (err) {
     return null;
   }
 }
-// GuJxOyUxLaUdKS17coYwdwEvAl5L0Du2zeA8NOTLNQ4
+
 export function loadUserProfile() {
   try {
-    const idToken = localStorage.getItem(ID_TOKEN);
-    const userProfile = jwt_decode(idToken);
+    const authToken = localStorage.getItem(AUTH_TOKEN);
+    const userToken = localStorage.getItem(USER_TOKEN);
+    const token = jwt_decode(authToken);
+    const userProfile = jwt_decode(userToken);
     const now = new Date().getTime() / 1000; // Date().getTime() returns milliseconds.
     // So divide by 1000 to get seconds
-    if (now > userProfile.exp) {
+    if (now > token.exp) {
       // user profile has expired.
-      removeIdToken();
+      removeTokens();
       return null;
     }
     return userProfile;

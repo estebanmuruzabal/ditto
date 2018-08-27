@@ -1,33 +1,25 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
-/////////////////////////////////////////////////////////////////////////
-// BrowserRouter would be preferred over HashRouter, but BrowserRouter
-// would require configuring the server. So we will use HashRouter here.
-// Please change to BrowserRouter if you have your own backend server.
-///////////////////////////////////////////////////////////////////////////
 import { Router, Route, Switch } from "react-router-dom";
-
 import { connect } from "react-redux";
+import history from 'utils/history';
+
 import Header from "components/header/Header";
 import Footer from "components/footer/Footer";
 import PrivateRoute from "../misc/PrivateRoute";
+import ModalComponent from 'components/modals/ModalComponent';
 import Home from "../home/Home";
 import UsersPage from "../user/UsersPage";
 import ReposPage from "../repo/ReposPage";
 import AdminPage from "containers/admin/AdminPage";
 import LoginPage from "containers/login/LoginPage";
 import SignupPage from "containers/signup/SignupPage";
+import SettingsPage from "containers/settings/SettingsPage";
+import EditNewCollectionPage from 'containers/admin/Collections/EditNewCollectionPage';
 import About from "../about/About";
 import NotFound from "../misc/NotFound";
-import history from 'utils/history';
-
-import { logout } from 'actions/auth.actions';
 
 class App extends Component {
-  handleLogout() {
-    this.props.dispatch(logout());
-  }
 
   render() {
     const { user } = this.props;
@@ -35,7 +27,7 @@ class App extends Component {
     return (
       <Router history={history}>
         <div className="appContent">
-          <Header user={user} handleLogout={() => this.handleLogout()} />
+          <Header />
           <div className="bodyContent">
             <Switch>
               <Route exact path="/" component={Home} />
@@ -45,10 +37,13 @@ class App extends Component {
               <PrivateRoute path="/admin" isAuthenticated={isAuthenticated} component={AdminPage} />
               <PrivateRoute path="/users" isAuthenticated={isAuthenticated} component={UsersPage} />
               <PrivateRoute path="/repos" isAuthenticated={isAuthenticated} component={ReposPage} />
+              <PrivateRoute path="/edit-collection/:collectionId" isAuthenticated={isAuthenticated} component={EditNewCollectionPage} />
+              <PrivateRoute path="/settings" isAuthenticated={isAuthenticated} component={SettingsPage} />
               <Route component={NotFound} />
             </Switch>
           </div>
           <Footer />
+          <ModalComponent />
         </div>
       </Router>
     );
@@ -67,7 +62,7 @@ App.contextTypes = {
 const mapStateToProps = state => {
   const { authReducer } = state;
   return {
-    user: authReducer ? authReducer.user : null
+    user: authReducer ? authReducer.user : null,
   };
 };
 

@@ -16,10 +16,15 @@ const SettingsDropdown = ({ userInfo, dropdownIsOpen, handleDropdownClick, handl
               onClick={handleDropdownClick}
               ref={setDropdownRef}
             >
-              <div onKeyPress={() => history.push('/admin')} className="user-menu-content-option active" role="presentation" onClick={() => history.push('/admin')}>
+              { (userInfo.scope).indexOf('admin') !== -1 &&
+                <div className="user-menu-content-option active" role="presentation" onClick={() => history.push('/admin')}>
+                  admin
+                </div>
+              }
+              <div className="user-menu-content-option active" role="presentation" onClick={() => history.push('/settings')}>
                 settings
               </div>
-              <div onKeyPress={(e) => handleLogoutClick(e)} className="user-menu-content-option active" role="presentation" onClick={(e) => handleLogoutClick(e)}>
+              <div className="user-menu-content-option active" role="presentation" onClick={() => handleLogoutClick()}>
                 logout
               </div>
             </div>

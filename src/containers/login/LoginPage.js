@@ -9,7 +9,7 @@ import { login } from "actions/auth.actions";
 class LoginPage extends Component {
   
   handleSubmit = values => {
-    this.props.dispatch(login(values.username, values.password));
+    this.props.dispatch(login({ email: values.email, password: values.password }));
   }
 
   render() {

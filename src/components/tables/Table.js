@@ -35,7 +35,7 @@ const Table = ({ headings, rows }) => {
 };
 
 Table.propTypes = {
-    rows: PropTypes.array.isRequired,
+  rows: PropTypes.array.isRequired,
   headings: PropTypes.array.isRequired,
 };
 

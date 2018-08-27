@@ -2,10 +2,11 @@ import history from 'utils/history';
 import configs from 'configs';
 import {
   callApi,
-  ID_TOKEN,
+  AUTH_TOKEN,
   USER_TOKEN,
-  setIdToken,
-  removeIdToken,
+  setTokens,
+  removeTokens,
+  requestOptionsHeader,
   decodeUserProfile,
 } from '../utils/apiUtils';
 
@@ -25,10 +26,10 @@ function loginRequest(user) {
 }
 
 function loginSuccess(payload) {
-  const idToken = payload[ID_TOKEN];
+  const authToken = payload[AUTH_TOKEN];
   const userToken = payload[USER_TOKEN];
   const decodedResponse = decodeUserProfile(userToken);
-  setIdToken(idToken);
+  setTokens(authToken, userToken);
   history.push('/');
   return {
     type: LOGIN_SUCCESS,
@@ -38,51 +39,46 @@ function loginSuccess(payload) {
 }
 
 function loginFailure(error) {
-  removeIdToken();
+  removeTokens();
   return {
     type: LOGIN_FAILURE,
     error,
   };
 }
 
-export function login(email, password) {
-  console.log('acaaa:::', configs.default.api.ditto_backend.baseUrl);
-  const config = {
-    method: 'post',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  };
-
+export function login(payload) {
   return callApi(
     `${configs.default.api.ditto_backend.baseUrl}/account/login`,
-    config,
-    loginRequest(email),
+    requestOptionsHeader('post', payload),
+    loginRequest(payload.email),
     loginSuccess,
     loginFailure,
   );
 }
 
 function logoutRequest() {
-  removeIdToken();
+  removeTokens();
   return {
     type: LOGOUT_REQUEST,
   };
 }
 
 function logoutSuccess() {
-  removeIdToken();
+  removeTokens();
   return {
     type: LOGOUT_SUCCESS,
+  };
+}
+
+function logoutFailure() {
+  removeTokens();
+  return {
+    type: LOGOUT_FAILURE,
   };
 }
 
 export function logout() {
   logoutRequest();
   logoutSuccess();
+  logoutFailure();
 }

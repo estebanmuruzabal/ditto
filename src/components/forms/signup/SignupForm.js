@@ -11,7 +11,7 @@ import Input from 'components/input/Input';
 const confirmPassword = password('password');
 const SIGNUP_FORM = 'SignupForm';
 
-const preferredCountriesOptions = ['us', 'ca'];
+const preferredCountriesOptions = ['ar'];
 
 const phoneInputStyle = {
   height: '45px',
@@ -53,7 +53,7 @@ const SignupForm = reduxForm({
         />
         <div className="tooltip">?
           <span className="tooltip-text">
-          Please makes sure your password has:<br />
+          Please make sure your password has:<br />
           - At least 1 lower case letter<br />
           - At least 1 upper case letter<br />
           - At least 1 number<br />
@@ -99,33 +99,6 @@ const SignupForm = reduxForm({
       />
       { ((phoneNumber(props.userPhone) && props.formSubmitted) || (phoneNumber(props.userPhone) && props.userPhone.length === 17)) &&
         <ErrorInput errorMessage={phoneNumber(props.userPhone)} />
-      }
-
-      <div className="tooltips-container">
-        <Field
-          name="emergencyContactName"
-          type="text"
-          component={Input}
-          placeholder="Emergency Contact Name"
-          validate={[required]}
-        />
-        <div className="tooltip">?
-          <span className="tooltip-text">Contact in case of emergency only</span>
-        </div>
-      </div>
-
-      <ReactPhoneInput
-        defaultCountry="us"
-        inputStyle={phoneInputStyle}
-        containerStyle={phoneContainerStyle}
-        placeholder="1 201-555-8684"
-        value={props.emergencyContactPhone}
-        onChange={(e) => props.phoneHandler(e, 'emergencyContactPhone')}
-        preferredCountries={preferredCountriesOptions}
-        disableAreaCodes
-      />
-      { ((phoneNumber(props.emergencyContactPhone) && props.formSubmitted) || (phoneNumber(props.emergencyContactPhone) && props.emergencyContactPhone.length === 17)) &&
-        <ErrorInput errorMessage={phoneNumber(props.emergencyContactPhone)} />
       }
 
       <p className="terms-and-conditions-title">The fine print. Please review our terms and conditions</p>
