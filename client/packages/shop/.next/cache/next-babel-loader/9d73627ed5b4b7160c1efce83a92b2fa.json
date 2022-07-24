@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var ADMIN_IMAGE_HOST = process.env.REACT_APP_IMAGE_URL;\nexport var SHOP_IMAGE_HOST = process.env.NEXT_PUBLIC_APP_IMAGE_URL;","map":null,"metadata":{},"sourceType":"module"}

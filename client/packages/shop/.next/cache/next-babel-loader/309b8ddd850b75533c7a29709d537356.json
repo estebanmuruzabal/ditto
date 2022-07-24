@@ -1,0 +1,1 @@
+{"ast":null,"code":"import gql from 'graphql-tag';\nexport const UPDATE_USER = gql`\nmutation UpdateUser(\n  $id: ID!, \n  $name: String!,\n  $email: String!\n) {\nupdateUserNameAndEmail(\n    id: $id, \n    name: $name,\n    email: $email\n  ) {\n   status\n    message\n  }\n}\n`;","map":null,"metadata":{},"sourceType":"module"}

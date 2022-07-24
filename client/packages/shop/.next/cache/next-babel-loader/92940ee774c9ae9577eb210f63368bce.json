@@ -1,0 +1,1 @@
+{"ast":null,"code":"import gql from 'graphql-tag';\nexport const DELIVERY_METHOD = gql`\nquery GetDeliveryMethods {\n    deliveryMethods(limit: 0) {\n      items {\n        id\n        name\n        details\n        created_at\n      }\n      totalCount\n      hasMore\n    }\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}

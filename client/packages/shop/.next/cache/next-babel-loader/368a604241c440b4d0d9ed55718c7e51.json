@@ -1,0 +1,1 @@
+{"ast":null,"code":"import gql from 'graphql-tag';\nexport const APPLY_COUPON = gql`\n  mutation applyCoupon($code: String!) {\n    applyCoupon(code: $code) {\n      id\n      code\n      discountInPercent\n    }\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import gql from 'graphql-tag';\nexport const SIGNIN_MUTATION = gql`\nmutation Login($phone: String!, $password: String!) {\n    login(phone: $phone, password: $password) {\n        user {\n            id\n            phones{\n                number\n            }\n        }\n        access_token\n    }\n}\n`;","map":null,"metadata":{},"sourceType":"module"}
