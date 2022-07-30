@@ -47,7 +47,6 @@ const AuthProvider = (props: any) => {
       {
         onCompleted: (data) => {
           makeAuthenticated(true);
-          console.log("userdata", data)
           setUser(data);
           localStorage.setItem('admin_access_token', `${data.login.access_token}`);
         },

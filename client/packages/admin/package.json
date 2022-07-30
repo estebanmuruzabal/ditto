@@ -1,5 +1,5 @@
 {
-  "name": "@pick-bazar/admin",
+  "name": "@ditto-ecommerce/admin",
   "version": "3.0.3",
   "private": true,
   "dependencies": {
