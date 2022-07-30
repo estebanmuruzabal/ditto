@@ -106,8 +106,11 @@ exports.usersResolvers = {
             if (userResult) {
                 throw new Error("User already registered.");
             }
-            if (!phone || !password || password.length < 6) {
+            if (!phone || !password) {
                 throw new Error("Every field is required");
+            }
+            if (password.length < 6) {
+                throw new Error("Incorrect length");
             }
             const otp = generateOTPCode();
             const user = {
@@ -119,6 +122,18 @@ exports.usersResolvers = {
                 otp: otp,
                 role: 'user',
                 created_at: new Date().toString(),
+                workInfo: {
+                    stoppedWorkTime: null,
+                    startedWorkTime: null,
+                    ratePerHour: 0,
+                    totalWorkingMinutesPerWeek: 0,
+                    totalSalaryToPayWeekly: 0,
+                    advancedSalaryPaid: 0,
+                    isWorking: false,
+                    taskRelated: null
+                },
+                todoTasks: [],
+                logs: []
             };
             yield db.users.insertOne(user);
             const { data, status } = yield number_verification_otp_1.sendOtp(phone, otp);
@@ -146,9 +161,9 @@ exports.usersResolvers = {
                     return userPhone;
                 }
             });
-            if (!phoneObject[0].status) {
-                throw new Error("Phone number dose not verified. Please verify your phone number.");
-            }
+            /* if (!phoneObject[0].status) {
+                throw new Error("Phone number dose not verified. Please verify your phone number.")
+            } */
             return {
                 user: userResult,
                 access_token: accessToken(userResult._id),

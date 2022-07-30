@@ -56,6 +56,7 @@ exports.typesResolvers = {
                 created_at: new Date().toUTCString(),
             };
             const insertResult = yield db.types.insertOne(typeData);
+            console.log(insertResult);
             return insertResult.ops[0];
         }),
         updateType: (_root, { id, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {

@@ -14,27 +14,29 @@ const mongodb_1 = require("mongodb");
 // env settings
 require("dotenv").config();
 let url;
-const dbName = process.env.DB_NAME;
+const dbName = "dittodb";
+const dbUserName = process.env.DB_USER;
 // @ts-ignore
 const dbPassword = process.env.DB_USER_PASSWORD;
+console.log(process.env.APP_ENV);
 if (process.env.APP_ENV == 'production') {
-    url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_CLUSTER}.mongodb.net`;
+    url = `mongodb+srv://estebanmuruzabal:Dallas765@cluster0.cmdfgmr.mongodb.net/test`;
 }
 else if (process.env.APP_ENV == 'server') {
-    url = `mongodb://${process.env.DB_USER}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
+    url = `mongodb://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
 }
 else if (process.env.APP_ENV == 'local') {
     url = process.env.DB_URL;
 }
 exports.connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("[mongodb]: Starting db init...");
+    console.log("[mongodb]: Starting db init on", url);
     const client = yield mongodb_1.MongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     });
     console.log("[mongodb]: Connected successfully to database");
     const db = client.db(dbName);
-    return {
+    const allCollections = {
         users: db.collection('users'),
         types: db.collection('types'),
         categories: db.collection('categories'),
@@ -47,4 +49,5 @@ exports.connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
         coupons: db.collection('coupons'),
         home_cards: db.collection('home_cards'),
     };
+    return allCollections;
 });

@@ -92,8 +92,20 @@ const seed = async () => {
                 is_primary: true
             }],
             otp: otp,
-            role: 'user',
+            role: 'adming',
             created_at: new Date().toString(),
+            workInfo: {
+                stoppedWorkTime: null,
+                startedWorkTime: null,
+                ratePerHour: 0,
+                totalWorkingMinutesPerWeek: 0,
+                totalSalaryToPayWeekly: 0,
+                advancedSalaryPaid: 0,
+                isWorking: false,
+                taskRelated: null,
+            },
+            todoTasks: [],
+            logs: []
         };
 
         const typeData: IType = {
@@ -112,9 +124,9 @@ const seed = async () => {
 
         const insertResult = await db.types.insertOne(typeData);
 
-        for (const listing of listings) {
-            await db.listings.insertOne(listing);
-        }
+        // for (const listing of listings) {
+        //     await db.listings.insertOne(listing);
+        // }
 
         await db.users.insertOne(user);
 
@@ -125,3 +137,5 @@ const seed = async () => {
 };
 
 seed();
+
+db.users.insertMany([{ _id: 1, name: 'Esteban Muruzabal', email: 'estebanmuruzabal@gmail.com', password: 123456, phones: [{ id: 1, number: '+17863847064', status: true, is_primary: true }], delivery_address: [{ id: 'string', title: 'string', address: 'string', division: 'string', district: 'string', region: 'string', is_primary: true }], otp: otp, role: 'adming', created_at: 'null', workInfo: { stoppedWorkTime: null, startedWorkTime: null, ratePerHour: 0, totalWorkingMinutesPerWeek: 0, totalSalaryToPayWeekly: 0, advancedSalaryPaid: 0, isWorking: false, taskRelated: null, }, todoTasks: [], logs: [] }])

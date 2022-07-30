@@ -21,6 +21,8 @@ const graphql_1 = require("./graphql");
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const mount = (app) => __awaiter(void 0, void 0, void 0, function* () {
+    const hostname = 'localhost';
+    // const hostname = '0.0.0.0';
     // mongodb connection
     const db = yield database_1.connectDatabase();
     // apollo server
@@ -41,7 +43,10 @@ const mount = (app) => __awaiter(void 0, void 0, void 0, function* () {
             limit: '30mb',
         },
     });
-    app.listen(process.env.PORT);
-    console.log(`[app]: http://localhost:${process.env.PORT}`);
+    const port = process.env.PORT;
+    app.listen(7000, hostname, () => {
+        console.log(`Server running at http://${hostname}:${port}`);
+    });
+    console.log(`[app]: http://${hostname}:${process.env.PORT}`);
 });
 mount(express_1.default());

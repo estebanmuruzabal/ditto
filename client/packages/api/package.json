@@ -1,5 +1,5 @@
 {
-  "name": "@pick-bazar/api",
+  "name": "@ditto-ecommerce/api",
   "version": "3.0.3",
   "scripts": {
     "shop-dev": "ts-node-dev --respawn server.shop.ts",

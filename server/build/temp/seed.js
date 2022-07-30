@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -10,8 +29,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
+const bcrypt = __importStar(require("bcrypt"));
 const mongodb_1 = require("mongodb");
 const database_1 = require("../src/database");
+const slugify_1 = require("../src/lib/utils/slugify");
+const hashPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield bcrypt.hash(password, 10);
+});
 const seed = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log('[seed]: running...');
@@ -51,9 +75,71 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
                 rating: 3
             }
         ];
-        for (const listing of listings) {
-            yield db.listings.insertOne(listing);
-        }
+        const generateOTPCode = () => {
+            const digits = '0123456789';
+            const otpLength = 6;
+            let otp = '';
+            for (let i = 1; i <= otpLength; i++) {
+                const index = Math.floor(Math.random() * (digits.length));
+                otp = otp + digits[index];
+            }
+            return otp;
+        };
+        const otp = generateOTPCode();
+        const user = {
+            _id: new mongodb_1.ObjectId(),
+            name: 'Esteban Muruzabal',
+            email: 'estebanmuruzabal@gmail.com',
+            password: yield hashPassword('123456'),
+            phones: [{
+                    id: new Date().toUTCString(),
+                    number: '+17863847064',
+                    status: true,
+                    is_primary: true
+                }],
+            delivery_address: [{
+                    id: 'string',
+                    title: 'string',
+                    address: 'string',
+                    division: 'string',
+                    district: 'string',
+                    region: 'string',
+                    is_primary: true
+                }],
+            otp: otp,
+            role: 'adming',
+            created_at: new Date().toString(),
+            workInfo: {
+                stoppedWorkTime: null,
+                startedWorkTime: null,
+                ratePerHour: 0,
+                totalWorkingMinutesPerWeek: 0,
+                totalSalaryToPayWeekly: 0,
+                advancedSalaryPaid: 0,
+                isWorking: false,
+                taskRelated: null,
+            },
+            todoTasks: [],
+            logs: []
+        };
+        const typeData = {
+            _id: new mongodb_1.ObjectId(),
+            name: 'grocery',
+            slug: slugify_1.slugify('grocery'),
+            image: '',
+            icon: '',
+            home_title: '',
+            home_subtitle: '',
+            meta_title: '',
+            meta_keyword: '',
+            meta_description: '',
+            created_at: new Date().toUTCString(),
+        };
+        const insertResult = yield db.types.insertOne(typeData);
+        // for (const listing of listings) {
+        //     await db.listings.insertOne(listing);
+        // }
+        yield db.users.insertOne(user);
         console.log('[seed]: success');
     }
     catch (_a) {
@@ -61,3 +147,4 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 seed();
+db.users.insertMany([{ _id: 1, name: 'Esteban Muruzabal', email: 'estebanmuruzabal@gmail.com', password: 123456, phones: [{ id: 1, number: '+17863847064', status: true, is_primary: true }], delivery_address: [{ id: 'string', title: 'string', address: 'string', division: 'string', district: 'string', region: 'string', is_primary: true }], otp: otp, role: 'adming', created_at: 'null', workInfo: { stoppedWorkTime: null, startedWorkTime: null, ratePerHour: 0, totalWorkingMinutesPerWeek: 0, totalSalaryToPayWeekly: 0, advancedSalaryPaid: 0, isWorking: false, taskRelated: null, }, todoTasks: [], logs: [] }]);
