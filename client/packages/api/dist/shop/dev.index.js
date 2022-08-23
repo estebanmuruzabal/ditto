@@ -31,7 +31,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     apolloServer.applyMiddleware({ app, path });
     app.listen(PORT, () => {
-        console.log('🚀 started http://localhost:4000/graphql');
+        console.log('🚀 started http://localhost:4000/graphql. This may be wrong');
     });
 });
 main();

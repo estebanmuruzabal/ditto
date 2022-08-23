@@ -47,7 +47,9 @@ export default function OtpModal() {
           user
         });
         closeModal();
-        Router.push('/[type]', router.asPath);
+        // Router.push('/[type]', router.asPath);
+        // currently sending to profile instead of really checking otp
+        Router.push('/profile', router.asPath);
       }
     },
     onError: (error) => {
@@ -71,13 +73,13 @@ export default function OtpModal() {
 
         <SubHeading>
           <FormattedMessage
-            id='otpText'
+            id='otpSubText'
             defaultMessage='Login with your phone number &amp; password'
           />
         </SubHeading>
         <form onSubmit={submitForm}
         >
-          <Input
+          {/* <Input
             type='text'
             placeholder={intl.formatMessage({
               id: 'verificationCodePlaceholder',
@@ -89,13 +91,13 @@ export default function OtpModal() {
             height='48px'
             backgroundColor='#F7F7F7'
             mb='10px'
-          />
+          /> */}
           <Button
             variant='primary'
             size='big'
             style={{ width: '100%' }}
             type='submit'
-          >Verify Now</Button>
+          >Ir a tu perfil</Button>
         </form>
         {loading && <p style={{
           marginTop: "15px"

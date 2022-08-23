@@ -78,12 +78,12 @@ const sidebarMenus = [
     exact: false,
     icon: <OrderIcon />,
   },
-  /*   {
+  {
       name: 'Customers',
       path: CUSTOMERS,
       exact: false,
       icon: <CustomerIcon />,
-    },*/
+    },
   {
     name: 'Coupons',
     path: COUPONS,

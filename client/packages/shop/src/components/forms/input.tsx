@@ -5,6 +5,7 @@ export const Input = styled.input<any>(
   css({
     display: 'block',
     width: '100%',
+
     p: '0 18px',
     appearance: 'none',
     fontFamily: 'body',

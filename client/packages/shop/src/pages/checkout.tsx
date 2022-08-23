@@ -13,7 +13,7 @@ import {ProfileProvider} from 'contexts/profile/profile.provider';
 import ErrorMessage from 'components/error-message/error-message';
 import ErrorMessageTwo from 'components/error-message/error-message-two';
 import {AuthContext} from "../contexts/auth/auth.context";
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage, useIntl } from 'react-intl';
 import {Button} from "../components/button/button";
 import styled from "styled-components";
 import AuthenticationForm from "../features/authentication-form";
@@ -41,6 +41,7 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
     const {data: deliverData, error: deliveryError, loading: deliveryLoading, refetch: deliveryRefetch} = useQuery(DELIVERY_METHOD)
     const {data: paymentData, error: paymentError, loading: paymentLoading, refetch: paymentRefetch} = useQuery(PAYMENT_OPTION);
     const {data, error, loading} = useQuery(GET_LOGGED_IN_USER);
+    const intl = useIntl();
 
     const {authDispatch} = useContext<any>(AuthContext);
     const toggleSignInForm = () => {
@@ -67,11 +68,13 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
     if (loading || deliveryLoading || paymentLoading) {
         return <ErrorMessage message={'Loading...'}/>
     }
+
     if (error || deliveryError || paymentError) {
         // @ts-ignore
+        const err = error || deliveryError || paymentError;
         return (
             <>
-                <ErrorMessageTwo message={'You are not authenticate user! Please login to place your order.'}/>
+                <ErrorMessageTwo message={intl.formatMessage({ id: 'primaryId', defaultMessage: err.toString() })}/>
                 <LoginMessageDiv>
                     <Modal>
                     <Button

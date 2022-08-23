@@ -31,8 +31,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
 const bcrypt = __importStar(require("bcrypt"));
 const mongodb_1 = require("mongodb");
-const database_1 = require("../src/database");
-const slugify_1 = require("../src/lib/utils/slugify");
+const database_1 = require("../database");
+const types_1 = require("../lib/types");
+const slugify_1 = require("../lib/utils/slugify");
 const hashPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
     return yield bcrypt.hash(password, 10);
 });
@@ -107,7 +108,7 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
                     is_primary: true
                 }],
             otp: otp,
-            role: 'adming',
+            role: types_1.Roles.ADMIN,
             created_at: new Date().toString(),
             workInfo: {
                 stoppedWorkTime: null,
@@ -119,7 +120,7 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
                 isWorking: false,
                 taskRelated: null,
             },
-            todoTasks: [],
+            tasks: [],
             logs: []
         };
         const typeData = {
@@ -146,5 +147,4 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
         throw new Error('Failed to seed mock data.');
     }
 });
-seed();
-db.users.insertMany([{ _id: 1, name: 'Esteban Muruzabal', email: 'estebanmuruzabal@gmail.com', password: 123456, phones: [{ id: 1, number: '+17863847064', status: true, is_primary: true }], delivery_address: [{ id: 'string', title: 'string', address: 'string', division: 'string', district: 'string', region: 'string', is_primary: true }], otp: otp, role: 'adming', created_at: 'null', workInfo: { stoppedWorkTime: null, startedWorkTime: null, ratePerHour: 0, totalWorkingMinutesPerWeek: 0, totalSalaryToPayWeekly: 0, advancedSalaryPaid: 0, isWorking: false, taskRelated: null, }, todoTasks: [], logs: [] }]);
+// seed();

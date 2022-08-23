@@ -28,7 +28,7 @@ export default function SignInModal() {
   const router = useRouter();
   const intl = useIntl();
   const { authDispatch } = useContext<any>(AuthContext);
-  const [phone, setPhone] = React.useState(process.env.ENV === 'development' ? '+17863847064' : '+17863847064');
+  const [phone, setPhone] = React.useState(process.env.ENV === 'development' ? '+543624951926' : '+543624951926');
   const [password, setPassword] = React.useState('123456');
 
   const toggleSignUpForm = () => {
@@ -145,7 +145,7 @@ export default function SignInModal() {
         }}>Loading...</p>}
         {error && <p style={{
           marginTop: "15px"
-        }}> Please try again</p>}
+        }}> {`${error?.message || error}. Please try again`}</p>}
       
         <Offer style={{ padding: '20px 0' }}>
           <FormattedMessage

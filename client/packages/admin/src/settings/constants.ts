@@ -1,7 +1,8 @@
 // **************** ROUTE CONSTANT START **************************
 // General Page Section
-export const DASHBOARD = '/';
+export const DASHBOARD = '/admin';
 export const TYPES = '/types';
+export const USERS = '/users';
 export const PRODUCTS = '/products';
 export const CATEGORY = '/categories';
 export const PAYMENT_OPTIONS = '/payment-options';
@@ -19,7 +20,14 @@ export const SITE_SETTINGS = '/site-settings';
 
 export const CURRENCY = '$';
 
-
+// **************** Roles CONSTANT Start **************************
+export const ADMIN = 'ADMIN';
+export const MANAGER = 'MANAGER';
+export const MEMBER = 'MEMBER';
+export const DELIVERY_BOY = 'DELIVERY_BOY';
+export const CLIENT = 'CLIENT';
+export const STAFF = 'STAFF';
+// **************** Roles CONSTANT End **************************
 
 // **************** Coupon Status CONSTANT START **************************
 export const CREATED = 'created';

@@ -14,7 +14,11 @@
 
 here are all the tabs and language settings: client/packages/shop/src/site-settings/site-navigation.ts
 
+# To do:
+
 # Bugs:
+0- se puede agregar mas cant de productos de la que hay en stock. El error recien salta en el pago (unhandled: This product do not have enough product quantity. Available quantity: 3)
+
 1- clear session, login, logout, crash on src/pages/index.tsx (63:12) @ IndexPage
 
 

@@ -22,7 +22,7 @@ import {
   DrawerMenuItem,
   UserOptionMenu,
 } from './header.style';
-import UserImage from 'assets/images/user.jpg';
+import UserImage from 'assets/images/user.png';
 import {
   AUTHORIZED_MENU_ITEMS,
   MOBILE_DRAWER_MENU,
@@ -124,17 +124,6 @@ const MobileDrawer: React.FunctionComponent = () => {
           </DrawerProfile>
 
           <DrawerMenu>
-            {isAuthenticated && AUTHORIZED_MENU_ITEMS.map((item, idx) => (
-              <DrawerMenuItem key={item.id}>
-              <NavLink
-              onClick={toggleHandler}
-              href={item.href}
-              label={item.defaultMessage}
-              intlId={item.id}
-              className="drawer_menu_item"
-              />
-              </DrawerMenuItem>
-            ))}
             {MOBILE_DRAWER_MENU.map((item) => (
               <DrawerMenuItem key={item.id}>
                 <NavLink
@@ -144,6 +133,17 @@ const MobileDrawer: React.FunctionComponent = () => {
                   intlId={item.id}
                   className="drawer_menu_item"
                 />
+              </DrawerMenuItem>
+            ))}
+            {isAuthenticated && AUTHORIZED_MENU_ITEMS.map((item, idx) => (
+              <DrawerMenuItem key={item.id}>
+              <NavLink
+              onClick={toggleHandler}
+              href={item.href}
+              label={item.defaultMessage}
+              intlId={item.id}
+              className="drawer_menu_item"
+              />
               </DrawerMenuItem>
             ))}
           </DrawerMenu>

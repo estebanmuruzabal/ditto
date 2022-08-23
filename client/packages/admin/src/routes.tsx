@@ -11,6 +11,7 @@ import {
   CUSTOMERS,
   COUPONS,
   STAFF_MEMBERS,
+  USERS,
   SITE_SETTINGS, PAYMENT_OPTIONS, DELIVERY_METHODS, HOMECARDS,
 } from './settings/constants';
 import AuthProvider, { AuthContext } from './context/auth';
@@ -18,6 +19,7 @@ import { InLineLoader } from './components/InlineLoader/InlineLoader';
 import {gql} from "apollo-boost";
 import {useQuery} from "@apollo/react-hooks";
 const Types = lazy(() => import('./containers/Types/Types'));
+// const Users = lazy(() => import('./containers/Users/Users'));
 const Products = lazy(() => import('./containers/Products/Products'));
 const AdminLayout = lazy(() => import('./containers/Layout/Layout'));
 const Dashboard = lazy(() => import('./containers/Dashboard/Dashboard'));
@@ -118,6 +120,13 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
+          <PrivateRoute path={USERS}>
+            <AdminLayout>
+              <Suspense fallback={<InLineLoader />}>
+                {/* <Users /> */}
+              </Suspense>
+            </AdminLayout>
+          </PrivateRoute>
           <PrivateRoute path={PRODUCTS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
@@ -174,17 +183,17 @@ const Routes = () => {
               </Suspense>
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path={SETTINGS}>
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Settings />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
           <PrivateRoute path={STAFF_MEMBERS}>
             <AdminLayout>
               <Suspense fallback={<InLineLoader />}>
                 <StaffMembers />
+              </Suspense>
+            </AdminLayout>
+          </PrivateRoute>
+          <PrivateRoute path={SETTINGS}>
+            <AdminLayout>
+              <Suspense fallback={<InLineLoader />}>
+                <Settings />
               </Suspense>
             </AdminLayout>
           </PrivateRoute>

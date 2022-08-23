@@ -91,9 +91,9 @@ const HeaderWrapper = styled.header`
     .banner-search{
         width: 650px;
     }
-    .modern-wrap{
-      margin-right: 200px;
-    }
+    // .modern-wrap{
+    //   margin-right: 200px;
+    // }
     @media (max-width: 1366px) {
       .headerSearc,
       .banner-search{

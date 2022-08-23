@@ -20,6 +20,7 @@ import {
   Title,
   Row,
   ButtonGroup,
+  Input,
   SuccessMsg,
   ErrorMsg
 } from './settings.style';
@@ -30,7 +31,6 @@ import PaymentGroup from 'components/payment-group/payment-group';
 import UpdateAddressTwo from 'components/address-card/address-card-two';
 import UpdateContact from 'components/contact-card/contact-card';
 import { Button } from 'components/button/button';
-import { Input } from 'components/forms/input';
 import { UPDATE_ME } from 'graphql/mutation/me';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Label } from 'components/forms/label';
@@ -228,6 +228,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               onChange={handleChange}
               backgroundColor='#F7F7F7'
               height='48px'
+              marginBottom='10px'
               // intlInputLabelId="profileNameField"
             />
           </Col>
@@ -246,12 +247,13 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               value={email}
               onChange={handleChange}
               backgroundColor='#F7F7F7'
+              marginBottom='10px'
               // intlInputLabelId="profileEmailField"
             />
           </Col>
 
           <Col xs={12} sm={2} md={2} lg={2}>
-            <Button size='big' style={{ width: '100%' }} onClick={handleSave}>
+            <Button size='big' style={{ width: '100%', marginBottom: '10px' }} onClick={handleSave}>
               <FormattedMessage id='profileSaveBtn' defaultMessage='Save' />
             </Button>
           </Col>
@@ -402,6 +404,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               onChange={handleChange}
               backgroundColor='#F7F7F7'
               height='48px'
+              marginBottom='10px'
               /* intlInputLabelId="profileNameField" */
             />
           </Col>
@@ -415,6 +418,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               onChange={handleChange}
               backgroundColor='#F7F7F7'
               height='48px'
+              marginBottom='10px'
               // intlInputLabelId="profileNameField"
             />
           </Col>
@@ -426,12 +430,13 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               value={ state.confirmPassword || '' }
               onChange={handleChange}
               backgroundColor='#F7F7F7'
+              marginBottom='10px'
               // intlInputLabelId="profileEmailField"
             />
           </Col>
           <Col xs={12} sm={2} md={2} lg={3}>
             {!passwordChangeMsg &&
-              <Button size='big' style={{ width: '100%' }} onClick={handleSavePassord}>
+              <Button size='big' style={{ width: '100%', marginBottom: '10px' }} onClick={handleSavePassord}>
                 <FormattedMessage id='profileSaveBtn' defaultMessage='Save' />
               </Button>
             }

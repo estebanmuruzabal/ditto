@@ -10,13 +10,13 @@ export const authorize = async (req: Request, db: Database): Promise<IUser | nul
     const secret = <string>process.env.JWT_SECRET;
 
     if (!token) {
-        throw new Error("Unauthorized!");
+        throw new Error("no token sent!");
     }
 
     try {
         jwt.verify(token, secret);
     } catch(err) {
-        throw new Error("Unauthorized!");
+        throw new Error("Unknown error:");
     }
 
     const {UserId, exp} = <any>jwt.verify(token, secret);
@@ -28,7 +28,7 @@ export const authorize = async (req: Request, db: Database): Promise<IUser | nul
     const user = await db.users.findOne({_id:  new ObjectId(UserId)});
 
     if (!user) {
-        throw new Error("Unauthorized!");
+        throw new Error("No user found!");
     }
 
     return user;

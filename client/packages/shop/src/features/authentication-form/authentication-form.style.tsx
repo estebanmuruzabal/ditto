@@ -63,6 +63,28 @@ export const Offer = styled.p`
   margin: 0;
 `;
 
+export const Dot = styled.div`
+  background-color: ${themeGet('colors.gray.200', '#F7F7F7')};
+  border-radius: 2,
+  width: 4,
+  height: 4,
+  align-self: 'center'
+`;
+
+export const SubrequirementContainer = styled.div`
+  flex-direction: 'row',
+  align-items: 'center',
+  margin-top: 5,
+  margin-left: 15
+`;
+
+export const Requirement = styled.input`
+  margin-left: 10,
+  font-size: 10,
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  color: ${themeGet('colors.gray.200', '#F7F7F7')};
+`;
+
 export const HelperText = styled.p`
   font-family: ${themeGet('fonts.body', 'Lato')};
   font-size: ${themeGet('fontSizes.sm', '13')}px;

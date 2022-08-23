@@ -6,6 +6,12 @@ export interface Phone {
     status?: boolean,
     is_primary?: boolean
 }
+
+export interface Logs {
+    logDescription: string,
+    timestamp: string
+}
+
 export interface Address {
     id: string
     title: string,
@@ -30,18 +36,30 @@ export interface IListings {
 
 export interface IUser {
     _id?: ObjectId;
-    name?: string;
+    name: string;
+    first_name?: string;
+    last_name?: string;
     email?: string;
     password: string;
     phones?: Array<Phone>;
     delivery_address?: Array<Address>;
     otp?: string;
-    role?: string;
+    role?: Roles;
     created_at: string;
     workInfo?: IWorkInfo;
-    todoTasks?: Array<any>;
-    logs?: Array<any>;
+    tasks?: Array<Tasks>;
+    logs?: Array<Logs>;
 }
+
+export enum Roles {
+    ADMIN = 'ADMIN',
+    MANAGER = 'MANAGER',
+    MEMBER = 'MEMBER',
+    DELIVERY_BOY = 'DELIVERY_BOY',
+    CLIENT = 'CLIENT',
+    STAFF = 'STAFF'
+}
+  
 
 export interface IWorkInfo {
     stoppedWorkTime: string | null;
@@ -52,6 +70,15 @@ export interface IWorkInfo {
     advancedSalaryPaid: number | null;
     isWorking: boolean;
     taskRelated: string | null;
+}
+
+export interface Tasks {
+    id: number | null;
+    startDate: string | null;
+    finishDate: string | null;
+    isDone: boolean;
+    description: string | null;
+    workedHours: number | null;  
 }
 
 export interface IUserAuth {
@@ -162,6 +189,20 @@ export interface IPaymentOption {
     created_at?: string;
     updated_at?: string;
 }
+
+export interface IRoles {
+    
+}
+
+
+
+const roleSelectOptions = [
+    { value: 'admin', label: 'Admin' },
+    { value: 'manager', label: 'Manager' },
+    { value: 'member', label: 'Member' },
+    { value: 'delivery boy', label: 'Delivery boy' },
+    { value: 'client', label: 'Client' },
+  ];
 
 export interface ICommonPaginationArgs {
     limit: number;

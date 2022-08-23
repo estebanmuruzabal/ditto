@@ -1,27 +1,27 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, ICommonMessageReturnType, IUser, IUserAuth, Phone} from "../../../lib/types";
+import {Address, Database, ICommonMessageReturnType, IUser, IUserAuth, IWorkInfo, Tasks, Logs, Phone, Roles} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize} from "../../../lib/utils";
 import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 
-const hashPassword = async (password: string) => {
+export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
 };
 
-const validatePassword = async (plainPassword: string, hashPassword: string) => {
+export const validatePassword = async (plainPassword: string, hashPassword: string) => {
     return await bcrypt.compare(plainPassword, hashPassword);
 };
 
-const accessToken = (id: any) => {
+export const accessToken = (id: any) => {
     const secret = <string>process.env.JWT_SECRET;
     return jwt.sign({UserId: id}, secret, {expiresIn: "1d"})
 };
 
-const authChecker = (token: string, secret: string) => {
+export const authChecker = (token: string, secret: string) => {
     if (!token) {
         return false;
     }
@@ -41,7 +41,7 @@ const authChecker = (token: string, secret: string) => {
     return true;
 }
 
-const generateOTPCode = () => {
+export const generateOTPCode = () => {
     const digits = '0123456789';
     const otpLength = 6;
     let otp = '';
@@ -101,7 +101,7 @@ export const usersResolvers: IResolvers = {
             {db}: { db: Database }
         ): Promise<ICommonMessageReturnType> => {
             const userResult = await db.users.findOne({"phones.number": phone});
-
+            
             if (userResult) {
                 throw new Error("User already registered.");
             }
@@ -122,28 +122,28 @@ export const usersResolvers: IResolvers = {
                 password: await hashPassword(password),
                 phones: [{id: shortid.generate(), number: phone, status: false, is_primary: true}],
                 otp: otp,
-                role: 'user',
+                role: Roles.CLIENT,
                 created_at: new Date().toString(),
                 workInfo: {
-                    stoppedWorkTime: null,
-                    startedWorkTime: null,
+                    stoppedWorkTime: "",
+                    startedWorkTime: "",
                     ratePerHour: 0,
                     totalWorkingMinutesPerWeek: 0,
                     totalSalaryToPayWeekly: 0,
                     advancedSalaryPaid: 0,
                     isWorking: false,
-                    taskRelated: null
+                    taskRelated: ""
                 },
-                todoTasks: [],
+                tasks: [],
                 logs: []
             };
-
             await db.users.insertOne(user);
 
-            const {data, status} = await sendOtp(phone, otp);
-            if (status != 201) {
-                throw new Error("Something went wrong! Please try again.");
-            }
+            // const {data, status} = await sendOtp(phone, otp);
+            // const {data, status} = await sendMailVerification('estebanmuruzabal@gmail.com');
+            // if (status != 201) {
+            //     throw new Error("Something went wrong! Please try again.");
+            // }
 
             return {
                 status: true,
@@ -225,9 +225,9 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User dose not exits.");
             }
 
-            if (userResult.otp != verification_code) {
-                throw new Error("Verification code dose not match.");
-            }
+            // if (userResult.otp != verification_code) {
+            //     throw new Error("Verification code dose not match.");
+            // }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

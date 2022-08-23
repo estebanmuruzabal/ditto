@@ -72,7 +72,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
               defaultMessage="Delivery Method"
             />
           </h3>
-          <Contact>{deliveryMethod.name}</Contact>
+          <Contact>{deliveryMethod?.name}</Contact>
           <h3>
             <FormattedMessage
               id="contactNumberTitle"

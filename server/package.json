@@ -6,6 +6,7 @@
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "bson": "^4.6.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -14,6 +15,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash.merge": "^4.6.2",
     "mongodb": "^3.6.0",
+    "nodemailer": "^6.7.7",
     "shortid": "^2.2.8"
   },
   "devDependencies": {

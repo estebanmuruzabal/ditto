@@ -23,7 +23,7 @@ import NoResult from '../../components/NoResult/NoResult';
 import Button from "../../components/Button/Button";
 import ActionWrapper from "../Orders/ActionWrapper";
 import {StyledBodyCell} from "../Types/Types.style";
-import { useIntl } from 'react-intl';
+// import { useIntl } from 'react-intl';
 
 const GET_ORDERS = gql`
     query GetOrders(
@@ -120,10 +120,10 @@ const nextButtonDisabledStyles = {
     color: '#6f6f6f',
     backgroundColor: '#d8d8d8'
 };
-const intl = useIntl();
-const pendingLabel = intl.formatMessage({ id: 'pendingStatusId', defaultMessage: 'Pending' });
+// const intl = useIntl();
+// const pendingLabel = intl.formatMessage({ id: 'pendingStatusId', defaultMessage: 'Pending' });
 const statusSelectOptions = [
-    {value: 'Pending', label: pendingLabel},
+    {value: 'Pending', label: 'Pending'},
     {value: 'Received', label: 'Received'},
     {value: 'Processing', label: 'Processing'},
     {value: 'InTransit', label: 'InTransit'},
@@ -256,6 +256,7 @@ export default function Orders() {
                             <StyledTable
                                 $gridTemplateColumns="minmax(150px, auto) minmax(150px, auto) minmax(200px, auto) minmax(200px, auto) minmax(200px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
                                 <StyledHeadCell>Action</StyledHeadCell>
+                                <StyledHeadCell>Status</StyledHeadCell>
                                 <StyledHeadCell>Order Code</StyledHeadCell>
                                 <StyledHeadCell>Customer ID</StyledHeadCell>
                                 <StyledHeadCell>Customer Contact</StyledHeadCell>
@@ -267,31 +268,18 @@ export default function Orders() {
                                 <StyledHeadCell>Total</StyledHeadCell>
                                 <StyledHeadCell>Coupon Code</StyledHeadCell>
                                 <StyledHeadCell>Discount Amount</StyledHeadCell>
-                                <StyledHeadCell>Status</StyledHeadCell>
+                                
                                 <StyledHeadCell>DateTime</StyledHeadCell>
 
                                 {data ? (
                                     data.orders.items.length ? (
                                         data.orders.items.map((item: any, index: number) => {
+                                            console.log(item)
                                             return (
                                                 <React.Fragment key={index + 1}>
                                                     <StyledCell>
                                                         <ActionWrapper itemsOffset={offset} itemData={item}/>
                                                     </StyledCell>
-                                                    <StyledCell>{item.order_code}</StyledCell>
-                                                    <StyledCell>{item.customer_id}</StyledCell>
-                                                    <StyledCell>{item.contact_number}</StyledCell>
-                                                    <StyledCell>{item.delivery_address}</StyledCell>
-                                                    <StyledCell>
-                                                        {item.delivery_method ? item.delivery_method.name+', ' : ''}
-                                                        {item.delivery_method ? item.delivery_method.details : ''}
-                                                    </StyledCell>
-                                                    <StyledCell>{item.payment_method}</StyledCell>
-                                                    <StyledCell>{item.payment_status}</StyledCell>
-                                                    <StyledCell>{item.sub_total}</StyledCell>
-                                                    <StyledCell>{item.total}</StyledCell>
-                                                    <StyledCell>{item.coupon_code}</StyledCell>
-                                                    <StyledCell>{item.discount_amount}</StyledCell>
                                                     <StyledCell style={{justifyContent: 'center'}}>
                                                         <Status
                                                             className={
@@ -309,6 +297,21 @@ export default function Orders() {
                                                             {item.status}
                                                         </Status>
                                                     </StyledCell>
+                                                    <StyledCell>{item.order_code}</StyledCell>
+                                                    <StyledCell>{item.customer_id}</StyledCell>
+                                                    <StyledCell>{item.contact_number}</StyledCell>
+                                                    <StyledCell>{item.delivery_address}</StyledCell>
+                                                    <StyledCell>
+                                                        {item.delivery_method ? item.delivery_method.name+', ' : ''}
+                                                        {item.delivery_method ? item.delivery_method.details : ''}
+                                                    </StyledCell>
+                                                    <StyledCell>{item.payment_method}</StyledCell>
+                                                    <StyledCell>{item.payment_status}</StyledCell>
+                                                    <StyledCell>{item.sub_total}</StyledCell>
+                                                    <StyledCell>{item.total}</StyledCell>
+                                                    <StyledCell>{item.coupon_code}</StyledCell>
+                                                    <StyledCell>{item.discount_amount}</StyledCell>
+                                                    
                                                     <StyledCell>
                                                         {/*{dayjs(item.datetime).format('DD MMM YYYY hh:mm:ss A')}*/}
                                                     </StyledCell>

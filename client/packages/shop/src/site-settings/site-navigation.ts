@@ -3,6 +3,7 @@ import { initializeApollo } from 'utils/apollo';
 import { GET_TYPE } from 'graphql/query/type.query';
 
 export const HOME_PAGE = '/';
+export const WORK_PAGE = '/work';
 export const GROCERY_PAGE = '/grocery';
 export const MAKEUP_PAGE = '/makeup';
 export const CLOTHING_PAGE = '/clothing';
@@ -27,6 +28,12 @@ export const HOME_MENU_ITEM = {
   id: 'nav.home',
   defaultMessage: 'Home',
   href: HOME_PAGE,
+};
+
+export const WORK_PAGE_ITEM = {
+  id: 'nav.work',
+  defaultMessage: 'Trabajo',
+  href: WORK_PAGE,
 };
 
 export const HELP_MENU_ITEM = {
@@ -57,6 +64,7 @@ export const PROFILE_MENU_ITEM = {
 export const AUTHORIZED_MENU_ITEMS = [
   PROFILE_MENU_ITEM,
   ORDER_MENU_ITEM,
+  WORK_PAGE_ITEM
   /*{
     id: 'nav.checkout',
     defaultMessage: 'Checkout',
@@ -176,31 +184,31 @@ export const PROFILE_SIDEBAR_TOP_MENU = [ORDER_MENU_ITEM];
 export const PROFILE_SIDEBAR_BOTTOM_MENU = [PROFILE_MENU_ITEM];
 
 export const LANGUAGE_MENU = [
-  {
-    id: 'ar',
-    defaultMessage: 'Arabic',
-    icon: 'SAFlag',
-  },
-  {
-    id: 'zh',
-    defaultMessage: 'Chinese',
-    icon: 'CNFlag',
-  },
+  // {
+  //   id: 'ar',
+  //   defaultMessage: 'Arabic',
+  //   icon: 'SAFlag',
+  // },
+  // {
+  //   id: 'zh',
+  //   defaultMessage: 'Chinese',
+  //   icon: 'CNFlag',
+  // },
   {
     id: 'en',
     defaultMessage: 'English',
     icon: 'USFlag',
   },
-  {
-    id: 'de',
-    defaultMessage: 'German',
-    icon: 'DEFlag',
-  },
-  {
-    id: 'he',
-    defaultMessage: 'Hebrew',
-    icon: 'ILFlag',
-  },
+  // {
+  //   id: 'de',
+  //   defaultMessage: 'German',
+  //   icon: 'DEFlag',
+  // },
+  // {
+  //   id: 'he',
+  //   defaultMessage: 'Hebrew',
+  //   icon: 'ILFlag',
+  // },
   {
     id: 'es',
     defaultMessage: 'Spanish',

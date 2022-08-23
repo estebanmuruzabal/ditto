@@ -10,6 +10,7 @@ import { useDrawerDispatch } from '../../context/DrawerContext';
 import Select from '../../components/Select/Select';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
+import ActionWrapper from "./ActionWrapper";
 
 import { Plus } from '../../assets/icons/PlusMinus';
 
@@ -26,15 +27,44 @@ import {
 } from './StaffMembers.style';
 import NoResult from '../../components/NoResult/NoResult';
 
+// query getStaffs($role: String, $searchBy: String) {
+//   getStaffs(role: $role, searchBy: $searchBy) {
+
 const GET_STAFFS = gql`
-  query getStaffs($role: String, $searchBy: String) {
-    staffs(role: $role, searchBy: $searchBy) {
+  query staffs {
+    getStaffs {
       id
       name
       email
-      contact_number
-      creation_date
       role
+      created_at
+      phones{
+        number
+        id
+        is_primary
+      }
+      workInfo{
+        stoppedWorkTime
+        startedWorkTime
+        ratePerHour
+        totalWorkingMinutesPerWeek
+        totalSalaryToPayWeekly
+        advancedSalaryPaid
+        isWorking
+        taskRelated
+      }
+      tasks{
+        id
+        startDate
+        finishDate
+        isDone
+        description
+        workedHours
+      }
+      logs{
+        logDescription
+        timestamp
+      }
     }
   }
 `;
@@ -60,11 +90,12 @@ const roleSelectOptions = [
   { value: 'manager', label: 'Manager' },
   { value: 'member', label: 'Member' },
   { value: 'delivery boy', label: 'Delivery boy' },
+  { value: 'client', label: 'Client' },
 ];
 
 export default function StaffMembers() {
   const dispatch = useDrawerDispatch();
-
+  const [offset, setOffset] = useState(0);
   const openDrawer = useCallback(
     () =>
       dispatch({ type: 'OPEN_DRAWER', drawerComponent: 'STAFF_MEMBER_FORM' }),
@@ -155,28 +186,32 @@ export default function StaffMembers() {
 
           <Wrapper style={{ boxShadow: '0 0 5px rgba(0, 0 , 0, 0.05)' }}>
             <TableWrapper>
-              <StyledTable $gridTemplateColumns="minmax(70px, 70px) minmax(270px, max-content) minmax(270px, max-content) minmax(150px, max-content) minmax(150px, auto) minmax(150px, auto)">
-                <StyledHeadCell>ID</StyledHeadCell>
+             <StyledTable $gridTemplateColumns="minmax(150px, auto) minmax(75px, auto) minmax(75px, auto) minmax(75px, auto) minmax(75px, auto) minmax(150px, auto) minmax(150px, max-content) minmax(75px, auto)">
                 <StyledHeadCell>Name</StyledHeadCell>
-                <StyledHeadCell>Email</StyledHeadCell>
-                <StyledHeadCell>Contact</StyledHeadCell>
-                <StyledHeadCell>Joining Date</StyledHeadCell>
                 <StyledHeadCell>Role</StyledHeadCell>
-
+                <StyledHeadCell>isWorking</StyledHeadCell>
+                <StyledHeadCell>Hourly rate</StyledHeadCell>
+                <StyledHeadCell>Weekly Salary</StyledHeadCell>
+                <StyledHeadCell>Salary in Advanced</StyledHeadCell>
+                <StyledHeadCell>Working Hours</StyledHeadCell>
+                <StyledHeadCell>Action</StyledHeadCell>
+  
                 {data ? (
-                  data.staffs.length ? (
-                    data.staffs
-                      .map((item) => Object.values(item))
-                      .map((row, index) => (
+                  data.getStaffs.length ? (
+                    data.getStaffs
+                      .map((item, index) => (
                         <React.Fragment key={index}>
-                          <StyledBodyCell>{row[0].slice(0, 6)}</StyledBodyCell>
-                          <StyledBodyCell>{row[1]}</StyledBodyCell>
-                          <StyledBodyCell>{row[2]}</StyledBodyCell>
-                          <StyledBodyCell>{row[3]}</StyledBodyCell>
+                          <StyledBodyCell>{item.name || '-'}</StyledBodyCell>
+                          <StyledBodyCell>{item.role || '-'}</StyledBodyCell>
+                          <StyledBodyCell>{item.workInfo?.isWorking.toString() || '-'}</StyledBodyCell>
+                          <StyledBodyCell>{item.workInfo?.ratePerHour || '-'}</StyledBodyCell>
+                          <StyledBodyCell>{item.workInfo?.totalSalaryToPayWeekly || '-'}</StyledBodyCell>
+                          <StyledBodyCell>{item.workInfo?.advancedSalaryPaid || '-'}</StyledBodyCell>
+                          {/* <StyledBodyCell>{item.workInfo?.totalWorkingMinutesPerWeek ? `${h}:${Number(m) >= 9 ? m : '0' + m} hs` : '-'}</StyledBodyCell> */}
+                          <StyledBodyCell>{item.workInfo?.totalWorkingMinutesPerWeek ? `${item.workInfo?.totalWorkingMinutesPerWeek / 60 | 0}:${Number(item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0) >= 9 ? item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0 : '0' + item.workInfo?.totalWorkingMinutesPerWeek % 60} hs` : '-'}</StyledBodyCell>
                           <StyledBodyCell>
-                            {dayjs(row[4]).format('DD MMM YYYY')}
+                            <ActionWrapper itemsOffset={offset} itemData={item}/>
                           </StyledBodyCell>
-                          <StyledBodyCell>{row[5]}</StyledBodyCell>
                         </React.Fragment>
                       ))
                   ) : (

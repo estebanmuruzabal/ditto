@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 // import Inputs from 'components/input/input';
 import { Row as Rows } from 'react-styled-flexboxgrid';
+import css from '@styled-system/css';
+import { compose, layout, space, color, border } from 'styled-system';
 
 const SettingsForm = styled.div`
   width: 100%;
@@ -140,12 +142,55 @@ const ErrorMsg = styled('span')`
   margin-left: 20px;
 `;
 
+
+const Input = styled.input<any>(
+  css({
+    display: 'block',
+    width: '100%',
+    textTransform: 'capitalize',
+    p: '0 18px',
+    appearance: 'none',
+    fontFamily: 'body',
+    fontSize: 'base',
+    lineHeight: 'inherit',
+    border: '1px solid',
+    borderColor: 'gray.500',
+    borderRadius: 'base',
+    backgroundColor: 'white',
+    color: 'text.bold',
+    height: '48px',
+    transition: 'all 0.25s ease',
+    // mb: 3,
+    '&:focus': {
+      borderColor: 'primary.regular',
+    },
+  }),
+  {
+    '&:hover,&:focus': {
+      outline: 0,
+    },
+
+    '&::placeholder': {
+      color: '',
+    },
+    '&::-webkit-inner-spin-button,&::-webkit-outer-spin-button': {
+      '-webkit-appearance': 'none',
+      margin: 0,
+    },
+    '&.disabled': {
+      cursor: 'not-allowed',
+      opacity: 0.6,
+    },
+  },
+  compose(layout, space, color, border)
+);
+
 export {
   SettingsForm,
   HeadingSection,
   Title,
   SettingsFormContent,
-  // Input,
+  Input,
   Row,
   ButtonGroup,
   SuccessMsg,

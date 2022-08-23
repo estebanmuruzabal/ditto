@@ -45,7 +45,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     apolloServer.applyMiddleware({ app, path });
     app.listen(PORT, () => {
-        console.log(`🚀 started http://localhost:${PORT}${path}`);
+        console.log(`🚀 started http://192.168.0.104:${PORT}${path}`);
     });
 });
 main();

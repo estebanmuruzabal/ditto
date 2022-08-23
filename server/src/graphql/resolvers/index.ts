@@ -4,6 +4,7 @@ import {typesResolvers} from "./Type";
 import {categoriesResolvers} from "./Category";
 import {productsResolvers} from "./Product";
 import {deliveryMethodsResolvers} from "./DeliveryMethod";
+import {staffMethodsResolvers} from "./Staff";
 import {paymentOptionsResolvers} from "./PaymentOption";
 import {ordersResolvers} from "./Orders";
 import {settingsResolvers} from "./Setting";
@@ -20,5 +21,6 @@ export const resolvers = merge(
     ordersResolvers,
     settingsResolvers,
     couponsResolvers,
-    homeCardsResolvers
+    homeCardsResolvers,
+    staffMethodsResolvers
 );

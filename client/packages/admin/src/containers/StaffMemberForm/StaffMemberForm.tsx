@@ -20,6 +20,8 @@ import {
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
 import { FormFields, FormLabel } from '../../components/FormFields/FormFields';
+import Select from '../../components/Select/Select';
+import { ADMIN, CLIENT, DELIVERY_BOY, MANAGER, MEMBER } from '../../settings/constants';
 
 const GET_STAFFS = gql`
   query getStaffs($role: String, $searchBy: String) {
@@ -60,7 +62,8 @@ const StaffMemberForm: React.FC<Props> = (props) => {
   const [country, setCountry] = React.useState(undefined);
   const [checked, setChecked] = React.useState(true);
   const [text, setText] = React.useState('');
-
+  const [role, setRole] = React.useState([]);
+  
   const [createStaff] = useMutation(CREATE_STAFF, {
     update(cache, { data: { createStaff } }) {
       const { staffs } = cache.readQuery({
@@ -73,18 +76,36 @@ const StaffMemberForm: React.FC<Props> = (props) => {
       });
     },
   });
+
+  function handleRole({ value }) {
+    const role = value[0].value || value;
+    setRole(role);
+    // if (value.length) {
+    //   refetch({ role: value[0].value, searchBy: search });
+    // }
+  }
+
+  const roleSelectOptions = [
+    { value: ADMIN, label: 'Admin' },
+    { value: MANAGER, label: 'Manager' },
+    { value: MEMBER, label: 'Member' },
+    { value: DELIVERY_BOY, label: 'Delivery boy' },
+    { value: CLIENT, label: 'Client' },
+  ];
+  
   const onSubmit = (data) => {
     const newStaff = {
       id: uuidv4(),
       ...data,
-      role: data.role ? 'admin' : 'staff',
+      role,
       creation_date: new Date(),
     };
 
     createStaff({ variables: { staff: newStaff } });
     closeDrawer();
   };
-
+  const select = [roleSelectOptions[0]];
+  console.log('select' ,select)
   return (
     <>
       <DrawerTitleWrapper>
@@ -117,7 +138,7 @@ const StaffMemberForm: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>First Name</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
+                    inputRef={register({ required: true, maxLength: 30 })}
                     name='first_name'
                   />
                 </FormFields>
@@ -125,7 +146,7 @@ const StaffMemberForm: React.FC<Props> = (props) => {
                 <FormFields>
                   <FormLabel>Last Name</FormLabel>
                   <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
+                    inputRef={register({ required: true, maxLength: 30 })}
                     name='last_name'
                   />
                 </FormFields>
@@ -160,6 +181,17 @@ const StaffMemberForm: React.FC<Props> = (props) => {
                 Expand or restrict user’s permissions to access certain part of
                 Ditto system.
               </FieldDetails>
+              <Select
+                options={roleSelectOptions}
+                labelKey="label"
+                valueKey="value"
+                placeholder="Role"
+                inputRef={register({ required: true })}
+                value={select}
+                name='role'
+                searchable={false}
+                onChange={handleRole}
+                />
             </Col>
 
             <Col lg={8}>

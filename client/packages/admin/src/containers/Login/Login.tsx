@@ -18,7 +18,7 @@ import {useQuery} from "@apollo/react-hooks";
 import {ADMIN_IMAGE_HOST} from "../../helpers/images-path";
 
 const initialValues = {
-    phone: '+17863847064',
+  phone: '543624951926',
   password: '123456',
 };
 const GET_SETTING = gql`
@@ -64,7 +64,7 @@ export default () => {
   let history = useHistory();
   let location = useLocation();
   const { authenticate, isAuthenticated, error: signinErrors } = useContext(AuthContext);
-  if (isAuthenticated) return <Redirect to={{ pathname: '/' }} />;
+  if (isAuthenticated) return <Redirect to={{ pathname: '/admin' }} />;
 
   let { from } = (location.state as any) || { from: { pathname: '/' } };
   let login = ({ phone, password }) => {

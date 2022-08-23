@@ -31,7 +31,7 @@ const Footer = () => {
       />
       &nbsp;
       <a href='#' target='_blank'>
-        Ditto
+        Ditto Farm
       </a>
     </Box>
   );

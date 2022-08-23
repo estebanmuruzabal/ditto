@@ -22,6 +22,31 @@ export const typeDefs = gql`
         is_primary: Boolean
     }
     
+    type WorkInfo {
+        stoppedWorkTime: String
+        startedWorkTime: String
+        ratePerHour: Int
+        totalWorkingMinutesPerWeek: Int
+        totalSalaryToPayWeekly: Int
+        advancedSalaryPaid: Int
+        isWorking: Boolean
+        taskRelated: String
+    }
+
+    type Tasks  {
+        id: Int
+        startDate: String
+        finishDate: String
+        isDone: Boolean
+        description: String
+        workedHours: Int  
+    }
+
+    type Logs {
+        logDescription: String
+        timestamp: String
+    }
+
     type User {
         id: ID!
         name: String
@@ -30,8 +55,11 @@ export const typeDefs = gql`
         delivery_address: [DeliveryAddress]
         role: String
         created_at: String
+        workInfo: WorkInfo
+        tasks: [Tasks]
+        logs: [Logs]
     }
-    
+
     type UserAuthPayload  {
         user: User!
         access_token: String!
@@ -365,11 +393,18 @@ export const typeDefs = gql`
         userAuthCheck: DefaultMessageType!
         homeCards(limit: Int = 12, offset: Int = 0, searchText: String): HomeCardPaginationType!
         getHomeCards(type: String!): [HomeCard]!
+        getStaffs: [User!]!
+        
     }
     
     type Mutation {
         login(phone: String!, password: String!): UserAuthPayload!
         signUp(phone: String!, password: String!): DefaultMessageType!
+        staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!
+        updateUserWorkInfo(id: ID!, isWorking: Boolean, startedWorkTime: String, stoppedWorkTime: String, ratePerHour: Int, logDescription: String, totalWorkingMinutesPerWeek: Int, totalSalaryToPayWeekly: Int, advancedSalaryPaid: Int, taskRelated: String, role: String): DefaultMessageType!
+        updateUserLogs(id: ID!, logs: String): Logs
+        updateUserTasks(id: ID!, tasks: String): Tasks
+        deleteStaff(id: ID!): DefaultMessageType!
         phoneVerification(phone: String!): DefaultMessageType!
         phoneVerificationCheck(phone: String!, verification_code: String!): UserAuthPayload!
         createType(input: MainTypeInput): MainType!

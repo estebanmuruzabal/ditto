@@ -21,6 +21,28 @@ query GetUser{
       id
       is_primary
     }
+    workInfo{
+        stoppedWorkTime
+        startedWorkTime
+        ratePerHour
+        totalWorkingMinutesPerWeek
+        totalSalaryToPayWeekly
+        advancedSalaryPaid
+        isWorking
+        taskRelated
+    }
+    tasks{
+      id
+      startDate
+      finishDate
+      isDone
+      description
+      workedHours
+    }
+    logs{
+      logDescription
+      timestamp
+    }
   }
 }
 `;

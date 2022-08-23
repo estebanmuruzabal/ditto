@@ -65,7 +65,7 @@ export default function Settings() {
 
       </Row>
 
-      {/*<Row>
+      <Row>
         <Col md={6}>
           <SettingsCard
               icon={<Members />}
@@ -82,7 +82,7 @@ export default function Settings() {
             onClick={openStaffForm}
           />
         </Col>
-      </Row>*/}
+      </Row>
     </Grid>
   );
 }
