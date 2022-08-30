@@ -42,7 +42,7 @@ exports.authorize = (req, db) => __awaiter(void 0, void 0, void 0, function* () 
         jwt.verify(token, secret);
     }
     catch (err) {
-        throw new Error("Unknown error:");
+        throw new Error("Unknown error verifying token:");
     }
     const { UserId, exp } = jwt.verify(token, secret);
     if (exp < Date.now().valueOf() / 1000) {

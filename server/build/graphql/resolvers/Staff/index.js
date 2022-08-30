@@ -121,31 +121,52 @@ exports.staffMethodsResolvers = {
                 message: "Updated logs successfully."
             };
         }),
-        updateUserTasks: (_root, { id, taskId, description, startDate, finishDate, plannedDate, isRepetitived, completationTimes, workedHours, isDone }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        deleteUserTask: (_root, { id, taskId }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             yield utils_1.authorize(req, db);
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
                 throw new Error("User dose not exits.");
             }
             const { tasks } = userResult;
-            const taskIndex = (tasks === null || tasks === void 0 ? void 0 : tasks.findIndex(task => task.id === taskId)) || 0;
-            const task = {
-                id: taskIndex ? taskId : Math.random().toString(),
-                description: taskIndex ? description : '',
-                startDate: taskIndex ? startDate : '',
-                finishDate: taskIndex ? finishDate : '',
-                plannedDate: taskIndex ? plannedDate : '',
-                isRepetitived: taskIndex ? isRepetitived : false,
-                completationTimes: taskIndex ? completationTimes : [],
-                workedHours: taskIndex ? workedHours : '',
-                isDone: taskIndex ? isDone : false
+            const taskIndex = (tasks === null || tasks === void 0 ? void 0 : tasks.findIndex(task => task.taskId === taskId)) || 0;
+            tasks.splice(taskIndex, 1);
+            console.log(tasks);
+            yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { tasks: tasks } });
+            return {
+                status: true,
+                message: "Updated logs successfully."
             };
-            if (taskIndex) {
+        }),
+        updateUserTasks: (_root, { id, taskId, description, startDate, finishDate, plannedDate, isRepetitived, completationTimes, workedHours, isDone }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            yield utils_1.authorize(req, db);
+            // console.log(taskId, description ,startDate ,finishDate ,plannedDate, isRepetitived, completationTimes, workedHours, isDone)
+            const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
+            if (!userResult) {
+                throw new Error("User dose not exits.");
+            }
+            // console.log(userResult)
+            const { tasks } = userResult;
+            const taskIndex = (tasks === null || tasks === void 0 ? void 0 : tasks.findIndex(task => task.taskId === taskId)) || 0;
+            console.log('taskIndex::', taskIndex);
+            console.log('tasks before:::', tasks);
+            const task = {
+                taskId: taskId ? taskId : Math.random().toString(),
+                description,
+                startDate,
+                finishDate,
+                plannedDate,
+                isRepetitived,
+                completationTimes,
+                workedHours,
+                isDone
+            };
+            if (taskId) {
                 tasks[taskIndex] = task;
             }
             else {
                 tasks.push(task);
             }
+            console.log(tasks);
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { tasks: tasks } });
             return {
                 status: true,

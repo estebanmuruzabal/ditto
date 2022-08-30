@@ -35,18 +35,6 @@ exports.typeDefs = apollo_server_express_1.gql `
         taskRelated: String
     }
 
-    type Task {
-        id: ID!
-        description: String
-        startDate: String
-        finishDate: String
-        plannedDate: String
-        isRepetitived: Boolean
-        completationTimes: String
-        workedHours: String
-        isDone: Boolean
-    }
-
     type Logs {
         logDescription: String
         timestamp: String
@@ -61,8 +49,20 @@ exports.typeDefs = apollo_server_express_1.gql `
         role: String
         created_at: String
         workInfo: WorkInfo
-        tasks: Task
+        tasks: [Task]
         logs: [Logs]
+    }
+
+    type Task {
+        taskId: String
+        description: String
+        startDate: String
+        finishDate: String
+        plannedDate: String
+        isRepetitived: Boolean
+        completationTimes: String
+        workedHours: String
+        isDone: Boolean
     }
 
     type UserAuthPayload  {

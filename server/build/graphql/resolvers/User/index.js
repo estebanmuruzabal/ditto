@@ -133,19 +133,7 @@ exports.usersResolvers = {
                     isWorking: false,
                     taskRelated: ""
                 },
-                tasks: [
-                    {
-                        taskId: Math.random().toString(),
-                        description: '',
-                        startDate: '',
-                        finishDate: '',
-                        plannedDate: '',
-                        isRepetitived: false,
-                        completationTimes: '',
-                        workedHours: '',
-                        isDone: false
-                    }
-                ],
+                tasks: [],
                 logs: []
             };
             yield db.users.insertOne(user);
