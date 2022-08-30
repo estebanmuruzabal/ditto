@@ -9,8 +9,7 @@ import {
     IUser,
     IWorkInfo,
     Logs,
-    Roles,
-    Tasks
+    Roles
 } from "../../../lib/types";
 import {authorize} from "../../../lib/utils";
 import {search} from "../../../lib/utils/search";
@@ -160,19 +159,82 @@ export const staffMethodsResolvers: IResolvers = {
             };
         },
 
-        updateUserTasks: async (
+        deleteUserTask: async (
             _root: undefined,
-            {id, tasks}: { id: string, tasks: [Tasks] },
+            {id, taskId}: { id: string, taskId: string },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             await authorize(req, db);
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
+            
             if (!userResult) {
                 throw new Error("User dose not exits.");
             }
+            const { tasks } = userResult;
+            const taskIndex = tasks?.findIndex(task => task.taskId === taskId) || 0;
 
-            userResult.tasks = tasks;
+            tasks.splice(taskIndex, 1);
+            console.log(tasks)
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$set: {tasks: tasks}}
+            );
+
+            return {
+                status: true,
+                message: "Updated logs successfully."
+            };
+        },
+
+
+        updateUserTasks: async (
+            _root: undefined,
+            {id, taskId, description ,startDate ,finishDate ,plannedDate, isRepetitived, completationTimes, workedHours, isDone}: {
+                id: string,
+                taskId: string,
+                description: string,
+                startDate: string,
+                finishDate: string,
+                plannedDate: string,
+                isRepetitived: boolean,
+                completationTimes: string,
+                workedHours: string,
+                isDone: boolean },
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            await authorize(req, db);
+            // console.log(taskId, description ,startDate ,finishDate ,plannedDate, isRepetitived, completationTimes, workedHours, isDone)
+            const userResult = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User dose not exits.");
+            }
+            
+
+            // console.log(userResult)
+            const { tasks } = userResult;
+            const taskIndex = tasks?.findIndex(task => task.taskId === taskId) || 0;
+            console.log('taskIndex::', taskIndex)
+            console.log('tasks before:::', tasks)
+            const task = {
+                taskId: taskId ? taskId : Math.random().toString(),
+                description,
+                startDate,
+                finishDate,
+                plannedDate,
+                isRepetitived,
+                completationTimes,
+                workedHours,
+                isDone
+            }; 
+
+            
+            if (taskId) {
+                tasks[taskIndex] = task;
+            } else {
+                tasks.push(task)
+            }
+            console.log(tasks)
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {tasks: tasks}}

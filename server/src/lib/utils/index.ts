@@ -16,7 +16,7 @@ export const authorize = async (req: Request, db: Database): Promise<IUser | nul
     try {
         jwt.verify(token, secret);
     } catch(err) {
-        throw new Error("Unknown error:");
+        throw new Error("Unknown error verifying token:");
     }
 
     const {UserId, exp} = <any>jwt.verify(token, secret);

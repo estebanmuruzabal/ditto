@@ -32,6 +32,7 @@ const Header: React.FC<Props> = ({ className }) => {
       type: 'SIGNIN',
     });
 
+    if (!openModal) return;
     openModal({
       show: true,
       overlayClassName: 'quick-view-overlay',

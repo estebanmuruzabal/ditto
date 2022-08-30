@@ -8,7 +8,7 @@ import RadioCard from 'components/radio-card/radio-card';
 import { WorkContext } from 'contexts/work/work.context';
 import { AuthContext } from 'contexts/auth/auth.context';
 import { DELETE_ADDRESS, SETPRIMARY_ADDRESS } from 'graphql/mutation/address';
-import { UPDATE_USER, UPDATE_USER_WORK_INFO } from 'graphql/mutation/user';
+import { UPDATE_USER_TODO_TASKS, UPDATE_USER_WORK_INFO } from 'graphql/mutation/user';
 import { CHANGE_PASSWORD } from 'graphql/mutation/changePassword';
 import { DELETE_CARD } from 'graphql/mutation/card';
 import { DELETE_PHONENUMBER, SETPRIMARY_PHONENUMBER } from 'graphql/mutation/phone';
@@ -58,7 +58,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
   const [updateMeMutation] = useMutation(UPDATE_ME);
   const [deletePaymentCardMutation] = useMutation(DELETE_CARD);
 
-  const [updateUserMutation] = useMutation(UPDATE_USER);
+  const [updateUserTodoMutation] = useMutation(UPDATE_USER_TODO_TASKS);
   const [updateUserInfoMutation] = useMutation(UPDATE_USER_WORK_INFO);
   const [changePasswordMutation] = useMutation(CHANGE_PASSWORD);
   const [deletePhoneNumberMutation] = useMutation(DELETE_PHONENUMBER);
@@ -76,16 +76,6 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     id,
     phones
   } = state;
-  console.log(state)
-
-  // const handleChange = (isWorking) => {
-  //   const { value, name } = e.target;
-  //   dispatch({
-  //     type: isWorking ? 'HANDLE_WORK_START_CHANGE' : 'HANDLE_WORK_STOP_CHANGE',
-  //     payload: { value, field: name },
-  //   });
-  // };
-
   
   const updateUserWorkInfoMutation = async (logDescription: string) => {
     const { workInfo, id } = state;
@@ -126,7 +116,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     const ratePerMinute = user.workInfo.ratePerHour / 60;
 
     user.workInfo.totalWorkingMinutesPerWeek += workedInMinutes;
-    user.workInfo.totalSalaryToPayWeekly = user.workInfo.totalWorkingMinutesPerWeek * ratePerMinute - user.workInfo.advancedSalaryPaid;
+    user.workInfo.totalSalaryToPayWeekly = Number(user.workInfo.totalWorkingMinutesPerWeek) * Number(ratePerMinute) - Number(user.workInfo.advancedSalaryPaid);
 
     // user.logs.push({
     //   logDescription: ,
@@ -161,14 +151,61 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
   };
 
 
+  
+  const handleTaskChange = async (task: any, action: string) => {
+    const { id, tasks } = state;
+    const completationTimes =  task.isRepetitived ? (Number(task.completationTimes)+ 1).toString() : task.completationTimes;
+    const taskIndex = tasks?.findIndex(t => t.taskId === task.taskId);
+    let taskUpdated;
 
-  // const handleChange = (e) => {
-  //   const { value, name } = e.target;
-  //   dispatch({
-  //     type: 'HANDLE_ON_INPUT_CHANGE',
-  //     payload: { value, field: name },
-  //   });
-  // };
+    switch (action) {
+      case 'stop':
+        taskUpdated = {
+          id,
+          taskId: task.taskId,
+          description: task.description,
+          startDate: task.startDate,
+          finishDate: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+          plannedDate: task.plannedDate,
+          isRepetitived: task.isRepetitived,
+          completationTimes,
+          workedHours: task.workedHours,
+          isDone: true
+        }
+        break;
+      case 'start':
+        const startDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+        taskUpdated = {
+          id,
+          taskId: task.taskId,
+          description: task.description,
+          startDate: startDate,
+          finishDate: task.finishDate,
+          plannedDate: task.plannedDate,
+          isRepetitived: task.isRepetitived,
+          completationTimes,
+          workedHours: task.workedHours,
+          isDone: task.isDone
+        }
+        break;
+      default:
+        taskUpdated = task;
+        break;
+      }
+
+      tasks[taskIndex] = taskUpdated;
+      dispatch({
+        type: 'HANDLE_TODO_TASKS',
+        payload: { tasks },
+      });
+
+      return await updateUserTodoMutation({
+        variables: {
+          ...taskUpdated,
+        },
+      });
+    }
+
   // Add or edit modal
   const handleModal = (
     modalComponent: any,
@@ -190,110 +227,12 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     });
   };
 
-  const handleEditDelete = async (item: any, index: any, type: string, name: string) => {
-    if (type === 'edit') {
-      const modalComponent = name === 'address' ? UpdateAddressTwo : UpdateContact;
-      handleModal(modalComponent,{
-        item,
-        id
-      });
-    } else {
-      switch (name) {
-        case 'payment':
-          dispatch({ type: 'DELETE_CARD', payload: item.id });
-          return await deletePaymentCardMutation({
-            variables: { cardId: JSON.stringify(item.id) },
-          });
-
-          
-        case 'contact':
-          if(phones.length > 1){
-            dispatch({ type: 'DELETE_CONTACT', payload: item.id });
-            return await deletePhoneNumberMutation({
-              variables: { 
-                id,
-                phoneId: item.id
-              },
-            });
-          }else{
-            return null
-          }
-        case 'address':
-          if(delivery_address.length > 1){
-          dispatch({ type: 'DELETE_ADDRESS', payload: item.id });
-            return await deleteAddressMutation({
-              variables: { 
-                id,
-                addressId: item.id
-              },
-            });
-          }else{
-            return null
-          }
-        default:
-          return false;
-      }
-    }
-  };
-
-  const handlePrimary = async (item: any, name: string) => {
-      switch (name) {
-        case 'contact':
-          dispatch({ type: 'SET_PRIMARY_CONTACT', payload: item.id });
-          return await setprimaryPhoneNumberMutation({
-            variables: { 
-              id,
-              phoneId: item.id
-            },
-          });
-        case 'address':
-          dispatch({ type: 'SET_PRIMARY_ADDRESS', payload: item.id });
-            return await setprimaryAddressMutation({
-              variables: { 
-                id,
-                addressId: item.id
-              },
-            });
-        default:
-          return false;
-      }
-  };
-
-  const handleSave = async () => {
-    const { name, email } = state;
-    await updateUserMutation({
-      variables: {
-         id,
-         name,
-         email
-        }
-    });
-    setUserinfoMsg('Update user info successfully');
-    setTimeout(function () {
-      setUserinfoMsg('');
-    }, 8000)
-  };
-
-  const handleSavePassord = async () => {
-    const { oldPassword , newPassword, confirmPassword } = state;
-      await changePasswordMutation({
-        variables: {
-          id,
-          old_password: oldPassword,
-          new_password: newPassword,
-          confirm_password: confirmPassword
-          }
-      });
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('access_token');
-        authDispatch({ type: 'SIGN_OUT' });
-        Router.push('/');
-      }
-      setPasswordChangeMsg('Loadding...')
-  };
-console.log("iswoprking:", state.workInfo)
+console.log("working info changed:", state.tasks)
 const h = state.workInfo?.totalWorkingMinutesPerWeek / 60 | 0;
 const m = state.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
+const subtotalSalario = Number(state.workInfo?.totalWorkingMinutesPerWeek) / 60 * Number(state.workInfo?.ratePerHour);
+const pendingTasks = state?.tasks.filter((task) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false))
+const inProgressTasks = state?.tasks.filter((task) => (task.startDate.length > 1 && task.finishDate.length === 0));
   return (
     <SettingsForm>
       <SettingsFormContent>
@@ -350,10 +289,21 @@ const m = state.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
               />
             </Label>
             <Label>
-            {`$${state.workInfo?.ratePerHour}`}
+            {`$${state.workInfo?.ratePerHour?.toFixed(2) || '-'}`}
             </Label>
           </Row>
 
+          <Row>
+            <Label style={{ marginRight: '15px', minWidth: '200px'}}>
+              <FormattedMessage
+                id='subtotalSalary'
+                defaultMessage='Salary Subtotal'
+              />
+            </Label>
+            <Label>
+              {`$${subtotalSalario}`}
+            </Label>
+          </Row>
 
           <Row>
             <Label style={{ marginRight: '15px', minWidth: '200px'}}>
@@ -375,298 +325,103 @@ const m = state.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
                 />
               </Label>
               <Label>
-                {`$${state.workInfo?.totalSalaryToPayWeekly}`}
+                {`$${state.workInfo?.totalSalaryToPayWeekly?.toFixed(2) || '-'}`}
               </Label>
           </Row>
 
+          { inProgressTasks?.length > 0 && (
+            <Row>
+            <Col xs={12} sm={12} md={12} lg={12}>
+              <SettingsFormContent>
+                <HeadingSection>
+                  <Title>
+                    <FormattedMessage id='inProgressTasks' defaultMessage='inProgressTasks' />
+                  </Title>
+                </HeadingSection>
+                <ButtonGroup>
+                  <RadioGroupThree
+                    items={inProgressTasks}
+                    component={(task: any, index: any) => (
+                      <RadioCard
+                        id={index}
+                        key={index}
+                        title={task.description}
+                        content={task.description}
+                        checked={task.isDone}
+                        onChange={() => handleTaskChange(task, 'nothing')}
+                        name='contact'
+                        hasEdit={false}
+                        onDelete={() => handleTaskChange(task, 'stop')}
+                      />
+                    )}
+                  />
+                </ButtonGroup>
+              </SettingsFormContent>
+            </Col>
+          </Row>
+          )}
+
           <Row>
-            <Label>
-              <FormattedMessage
-                id='todoTasks'
-                defaultMessage='todoTasks'
-              />
-            </Label>
-            {state.workInfo?.tasks?.map((task) => {
-              return (
-                <Label>
-                  {task}
-                </Label>
-              )
-            })}
+            <Col xs={12} sm={12} md={12} lg={12}>
+              <SettingsFormContent>
+                <HeadingSection>
+                  <Title>
+                    <FormattedMessage id='pendingTasks' defaultMessage='pendingTasks' />
+                  </Title>
+                </HeadingSection>
+                <ButtonGroup>
+                  <RadioGroupThree
+                    items={pendingTasks}
+                    component={(task: any, index: any) => (
+                      <RadioCard
+                        id={index}
+                        key={index}
+                        title={task.description}
+                        content={`Comenzo: ${task.startDate}. Termino: ${task.finishDate}. Completada: ${task.isDone}`}
+                        checked={task.isDone}
+                        onChange={() => handleTaskChange(task, 'contact')}
+                        name='contact'
+                        onEdit={() => handleTaskChange(task,'start')}
+                        hasDelete={false}
+                      />
+                    )}
+                  />
+                </ButtonGroup>
+              </SettingsFormContent>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xs={12} sm={12} md={12} lg={12}>
+              <SettingsFormContent>
+                <HeadingSection>
+                  <Title>
+                    <FormattedMessage id='doneTasks' defaultMessage='doneTasks' />
+                  </Title>
+                </HeadingSection>
+                <ButtonGroup>
+                  <RadioGroupThree
+                    items={state?.tasks.filter((task) => (task.isDone === true))}
+                    component={(task: any, index: any) => (
+                      <RadioCard
+                        id={index}
+                        key={index}
+                        title={task.description}
+                        content={task.description}
+                        checked={task.isDone}
+                        onChange={() => handleTaskChange(task, 'nothing')}
+                        name='contact'
+                        hasDelete={false}
+                        hasEdit={false}
+                      />
+                    )}
+                  />
+                </ButtonGroup>
+              </SettingsFormContent>
+            </Col>
           </Row>
 
         </Col>
-        {/* <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
-          <Col xs={12} sm={5} md={5} lg={5}>
-            <Label>
-              <FormattedMessage
-                id='profileNameField'
-                defaultMessage='Your Name'
-              />
-            </Label>
-            <Input
-              type='text'
-              label='Name'
-              name='name'
-              value={name}
-              onChange={handleChange}
-              backgroundColor='#F7F7F7'
-              height='48px'
-              marginBottom='10px'
-              // intlInputLabelId="profileNameField"
-            />
-          </Col>
-
-          <Col xs={12} sm={5} md={5} lg={5}>
-            <Label>
-              <FormattedMessage
-                id='profileEmailField'
-                defaultMessage='Your Email'
-              />
-            </Label>
-            <Input
-              type='email'
-              name='email'
-              label='Email Address'
-              value={email}
-              onChange={handleChange}
-              backgroundColor='#F7F7F7'
-              marginBottom='10px'
-              // intlInputLabelId="profileEmailField"
-            />
-          </Col>
-
-          <Col xs={12} sm={2} md={2} lg={2}>
-            <Button size='big' style={{ width: '100%', marginBottom: '10px' }} onClick={handleSave}>
-              <FormattedMessage id='profileSaveBtn' defaultMessage='Save' />
-            </Button>
-          </Col>
-          {userinfoMsg && (
-              <SuccessMsg>
-                <FormattedMessage
-                  id='userInfoSuccess'
-                  defaultMessage={userinfoMsg}
-                />
-              </SuccessMsg>
-          )}
-        </Row>
-        <Row>
-          <Col xs={12} sm={12} md={12} lg={12}>
-            <SettingsFormContent>
-              <HeadingSection>
-                <Title>
-                  <FormattedMessage
-                    id='contactNumberTItle'
-                    defaultMessage='Contact Numbers'
-                  />
-                </Title>
-              </HeadingSection>
-              <ButtonGroup>
-                <RadioGroupThree
-                  items={phones}
-                  component={(item: any, index: any) => (
-                    <RadioCard
-                      id={index}
-                      key={index}
-                      title={item.is_primary ? intl.formatMessage({ id: 'primaryId', defaultMessage: 'Primary' }) : intl.formatMessage({ id: 'secundaryId', defaultMessage: 'Secondary' })}
-                      content={item.number}
-                      checked={item.is_primary === true}
-                      onChange={() => handlePrimary(item, 'contact')}
-                      name='contact'
-                      onEdit={() => handleEditDelete(item, index, 'edit', 'contact')}
-                      onDelete={() =>
-                        handleEditDelete(item, index, 'delete', 'contact')
-                      }
-                    />
-                  )}
-                  secondaryComponent={
-                    <Button
-                      size='big'
-                      variant='outlined'
-                      type='button'
-                      className='add-button'
-                      onClick={() =>handleModal(
-                         UpdateContact, 
-                         {
-                          item:{},
-                          id
-                        }, 
-                        'add-contact-modal'
-                        )
-                      }
-                    >
-                      <FormattedMessage
-                        id='addContactBtn'
-                        defaultMessage='Add Contact'
-                      />
-                    </Button>
-                  }
-                />
-              </ButtonGroup>
-            </SettingsFormContent>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} sm={12} md={12} lg={12} style={{ position: 'relative' }}>
-            <SettingsFormContent>
-              <HeadingSection>
-                <Title>
-                  <FormattedMessage
-                    id='deliveryAddresTitle'
-                    defaultMessage='Delivery Address'
-                  />
-                </Title>
-              </HeadingSection>
-              <ButtonGroup>
-                <RadioGroupTwo
-                  items={delivery_address}
-                  component={(item: any, index: any) => (
-                    <RadioCardTWO 
-                      id={index}
-                      key={index}
-                      address={item.address}
-                      district={item.district}
-                      division={item.division}
-                      title={item.title}
-                      region = {item.region}
-                      name='address'
-                      isChecked={item.is_primary === true}
-                      onChange={() =>handlePrimary(item, 'address')}
-                      onEdit={() => handleEditDelete(item, index, 'edit', 'address')}
-                      onDelete={() =>
-                        handleEditDelete(item, index, 'delete', 'address')
-                      }
-                    />
-                  )}
-                  
-                  secondaryComponent={
-                    <Button
-                      size='big'
-                      variant='outlined'
-                      type='button'
-                      className='add-button'
-                      onClick={() =>handleModal(
-                          UpdateAddressTwo, 
-                          {
-                            item:{},
-                            id
-                          },
-                          'add-address-modal')
-                      }
-                    >
-                      <FormattedMessage
-                        id={delivery_address?.length === 3 ? "fullDeliveryAddressesMsg" : "addAddressBtn"}
-                        defaultMessage='Add Address' 
-                      />
-                    </Button>
-                  }
-                />
-              </ButtonGroup>
-            </SettingsFormContent>
-          </Col>
-        </Row>
-        <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
-          <Col xs={12} sm={12} md={12} lg={12}>
-            <SettingsFormContent>
-              <HeadingSection>
-                <Title>
-                  <FormattedMessage
-                    id='changePasswordTitle'
-                    defaultMessage='Change Password'
-                  />
-                </Title>
-              </HeadingSection>
-            </SettingsFormContent>
-          </Col>
-          <Col xs={12} sm={2} md={2} lg={3}>
-            <Input
-              type='password'
-              label='Old Password' 
-              placeholder={intl.formatMessage({ id: 'oldPasswordId', defaultMessage: 'Old password' })}
-              name='oldPassword'
-              value={ state.oldPassword || '' }
-              onChange={handleChange}
-              backgroundColor='#F7F7F7'
-              height='48px'
-              marginBottom='10px'
-              intlInputLabelId="profileNameField"
-            />
-          </Col>
-          <Col xs={12} sm={2} md={2} lg={3}>
-            <Input
-              type='password'
-              label='New Password'
-              placeholder={intl.formatMessage({ id: 'newPasswordId', defaultMessage: 'New password' })}
-              name='newPassword'
-              value={ state.newPassword || '' }
-              onChange={handleChange}
-              backgroundColor='#F7F7F7'
-              height='48px'
-              marginBottom='10px'
-              // intlInputLabelId="profileNameField"
-            />
-          </Col>
-          <Col xs={12} sm={2} md={2} lg={3}>
-            <Input
-              type='password'
-              name='confirmPassword'
-              placeholder={intl.formatMessage({ id: 'confirmPasswordId', defaultMessage: 'Confirm password' })}
-              value={ state.confirmPassword || '' }
-              onChange={handleChange}
-              backgroundColor='#F7F7F7'
-              marginBottom='10px'
-              // intlInputLabelId="profileEmailField"
-            />
-          </Col>
-          <Col xs={12} sm={2} md={2} lg={3}>
-            {!passwordChangeMsg &&
-              <Button size='big' style={{ width: '100%', marginBottom: '10px' }} onClick={handleSavePassord}>
-                <FormattedMessage id='profileSaveBtn' defaultMessage='Save' />
-              </Button>
-            }
-            {passwordChangeMsg &&
-              <Button size='big' style={{ width: '100%' }} onClick={handleSavePassord}>
-                <FormattedMessage id='profileSaveBtn' defaultMessage='Loading..' />
-              </Button>
-            }
-          </Col>
-        </Row> */}
-
-        {/*<Row>
-          <Col xs={12} sm={12} md={12} lg={12}>
-            <SettingsFormContent>
-              <HeadingSection>
-                <Title>
-                  <FormattedMessage
-                    id='paymentCardTitle'
-                    defaultMessage='Payments Card'
-                  />
-                </Title>
-              </HeadingSection>
-              <PaymentGroup
-                name='payment'
-                deviceType={deviceType}
-                items={card}
-                onEditDeleteField={(item: any, type: string) =>
-                  handleEditDelete(item, type, 'payment')
-                }
-                onChange={(item: any) =>
-                  dispatch({
-                    type: 'SET_PRIMARY_CARD',
-                    payload: item.id.toString(),
-                  })
-                }
-                handleAddNewCard={() => {
-                  handleModal(
-                    StripePaymentForm,
-                    { buttonText: 'Add Card' },
-                    'add-address-modal stripe-modal'
-                  );
-                }}
-              />
-            </SettingsFormContent>
-          </Col>
-        </Row>*/}
       </SettingsFormContent>
     </SettingsForm>
   );

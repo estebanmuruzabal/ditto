@@ -12,13 +12,14 @@ import Button, { KIND } from '../../components/Button/Button';
 import es from 'react-phone-input-2/lang/es.json'
 
 import DrawerBox from '../../components/DrawerBox/DrawerBox';
-import { Row, Col } from '../../components/FlexBox/FlexBox';
+import { Row, Col, Container } from '../../components/FlexBox/FlexBox';
 import {
   Form,
   DrawerTitleWrapper,
   DrawerTitle,
   FieldDetails,
   ButtonGroup,
+  TaskDetail
 } from '../DrawerItems/DrawerItems.style';
 import { FormFields, FormLabel } from '../../components/FormFields/FormFields';
 import Select from '../../components/Select/Select';
@@ -36,6 +37,51 @@ const GET_STAFFS = gql`
     }
   }
 `;
+
+export const DELETE_USER_TASK = gql`
+  mutation DeleteUserTask(
+    $id: ID!, 
+    $taskId: String,
+  ) { deleteUserTask(
+      id: $id, 
+      taskId: $taskId,
+    ) {
+    status
+      message
+    }
+  }
+`;
+
+export const UPDATE_USER_TODO_TASKS = gql`
+  mutation UpdateUserTasks(
+    $id: ID!, 
+    $taskId: String,
+    $description: String,
+    $startDate: String,
+    $finishDate: String,
+    $plannedDate: String,
+    $isRepetitived: Boolean,
+    $completationTimes: String,
+    $workedHours: String,
+    $isDone: Boolean
+  ) { updateUserTasks(
+      id: $id, 
+      taskId: $taskId,
+      description: $description,
+      startDate: $startDate,
+      finishDate: $finishDate,
+      plannedDate: $plannedDate,
+      isRepetitived: $isRepetitived,
+      completationTimes: $completationTimes,
+      workedHours: $workedHours,
+      isDone: $isDone
+    ) {
+    status
+      message
+    }
+  }
+`;
+
 
 export const UPDATE_USER_WORK_INFO = gql`
   mutation UpdateUserWorkInfo(
@@ -91,47 +137,35 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
   const closeDrawer = useCallback(() => dispatch({ type: 'CLOSE_DRAWER' }), [
     dispatch,
   ]);
-  const [country, setCountry] = React.useState(undefined);
-  const [checked, setChecked] = React.useState(true);
-  const [text, setText] = React.useState('');
+
+  const [task, setTask] = React.useState({
+    taskId: null,
+    description: '',
+    startDate: '',
+    finishDate: '',
+    plannedDate: '',
+    isRepetitived: false,
+    completationTimes: '',
+    workedHours: '',
+    isDone: false
+  });
   const itemData = useDrawerState('data');
   const [roleSelected, setRole] = React.useState(itemData.role || '');
   const [updateUserInfoMutation] = useMutation(UPDATE_USER_WORK_INFO);
+  const [updateUserTodoMutation] = useMutation(UPDATE_USER_TODO_TASKS);
+  const [deleteUserTaskMutation] = useMutation(DELETE_USER_TASK);
   console.log('itemData', itemData)
   // itemData.role = itemData.role || '';
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: itemData,
   })
 
-  function handleRole({ value }) {
-    console.log('setRole(value);', value)
-    setRole(value);
-
-  }
-  // const [createStaff] = useMutation(EDIT_STAFF, {
-  //   update(cache, { data: { createStaff } }) {
-  //     const { staffs } = cache.readQuery({
-  //       query: GET_STAFFS,
-  //     });
-
-  //     cache.writeQuery({
-  //       query: GET_STAFFS,
-  //       data: { staffs: staffs.concat([createStaff]) },
-  //     });
-  //   },
-  // });
-
   const updateUserWorkInfoMutation = async (data) => {
     const { workInfo, id } = itemData;
-    console.log(data.workInfo);
-    console.log(workInfo);
     const { ratePerHour, advancedSalaryPaid, totalSalaryToPayWeekly, totalWorkingMinutesPerWeek } = data.workInfo;
-    
-    // const newTotalSalaryToPayWeekly = Number(ratePerHour) * Number(totalWorkingMinutesPerWeek) - Number(advancedSalaryPaid);
-    // const newAdvancedSalaryPaid = Number(totalSalaryToPayWeekly) - newTotalSalaryToPayWeekly;
     const ratePerMinute = Number(ratePerHour) / 60;
-    const newTotalWorkingMinutesPerWeek = Number(totalWorkingMinutesPerWeek) * 60;
-    const newTotalSalaryToPayWeekly = newTotalWorkingMinutesPerWeek * ratePerMinute - Number(advancedSalaryPaid);
+    const newTotalSalaryToPayWeekly = Number(totalWorkingMinutesPerWeek) * ratePerMinute - Number(advancedSalaryPaid);
+
     await updateUserInfoMutation({
       variables: {
          id,
@@ -140,15 +174,37 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
          stoppedWorkTime: workInfo.stoppedWorkTime,
          ratePerHour: Number(ratePerHour),
          logDescription: `totalSalaryToPayWeekly from ${workInfo.totalSalaryToPayWeekly} to ${totalSalaryToPayWeekly}.advancedSalaryPaid from ${workInfo.advancedSalaryPaid} to ${advancedSalaryPaid}. ratePerHour from ${workInfo.ratePerHour} to ${ratePerHour}. totalWorkingMinutesPerWeek from ${workInfo.totalWorkingMinutesPerWeek} to ${totalWorkingMinutesPerWeek}`,
-         totalWorkingMinutesPerWeek: newTotalWorkingMinutesPerWeek,
-         totalSalaryToPayWeekly: newTotalSalaryToPayWeekly,
+         totalWorkingMinutesPerWeek: Number(totalWorkingMinutesPerWeek),
+         totalSalaryToPayWeekly: parseInt(Number(newTotalSalaryToPayWeekly).toFixed(2)),
          advancedSalaryPaid: Number(advancedSalaryPaid),
          taskRelated: workInfo.taskRelated,
-         role: roleSelected
+         role: roleSelected || workInfo.role
         }
     });
   };
 
+  const deleteUserTask = async (taskId) => {
+    const { id } = itemData;
+    await deleteUserTaskMutation({
+      variables: {
+         id,
+         taskId: taskId
+        }
+    });
+  };
+
+  const addUserTasks = async () => {
+    const { id, tasks } = itemData;
+    
+    tasks.push(task)
+
+    await updateUserTodoMutation({
+      variables: {
+         id,
+         ...task,
+        }
+    });
+  };
   React.useEffect(() => {  }, [register]);
 
   const roleSelectOptions = [
@@ -160,17 +216,31 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
   ];
   
   const onSubmit = (data) => {
-
     updateUserWorkInfoMutation(data);
     closeDrawer();
   };
 
+  const editTask = (field, value) => {
+    switch (field) {
+      case 'description':
+
+        break;
+    
+      default:
+        setTask({ ...task, [field]: value });
+        break;
+    }
+
+  };
+
+  
   const h = itemData.workInfo?.totalWorkingMinutesPerWeek / 60 | 0;
   const m = itemData.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
+  console.log(task)
   return (
     <>
       <DrawerTitleWrapper>
-        <DrawerTitle>Edit Staff Member</DrawerTitle>
+        <DrawerTitle>Edit Staff Member {itemData.name}</DrawerTitle>
       </DrawerTitleWrapper>
 
       <Form onSubmit={handleSubmit(onSubmit)} style={{ height: '100%' }}>
@@ -196,71 +266,8 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
 
             <Col lg={8}>
               <DrawerBox>
-                {/* <FormFields>
-                  <FormLabel>First Name</FormLabel>
-                  <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
-                    name='first_name'
-                  />
-                </FormFields>
-
                 <FormFields>
-                  <FormLabel>Last Name</FormLabel>
-                  <Input
-                    inputRef={register({ required: true, maxLength: 20 })}
-                    name='last_name'
-                  />
-                </FormFields>
-
-                <FormFields>
-                  <FormLabel>Contact No.</FormLabel>
-                  <PhoneInput
-                    onCountryChange={({ option }) => setCountry(option)}
-                    text={text}
-                    onTextChange={(e) => setText(e.currentTarget.value)}
-                    inputRef={register({ required: true })}
-                    name='contact_number'
-
-                    // inputProps={{
-                    //   name: 'phone',
-                    //   required: true,
-                    //   autoFocus: true
-                    // }}
-                    containerStyle={{textAlign: "left"}}
-                    inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
-                    onlyCountries={['ar']}
-                    localization={es}
-                    country={'ar'}
-                    masks={{ar: '(...) ...-....'}}
-                  />
-                </FormFields> */}
-{/* 
-                <FormFields>
-                  <FormLabel>Role</FormLabel>
-                  <Select
-                    options={roleSelectOptions}
-                    labelKey="label"
-                    valueKey="value"
-                    placeholder="Role"
-                    inputRef={register({ required: true })}
-                    value={[roleSelectOptions[0]]}
-                    // name='role'
-                    searchable={false}
-                    onChange={handleRole}
-                    />
-                </FormFields> */}
-
-                {/* <FormFields>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    type='email'
-                    inputRef={register({ required: true })}
-                    name='email'
-                  />
-                </FormFields> */}
-
-                <FormFields>
-                  <FormLabel>Minutes working bellow. {`(${h}:${Number(m) >= 9 ? m : '0' + m} hs)`}, Change example: type '2.5' for 2:30 hs </FormLabel>
+                  <FormLabel>Working Hours:{`${h}: ${Number(m) >= 9 ? m : '0' + m} hs.  Total Working Minutes:`}</FormLabel>
                   <Input
                     inputRef={register({ required: true })}
                     name='workInfo.totalWorkingMinutesPerWeek'
@@ -285,16 +292,116 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
                   />
                 </FormFields>
 
-                <FormFields>
+                <Col>
                   <FormLabel>Total Salary To Pay Weekly</FormLabel>
-                  <Input
+                  <FormLabel>{`:   $${itemData?.workInfo?.totalSalaryToPayWeekly}`}</FormLabel>
+                  {/* <Input
                     type='number'
                     inputRef={register({ required: true })}
                     disabled={true}
                     name='workInfo.totalSalaryToPayWeekly'
-                  />
-                </FormFields>
+                  /> */}
+                </Col>
+              </DrawerBox>
+            </Col>
+          </Row>
 
+          <Row>
+            <Col lg={4}>
+              <FieldDetails>
+                Add tasks
+              </FieldDetails>
+            </Col>
+
+            <Col lg={8}>
+              <DrawerBox>
+                <FormFields>
+                    <Input
+                      placeholder={'Task description'}
+                      label='Task description'
+                      value={task.description}
+                      onChange={(e) => setTask({ ...task, description: e.target.value })}
+                      backgroundColor='#F7F7F7'
+                      marginBottom='10px'
+                      // inputRef={register({ required: true })}
+                      // name='workInfo.totalSalaryToPayWeekly'
+                    />
+
+                    <Input
+                      placeholder={'Planned date'}
+                      label='Planned date'
+                      type="datetime-local"
+                      value={task.plannedDate}
+                      onChange={(e) => setTask({ ...task, plannedDate: e.target.value })}
+                      backgroundColor='#F7F7F7'
+                      marginBottom='10px'
+                      // inputRef={register({ required: true })}
+                      // name='workInfo.totalSalaryToPayWeekly'
+                    />
+
+                    <Checkbox
+                      checked={task.isRepetitived}
+                      onChange={() => setTask({ ...task, isRepetitived: !task.isRepetitived })}
+                      // inputRef={register({ required: true })}
+                      // name={'role'}
+                      overrides={{
+                        Label: {
+                          style: ({ $theme }) => ({
+                            color: $theme.colors.textNormal,
+                          }),
+                        },
+                      }}
+                    >
+                      {'Is repetitived?'}
+                    </Checkbox>
+                    <Button size='small' style={{ width: '100%', marginBottom: '10px' }} onClick={addUserTasks}>
+                      {'Add task'}
+                    </Button>
+                  </FormFields>
+
+                  { itemData?.tasks?.length > 0 && itemData?.tasks?.map((task) => {
+                    const { taskId } = task || {};
+                    return (
+                      <Container>
+                        <Col lg={4}>
+                          <TaskDetail>
+                            - Description: {task?.description || 'not set'}
+                          </TaskDetail>
+                          <TaskDetail>
+                            - Start Date: {task?.startDate || 'not set'}
+                          </TaskDetail>
+                          <TaskDetail>
+                            - Finish Date: {task?.startDate || 'not set'}
+                          </TaskDetail>
+                          <TaskDetail>
+                            - Is done: {task?.isDone ? 'true' : 'false'}
+                          </TaskDetail>
+                          </Col>
+                          <Button
+                            kind={KIND.tertiary}
+                            onClick={() => deleteUserTask(taskId)}
+                            overrides={{
+                              BaseButton: {
+                                style: ({ $theme }) => ({
+                                  width: '50%',
+                                  borderTopLeftRadius: '3px',
+                                  borderTopRightRadius: '3px',
+                                  borderBottomRightRadius: '3px',
+                                  borderBottomLeftRadius: '3px',
+                                  marginRight: '15px',
+                                  color: $theme.colors.red400,
+                                }),
+                              },
+                            }}
+                          >
+                            delete
+                          </Button>
+
+                        </Container>
+                    );
+                  }) 
+                    
+                  }
               </DrawerBox>
             </Col>
           </Row>
@@ -317,7 +424,7 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
                           checked={role.value === roleSelected}
                           onChange={() => setRole(role.value)}
                           inputRef={register({ required: true })}
-                          name={'role'}
+                          // name={'role'}
                           overrides={{
                             Label: {
                               style: ({ $theme }) => ({

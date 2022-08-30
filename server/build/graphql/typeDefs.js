@@ -35,13 +35,16 @@ exports.typeDefs = apollo_server_express_1.gql `
         taskRelated: String
     }
 
-    type Tasks  {
-        id: Int
+    type Task {
+        id: ID!
+        description: String
         startDate: String
         finishDate: String
+        plannedDate: String
+        isRepetitived: Boolean
+        completationTimes: String
+        workedHours: String
         isDone: Boolean
-        description: String
-        workedHours: Int  
     }
 
     type Logs {
@@ -58,7 +61,7 @@ exports.typeDefs = apollo_server_express_1.gql `
         role: String
         created_at: String
         workInfo: WorkInfo
-        tasks: [Tasks]
+        tasks: Task
         logs: [Logs]
     }
 
@@ -342,7 +345,6 @@ exports.typeDefs = apollo_server_express_1.gql `
         hasMore: Boolean
     }
 
-
     input CouponInput {
         title: String!
         code: String!
@@ -405,7 +407,8 @@ exports.typeDefs = apollo_server_express_1.gql `
         staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!
         updateUserWorkInfo(id: ID!, isWorking: Boolean, startedWorkTime: String, stoppedWorkTime: String, ratePerHour: Int, logDescription: String, totalWorkingMinutesPerWeek: Int, totalSalaryToPayWeekly: Int, advancedSalaryPaid: Int, taskRelated: String, role: String): DefaultMessageType!
         updateUserLogs(id: ID!, logs: String): Logs
-        updateUserTasks(id: ID!, tasks: String): Tasks
+        deleteUserTask(id: ID!, taskId: String): DefaultMessageType
+        updateUserTasks(id: ID!, taskId: String, description: String, startDate: String, finishDate: String, plannedDate: String, isRepetitived: Boolean, completationTimes: String, workedHours: String, isDone: Boolean): DefaultMessageType!
         deleteStaff(id: ID!): DefaultMessageType!
         phoneVerification(phone: String!): DefaultMessageType!
         phoneVerificationCheck(phone: String!, verification_code: String!): UserAuthPayload!

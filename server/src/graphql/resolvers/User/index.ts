@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, ICommonMessageReturnType, IUser, IUserAuth, IWorkInfo, Tasks, Logs, Phone, Roles} from "../../../lib/types";
+import {Address, Database, ICommonMessageReturnType, IUser, IUserAuth, IWorkInfo, Logs, Phone, Roles} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize} from "../../../lib/utils";

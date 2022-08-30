@@ -65,13 +65,30 @@ export const UPDATE_USER_LOGS = gql`
 export const UPDATE_USER_TODO_TASKS = gql`
   mutation UpdateUserTasks(
     $id: ID!, 
-    $tasks: Tasks,
+    $taskId: String,
+    $description: String,
+    $startDate: String,
+    $finishDate: String,
+    $plannedDate: String,
+    $isRepetitived: Boolean,
+    $completationTimes: String,
+    $workedHours: String,
+    $isDone: Boolean
   ) { updateUserTasks(
       id: $id, 
-      tasks: $tasks,
+      taskId: $taskId,
+      description: $description,
+      startDate: $startDate,
+      finishDate: $finishDate,
+      plannedDate: $plannedDate,
+      isRepetitived: $isRepetitived,
+      completationTimes: $completationTimes,
+      workedHours: $workedHours,
+      isDone: $isDone
     ) {
     status
       message
     }
   }
 `;
+

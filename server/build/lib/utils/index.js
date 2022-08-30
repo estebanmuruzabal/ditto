@@ -36,13 +36,13 @@ exports.authorize = (req, db) => __awaiter(void 0, void 0, void 0, function* () 
     const token = req.headers["x-access-token"];
     const secret = process.env.JWT_SECRET;
     if (!token) {
-        throw new Error("Unauthorized!");
+        throw new Error("no token sent!");
     }
     try {
         jwt.verify(token, secret);
     }
     catch (err) {
-        throw new Error("Unauthorized!");
+        throw new Error("Unknown error:");
     }
     const { UserId, exp } = jwt.verify(token, secret);
     if (exp < Date.now().valueOf() / 1000) {
@@ -50,7 +50,7 @@ exports.authorize = (req, db) => __awaiter(void 0, void 0, void 0, function* () 
     }
     const user = yield db.users.findOne({ _id: new mongodb_1.ObjectId(UserId) });
     if (!user) {
-        throw new Error("Unauthorized!");
+        throw new Error("No user found!");
     }
     return user;
 });

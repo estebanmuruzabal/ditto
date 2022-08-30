@@ -20,9 +20,10 @@ type Props = {
     desktop: boolean;
   };
 };
+
 const WorkPage: NextPage<Props> = ({ deviceType }) => {
   const { data, error, loading } = useQuery(GET_LOGGED_IN_USER);
-  console.log('data.getUser:::' , data)
+
   if (!data || loading) {
     return <div>loading...</div>;
   }

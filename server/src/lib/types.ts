@@ -12,6 +12,18 @@ export interface Logs {
     timestamp: string
 }
 
+export interface Task {
+    taskId: string,
+    description: string,
+    startDate: string,
+    finishDate: string,
+    plannedDate: string,
+    isRepetitived: boolean,
+    completationTimes: string,
+    workedHours: string,
+    isDone: boolean
+}
+
 export interface Address {
     id: string
     title: string,
@@ -46,9 +58,9 @@ export interface IUser {
     otp?: string;
     role?: Roles;
     created_at: string;
-    workInfo?: IWorkInfo;
-    tasks?: Array<Tasks>;
-    logs?: Array<Logs>;
+    workInfo: IWorkInfo;
+    tasks: Array<Task>;
+    logs: Array<Logs>;
 }
 
 export enum Roles {
@@ -70,15 +82,6 @@ export interface IWorkInfo {
     advancedSalaryPaid: number | null;
     isWorking: boolean;
     taskRelated: string | null;
-}
-
-export interface Tasks {
-    id: number | null;
-    startDate: string | null;
-    finishDate: string | null;
-    isDone: boolean;
-    description: string | null;
-    workedHours: number | null;  
 }
 
 export interface IUserAuth {

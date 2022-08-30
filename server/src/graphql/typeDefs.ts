@@ -33,15 +33,6 @@ export const typeDefs = gql`
         taskRelated: String
     }
 
-    type Tasks  {
-        id: Int
-        startDate: String
-        finishDate: String
-        isDone: Boolean
-        description: String
-        workedHours: Int  
-    }
-
     type Logs {
         logDescription: String
         timestamp: String
@@ -56,8 +47,20 @@ export const typeDefs = gql`
         role: String
         created_at: String
         workInfo: WorkInfo
-        tasks: [Tasks]
+        tasks: [Task]
         logs: [Logs]
+    }
+
+    type Task {
+        taskId: String
+        description: String
+        startDate: String
+        finishDate: String
+        plannedDate: String
+        isRepetitived: Boolean
+        completationTimes: String
+        workedHours: String
+        isDone: Boolean
     }
 
     type UserAuthPayload  {
@@ -340,7 +343,6 @@ export const typeDefs = gql`
         hasMore: Boolean
     }
 
-
     input CouponInput {
         title: String!
         code: String!
@@ -403,7 +405,8 @@ export const typeDefs = gql`
         staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!
         updateUserWorkInfo(id: ID!, isWorking: Boolean, startedWorkTime: String, stoppedWorkTime: String, ratePerHour: Int, logDescription: String, totalWorkingMinutesPerWeek: Int, totalSalaryToPayWeekly: Int, advancedSalaryPaid: Int, taskRelated: String, role: String): DefaultMessageType!
         updateUserLogs(id: ID!, logs: String): Logs
-        updateUserTasks(id: ID!, tasks: String): Tasks
+        deleteUserTask(id: ID!, taskId: String): DefaultMessageType
+        updateUserTasks(id: ID!, taskId: String, description: String, startDate: String, finishDate: String, plannedDate: String, isRepetitived: Boolean, completationTimes: String, workedHours: String, isDone: Boolean): DefaultMessageType!
         deleteStaff(id: ID!): DefaultMessageType!
         phoneVerification(phone: String!): DefaultMessageType!
         phoneVerificationCheck(phone: String!, verification_code: String!): UserAuthPayload!

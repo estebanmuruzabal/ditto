@@ -18,6 +18,20 @@ export const Row = styled(Rows, () => ({
   },
 }));
 
+export const Container = styled('div', ({ props }) => ({
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '3px',
+  borderWidth: '2px',
+  borderRadius: '2px',
+  borderColor: '#E6E6E6',
+  borderStyle: 'dashed',
+  backgroundColor: '#ffffff',
+  color: '#00c58d',
+  outline: 'none',
+  transition: 'border 0.24s ease-in-out',
+}));
+
 export const Col = styled(Cols, () => ({
   padding: '0 15px',
 }));

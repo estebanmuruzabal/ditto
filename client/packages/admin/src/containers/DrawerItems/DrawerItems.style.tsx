@@ -31,6 +31,17 @@ export const FieldDetails = styled("span", ({ $theme }) => ({
   }
 }));
 
+export const TaskDetail = styled("span", ({ $theme }) => ({
+  ...$theme.typography.font14,
+  padding: "10px 0 5px",
+  color: $theme.colors.textNormal,
+  display: "block",
+
+  "@media only screen and (max-width: 991px)": {
+    padding: "30px 0"
+  }
+}));
+
 export const ButtonGroup = styled("div", ({ $theme }) => ({
   padding: "30px 60px",
   display: "flex",

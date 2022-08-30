@@ -54,9 +54,12 @@ const GET_STAFFS = gql`
         taskRelated
       }
       tasks{
-        id
+        taskId
         startDate
         finishDate
+        plannedDate
+        isRepetitived
+        completationTimes
         isDone
         description
         workedHours
@@ -189,10 +192,10 @@ export default function StaffMembers() {
              <StyledTable $gridTemplateColumns="minmax(150px, auto) minmax(75px, auto) minmax(75px, auto) minmax(75px, auto) minmax(75px, auto) minmax(150px, auto) minmax(150px, max-content) minmax(75px, auto)">
                 <StyledHeadCell>Name</StyledHeadCell>
                 <StyledHeadCell>Role</StyledHeadCell>
-                <StyledHeadCell>isWorking</StyledHeadCell>
+                <StyledHeadCell>Is Working</StyledHeadCell>
                 <StyledHeadCell>Hourly rate</StyledHeadCell>
                 <StyledHeadCell>Weekly Salary</StyledHeadCell>
-                <StyledHeadCell>Salary in Advanced</StyledHeadCell>
+                <StyledHeadCell>Pending Tasks</StyledHeadCell>
                 <StyledHeadCell>Working Hours</StyledHeadCell>
                 <StyledHeadCell>Action</StyledHeadCell>
   
@@ -203,12 +206,11 @@ export default function StaffMembers() {
                         <React.Fragment key={index}>
                           <StyledBodyCell>{item.name || '-'}</StyledBodyCell>
                           <StyledBodyCell>{item.role || '-'}</StyledBodyCell>
-                          <StyledBodyCell>{item.workInfo?.isWorking.toString() || '-'}</StyledBodyCell>
-                          <StyledBodyCell>{item.workInfo?.ratePerHour || '-'}</StyledBodyCell>
-                          <StyledBodyCell>{item.workInfo?.totalSalaryToPayWeekly || '-'}</StyledBodyCell>
-                          <StyledBodyCell>{item.workInfo?.advancedSalaryPaid || '-'}</StyledBodyCell>
-                          {/* <StyledBodyCell>{item.workInfo?.totalWorkingMinutesPerWeek ? `${h}:${Number(m) >= 9 ? m : '0' + m} hs` : '-'}</StyledBodyCell> */}
-                          <StyledBodyCell>{item.workInfo?.totalWorkingMinutesPerWeek ? `${item.workInfo?.totalWorkingMinutesPerWeek / 60 | 0}:${Number(item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0) >= 9 ? item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0 : '0' + item.workInfo?.totalWorkingMinutesPerWeek % 60} hs` : '-'}</StyledBodyCell>
+                          <StyledBodyCell>{item.workInfo?.isWorking?.toString()?.toUpperCase() || '-'}</StyledBodyCell>
+                          <StyledBodyCell>${item.workInfo?.ratePerHour || '0'}</StyledBodyCell>
+                          <StyledBodyCell>${item.workInfo?.totalSalaryToPayWeekly || '0'}</StyledBodyCell>
+                          <StyledBodyCell>{item.tasks?.filter((task) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false)).length}</StyledBodyCell>
+                          <StyledBodyCell>{item.workInfo?.totalWorkingMinutesPerWeek ? `${item.workInfo?.totalWorkingMinutesPerWeek / 60 | 0}:${Number(item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0) >= 9 ? item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0 : '0' + item.workInfo?.totalWorkingMinutesPerWeek % 60} hs` : '0'}</StyledBodyCell>
                           <StyledBodyCell>
                             <ActionWrapper itemsOffset={offset} itemData={item}/>
                           </StyledBodyCell>

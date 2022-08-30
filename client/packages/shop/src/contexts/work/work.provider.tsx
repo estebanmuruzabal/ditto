@@ -16,15 +16,16 @@ type Action =
   | { type: 'SET_PRIMARY_ADDRESS'; payload: any }
   | { type: 'SET_PRIMARY_SCHEDULE'; payload: any }
   | { type: 'SET_PRIMARY_CARD'; payload: any }
-  | { type: 'HANDLE_WORK_CHANGE'; payload: any };
+  | { type: 'HANDLE_WORK_CHANGE'; payload: any }
+  | { type: 'HANDLE_TODO_TASKS'; payload: any };
 
 function reducer(state: any, action: Action): any {
   switch (action.type) {
     case 'HANDLE_WORK_CHANGE':
       return { ...state, workInfo: action.payload.workInfo, logs: action.payload.logs };
     
-    case 'HANDLE_ON_INPUT_CHANGE':
-      return { ...state, [action.payload.field]: action.payload.value };
+    case 'HANDLE_TODO_TASKS':
+      return { ...state, tasks: action.payload.tasks };
     
     case 'ADD_CONTACT':
       const newContact = {

@@ -22,7 +22,8 @@ import {
   ButtonGroup,
   Input,
   SuccessMsg,
-  ErrorMsg
+  ErrorMsg,
+  InputUpper
 } from './settings.style';
 import RadioGroupTwo from 'components/radio-group/radio-group-two';
 import RadioGroupThree from 'components/radio-group/radio-group-three';
@@ -62,7 +63,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
   const [setprimaryAddressMutation] = useMutation(SETPRIMARY_ADDRESS);
   const [deleteAddressMutation] = useMutation(DELETE_ADDRESS);
   const intl = useIntl();
- 
+  const passwordEmptyFields = intl.formatMessage({ id: 'passwordEmptyFields', defaultMessage: 'passwordEmptyFields' })
 
   const { 
     delivery_address, 
@@ -185,6 +186,15 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
 
   const handleSavePassord = async () => {
     const { oldPassword , newPassword, confirmPassword } = state;
+
+    const hasEmptyFields = !oldPassword || !newPassword || !confirmPassword; 
+
+    if (hasEmptyFields) {
+      setPasswordChangeMsg(passwordEmptyFields)
+      return;
+    } else {
+      setPasswordChangeMsg('')
+    }
       await changePasswordMutation({
         variables: {
           id,
@@ -201,6 +211,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
       setPasswordChangeMsg('Loadding...')
   };
 
+  const hasEmptyFields = state.oldPassword?.length === 0 || state.newPassword?.length === 0 || state.confirmPassword?.length === 0;
   return (
     <SettingsForm>
       <SettingsFormContent>
@@ -220,7 +231,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                 defaultMessage='Your Name'
               />
             </Label>
-            <Input
+            <InputUpper
               type='text'
               label='Name'
               name='name'
@@ -435,6 +446,14 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
             />
           </Col>
           <Col xs={12} sm={2} md={2} lg={3}>
+            {passwordChangeMsg === passwordEmptyFields && (
+                <SuccessMsg>
+                  <FormattedMessage
+                    id='passwordEmptyFields'
+                    defaultMessage={passwordEmptyFields}
+                  />
+                </SuccessMsg>
+            )}
             {!passwordChangeMsg &&
               <Button size='big' style={{ width: '100%', marginBottom: '10px' }} onClick={handleSavePassord}>
                 <FormattedMessage id='profileSaveBtn' defaultMessage='Save' />
@@ -447,7 +466,6 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
             }
           </Col>
         </Row>
-
         {/*<Row>
           <Col xs={12} sm={12} md={12} lg={12}>
             <SettingsFormContent>

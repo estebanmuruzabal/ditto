@@ -32,9 +32,12 @@ query GetUser{
         taskRelated
     }
     tasks{
-      id
+      taskId
       startDate
       finishDate
+      plannedDate
+      isRepetitived
+      completationTimes
       isDone
       description
       workedHours
