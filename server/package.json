@@ -1,5 +1,5 @@
 {
-  "name": "pickbazar-server",
+  "name": "ditto-server",
   "version": "0.1.0",
   "dependencies": {
     "apollo-server-express": "^2.18.2",
@@ -39,6 +39,6 @@
   "scripts": {
     "start": "nodemon src/index.ts",
     "build": "tsc -p ./",
-    "seed": "ts-node temp/seed.ts"
+    "seed": "ts-node src/temp/seed.ts"
   }
 }

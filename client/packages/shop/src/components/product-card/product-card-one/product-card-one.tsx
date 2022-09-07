@@ -16,8 +16,6 @@ import { cartAnimation } from 'utils/cart-animation';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { CartIcon } from 'assets/icons/CartIcon';
 import { ProductQuantityExceededMsg } from '../product-card.style';
-import { useDeviceType } from 'utils/useDeviceType';
-import MobileDetect from 'mobile-detect';
 
 type ProductCardProps = {
   title: string;
@@ -62,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { addItem, removeItem, getItem, isInCart, items } = useCart();
   const [showProductQuantityExceededMsg, setShowProductQuantityExceededMsg] = useState(false);
-  const { desktop } = useDeviceType();
+
   const intl = useIntl();
 
   const handleAddClick = (e) => {
@@ -165,9 +163,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               }}
               disabled
             >
-              { !desktop && (
                 <CartIcon/>
-              )}
               <ButtonText>
                 <FormattedMessage id="addCartButton" defaultMessage="Cart"/>
               </ButtonText>

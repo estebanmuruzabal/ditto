@@ -216,7 +216,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     const duration = moment.duration(finishDate.diff(startDate));
     const hours = duration.asHours();
     const minutes = duration.asHours();
-    return `${parseInt(duration.asHours())}:${parseInt(duration.asMinutes()) % 60}`;
+    return `${parseInt(duration.asHours().toString())}:${parseInt(duration.asMinutes().toString()) % 60}`;
   };
 
   // Add or edit modal

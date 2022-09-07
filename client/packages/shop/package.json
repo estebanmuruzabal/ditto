@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next -p 9000",
     "build": "next build",
-    "start": "next start -p 9000",
+    "start": "next -p 9000",
     "shop-dev": "next -p 9000"
   },
   "dependencies": {
@@ -88,5 +88,5 @@
     "imagemin-svgo": "^8.0.0",
     "typescript": "^3.9.5"
   },
-  "proxy": "http://ec2-18-231-112-19.sa-east-1.compute.amazonaws.com/"
+  "proxy": "http://ec2-18-228-12-159.sa-east-1.compute.amazonaws.com/"
 }

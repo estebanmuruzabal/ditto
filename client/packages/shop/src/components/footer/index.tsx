@@ -356,7 +356,7 @@ const Footer: React.FC<Props> = ({ logo }) =>{
                 <h2>3624-951926</h2>
               </div>
               <p className="footer-email">or email 
-                <strong> flyingchickenco@gmail.com</strong>
+                <strong>flyingchickenco@gmail.com</strong>
               </p>
             </div>
             <ul className="footer-social">

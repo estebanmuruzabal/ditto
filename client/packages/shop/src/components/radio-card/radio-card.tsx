@@ -196,7 +196,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
       {title && <CardTitle>{title}</CardTitle>}
       {content && <CardContent>{content}</CardContent>}
       {preLinkText && (<CardContent>{preLinkText}</CardContent>)}
-      {linkOnly && <Link href={linkOnly} prefetch={false} target="_blank" rel="noopener noreferrer">Click aquí</Link>}
+      {linkOnly && <Link href={linkOnly} target="_blank" rel="noopener noreferrer">Click aquí</Link>}
       {withActionButtons && (
         <CardButtons className='button-wrapper'>
           {hasEdit && (
