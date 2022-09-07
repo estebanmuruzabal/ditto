@@ -102,9 +102,8 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
                     id: 'string',
                     title: 'string',
                     address: 'string',
-                    division: 'string',
-                    district: 'string',
-                    region: 'string',
+                    location: 'string',
+                    instructions: 'string',
                     is_primary: true
                 }],
             otp: otp,

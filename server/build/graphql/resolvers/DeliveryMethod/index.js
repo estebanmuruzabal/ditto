@@ -27,7 +27,7 @@ exports.deliveryMethodsResolvers = {
         })
     },
     Mutation: {
-        createDeliveryMethod: (_root, { name, details }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        createDeliveryMethod: (_root, { name, details, isPickUp, pickUpAddress }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             yield utils_1.authorize(req, db);
             const existsData = yield db.delivery_methods.findOne({ name: name });
             if (existsData) {
@@ -37,12 +37,14 @@ exports.deliveryMethodsResolvers = {
                 _id: new mongodb_1.ObjectId(),
                 name: name,
                 details: details,
+                isPickUp,
+                pickUpAddress,
                 created_at: new Date().toUTCString(),
             };
             const insertResult = yield db.delivery_methods.insertOne(insertData);
             return insertResult.ops[0];
         }),
-        updateDeliveryMethod: (_root, { id, name, details }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        updateDeliveryMethod: (_root, { id, name, details, isPickUp, pickUpAddress }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             yield utils_1.authorize(req, db);
             const existsData = yield db.delivery_methods.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!existsData) {
@@ -51,6 +53,8 @@ exports.deliveryMethodsResolvers = {
             const updateData = {
                 name: name,
                 details: details,
+                isPickUp,
+                pickUpAddress,
                 updated_at: new Date().toUTCString(),
             };
             yield db.delivery_methods.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: updateData });

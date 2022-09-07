@@ -131,6 +131,11 @@ exports.ordersResolvers = {
             } else {
                 paymentStatus = "Paid";
             }*/
+            // name
+            //     isPickUp
+            //     pickUpAddress
+            //     details
+            //     delivery_date
             const insertData = {
                 _id: new mongodb_1.ObjectId(),
                 order_code: generateOrderCode(),
@@ -138,6 +143,7 @@ exports.ordersResolvers = {
                 contact_number: input.contact_number,
                 payment_option_id: input.payment_option_id,
                 delivery_method: input.delivery_method_id,
+                delivery_date: input.delivery_date,
                 datetime: new Date().toUTCString(),
                 delivery_address: input.delivery_address,
                 sub_total: input.sub_total,

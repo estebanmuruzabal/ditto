@@ -18,9 +18,8 @@ exports.typeDefs = apollo_server_express_1.gql `
         id: String
         title: String
         address: String 
-        division: String 
-        district: String
-        region: String 
+        location: String 
+        instructions: String
         is_primary: Boolean
     }
     
@@ -222,6 +221,9 @@ exports.typeDefs = apollo_server_express_1.gql `
         id: ID!
         name: String!
         details: String!
+        isPickUp: Boolean
+        pickUpAddress: String
+        delivery_date: String
         created_at: String
         updated_at: String
     }
@@ -262,6 +264,7 @@ exports.typeDefs = apollo_server_express_1.gql `
         payment_option_id: String!
         delivery_method_id: String!
         delivery_address: String!
+        delivery_date: String
         sub_total: Float
         total: Float
         coupon_code: String
@@ -296,6 +299,7 @@ exports.typeDefs = apollo_server_express_1.gql `
       datetime: String
       delivery_method: DeliveryMethod
       delivery_address: String!
+      delivery_date: String
       sub_total: Float
       total: Float
       coupon_code: String
@@ -421,8 +425,8 @@ exports.typeDefs = apollo_server_express_1.gql `
         createProduct(input: ProductInput): Product!
         updateProduct(id: ID!, input: ProductUpdateInput): Product!
         deleteProduct(id: ID!): DefaultMessageType!
-        createDeliveryMethod(name: String!, details: String!): DeliveryMethod!
-        updateDeliveryMethod(id: ID!, name: String!, details: String!): DeliveryMethod!
+        createDeliveryMethod(name: String!, details: String!, isPickUp: Boolean, pickUpAddress: String): DeliveryMethod!
+        updateDeliveryMethod(id: ID!, name: String!, details: String!, isPickUp: Boolean, pickUpAddress: String): DeliveryMethod!
         deleteDeliveryMethod(id: ID!): DefaultMessageType!
         createPaymentOption(name: String!, type: String!, image: String!, image_data: String!, details: String): PaymentOption!
         updatePaymentOption(id: ID!, name: String!, type: String!, image: String!, image_data: String, details: String): PaymentOption!
@@ -434,8 +438,8 @@ exports.typeDefs = apollo_server_express_1.gql `
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!
-        addDeliveryAddress(id: ID!, title: String!, address: String!, division: String, district: String, region: String): DeliveryAddress!
-        updateDeliveryAddress(id: ID!, addressId: String!, title: String!, address: String!, division: String, district: String, region: String): DeliveryAddress!
+        addDeliveryAddress(id: ID!, title: String!, address: String!, location: String, instructions: String): DeliveryAddress!
+        updateDeliveryAddress(id: ID!, addressId: String!, title: String!, address: String!, location: String, instructions: String): DeliveryAddress!
         setDeliveryAddressPrimary(id: ID!, addressId: String!): DefaultMessageType!
         deleteDeliveryAddress(id: ID!, addressId: String!): DefaultMessageType!
         changePassword(id: ID!, old_password: String!, new_password: String!, confirm_password: String!): DefaultMessageType!
