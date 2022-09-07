@@ -7,6 +7,7 @@ export interface IOrderProductInput {
     price: number;
 }
 interface IOrderInput {
+    delivery_date: string;
     customer_id: string;
     contact_number: string;
     payment_option_id: string;

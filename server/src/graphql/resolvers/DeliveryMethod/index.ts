@@ -33,7 +33,7 @@ export const deliveryMethodsResolvers: IResolvers = {
     Mutation: {
         createDeliveryMethod: async (
             _root: undefined,
-            {name, details}: { name: string, details: string },
+            {name, details, isPickUp, pickUpAddress}: { name: string, details: string, isPickUp: boolean, pickUpAddress: string },
             {db, req}: { db: Database, req: Request }
         ): Promise<IDeliveryMethod> => {
             await authorize(req, db);
@@ -48,6 +48,8 @@ export const deliveryMethodsResolvers: IResolvers = {
                 _id: new ObjectId(),
                 name: name,
                 details: details,
+                isPickUp,
+                pickUpAddress,
                 created_at: new Date().toUTCString(),
             };
 
@@ -57,7 +59,7 @@ export const deliveryMethodsResolvers: IResolvers = {
 
         updateDeliveryMethod: async (
             _root: undefined,
-            {id, name, details}: { id: string, name: string, details: string },
+            {id, name, details, isPickUp, pickUpAddress}: { id: string, name: string, details: string, isPickUp: boolean, pickUpAddress: string },
             {db, req}: { db: Database, req: Request }
         ): Promise<IDeliveryMethod> => {
             await authorize(req, db);
@@ -70,6 +72,8 @@ export const deliveryMethodsResolvers: IResolvers = {
             const updateData: IDeliveryMethod = {
                 name: name,
                 details: details,
+                isPickUp, 
+                pickUpAddress,
                 updated_at: new Date().toUTCString(),
             };
 

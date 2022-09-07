@@ -214,8 +214,7 @@ export const staffMethodsResolvers: IResolvers = {
             // console.log(userResult)
             const { tasks } = userResult;
             const taskIndex = tasks?.findIndex(task => task.taskId === taskId) || 0;
-            console.log('taskIndex::', taskIndex)
-            console.log('tasks before:::', tasks)
+
             const task = {
                 taskId: taskId ? taskId : Math.random().toString(),
                 description,

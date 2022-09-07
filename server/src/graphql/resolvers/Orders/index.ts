@@ -164,6 +164,12 @@ export const ordersResolvers: IResolvers = {
                 paymentStatus = "Paid";
             }*/
 
+            // name
+            //     isPickUp
+            //     pickUpAddress
+            //     details
+            //     delivery_date
+
             const insertData: IOrder = {
                 _id: new ObjectId(),
                 order_code: generateOrderCode(),
@@ -171,6 +177,7 @@ export const ordersResolvers: IResolvers = {
                 contact_number: input.contact_number,
                 payment_option_id: input.payment_option_id,
                 delivery_method: input.delivery_method_id,
+                delivery_date: input.delivery_date,
                 datetime: new Date().toUTCString(),
                 delivery_address: input.delivery_address,
                 sub_total: input.sub_total,

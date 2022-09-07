@@ -417,13 +417,12 @@ export const usersResolvers: IResolvers = {
         },
         addDeliveryAddress: async (
             _root: undefined,
-            {id, title, address, division, district, region}: {
+            {id, title, address, location, instructions}: {
                 id: string,
                 title: string,
                 address: string,
-                division: string,
-                district: string,
-                region: string
+                location: string,
+                instructions: string
             },
             {db, req}: { db: Database, req: Request }
         ): Promise<Address> => {
@@ -444,9 +443,8 @@ export const usersResolvers: IResolvers = {
                 id: shortid.generate(),
                 title: title,
                 address: address,
-                division: division,
-                district: district,
-                region: region,
+                location: location,
+                instructions: instructions,
                 is_primary: false,
             }
 
@@ -459,14 +457,13 @@ export const usersResolvers: IResolvers = {
         },
         updateDeliveryAddress: async (
             _root: undefined,
-            {id, addressId, title, address, division, district, region}: {
+            {id, addressId, title, address, location, instructions}: {
                 id: string,
                 addressId: string,
                 title: string,
                 address: string,
-                division: string,
-                district: string,
-                region: string
+                location: string,
+                instructions: string,
             },
             {db, req}: { db: Database, req: Request }
         ): Promise<Address> => {
@@ -480,7 +477,7 @@ export const usersResolvers: IResolvers = {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const matchedAddress = userResult.delivery_address.filter(address => {return address.id == addressId});
-            const {id: id1, title: title1, address: address1, division: division1, district: district1, region: region1, is_primary} = matchedAddress[0];
+            const {id: id1, title: title1, address: address1, location: location1, instructions: instructions1, is_primary} = matchedAddress[0];
 
             await db.users.updateOne(
                 {_id: new ObjectId(id), "delivery_address.id": addressId},
@@ -489,9 +486,8 @@ export const usersResolvers: IResolvers = {
                         "delivery_address.$.id": id1,
                         "delivery_address.$.title": title ? title : title1,
                         "delivery_address.$.address": address ? address : address1,
-                        "delivery_address.$.division": division ? division : division1,
-                        "delivery_address.$.district": district ? district : district1,
-                        "delivery_address.$.region": region ? region : region1,
+                        "delivery_address.$.location": location ? location : location1,
+                        "delivery_address.$.instructions": instructions ? instructions : instructions1,
                         "delivery_address.$.is_primary": is_primary,
                     }
                 }
@@ -524,9 +520,8 @@ export const usersResolvers: IResolvers = {
                         id: address.id,
                         title: address.title,
                         address: address.address,
-                        division: address.division,
-                        district: address.district,
-                        region: address.region,
+                        location: address.location,
+                        instructions: address.instructions,
                         is_primary: true
                     }
                 } else {
@@ -534,9 +529,8 @@ export const usersResolvers: IResolvers = {
                         id: address.id,
                         title: address.title,
                         address: address.address,
-                        division: address.division,
-                        district: address.district,
-                        region: address.region,
+                        location: address.location,
+                        instructions: address.instructions,
                         is_primary: false
                     }
                 }
@@ -582,9 +576,8 @@ export const usersResolvers: IResolvers = {
                             id: userAddresses[i].id,
                             title: userAddresses[i].title,
                             address: userAddresses[i].address,
-                            division: userAddresses[i].division,
-                            district: userAddresses[i].district,
-                            region: userAddresses[i].region,
+                            location: userAddresses[i].location,
+                            instructions: userAddresses[i].instructions,
                             is_primary: userAddresses[i].is_primary
                         });
                     }

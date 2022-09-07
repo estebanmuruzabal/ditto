@@ -28,9 +28,8 @@ export interface Address {
     id: string
     title: string,
     address: string,
-    division?: string,
-    district?: string,
-    region?: string,
+    location?: string,
+    instructions?: string,
     is_primary?: boolean
 }
 
@@ -179,6 +178,8 @@ export interface IDeliveryMethod {
     _id?: ObjectId;
     name: string;
     details: string;
+    isPickUp: boolean;
+    pickUpAddress: string;
     created_at?: string;
     updated_at?: string;
 }
@@ -245,6 +246,7 @@ export interface IOrder {
     datetime: string;
     delivery_method?: string;
     delivery_address: string;
+    delivery_date?: string;
     sub_total: number;
     total: number;
     coupon_code?: string;

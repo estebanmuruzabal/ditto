@@ -144,11 +144,10 @@ exports.staffMethodsResolvers = {
             if (!userResult) {
                 throw new Error("User dose not exits.");
             }
-            // console.log(userResult)
+
             const { tasks } = userResult;
             const taskIndex = (tasks === null || tasks === void 0 ? void 0 : tasks.findIndex(task => task.taskId === taskId)) || 0;
-            console.log('taskIndex::', taskIndex);
-            console.log('tasks before:::', tasks);
+
             const task = {
                 taskId: taskId ? taskId : Math.random().toString(),
                 description,
