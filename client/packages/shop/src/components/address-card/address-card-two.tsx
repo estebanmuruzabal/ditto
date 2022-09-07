@@ -16,9 +16,8 @@ interface FormValues {
   addressId: any | null,
   title: string;
   address: string;
-  division?: string;
-  district?: string;
-  region?: string;
+  location?: string;
+  instructions?: string;
 }
 
 // The type of props MyForm receives
@@ -38,14 +37,14 @@ const FormEnhancer = withFormik<MyFormProps, FormValues>({
       addressId: addressItem.id || null,
       title: addressItem.title || '',
       address: addressItem.address || '',
-      division: addressItem.division || '',
-      district: addressItem.district || '',
-      region: addressItem.region || '',
+      instructions: addressItem.instructions || '',
+      location: addressItem.location || ''
     };
   },
   validationSchema: Yup.object().shape({
     title: Yup.string().required('Required!'),
     address: Yup.string().required('Required'),
+    location: Yup.string().required('Required'),
   }),
   handleSubmit: (values) => {
     // do submitting things
@@ -74,9 +73,8 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
     addressId: addressItem.id, 
     title: values.title,
     address: values.address,
-    division: values.division,
-    district: values.district,
-    region: values.region
+    location: values.location,
+    instructions: values.instructions,
   };
   const { state, dispatch } = useContext(ProfileContext);
   const intl = useIntl();
@@ -86,16 +84,15 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
 
   const handleSubmit = async () => {
     if (isValid) {
-      const {id, addressId, title, address, division, district, region} = addressValue;
+      const {id, addressId, title, address, location, instructions} = addressValue;
       if(Object.keys(addressItem).length === 0){
         const {data}  = await addAddressMutation({
           variables: { 
             id,
             title,
             address, 
-            division,
-            district,
-            region
+            location,
+            instructions,
            },
         });
         newAddressid = data.addDeliveryAddress.id;
@@ -112,9 +109,8 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
             addressId,
             title,
             address, 
-            division,
-            district,
-            region
+            location,
+            instructions
            }
         });
         dispatch({
@@ -140,46 +136,35 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
           onBlur={handleBlur}
         />
       </FieldWrapper>
-      {/* <FieldWrapper>
-        <TextField
-          id="district"
-          type="text"
-          placeholder="Enter District"
-          error={touched.district && errors.district}
-          value={values.district}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-      </FieldWrapper> */}
-      <FieldWrapper>
-        <TextField
-          id="division"
-          type="text"
-          placeholder={intl.formatMessage({ id: 'localidadId', defaultMessage: 'Localidad' })}
-          error={touched.division && errors.division}
-          value={values.division}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-      </FieldWrapper>
-      <FieldWrapper>
-        <TextField
-          id="region"
-          type="text"
-          placeholder={intl.formatMessage({ id: 'provinciaId', defaultMessage: 'Provincia' })}
-          error={touched.region && errors.region}
-          value={values.region}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-      </FieldWrapper>
       <FieldWrapper>
         <TextField
           id="address"
-          as="textarea"
-          placeholder={intl.formatMessage({ id: 'addressId', defaultMessage: 'Dirección' })}
+          type="text"
+          placeholder={intl.formatMessage({ id: 'addressId', defaultMessage: 'Address' })}
           error={touched.address && errors.address}
           value={values.address}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </FieldWrapper>
+      <FieldWrapper>
+        <TextField
+          id="location"
+          type="text"
+          placeholder={intl.formatMessage({ id: 'locationId', defaultMessage: 'Localidad' })}
+          error={touched.location && errors.location}
+          value={values.location}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </FieldWrapper>
+      <FieldWrapper>
+        <TextField
+          id="instructions"
+          as="textarea"
+          placeholder={intl.formatMessage({ id: 'instructionsId', defaultMessage: 'Delivery instructions' })}
+          error={touched.instructions && errors.instructions}
+          value={values.instructions}
           onChange={handleChange}
           onBlur={handleBlur}
         />

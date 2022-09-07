@@ -5,6 +5,7 @@ mutation Login($phone: String!, $password: String!) {
     login(phone: $phone, password: $password) {
         user {
             id
+            role
             phones{
                 number
             }

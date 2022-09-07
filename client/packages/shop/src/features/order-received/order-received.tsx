@@ -52,6 +52,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   }
 
   const dateAndTime = `${moment(myOrder.datetime).format('MM/DD/YY')}, ${moment(myOrder.datetime).format('hh:mm A')}`;
+  console.log(myOrder.delivery_method.details)
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>
@@ -146,6 +147,19 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
             </ListTitle>
             <ListDes>
            <Text>{myOrder.delivery_method.details}</Text>
+            </ListDes>
+          </ListItem>
+          <ListItem>
+            <ListTitle>
+              <Text bold>
+                <FormattedMessage
+                  id="deliveryDateTitle"
+                  defaultMessage="Delivery Date"
+                />
+              </Text>
+            </ListTitle>
+            <ListDes>
+           <Text>{myOrder.delivery_date}</Text>
             </ListDes>
           </ListItem>
           <ListItem>

@@ -21,6 +21,9 @@ import Logo from 'layouts/logo/logo';
 import LanguageSwitcher from './menu/language-switcher/language-switcher';
 import { isCategoryPage } from '../is-home-page';
 import useDimensions from 'utils/useComponentSize';
+import { GET_TYPE } from 'graphql/query/type.query';
+import { useQuery } from '@apollo/react-hooks';
+import { CATEGORY_MENU_ITEMS } from 'site-settings/site-navigation';
 
 type MobileHeaderProps = {
   className?: string;
@@ -49,6 +52,15 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
   const { pathname, query } = useRouter();
 
   const [mobileHeaderRef, dimensions] = useDimensions();
+  const router = useRouter();
+  const { data, error, loading } = useQuery(
+    GET_TYPE,
+    {
+      variables: {
+        searchText: ''
+      }
+    }
+  );
 
   const handleSearchModal = () => {
     openModal({
@@ -68,6 +80,27 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
   const type = pathname === '/restaurant' ? 'restaurant' : query.type;
 
   const isHomePage = isCategoryPage(type);
+  const typeMenu = data.types.items.map((item) => {
+    return({
+      id: item.id,
+      href: `/${item.slug}`,
+      defaultMessage: item.name,
+      icon: item.icon,
+      dynamic: true,
+    })
+  })
+  const initialMenu = router.asPath == '/' ? typeMenu[0] : typeMenu.find((item) => item.href == router.asPath);
+  
+  if(initialMenu){
+    if(localStorage.getItem('myMenu')){
+      localStorage.removeItem('myMenu');
+    }
+    localStorage.setItem('myMenu', JSON.stringify(initialMenu));
+  }
+
+  const [activeMenu, setActiveMenu] = React.useState(
+    initialMenu ?? CATEGORY_MENU_ITEMS[0]
+  );
 
   return (
     <MobileHeaderWrapper>
@@ -77,19 +110,29 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
         </DrawerWrapper>
 
         <LogoWrapper>
-          <Logo imageUrl={LogoImage} alt="shop logo" />
+          <Logo
+            imageUrl={LogoImage}
+            alt="shop logo"
+            onClick={initialMenu ? initialMenu: JSON.parse(localStorage.getItem('myMenu'))}
+          />
         </LogoWrapper>
 
-        {/* <LanguageSwitcher /> */}
+        <LanguageSwitcher />
 
-        {isHomePage ? (
+        {/* {isHomePage ? (
           <SearchWrapper
             onClick={handleSearchModal}
             className="searchIconWrapper"
           >
             <SearchIcon />
           </SearchWrapper>
-        ) : null}
+        ) : null} */}
+        <SearchWrapper
+          onClick={handleSearchModal}
+          className="searchIconWrapper"
+        >
+          <SearchIcon />
+        </SearchWrapper>
       </MobileHeaderInnerWrapper>
     </MobileHeaderWrapper>
   );

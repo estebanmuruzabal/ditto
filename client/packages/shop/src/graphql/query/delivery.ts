@@ -9,6 +9,8 @@ query GetDeliveryMethods {
         name
         details
         created_at
+        isPickUp
+        pickUpAddress
       }
       totalCount
       hasMore

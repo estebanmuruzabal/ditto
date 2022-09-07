@@ -12,7 +12,6 @@ export const Box = styled.div(
     alignItems: 'center',
     width: '100%',
     position: 'relative',
-    // backgroundColor: #f7f7f7;
   }
 );
 export const Image = styled.div<any>(
@@ -27,8 +26,8 @@ export const Image = styled.div<any>(
     position: 'absolute',
     top: 0,
     left: 0,
-    '@media (max-width: 990px) and (min-width: 768px)': {
-      backgroundPosition: 'inherit',
+    '@media (max-width: 990px) ': {
+      backgroundPosition: 'unset',
     },
   },
   background
@@ -46,9 +45,13 @@ export const Content = styled.div(
 );
 export const Title = styled.h2(
   css({
-    fontSize: [17, '2xl', 45],
+    fontSize: [17, '2xl', 38],
     color: 'text.bold',
     fontWeight: 'bold',
+    backgroundColor: '#89b4f787',
+    '@media (max-width: 990px) ': {
+      fontSize: [12, '2xl', 38],
+    },
   }),
   {
     marginBottom: 15,
@@ -57,11 +60,15 @@ export const Title = styled.h2(
 );
 export const Description = styled.p(
   css({
+
+    fontWeight: 'bold',
+    backgroundColor: '#89b4f787',
+
     fontSize: ['base', 'md'],
-    color: 'text.regular',
+    color: 'text.bold',
     marginBottom: [null, 60],
     display: ['none', 'block'],
-    fontWeight: 'regular',
+
     lineHeight: 'body',
   }),
   {

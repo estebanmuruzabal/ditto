@@ -89,7 +89,8 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
       dynamic: true,
     })
   })
-  const initialMenu = router.asPath == '/' ? typeMenu[0] : typeMenu.find((item) => item.href == router.asPath);
+  
+  const initialMenu = router.asPath == '/' ? typeMenu[1] : typeMenu.find((item) => item.href == router.asPath);
   
   if(initialMenu){
     if(localStorage.getItem('myMenu')){

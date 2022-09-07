@@ -18,6 +18,7 @@ import {Button} from "../components/button/button";
 import styled from "styled-components";
 import AuthenticationForm from "../features/authentication-form";
 import { render } from 'react-dom';
+import { LinkButton, Offer } from 'features/authentication-form/authentication-form.style';
 
 type Props = {
     deviceType: {
@@ -44,6 +45,13 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
     const intl = useIntl();
 
     const {authDispatch} = useContext<any>(AuthContext);
+
+    const toggleSignUpForm = () => {
+        authDispatch({
+            type: 'SIGNUP',
+        });
+    };
+
     const toggleSignInForm = () => {
         authDispatch({
             type: 'SIGNIN',
@@ -69,12 +77,11 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
         return <ErrorMessage message={'Loading...'}/>
     }
 
-    if (error || deliveryError || paymentError) {
+    if (error?.toString()?.includes('no token sent')) {
         // @ts-ignore
-        const err = error || deliveryError || paymentError;
         return (
             <>
-                <ErrorMessageTwo message={intl.formatMessage({ id: 'primaryId', defaultMessage: err.toString() })}/>
+                <ErrorMessageTwo message={intl.formatMessage({ id: 'notAuth', defaultMessage: 'notAuth' })}/>
                 <LoginMessageDiv>
                     <Modal>
                     <Button
@@ -83,13 +90,52 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
                         size='big'
                         style={{width: '200px'}}
                     >
-                        Login Now
+                        {intl.formatMessage({ id: 'loginBtnText', defaultMessage: 'loginBtnText' })}
                     </Button>
+                    <Offer style={{ padding: '20px 20px' }}>
+                        <FormattedMessage
+                            id='dontHaveAccount'
+                            defaultMessage="Don't have any account?"
+                        />{' '}
+                        <LinkButton onClick={toggleSignUpForm}>
+                            <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
+                        </LinkButton>
+                    </Offer>
+                    </Modal>
+                </LoginMessageDiv>
+            </>
+        )
+    } else if (error || deliveryError || paymentError) {
+        // @ts-ignore
+        const err = error || deliveryError || paymentError;
+        return (
+            <>
+                <ErrorMessageTwo message={intl.formatMessage({ id: 'somethingWentWrongAuth', defaultMessage: err.toString() })}/>
+                <LoginMessageDiv>
+                    <Modal>
+                    <Button
+                        type='button'
+                        onClick={toggleSignInForm}
+                        size='big'
+                        style={{width: '200px'}}
+                    >
+                        {intl.formatMessage({ id: 'loginBtnText', defaultMessage: 'loginBtnText' })}
+                    </Button>
+                    <Offer style={{ padding: '20px 20px' }}>
+                        <FormattedMessage
+                            id='dontHaveAccount'
+                            defaultMessage="Don't have any account?"
+                        />{' '}
+                        <LinkButton onClick={toggleSignUpForm}>
+                            <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
+                        </LinkButton>
+                    </Offer>
                     </Modal>
                 </LoginMessageDiv>
             </>
         )
     }
+
     const token = 'true';
 
     deliveryRefetch();

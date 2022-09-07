@@ -1,11 +1,23 @@
 import React, { useReducer } from 'react';
 import { AuthContext } from './auth.context';
 const isBrowser = typeof window !== 'undefined';
+// **************** Roles CONSTANT Start **************************
+export const ADMIN = 'ADMIN';
+export const MANAGER = 'MANAGER';
+export const MEMBER = 'MEMBER';
+export const DELIVERY_BOY = 'DELIVERY_BOY';
+export const STAFF = 'STAFF';
+export const CLIENT = 'CLIENT';
+// **************** Roles CONSTANT End **************************
+
 const INITIAL_STATE = {
   isAuthenticated: isBrowser && !!localStorage.getItem('access_token'),
   currentForm: 'signIn',
   currentUser: false,
-  user: {}
+  user: {},
+  isStaff: false,
+  isManager: false
+
 };
 
 function reducer(state: any, action: any) {
@@ -20,6 +32,8 @@ function reducer(state: any, action: any) {
         return {
           ...state,
           isAuthenticated: true,
+          isStaff: [MEMBER, ADMIN, MANAGER, DELIVERY_BOY, STAFF].includes(action.user.role),
+          isManager: [ADMIN, MANAGER].includes(action.user.role),
           user: action.user,
         };
       case 'CURRENT_USER':

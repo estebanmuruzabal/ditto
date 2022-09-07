@@ -13,12 +13,14 @@ type Props = {
   onJoin: () => void;
   avatar: string;
   isAuthenticated: boolean;
+  isStaff: boolean;
 };
 
 export const RightMenu: React.FC<Props> = ({
   onLogout,
   avatar,
   isAuthenticated,
+  isStaff,
   onJoin,
 }) => {
   return (
@@ -45,6 +47,7 @@ export const RightMenu: React.FC<Props> = ({
         onJoin={onJoin}
         onLogout={onLogout}
         isAuthenticated={isAuthenticated}
+        isStaff={isStaff}
       />
     </RightMenuBox>
   );

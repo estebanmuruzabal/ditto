@@ -45,7 +45,7 @@ const Switch: React.SFC<SwitchProps> = ({
           LabelField}
 
         <input
-          checked={checked ? !state : state}
+          checked={checked}
           className="switch"
           type="checkbox"
           disabled={disabled}

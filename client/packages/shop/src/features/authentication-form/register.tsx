@@ -100,7 +100,7 @@ export default function SignOutModal() {
   // }
 
 
-  console.log(error?.toString())
+
   return (
     <Wrapper>
       <Container>

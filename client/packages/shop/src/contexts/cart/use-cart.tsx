@@ -50,8 +50,8 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
   };
   const getCartItemsPrice = () => cartItemsTotalPrice(state.items).toFixed(2);
 
-  const getCartItemsTotalPrice = () =>
-    cartItemsTotalPrice(state.items, state.coupon).toFixed(2);
+  const getCartItemsTotalPrice = (deliveryCharge) =>
+    cartItemsTotalPrice(state.items, state.coupon, deliveryCharge).toFixed(2);
 
   const getDiscount = () => cartDiscountAmount(state.items, state.coupon).toFixed(2);
 

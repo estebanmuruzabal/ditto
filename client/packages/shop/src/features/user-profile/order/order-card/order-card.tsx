@@ -10,6 +10,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 
 import { CURRENCY } from 'utils/constant';
+import moment from 'moment';
 
 type OrderCardProps = {
   orderId?: any;
@@ -50,7 +51,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               id="intlOrderCardDateText"
               defaultMessage="Order Date"
             />
-            : <span>{date}</span>
+            : <span>{moment(date).format('hh:mm A - DD MMM')}</span>
           </Meta>
           <Meta className="price">
             <FormattedMessage

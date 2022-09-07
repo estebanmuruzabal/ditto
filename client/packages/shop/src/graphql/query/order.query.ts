@@ -16,8 +16,11 @@ export const GET_ORDERS = gql`
       discount_amount
       sub_total
       total
+      delivery_date
       delivery_method {
         name
+        isPickUp
+        pickUpAddress
         details
       }
       order_tracking {

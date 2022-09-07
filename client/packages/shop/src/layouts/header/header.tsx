@@ -16,10 +16,11 @@ type Props = {
 
 const Header: React.FC<Props> = ({ className }) => {
   const {
-    authState: { isAuthenticated },
+    authState: { isAuthenticated, isStaff },
     authDispatch,
   } = React.useContext<any>(AuthContext);
   const { pathname, query } = useRouter();
+
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('access_token');
@@ -59,6 +60,7 @@ const Header: React.FC<Props> = ({ className }) => {
      
       <RightMenu
         isAuthenticated={isAuthenticated}
+        isStaff={isStaff}
         onJoin={handleJoin}
         onLogout={handleLogout}
         avatar={UserImage}

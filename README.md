@@ -16,6 +16,13 @@ here are all the tabs and language settings: client/packages/shop/src/site-setti
 
 # To do:
 
+- poner mejores datos en los cards de las tasks (start, end time).
+- better ui in task listing edit staff modal
+
+# Improvements: 
+- add delete user func in staffmembers.tsx
+- add comment on tasks for feedback.
+
 # Bugs:
 0- se puede agregar mas cant de productos de la que hay en stock. El error recien salta en el pago (unhandled: This product do not have enough product quantity. Available quantity: 3)
 

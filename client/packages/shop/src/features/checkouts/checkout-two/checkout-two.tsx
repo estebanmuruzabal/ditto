@@ -72,6 +72,7 @@ import { useWindowSize } from 'utils/useWindowSize';
 
 
 import UpdateAddressTwo from 'components/address-card/address-card-two';
+import moment from 'moment';
 
 
 // The type of props Checkout Form receives
@@ -177,36 +178,60 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const size = useWindowSize();
 
   const [appliedCoupon] = useMutation(GET_COUPON);
-
+  let deliveryCharge = 0;
   const selectedAddress = delivery_address && delivery_address.find(
     (item) => item.is_primary === true
   );
   const selectedContact= phones.find(
     (item) => item.is_primary === true
   );
-  
 
+  const pickUpAddress = deliveryMethods.find(deliveryMethod => {
+    return submitResult.delivery_method_id === deliveryMethod.id;
+  })?.pickUpAddress;
+
+  const calculateDeliveryCharge = () => {
+    const deliveryTitle = deliveryMethods.find(deliveryMethod => {
+      return submitResult.delivery_method_id === deliveryMethod.id;
+    });
+
+    if (!deliveryTitle) return 0;
+    const charge = deliveryTitle?.name?.split("$");
+    const chargeFormatted = charge[charge?.length -1]?.replace(/\D/g,'');
+    return Number(chargeFormatted);
+  }
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && selectedAddress.address}, ${selectedAddress && selectedAddress.instructions}, ${selectedAddress && selectedAddress.instructions}` : null;
+  let toBeDelivered = false;
   useEffect(() => {
     removeCoupon();
     setHasCoupon(false);
+    
+    deliveryCharge = calculateDeliveryCharge();
     setSubmitResult({
       ...submitResult,
-      delivery_address: `${selectedAddress && selectedAddress.title}) -   
-      ${selectedAddress && selectedAddress.address}, ${selectedAddress && selectedAddress.district}, ${selectedAddress && selectedAddress.region}`,
+      delivery_address: pickUpAddress || selectedAddressText,
       products: cartProduct,
       contact_number: selectedContact.number
     })
+    console.log('deliveryMethods', deliveryMethods)
+    console.log('paymentMethods', paymentMethods)
+    console.log('delivery_address', delivery_address)
     if (
       calculatePrice() > 0 &&
       cartItemsCount > 0 &&
-        (delivery_address && delivery_address.length) &&
+      (submitResult?.delivery_method_id || pickUpAddress) &&
       phones.length &&
-      paymentMethods.length &&
       deliveryMethods.length
     ) {
       setIsValid(true);
     }
   }, [state]);
+
   // Add or edit modal
   const handleModal = (
     modalComponent: any,
@@ -335,19 +360,56 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   };
 
   const setErrorFor5Sec = (messageId) => {
-    const a = <FormattedMessage id={messageId} />;
-      setCheckoutError('a');
+    const error = intl.formatMessage({ id: messageId, defaultMessage: 'Please check the form' })
+      setCheckoutError(error);
       setTimeout(() => setCheckoutError(null), 1500)
       return null;
   };
 
-  const handleSubmit = async () => {
 
+  const getDeliveryDate = () => {
+    moment.locale('es');
+    let orderDay = moment(new Date(), 'MM/D/YYYY').day();
+    const orderHour = moment(new Date(), 'MM/D/YYYY').hour();
+    const orderMinute = moment(new Date(), 'MM/D/YYYY').minutes();
+    let deliveryDate = moment(new Date());
+    const lastOrderHour = 14;
+    const lastOrderMinute = 0;
+    const lunes = 1;
+    const martes = 2;
+    const miercoles = 3;
+    const jueves = 4;
+    const viernes = 5;
+    const sabado = 6;
+    const domingo = 7;
+
+    // case between jueves 14:00 and martes 13:59
+    if ((orderDay >= jueves && orderHour > 13  ) || (orderDay >= lunes && orderDay <= martes && orderHour < 14)) {
+      while (++orderDay === martes) {
+        if (orderDay === domingo) orderDay = 1;
+        deliveryDate.add(1, 'days');
+      }
+      
+      return deliveryDate;
+    }
+    // case between martes 14:01 and jueves 13:59
+    if (((orderDay >= martes && orderHour > 13) && orderDay <= jueves) || (orderDay === jueves && orderHour < 14)) {
+      while (++orderDay === jueves) {
+        deliveryDate.add(1, 'days');
+      }
+      
+      // return moment(deliveryDate).format('hh:mm A - dddd DD MMM');
+      return moment(deliveryDate).format('dddd DD MMM');
+    }
+  }
+
+  const handleSubmit = async () => {
+    const deliveryCharge = calculateDeliveryCharge();
 
     const otherSubmitResult = {
       customer_id: id,
       sub_total: Number(calculateSubTotalPrice()),
-      total: Number(calculatePrice()),
+      total: Number(calculatePrice(deliveryCharge)),
       discount_amount: Number(calculateDiscount()),
     }
 
@@ -367,22 +429,16 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       discount_amount
     } = otherSubmitResult;
 
-    console.log('total = ',typeof(total))
-    console.log('sub_total = ', typeof(sub_total))
-    console.log('discount_amount = ', typeof(discount_amount))
-    console.log('product-price = ', products)
-
-    if (!delivery_address) setErrorFor5Sec('checkoutDeliveryAddressInvalid');
-    if (!delivery_method_id) setErrorFor5Sec('checkoutDeliveryMethodInvalid');
-    if (!contact_number) setErrorFor5Sec('checkoutContactNumberInvalid');
-    if (!payment_option_id) setErrorFor5Sec('checkoutPaymentMethodInvalid');
+    if (!delivery_address) { setErrorFor5Sec('checkoutDeliveryAddressInvalid');return; }
+    if (!delivery_method_id) { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
+    if (!contact_number) { setErrorFor5Sec('checkoutContactNumberInvalid');return; }
+    if (!payment_option_id) { setErrorFor5Sec(pickUpAddress ? 'checkoutPaymentMethodInvalidOption3' : 'checkoutPaymentMethodInvalidOption4');return; }
 
     if (!customer_id || !products) {
       setCheckoutError('Please place a valid order!');
       return null;
     }
-    
-
+    const delivery_date = getDeliveryDate();
     // if (confirm('Are you sure? You want to place this order?')) {
         const {errors: orderCreateError} = await setOrderMutation({
             variables: {
@@ -391,6 +447,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                     contact_number,
                     payment_option_id,
                     delivery_method_id,
+                    delivery_date,
                     delivery_address,
                     sub_total,
                     total,
@@ -420,10 +477,10 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
   };
 
-  const pickUpOptionIds = deliveryMethods.map(deliveryMethod => {
-    return deliveryMethod.name.toLowerCase().includes('busc') ? deliveryMethod.id : null;
+  const pickedUpOptionIds = deliveryMethods.map(deliveryMethod => {
+    return deliveryMethod.isPickUp ? deliveryMethod.id : null;
   });
-  console.log(submitResult, deliveryMethods, pickUpOptionIds)
+  const pickUpOptionSelected = !pickedUpOptionIds.includes(submitResult.delivery_method_id)
   return (
     <form>
       <CheckoutWrapper>
@@ -476,7 +533,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             </InformationBox>
 
             {/* DeliveryAddress */}
-            { !pickUpOptionIds.includes(submitResult.delivery_method_id) && (
+            { pickUpOptionSelected && (
               <InformationBox>
                 <Heading>
                   <FormattedMessage
@@ -492,16 +549,15 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                         id={index}
                         key={index}
                         address={item.address}
-                        district={item.district}
-                        division={item.division}
+                        location={item.location}
+                        instructions={item.instructions}
                         title={item.title}
-                        region = {item.region}
                         name='address'
                         isChecked={item.is_primary === true}
                         onClick={() => setSubmitResult({
                           ...submitResult,
                           delivery_address:  `${item.title} -
-                          ${item.address}, ${item.region}, ${item.district}
+                          ${item.address}, ${item.location}, ${item.instructions}
                           `,
                           products: cartProduct
                         })}
@@ -825,13 +881,26 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                     </Text>
                   </TextWrapper>
 
+                  <TextWrapper>
+                    <Text>
+                      <FormattedMessage
+                        id='deliveryChargeText'
+                        defaultMessage='Delivery charge'
+                      />
+                    </Text>
+                    <Text>
+                      {CURRENCY}
+                      {calculateDeliveryCharge()}
+                    </Text>
+                  </TextWrapper>
+
                   <TextWrapper style={{ marginTop: 20 }}>
                     <Bold>
                       <FormattedMessage id='totalText' defaultMessage='Total' />{' '}
                     </Bold>
                     <Bold>
                       {CURRENCY}
-                      {calculatePrice()}
+                      {calculatePrice(calculateDeliveryCharge())}
                     </Bold>
                   </TextWrapper>
                 </CalculationWrapper>

@@ -78,7 +78,7 @@ export default function SignInModal() {
   const handlePhoneChange = (value, data, event, formattedValue) => {
     setPhone(value)
   }
-
+  const authError = error?.toString()?.includes("User dose not exits.") || error?.toString()?.includes("Password dose not match");
   return (
     <Wrapper>
       <Container>
@@ -140,11 +140,17 @@ export default function SignInModal() {
             <FormattedMessage id='continueBtn' defaultMessage='Continue' />
           </Button>
         </form>
+        
         {loading && <p style={{
           marginTop: "15px"
         }}>Loading...</p>}
-        {error && <p style={{
-          marginTop: "15px"
+        
+        {authError && <p style={{
+          marginTop: "15px", fontSize: '16px'
+        }}> {intl.formatMessage({ id: 'userNotFound', defaultMessage: 'Invalid user/password' })}</p>}
+        
+        {error && !authError &&<p style={{
+          marginTop: "15px", fontSize: '16px'
         }}> {`${error?.message || error}. Please try again`}</p>}
       
         <Offer style={{ padding: '20px 0' }}>

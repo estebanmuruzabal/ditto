@@ -1,16 +1,18 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import NavLink from 'components/nav-link/nav-link';
-import { AUTHORIZED_MENU_ITEMS } from 'site-settings/site-navigation';
+import { AUTHORIZED_MENU_ITEMS, STAFF_MENU_ITEMS } from 'site-settings/site-navigation';
 
 type Props = {
   onLogout: () => void;
+  isStaff: boolean;
 };
 
-export const AuthorizedMenu: React.FC<Props> = ({ onLogout }) => {
+export const AuthorizedMenu: React.FC<Props> = ({ onLogout, isStaff }) => {
+  const menuItems = isStaff ? STAFF_MENU_ITEMS : AUTHORIZED_MENU_ITEMS; 
   return (
     <>
-      {AUTHORIZED_MENU_ITEMS.map((item, idx) => (
+      {menuItems?.map((item, idx) => (
         <NavLink
           key={idx}
           className="menu-item"

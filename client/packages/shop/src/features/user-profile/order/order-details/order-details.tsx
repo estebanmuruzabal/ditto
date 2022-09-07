@@ -19,6 +19,7 @@ import Progress from 'components/progress-box/progress-box';
 import { CURRENCY } from 'utils/constant';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {Title} from "../order.style";
+import moment from 'moment';
 
 type OrderDetailsProps = {
   id?: any;
@@ -28,6 +29,7 @@ type OrderDetailsProps = {
   progressStatus?: any;
   address?: string;
   number?: string;
+  deliveryDate?: string;
   subtotal?: number;
   discount?: number;
   grandTotal?: number;
@@ -46,6 +48,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
   number,
   id,
   progressStatus,
+  deliveryDate,
   progressData,
   subtotal,
   discount,
@@ -61,6 +64,23 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     })
     return false
   }
+
+  const calculateDeliveryCharge = () => {
+    if (!deliveryMethod?.name) return 0;
+    const charge = deliveryMethod?.name?.split("$");
+    const chargeFormatted = charge[charge?.length -1]?.replace(/\D/g,'');
+    return Number(chargeFormatted);
+  }
+
+  const getDeliverySchedule = (details) => {
+    const word = 'Horario';
+
+    const index = details.indexOf(word);   // 8
+    const length = word.length;			// 7
+
+    return details.slice(index + length);
+  }
+  const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethod?.details)} - ${moment(deliveryDate).format('DD MMM')}`
 
   return (
     <>
@@ -80,13 +100,41 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
             />
           </h3>
           <Contact>{number}</Contact>
-          <h3>
-            <FormattedMessage
-              id="deliveryAddressTitle"
-              defaultMessage="Delivery Address"
-            />
-          </h3>
-          <Address>{address}</Address>
+          {deliveryMethod?.isPickUp ? (
+            <>
+              <h3>
+                <FormattedMessage
+                  id="pickUpDateTitle"
+                  defaultMessage="Pickup Date"
+                />
+              </h3>
+              <Contact>{deliveryDate || '-'}</Contact>
+              <h3>
+                <FormattedMessage
+                  id="deliveryAddressTitle"
+                  defaultMessage="Delivery Address"
+                />
+              </h3>
+              <Address>{address}</Address>
+            </>
+          ) : (
+            <>
+              <h3>
+                <FormattedMessage
+                  id="deliveryDateTitle"
+                  defaultMessage="Delivery Date"
+                />
+              </h3>
+              <Contact>{deliveryDateAndTime || '-'}</Contact>
+              <h3>
+                <FormattedMessage
+                  id="deliveryAddressTitle"
+                  defaultMessage="Delivery Address"
+                />
+              </h3>
+              <Address>{address}</Address>
+            </>
+          )}
         </DeliveryAddress>
 
         <CostCalculation>
@@ -107,6 +155,16 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
               {discount !== null ? discount : 0}
             </Price>
           </PriceRow>
+          <PriceRow>
+            <FormattedMessage
+              id="deliveryChargeText"
+              defaultMessage="Delivery charge"
+            />
+            <Price>
+              {CURRENCY}
+              {calculateDeliveryCharge()}
+            </Price>
+          </PriceRow>
           <PriceRow className="grandTotal">
             <FormattedMessage id="totalText" defaultMessage="Total" />
             <Price>
@@ -116,12 +174,12 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
           </PriceRow>
         </CostCalculation>
       </DeliveryInfo>
-      {/*<Title style={{ padding: '0 20px' }}>
+      <Title style={{ padding: '0 20px' }}>
         <FormattedMessage
             id="orderTrackingText"
             defaultMessage="Order Tracking"
         />
-      </Title>*/}
+      </Title>
       <ProgressWrapper>
         <Progress data={progressData} status={progressStatus} />
       </ProgressWrapper>

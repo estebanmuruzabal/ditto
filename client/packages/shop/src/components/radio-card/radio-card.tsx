@@ -4,6 +4,13 @@ import { themeGet } from '@styled-system/theme-get';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { PencilIcon } from 'assets/icons/PencilIcon';
 
+const Link = styled.a`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.base', '15')}px;
+  font-weight: ${themeGet('fontWeights.bold', '700')};
+  color: ${themeGet('colors.blue.dark', '#161F6A')};
+`;
+
 const CardWrapper = styled.label`
   display: inline-flex;
   align-items: center;
@@ -154,6 +161,22 @@ const RadioCard: React.FC<RadioCardProps> = ({
   checked,
   onChange,
 }) => {
+  const getLinkOnly = (text) => {
+    if (!text) return;
+    const word = 'https';
+
+    const index = text.indexOf(word);   // 8
+    const length = word.length;			// 7
+
+    return text.slice(index + length - 5);
+  }
+
+  const contentDivided = content?.split(' | ');
+  const linkContent = contentDivided?.find((part) => part.includes('http'));
+  const linkOnly = getLinkOnly(linkContent);
+  const preLinkText = linkContent?.substring(0, linkContent.indexOf('http'));
+  content = linkOnly ? `${contentDivided[1] && contentDivided[1]} ${contentDivided[2] && contentDivided[2]}` : content;
+
   return (
     <CardWrapper
       htmlFor={`${name}-${id}`}
@@ -172,6 +195,8 @@ const RadioCard: React.FC<RadioCardProps> = ({
       />
       {title && <CardTitle>{title}</CardTitle>}
       {content && <CardContent>{content}</CardContent>}
+      {preLinkText && (<CardContent>{preLinkText}</CardContent>)}
+      {linkOnly && <Link href={linkOnly} prefetch={false} target="_blank" rel="noopener noreferrer">Click aquí</Link>}
       {withActionButtons && (
         <CardButtons className='button-wrapper'>
           {hasEdit && (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'components/image/image';
 import { PlusOutline } from 'assets/icons/PlusOutline';
 import {
@@ -12,6 +12,8 @@ import {
   Counter,
 } from './product-card-five.style';
 import { useCart } from 'contexts/cart/use-cart';
+import { ProductQuantityExceededMsg } from 'features/carts/cart.style';
+import { FormattedMessage } from 'react-intl';
 
 type ProductCardProps = {
   title: string;
@@ -55,17 +57,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
   ...props
 }) => {
   const { addItem, removeItem, getItem, isInCart } = useCart();
+  const [showProductQuantityExceededMsg, setShowProductQuantityExceededMsg] = useState(false);
+
+  const showProductQuantityExceededMsgFor5Sec = () => {
+    setShowProductQuantityExceededMsg(true);
+    setTimeout(() => {
+      setShowProductQuantityExceededMsg(false);
+    }, 1500)
+  };
 
   const handleAddClick = (e) => {
-    e.stopPropagation();
-    addItem(data);
+    if (data.quantity < data.product_quantity) {
+      e.stopPropagation();
+      addItem(data)
+    } else {
+      showProductQuantityExceededMsgFor5Sec()
+    }
   };
 
   const handleRemoveClick = (e) => {
     e.stopPropagation();
     removeItem(data);
   };
-  // console.log(items, 'product-card');
 
   return (
     <CardWrapper onClick={onClick} className="medicine-card">
@@ -89,6 +102,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
           />
         )}
       </ImageWrapper>
+      { showProductQuantityExceededMsg && (
+        <ProductQuantityExceededMsg>
+          <FormattedMessage
+            id='productStockLimit'
+            defaultMessage='There is no more availability of this product'
+          />
+        </ProductQuantityExceededMsg>
+      )}
       <InfoWrapper>
         <Price>
           {currency}

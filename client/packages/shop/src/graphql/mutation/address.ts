@@ -5,24 +5,21 @@ mutation AddDeliveryAddress(
   $id: ID!, 
   $title: String!,
   $address: String!,
-  $division: String,
-  $district: String,
-  $region: String
+  $location: String,
+  $instructions: String,
 ) {
   addDeliveryAddress(
     id: $id, 
     title: $title, 
     address: $address, 
-    division: $division,
-    district: $district,
-    region: $region
+    location: $location,
+    instructions: $instructions
   ) {
     id
     title
     address
-    division
-    district
-    region
+    location
+    instructions
     is_primary
   }
 }
@@ -35,25 +32,22 @@ export const UPDATE_ADDRESS = gql`
       $addressId: String!
       $title: String!,
       $address: String!,
-      $division: String,
-      $district: String,
-      $region: String
+      $location: String,
+      $instructions: String
      ){
       updateDeliveryAddress (
         id: $id, 
         addressId: $addressId,
         title: $title, 
         address: $address, 
-        division: $division,
-        district: $district,
-        region: $region
+        location: $location,
+        instructions: $instructions
     ){
       id
       title
       address
-      division
-      district
-      region
+      location
+      instructions
       is_primary
     }
   }

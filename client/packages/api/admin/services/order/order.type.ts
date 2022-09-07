@@ -18,8 +18,8 @@ export default class Order {
   @Field()
   contact_number: string;
 
-  @Field()
-  delivery_address: string;
+  // @Field()
+  // delivery_address: string;
 
   @Field()
   status: string;

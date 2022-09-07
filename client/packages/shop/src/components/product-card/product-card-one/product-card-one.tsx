@@ -1,5 +1,5 @@
 // product card for general
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'components/image/image';
 import { Button } from 'components/button/button';
 import {
@@ -13,8 +13,11 @@ import {
 import { useCart } from 'contexts/cart/use-cart';
 import { Counter } from 'components/counter/counter';
 import { cartAnimation } from 'utils/cart-animation';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { CartIcon } from 'assets/icons/CartIcon';
+import { ProductQuantityExceededMsg } from '../product-card.style';
+import { useDeviceType } from 'utils/useDeviceType';
+import MobileDetect from 'mobile-detect';
 
 type ProductCardProps = {
   title: string;
@@ -58,17 +61,37 @@ const ProductCard: React.FC<ProductCardProps> = ({
   ...props
 }) => {
   const { addItem, removeItem, getItem, isInCart, items } = useCart();
+  const [showProductQuantityExceededMsg, setShowProductQuantityExceededMsg] = useState(false);
+  const { desktop } = useDeviceType();
+  const intl = useIntl();
+
   const handleAddClick = (e) => {
-    e.stopPropagation();
-    addItem(data);
-    if (!isInCart(data.id)) {
-      cartAnimation(e);
+    const currentQuantity = getItem(data.id)?.quantity;
+    const stock = data.product_quantity;
+    if (stock <= currentQuantity) {
+      e.stopPropagation();
+      showProductQuantityExceededMsgFor5Sec()
+    } else {
+      e.stopPropagation();
+      addItem(data);
+      if (!isInCart(data.id)) {
+        cartAnimation(e);
+      }
     }
   };
+
   const handleRemoveClick = (e) => {
     e.stopPropagation();
     removeItem(data);
   };
+
+  const showProductQuantityExceededMsgFor5Sec = () => {
+    setShowProductQuantityExceededMsg(true);
+    setTimeout(() => {
+      setShowProductQuantityExceededMsg(false);
+    }, 1500)
+  };
+  
   return (
     <ProductCardWrapper onClick={onClick} className="product-card">
       <ProductImageWrapper>
@@ -87,7 +110,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
         {data.product_quantity == 0 ? (
           <>
-            <OutOfStock>Out Of Stock</OutOfStock>
+            <OutOfStock>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</OutOfStock>
           </>
         ) : (
           ''
@@ -134,22 +157,32 @@ const ProductCard: React.FC<ProductCardProps> = ({
             )
           ) : (
             <Button
-            className="cart-button"
-            variant="secondary"
-            borderRadius={100}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-            disabled
+              className="cart-button"
+              variant="secondary"
+              borderRadius={100}
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              disabled
             >
-            <CartIcon/>
-            <ButtonText>
-            <FormattedMessage id="addCartButton" defaultMessage="Cart"/>
-            </ButtonText>
+              { !desktop && (
+                <CartIcon/>
+              )}
+              <ButtonText>
+                <FormattedMessage id="addCartButton" defaultMessage="Cart"/>
+              </ButtonText>
             </Button>
             )
           }
         </div>
+        { showProductQuantityExceededMsg && (
+          <ProductQuantityExceededMsg>
+            <FormattedMessage
+              id='productStockLimit'
+              defaultMessage='There is no more availability of this product'
+            />
+          </ProductQuantityExceededMsg>
+        )}
       </ProductInfo>
     </ProductCardWrapper>
   );

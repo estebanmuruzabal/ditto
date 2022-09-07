@@ -20,7 +20,7 @@ export const MenuItem = styled.button`
   color: ${themeGet('colors.text.bold', '#0D1136')};
   line-height: 1.2em;
   display: block;
-  padding: 12px 30px;
+  padding: 12px 10px;
   border-radius: ${themeGet('radii.base', '6px')};
   transition: 0.15s ease-in-out;
   display: flex;
@@ -42,11 +42,11 @@ export const MenuItem = styled.button`
 
   @media (max-width: 1400px) {
     margin-right: 10px;
-    font-size: ${themeGet('fontSizes.base', '15')}px;
+    font-size: ${themeGet('fontSizes.base', '14')}px;
   }
 
   @media only screen and (min-width: 991px) and (max-width: 1200px) {
-    padding: 15px 30px;
+    padding: 15px 10px;
   }
 
   &:hover {

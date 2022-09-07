@@ -12,6 +12,9 @@ export default class OrderInput {
   contact: string;
 
   @Field()
+  delivery_date: string;
+
+  @Field()
   payment: string;
 
   @Field()

@@ -168,6 +168,7 @@ const OrdersContent: React.FC<{}> = () => {
               progressData={order.order_tracking}
               number={order.contact_number}
               address={order.delivery_address}
+              deliveryDate={order.delivery_date}
               subtotal={order.sub_total}
               discount={order.discount_amount}
               grandTotal={order.total}

@@ -126,9 +126,8 @@ type RadioCardProps = {
   name: string;
   title: string;
   address: string,
-  district: string,
-  division: string,
-  region: string,
+  location: string,
+  instructions: string,
   editIcon?: any;
   deleteIcon?: any;
   withActionButtons?: boolean;
@@ -147,9 +146,8 @@ const RadioCardTWO: React.FC<RadioCardProps> = ({
   name,
   title,
   address,
-  district,
-  division,
-  region,
+  location,
+  instructions,
   editIcon,
   deleteIcon,
   withActionButtons,
@@ -183,9 +181,8 @@ const RadioCardTWO: React.FC<RadioCardProps> = ({
       />
       {title && <CardTitle>{title}</CardTitle>}
       {address && <CardContent>{intl.formatMessage({ id: 'addressTitleId', defaultMessage: 'Address:' })} {address}</CardContent>}
-      {/* {district && <CardContent>{intl.formatMessage({ id: 'localidadTitleId', defaultMessage: 'Address:' })} {district}</CardContent>} */}
-      {division && <CardContent>{intl.formatMessage({ id: 'localidadTitleId', defaultMessage: 'Address:' })} {division}</CardContent>}
-      {region && <CardContent>{intl.formatMessage({ id: 'provinciaTitleId', defaultMessage: 'Address:' })} {region}</CardContent>}
+      {location && <CardContent>{intl.formatMessage({ id: 'localidadTitleId', defaultMessage: 'Location:' })} {location}</CardContent>}
+      {instructions && <CardContent>{intl.formatMessage({ id: 'instructionsTitleId', defaultMessage: 'Instructions:' })} {instructions}</CardContent>}
       {withActionButtons && (
         <CardButtons className='button-wrapper'>
           {hasEdit && (

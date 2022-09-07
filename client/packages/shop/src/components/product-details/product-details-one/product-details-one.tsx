@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import dynamic from 'next/dynamic';
@@ -30,12 +30,13 @@ import ReadMore from 'components/truncate/truncate';
 import CarouselWithCustomDots from 'components/multi-carousel/multi-carouselV2';
 import Products from 'components/product-grid/product-list/product-list';
 import { CURRENCY } from 'utils/constant';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useLocale } from 'contexts/language/language.provider';
 import { useCart } from 'contexts/cart/use-cart';
 import { Counter } from 'components/counter/counter';
 import { flex } from 'styled-system';
 import Footer from 'components/footer';
+import { ProductQuantityExceededMsg } from 'components/product-card/product-card.style';
 
 const CartPopUp = dynamic(() => import('features/carts/cart-popup-two'), {
   ssr: false,
@@ -56,12 +57,31 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   deviceType,
 }) => {
   const { isRtl } = useLocale();
-  const { addItem, removeItem, isInCart, getItem } = useCart();
+  const { addItem, removeItem, isInCart, getItem} = useCart();
+  const [showProductQuantityExceededMsg, setShowProductQuantityExceededMsg] = useState(false);
   const data = product;
+  const intl = useIntl();
+
   const handleAddClick = (e) => {
-    e.stopPropagation();
-    addItem(data);
+    const currentQuantity = getItem(data.id)?.quantity;
+    const stock = data.product_quantity;
+    if (stock <= currentQuantity) {
+      e.stopPropagation();
+      showProductQuantityExceededMsgFor5Sec()
+    } else {
+      e.stopPropagation();
+      addItem(data);
+      
+    }
   };
+
+  const showProductQuantityExceededMsgFor5Sec = () => {
+    setShowProductQuantityExceededMsg(true);
+    setTimeout(() => {
+      setShowProductQuantityExceededMsg(false);
+    }, 1500)
+  };
+  
   const checkoutStatus = React.useRef(null);
   const handleRemoveClick = (e) => {
     e.stopPropagation();
@@ -161,6 +181,14 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                       onIncrement={handleAddClick}
                   />
               )}
+               { showProductQuantityExceededMsg && (
+                  <ProductQuantityExceededMsg>
+                    <FormattedMessage
+                      id='productStockLimit'
+                      defaultMessage='There is no more availability of this product'
+                    />
+                  </ProductQuantityExceededMsg>
+                )}
             </ProductCartBtn>
             <CartPopUp deviceType={deviceType}/>
           </ProductCartWrapper>) :
@@ -169,7 +197,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                 flexDirection: 'row',
                 alignItems: 'center'
               }}>
-                <p style={{color: '#ff5e5e'}}>Out Of Stock</p>
+                <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p>
               </ProductCartWrapper>)
           }
 

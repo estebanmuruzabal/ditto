@@ -7,13 +7,13 @@ query GetUser{
     name
     email
     created_at
+    role
     delivery_address{
       id
       title
       address
-      division
-      district
-      region
+      location
+      instructions
       is_primary
     }
     phones{

@@ -4,6 +4,8 @@ import Collapse, { Panel } from 'rc-collapse';
 import ReactToPrint from "react-to-print";
 import Progress from 'components/progress-box/progress-box';
 
+import { FormattedMessage, useIntl } from 'react-intl';
+
 import {
   OrderListHeader,
   TrackID,
@@ -25,6 +27,8 @@ import {
 } from './order-card.style';
 
 import { CURRENCY } from 'utils/constant';
+import moment from 'moment';
+import { date } from 'yup';
 
 type MobileOrderCardProps = {
   orderId?: any;
@@ -59,11 +63,20 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
 }) => {
   //   const displayDetail = className === 'active' ? '100%' : '0';
   const addAllClasses: string[] = ['accordion'];
+  const getDeliverySchedule = (details) => {
+    const word = 'Horario';
 
+    const index = details.indexOf(word);   // 8
+    const length = word.length;			// 7
+
+    return details.slice(index + length);
+  }
+  const intl = useIntl();
   if (className) {
     addAllClasses.push(className);
   }
   console.log("orderrs:L", orders)
+
   return (
     <>
       <Collapse
@@ -78,23 +91,32 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
               <CardWrapper onClick={onClick}>
                 <OrderListHeader>
                   <TrackID>
-                    Order <span>#{order.id}</span>
+                  {intl.formatMessage({ id: 'order', defaultMessage: 'Order' })} <span>#{order.id}</span>
                   </TrackID>
                   <Status>{progressData[order.status - 1]}</Status>
                 </OrderListHeader>
 
+        
                 <OrderMeta>
-                  <Meta>
-                    Order Date: <span>{order.date}</span>
-                  </Meta>
-                  <Meta>
-                    Delivery Time: <span>{order.deliveryTime}</span>
-                  </Meta>
+                  <Meta>{intl.formatMessage({ id: 'deliveryMethodTitle', defaultMessage: 'Delivery Method' })} <span>{order?.delivery_method?.name}</span></Meta>
+                  {/* <Meta>{intl.formatMessage({ id: 'deliveryTime', defaultMessage: 'Delivery Time:' })}<span>18hs a 21hs {order.delivery_date}</span></Meta> */}
+                  { order?.delivery_method?.isPickUp ? (
+                    <>
+                      <Meta>{intl.formatMessage({ id: 'pickUpDateTitle', defaultMessage: 'Pickup Date:' })}<span>{order.delivery_date}</span></Meta>
+                      <Meta>{intl.formatMessage({ id: 'deliveryAddressTitle', defaultMessage: 'Delivery Address:' })} <span>{order?.delivery_address}</span></Meta>
+                    </>
+                  ) : (
+                    <>
+                      <Meta>{intl.formatMessage({ id: 'deliveryDateTitle', defaultMessage: 'Delivery Date:' })}<span>{`${getDeliverySchedule(order?.delivery_method?.details)} - ${moment(order?.deliveryDate).format('DD MMM')}` || '-'}</span></Meta>
+                      <Meta>{intl.formatMessage({ id: 'deliveryAddressTitle', defaultMessage: 'Delivery Address:' })} <span>{order?.delivery_address}</span></Meta>
+                    </>
+                  )}
+
                   <Meta className="price">
-                    Total Price:
+                    {intl.formatMessage({ id: 'totalPrice', defaultMessage: 'Total Price:' })}
                     <span>
                       {CURRENCY}
-                      {order.amount}
+                      {order.total}
                     </span>
                   </Meta>
                 </OrderMeta>
@@ -106,11 +128,11 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
             <OrderDetail>
               <DeliveryInfo>
                 <DeliveryAddress>
-                  <h3>Contact Number</h3>
+                  <h3>{intl.formatMessage({ id: 'contactNumber', defaultMessage: 'Contact Number' })}</h3>
                   <Contact>{order.contact_number}</Contact>
                 </DeliveryAddress>
                 <DeliveryAddress>
-                  <h3>Delivery Address</h3>
+                  <h3>{intl.formatMessage({ id: 'deliveryAddress', defaultMessage: 'Delivery Address' })}</h3>
                   <Address>{order.delivery_address}</Address>
                 </DeliveryAddress>
                 <CostCalculation>
@@ -122,10 +144,10 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
                     </Price>
                   </PriceRow>
                   <PriceRow>
-                    Discount
+                    {intl.formatMessage({ id: 'discount', defaultMessage: 'Discount' })}
                     <Price>
                       {CURRENCY}
-                      {order.discount}
+                      {order.discount || '0'}
                     </Price>
                   </PriceRow>
                   <PriceRow className="grandTotal">

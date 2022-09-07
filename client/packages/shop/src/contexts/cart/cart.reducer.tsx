@@ -16,14 +16,14 @@ function getTotalItemPrice(items) {
   }, 0);
 }
 
-export const cartItemsTotalPrice = (items, coupon = null) => {
+export const cartItemsTotalPrice = (items, coupon = null, deliveryCharge = 0) => {
   if (items === null || items.length === 0) return 0;
 
   const itemCost = getTotalItemPrice(items);
 
   let discount = coupon ? getDiscountAmount(itemCost, coupon) : 0;
 
-  return itemCost - discount;
+  return itemCost - discount + deliveryCharge;
 };
 
 export const cartDiscountAmount = (items, coupon = null) => {

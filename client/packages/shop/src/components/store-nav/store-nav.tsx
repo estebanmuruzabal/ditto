@@ -11,7 +11,6 @@ const StoreNav: React.FunctionComponent<StoreNavProps> = ({
   className,
   items = [],
 }) => {
-  console.log(items)
   return (
     <StoreNavWrapper className={className}>
       <StoreNavLinks>

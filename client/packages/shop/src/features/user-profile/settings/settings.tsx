@@ -352,10 +352,9 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
                       id={index}
                       key={index}
                       address={item.address}
-                      district={item.district}
-                      division={item.division}
+                      instructions={item.instructions}
+                      location={item.location}
                       title={item.title}
-                      region = {item.region}
                       name='address'
                       isChecked={item.is_primary === true}
                       onChange={() =>handlePrimary(item, 'address')}

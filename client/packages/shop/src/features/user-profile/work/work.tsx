@@ -160,16 +160,19 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
 
     switch (action) {
       case 'stop':
+        const finishDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+        const workedHours = getDurationTimeInHours(task.startDate, finishDate);
+
         taskUpdated = {
           id,
           taskId: task.taskId,
           description: task.description,
           startDate: task.startDate,
-          finishDate: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+          finishDate,
           plannedDate: task.plannedDate,
           isRepetitived: task.isRepetitived,
           completationTimes,
-          workedHours: task.workedHours,
+          workedHours: workedHours,
           isDone: true
         }
         break;
@@ -206,6 +209,16 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
       });
     }
 
+  const getDurationTimeInHours = (start: string, finish: string) => {
+    const startDate = moment(new Date(start));
+    const finishDate = moment(new Date(finish));
+
+    const duration = moment.duration(finishDate.diff(startDate));
+    const hours = duration.asHours();
+    const minutes = duration.asHours();
+    return `${parseInt(duration.asHours())}:${parseInt(duration.asMinutes()) % 60}`;
+  };
+
   // Add or edit modal
   const handleModal = (
     modalComponent: any,
@@ -227,12 +240,13 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     });
   };
 
-console.log("working info changed:", state.tasks)
-const h = state.workInfo?.totalWorkingMinutesPerWeek / 60 | 0;
-const m = state.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
-const subtotalSalario = Number(state.workInfo?.totalWorkingMinutesPerWeek) / 60 * Number(state.workInfo?.ratePerHour);
-const pendingTasks = state?.tasks.filter((task) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false))
-const inProgressTasks = state?.tasks.filter((task) => (task.startDate.length > 1 && task.finishDate.length === 0));
+  console.log("working info changed:", state)
+  const h = state.workInfo?.totalWorkingMinutesPerWeek / 60 | 0;
+  const m = state.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
+  const subtotalSalario = Number(state.workInfo?.totalWorkingMinutesPerWeek) / 60 * Number(state.workInfo?.ratePerHour);
+  const pendingTasks = state?.tasks.filter((task) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false) || task.isRepetitived)
+  const inProgressTasks = state?.tasks.filter((task) => (task.startDate.length > 1 && task.finishDate.length === 0));
+
   return (
     <SettingsForm>
       <SettingsFormContent>
@@ -249,6 +263,7 @@ const inProgressTasks = state?.tasks.filter((task) => (task.startDate.length > 1
             <Switch 
               label={`Usted se encuentra: ${state.workInfo?.isWorking ? 'Chambeando' : 'Vagando'}`}
               disabled={false}
+              checked={state.workInfo?.isWorking}
               labelPosition={'right'}
               // className,
               onUpdate={() => state.workInfo?.isWorking ? stopWorking() :startWorking() }
@@ -346,7 +361,7 @@ const inProgressTasks = state?.tasks.filter((task) => (task.startDate.length > 1
                         id={index}
                         key={index}
                         title={task.description}
-                        content={task.description}
+                        content={`Comenzaste: ${moment(new Date(task.startDate)).format('HH:mm A - DD MMM')}.`}
                         checked={task.isDone}
                         onChange={() => handleTaskChange(task, 'nothing')}
                         name='contact'
@@ -372,19 +387,33 @@ const inProgressTasks = state?.tasks.filter((task) => (task.startDate.length > 1
                 <ButtonGroup>
                   <RadioGroupThree
                     items={pendingTasks}
-                    component={(task: any, index: any) => (
-                      <RadioCard
-                        id={index}
-                        key={index}
-                        title={task.description}
-                        content={`Comenzo: ${task.startDate}. Termino: ${task.finishDate}. Completada: ${task.isDone}`}
-                        checked={task.isDone}
-                        onChange={() => handleTaskChange(task, 'contact')}
-                        name='contact'
-                        onEdit={() => handleTaskChange(task,'start')}
-                        hasDelete={false}
-                      />
-                    )}
+                    component={(task: any, index: any) => {
+                      const plannedDateDay = moment(task.plannedDate, 'MM/D/YYYY').day();
+                      const plannedDate = moment(task.plannedDate, 'MM/D/YYYY');
+                      const today = moment(new Date(), 'MM/D/YYYY');
+                      const todayDay = moment(new Date(), 'MM/D/YYYY').day();
+                      let message = null;
+
+                      if (task.plannedDate?.length > 1 && task.isRepetitived && plannedDateDay === todayDay) {
+                        message = `Tarea repetitiva: ${moment(new Date(task.plannedDate)).format('HH:mm A - ddd')}`
+                      } else if (task.plannedDate?.length > 1 && !task.isRepetitived && plannedDate.isSame(today, 'date')){
+                        message = `Tarea unica, fecha: ${moment(new Date(task.plannedDate)).format('HH:mm A - DD MMM')}`
+                      }
+                      return (
+                        <RadioCard
+                          id={index}
+                          key={index}
+                          disabled={!!!message}
+                          title={task.description}
+                          content={message}
+                          checked={task.isDone}
+                          onChange={() => handleTaskChange(task, 'contact')}
+                          name='contact'
+                          onEdit={() => handleTaskChange(task,'start')}
+                          hasDelete={false}
+                        />
+                      )}
+                    }
                   />
                 </ButtonGroup>
               </SettingsFormContent>
@@ -407,7 +436,7 @@ const inProgressTasks = state?.tasks.filter((task) => (task.startDate.length > 1
                         id={index}
                         key={index}
                         title={task.description}
-                        content={task.description}
+                        content={`Comenzaste: ${moment(new Date(task.startDate)).format('HH:mm A - DD MMM')}. Terminaste: ${moment(new Date(task.finishDate)).format('HH:mm A - DD MMM')}. Tardaste: ${task.workedHours}hs`}
                         checked={task.isDone}
                         onChange={() => handleTaskChange(task, 'nothing')}
                         name='contact'

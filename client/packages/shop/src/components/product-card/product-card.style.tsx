@@ -24,6 +24,17 @@ export const ProductCardWrapper = styled.div(
   })
 );
 
+export const ProductQuantityExceededMsg = styled.div`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.base', '12')}px;
+  font-weight: ${themeGet('fontWeights.bold', '700')};
+  color: ${themeGet('colors.red', '#ea4d4a')};
+  display: block;
+  width: 100%;
+  padding: 5px 0;
+  text-align: center;
+`;
+
 export const ProductImageWrapper = styled.div`
   height: 240px;
   padding: 5px;
@@ -240,6 +251,7 @@ export const ProductInfo = styled.div`
 `;
 
 export const ButtonText = styled.span`
+  padding-left: 15px;
   @media (max-width: 767px) {
     display: none;
   }

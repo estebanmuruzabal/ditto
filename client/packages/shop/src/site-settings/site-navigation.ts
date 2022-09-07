@@ -61,10 +61,16 @@ export const PROFILE_MENU_ITEM = {
   defaultMessage: 'Profile',
   href: PROFILE_PAGE,
 };
-export const AUTHORIZED_MENU_ITEMS = [
+
+export const STAFF_MENU_ITEMS = [
   PROFILE_MENU_ITEM,
   ORDER_MENU_ITEM,
   WORK_PAGE_ITEM
+]
+
+export const AUTHORIZED_MENU_ITEMS = [
+  PROFILE_MENU_ITEM,
+  ORDER_MENU_ITEM,
   /*{
     id: 'nav.checkout',
     defaultMessage: 'Checkout',
