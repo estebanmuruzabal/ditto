@@ -212,11 +212,13 @@ const AddProduct: React.FC<Props> = props => {
   };
 
   const handleTypeChange = ({ value }) => {
-    setValue('type', {
-      id: value[0].id,
-      name: value[0].name,
-      slug: value[0].slug
-    });
+    if (value) {
+      setValue('type', {
+        id: value[0].id,
+        name: value[0].name,
+        slug: value[0].slug
+      });  
+    }
     setType(value);
   };
   const handleUploader = files => {

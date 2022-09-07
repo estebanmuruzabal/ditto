@@ -128,7 +128,7 @@ const Topbar = ({ refs }: any) => {
       <TopbarRightSide>
         {/*<Button startEnhancer={() => <Plus />} style={{ marginRight: "20px" }} onClick={openDrawer}>Add Products</Button>*/}
 
-        {/*<Popover
+        {/* <Popover
           content={({ close }) => <Notification data={data} onClear={close} />}
           accessibilityType={'tooltip'}
           placement={PLACEMENT.bottomRight}
@@ -152,17 +152,17 @@ const Topbar = ({ refs }: any) => {
               <AlertDotIcon />
             </AlertDot>
           </NotificationIconWrapper>
-        </Popover>*/}
+        </Popover> */}
 
         <Popover
           content={({ close }) => (
             <UserDropdowItem>
-              {/*<NavLink to={STAFF_MEMBERS} exact={false} onClick={close}>
+              <NavLink to={STAFF_MEMBERS} exact={false} onClick={close}>
                 Staff
               </NavLink>
               <NavLink to={SETTINGS} exact={false} onClick={close}>
                 Settings
-              </NavLink>*/}
+              </NavLink>
               <LogoutBtn
                 onClick={() => {
                   signout();

@@ -154,8 +154,7 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
   const [updateUserInfoMutation] = useMutation(UPDATE_USER_WORK_INFO);
   const [updateUserTodoMutation] = useMutation(UPDATE_USER_TODO_TASKS);
   const [deleteUserTaskMutation] = useMutation(DELETE_USER_TASK);
-  console.log('itemData', itemData)
-  // itemData.role = itemData.role || '';
+
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: itemData,
   })
@@ -236,7 +235,7 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
   
   const h = itemData.workInfo?.totalWorkingMinutesPerWeek / 60 | 0;
   const m = itemData.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
-  console.log(task)
+
   return (
     <>
       <DrawerTitleWrapper>
@@ -267,7 +266,7 @@ const StaffEditMemberForm: React.FC<Props> = (props) => {
             <Col lg={8}>
               <DrawerBox>
                 <FormFields>
-                  <FormLabel>Working Hours:{`${h}: ${Number(m) >= 9 ? m : '0' + m} hs.  Total Working Minutes:`}</FormLabel>
+                  <FormLabel>Working Hours:{` ${h}:${Number(m) >= 9 ? m : '0' + m} hs.  Total Working Minutes:`}</FormLabel>
                   <Input
                     inputRef={register({ required: true })}
                     name='workInfo.totalWorkingMinutesPerWeek'

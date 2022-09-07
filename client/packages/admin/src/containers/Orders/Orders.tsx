@@ -52,7 +52,10 @@ const GET_ORDERS = gql`
                 total
                 delivery_method {
                     name
+                    isPickUp
+                    pickUpAddress
                     details
+                    delivery_date
                 }
                 order_tracking {
                     status
@@ -274,7 +277,6 @@ export default function Orders() {
                                 {data ? (
                                     data.orders.items.length ? (
                                         data.orders.items.map((item: any, index: number) => {
-                                            console.log(item)
                                             return (
                                                 <React.Fragment key={index + 1}>
                                                     <StyledCell>

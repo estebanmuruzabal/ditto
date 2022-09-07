@@ -39,6 +39,8 @@ const GET_DELIVERY_METHODS = gql`
         name
         details
         created_at
+        isPickUp
+        pickUpAddress
       }
       totalCount
       hasMore

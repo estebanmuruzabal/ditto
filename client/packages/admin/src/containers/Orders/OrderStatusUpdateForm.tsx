@@ -43,7 +43,10 @@ const GET_ORDERS = gql`
         total
         delivery_method {
           name
+          isPickUp
+          pickUpAddress
           details
+          delivery_date
         }
         order_tracking {
           status
@@ -76,7 +79,10 @@ const GET_ORDERS = gql`
       total
       delivery_method {
         name
+        isPickUp
+        pickUpAddress
         details
+        delivery_date
       }
       order_tracking {
         status

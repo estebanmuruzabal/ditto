@@ -96,7 +96,6 @@ const GET_ORDERS = gql`
     orders(status: $status, limit: $limit, searchText: $searchText) {
       id
       creation_date
-      delivery_address
       amount
       payment_method
       contact_number
@@ -140,7 +139,6 @@ export default function Orders() {
     return <div>Error! {error.message}</div>;
   }
 
-  console.log(data && data.orders.map((item) => Object.values(item)));
   function handleSearch(event) {
     const { value } = event.currentTarget;
     setSearch(value);

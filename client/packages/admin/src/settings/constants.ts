@@ -25,8 +25,8 @@ export const ADMIN = 'ADMIN';
 export const MANAGER = 'MANAGER';
 export const MEMBER = 'MEMBER';
 export const DELIVERY_BOY = 'DELIVERY_BOY';
-export const CLIENT = 'CLIENT';
 export const STAFF = 'STAFF';
+export const CLIENT = 'CLIENT';
 // **************** Roles CONSTANT End **************************
 
 // **************** Coupon Status CONSTANT START **************************

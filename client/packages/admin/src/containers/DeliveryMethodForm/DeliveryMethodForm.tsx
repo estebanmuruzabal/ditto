@@ -1,8 +1,8 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import gql from 'graphql-tag';
 import {useMutation} from '@apollo/react-hooks';
-import {useDrawerDispatch} from '../../context/DrawerContext';
+import {useDrawerDispatch, useDrawerState} from '../../context/DrawerContext';
 import {Scrollbars} from 'react-custom-scrollbars';
 import Input from '../../components/Input/Input';
 import Button, {KIND} from '../../components/Button/Button';
@@ -17,6 +17,8 @@ import {
 } from '../DrawerItems/DrawerItems.style';
 import {FormFields, FormLabel} from '../../components/FormFields/FormFields';
 import {displaySuccessNotification, displayErrorMessage} from "../../helpers/custom-message";
+import Checkbox from '../../components/CheckBox/CheckBox';
+
 
 const GET_DELIVERY_METHODS = gql`
     query GetDeliveryMethods(
@@ -32,6 +34,8 @@ const GET_DELIVERY_METHODS = gql`
                 name
                 details
                 created_at
+                isPickUp
+                pickUpAddress
             }
             totalCount
             hasMore
@@ -40,12 +44,14 @@ const GET_DELIVERY_METHODS = gql`
 `;
 
 const CREATE_DELIVERY_METHOD = gql`    
-    mutation CreateDeliveryMethod($name: String!, $details: String!) {
-        createDeliveryMethod(name: $name, details: $details) {
+    mutation CreateDeliveryMethod($name: String!, $details: String!, $isPickUp: Boolean, $pickUpAddress: String) {
+        createDeliveryMethod(name: $name, details: $details, isPickUp: $isPickUp, pickUpAddress: $pickUpAddress) {
             id
             name
             details
             created_at
+            isPickUp
+            pickUpAddress
         }
     }
 `;
@@ -58,7 +64,9 @@ const AddDeliveryMethod: React.FC<Props> = props => {
         dispatch,
     ]);
     const {register, handleSubmit, setValue} = useForm();
-
+    const [isPickUp, setIsPickUp] = useState(false);
+    const itemData = useDrawerState('data');
+    
     React.useEffect(() => { }, [register]);
 
     const [createDeliveryMethod] = useMutation(CREATE_DELIVERY_METHOD, {
@@ -89,16 +97,18 @@ const AddDeliveryMethod: React.FC<Props> = props => {
         }
     });
 
-    const onSubmit = ({name, details}) => {
+    const onSubmit = ({name, details, pickUpAddress}) => {
         createDeliveryMethod({
             variables: {
-                name: name,
-                details: details,
+                name,
+                details,
+                isPickUp,
+                pickUpAddress
             },
         });
         closeDrawer();
     };
-
+    console.log(itemData)
     return (
         <>
             <DrawerTitleWrapper>
@@ -144,6 +154,34 @@ const AddDeliveryMethod: React.FC<Props> = props => {
                                         name="details"
                                         required={true}
                                     />
+                                </FormFields>
+
+                                <FormFields>
+                                    <FormLabel>Pickup Address</FormLabel>
+                                    <Input
+                                        inputRef={register({required: true})}
+                                        name="pickUpAddress"
+                                        required={true}
+                                    />
+                                </FormFields>
+
+                                <FormFields>
+                                    {/* <FormLabel>Pickup only</FormLabel> */}
+                                    <Checkbox
+                                        checked={isPickUp}
+                                        onChange={() => setIsPickUp(!isPickUp) }
+                                        inputRef={register({ required: true })}
+                                        name='isPickUp'
+                                        overrides={{
+                                        Label: {
+                                            style: ({ $theme }) => ({
+                                            color: $theme.colors.textNormal,
+                                            }),
+                                        },
+                                        }}
+                                    >
+                                        {'Pickup only'}
+                                    </Checkbox>
                                 </FormFields>
                             </DrawerBox>
                         </Col>

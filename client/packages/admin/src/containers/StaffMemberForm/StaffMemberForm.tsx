@@ -105,7 +105,7 @@ const StaffMemberForm: React.FC<Props> = (props) => {
     closeDrawer();
   };
   const select = [roleSelectOptions[0]];
-  console.log('select' ,select)
+
   return (
     <>
       <DrawerTitleWrapper>
