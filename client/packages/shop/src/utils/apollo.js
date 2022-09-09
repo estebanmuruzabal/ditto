@@ -92,7 +92,7 @@ export function useApollo(initialState) {
 import { useMemo } from 'react';
 import {ApolloClient, ApolloLink, HttpLink, InMemoryCache} from 'apollo-boost';
 const httpLink = new HttpLink({
-  uri: 'http://ec2-54-94-119-198.sa-east-1.compute.amazonaws.com/api', // Server URL (must be absolute)
+  uri: 'http://54.232.137.175/api', // Server URL (must be absolute)
   credentials: 'same-origin', // Additional fetch() options like `credentials`
   onError: ({ networkError, graphQLErrors }) => {
     console.log('graphQLErrors', graphQLErrors);
