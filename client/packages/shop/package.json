@@ -88,5 +88,5 @@
     "imagemin-svgo": "^8.0.0",
     "typescript": "^3.9.5"
   },
-  "proxy": "http://ec2-54-233-245-157.sa-east-1.compute.amazonaws.com/api"
+  "proxy": "http://ec2-54-94-119-198.sa-east-1.compute.amazonaws.com/api"
 }
