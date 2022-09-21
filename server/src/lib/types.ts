@@ -159,6 +159,7 @@ export interface IProduct {
     categories: Array<IProductCategory>;
     name: string;
     slug?: string;
+    packagePrice?: number;
     description?: string;
     images: Array<string>;
     unit?: string;

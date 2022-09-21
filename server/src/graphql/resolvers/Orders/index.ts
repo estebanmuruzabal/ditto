@@ -140,10 +140,13 @@ export const ordersResolvers: IResolvers = {
 
             // Products quantity substation
             const products: Array<IProduct> = await db.products.find({ _id: {$in: makeObjectIds(input.products)}}).toArray();
-
+            console.log('db products', products)
+            console.log('---')
+            console.log('input.products', input.products)
             for (let i = 0; i < products.length; i++) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
+
                 if (products[i]._id.toString() != input.products[i].product_id) {
                     throw new Error("Something went wrong! Please contact support to resolve this problem.");
                 }
@@ -199,7 +202,7 @@ export const ordersResolvers: IResolvers = {
                 for (let i = 0; i < products.length; i++) {
                     await db.products.updateOne(
                         {_id: products[i]._id},
-                        {$set: {product_quantity: products[i].product_quantity - input.products[i].quantity}}
+                        {$set: {product_quantity: products[i].product_quantity - (input.products[i].quantity + input.products[i].recicledQuantity) }}
                     )
                 }
             }

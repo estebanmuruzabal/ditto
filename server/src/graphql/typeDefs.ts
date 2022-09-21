@@ -151,6 +151,8 @@ export const typeDefs = gql`
         description: String
         images_data: String!
         images: [String!]!
+        slug: String!
+        packagePrice: Float
         unit: String
         price: Float!
         sale_price: Float
@@ -168,6 +170,8 @@ export const typeDefs = gql`
         description: String
         images_data: String
         images: [String]
+        slug: String
+        packagePrice: Int
         unit: String
         price: Float
         sale_price: Float
@@ -199,6 +203,7 @@ export const typeDefs = gql`
         images: [String!]!
         unit: String
         price: Float!
+        packagePrice: Float 
         sale_price: Float
         discount_in_percent: Int
         product_quantity: Int!
@@ -252,6 +257,7 @@ export const typeDefs = gql`
         name: String
         image: String
         quantity: Int!
+        recicledQuantity: Int!
         unit: String
         price: Float!
         sale_price: Float

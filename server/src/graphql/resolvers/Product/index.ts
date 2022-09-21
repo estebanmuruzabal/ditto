@@ -61,10 +61,10 @@ export const productsResolvers: IResolvers = {
             await authorize(req, db);
             const imagesPath = [];
             const imagesData = JSON.parse(input.images_data);
-            const existsData = await db.products.findOne({slug: slugify(input.name)});
+            const existsData = await db.products.findOne({slug: input.slug});
 
             if (existsData) {
-                throw new Error("Resource already exits with this name.");
+                throw new Error("Resource already exits with this slug name.");
             }
 
             if (imagesData.length) {
@@ -81,8 +81,9 @@ export const productsResolvers: IResolvers = {
                 type: input.type,
                 categories: JSON.parse(input.categories),
                 name: input.name,
-                slug: slugify(input.name),
+                slug: input.slug,
                 description: input.description,
+                packagePrice: input.packagePrice,
                 images: imagesPath,
                 unit: input.unit,
                 price: input.price,
@@ -125,10 +126,11 @@ export const productsResolvers: IResolvers = {
                 type: input.type,
                 categories: JSON.parse(input.categories),
                 name: input.name,
-                slug: slugify(input.name),
+                slug: input.slug,
                 description: input.description,
                 images: imagesPath,
                 unit: input.unit,
+                packagePrice: input.packagePrice,
                 price: input.price,
                 sale_price: input.sale_price,
                 discount_in_percent: input.discount_in_percent,

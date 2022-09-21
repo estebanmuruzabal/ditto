@@ -12,6 +12,8 @@ export interface IProductInput {
     name: string;
     type: IProductType;
     categories: string;
+    slug: string;
+    packagePrice: number;
     description?: string;
     images_data?: any;
     images: [string];
@@ -34,6 +36,8 @@ export interface IUpdateProductInput {
     images: [string];
     price: number;
     unit?: string;
+    packagePrice?: number;
+    slug?: string; 
     sale_price?: number;
     discount_in_percent?: number;
     product_quantity: number;
