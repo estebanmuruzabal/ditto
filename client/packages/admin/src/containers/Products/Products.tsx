@@ -95,6 +95,7 @@ const GET_PRODUCTS = gql`
         }
         name
         slug
+        packagePrice
         description
         images
         unit

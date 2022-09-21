@@ -54,6 +54,7 @@ const GET_PRODUCTS = gql`
         }
         name
         slug
+        packagePrice
         description
         images
         unit
@@ -126,6 +127,7 @@ const UPDATE_PRODUCT = gql`
       slug
       description
       images
+      packagePrice
       unit
       price
       sale_price
@@ -162,7 +164,8 @@ const AddProduct: React.FC<Props> = () => {
   const [meta_title, setMetaTitle] = useState(itemData.meta_title ? itemData.meta_title : '');
   const [meta_keyword, setMetaKeyword] = useState(itemData.meta_keyword ? itemData.meta_keyword : '');
   const [meta_description, setMetaDescription] = useState(itemData.meta_description ? itemData.meta_description : '');
-
+  const [slug, setSlugTitle] = useState(itemData.slug ? itemData.slug : '');
+  const [packagePrice, setPackagePrice] = useState(itemData.packagePrice ? itemData.packagePrice : 0);
 
   React.useEffect(() => {
     setCategory(itemData.categories.map(category => ({
@@ -177,6 +180,8 @@ const AddProduct: React.FC<Props> = () => {
     register({ name: 'type' });
     register({ name: 'categories' });
     register({ name: 'images', required: true });
+    register({ name: 'slug', required: true });
+    register({ name: 'packagePrice' });
     register({ name: 'description' });
     register({name: 'is_featured'});
     register({name: 'meta_title'});
@@ -233,6 +238,16 @@ const AddProduct: React.FC<Props> = () => {
     setValue('meta_title', value);
     setMetaTitle(value);
   };
+  const handleSlugTitleChange = e => {
+    const value = e.target.value;
+    setValue('slug', value);
+    setSlugTitle(value);
+  };
+  const handlePackagePriceChange = e => {
+    const value = e.target.value;
+    setValue('packagePrice', value);
+    setPackagePrice(Number(value));
+  };
   const handleMetaKeywordChange = e => {
     const value = e.target.value;
     setValue('meta_keyword', value);
@@ -261,6 +276,8 @@ const AddProduct: React.FC<Props> = () => {
       }))),
       description: data.description,
       images_data: data.images_data,
+      slug: data.slug,
+      packagePrice: Number(data.packagePrice),
       images: data.images,
       price: Number(data.price),
       unit: data.unit,
@@ -377,6 +394,24 @@ const AddProduct: React.FC<Props> = () => {
                     type="number"
                     inputRef={register}
                     name="discount_in_percent"
+                  />
+                </FormFields>
+
+                <FormFields>
+                  <FormLabel>Package price</FormLabel>
+                  <Input
+                      name="packagePrice"
+                      type="number"
+                      value={packagePrice}
+                    onChange={handlePackagePriceChange}
+                  />
+                </FormFields>
+                <FormFields>
+                  <FormLabel>Slug</FormLabel>
+                  <Input
+                      name="slug"
+                      value={slug}
+                      onChange={handleSlugTitleChange}
                   />
                 </FormFields>
 

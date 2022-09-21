@@ -54,6 +54,7 @@ const GET_PRODUCTS = gql`
         slug
         description
         images
+        packagePrice
         unit
         price
         sale_price
@@ -129,6 +130,7 @@ const CREATE_PRODUCT = gql`
       price
       sale_price
       discount_in_percent
+      packagePrice
       product_quantity
       is_featured
       meta_title
@@ -161,6 +163,8 @@ const AddProduct: React.FC<Props> = props => {
   const [description, setDescription] = useState('');
   const [isFeatured, setIsFeatured] = useState(false);
   const [meta_title, setMetaTitle] = useState('');
+  const [slug, setSlugTitle] = useState('');
+  const [packagePrice, setPackagePrice] = useState(0);
   const [meta_keyword, setMetaKeyword] = useState('');
   const [meta_description, setMetaDescription] = useState('');
 
@@ -169,6 +173,8 @@ const AddProduct: React.FC<Props> = props => {
     register({ name: 'type' });
     register({ name: 'categories' });
     register({ name: 'images', required: true });
+    register({ name: 'slug', required: true });
+    register({ name: 'packagePrice' });
     register({ name: 'description' });
     register({name: 'is_featured'});
     register({name: 'meta_title'});
@@ -241,6 +247,16 @@ const AddProduct: React.FC<Props> = props => {
     setValue('meta_title', value);
     setMetaTitle(value);
   };
+  const handleSlugTitleChange = e => {
+    const value = e.target.value;
+    setValue('slug', value);
+    setSlugTitle(value);
+  };
+  const handlePackagePriceChange = e => {
+    const value = e.target.value;
+    setValue('packagePrice', value);
+    setPackagePrice(value);
+  };
   const handleMetaKeywordChange = e => {
     const value = e.target.value;
     setValue('meta_keyword', value);
@@ -262,6 +278,8 @@ const AddProduct: React.FC<Props> = props => {
       categories: data.categories,
       description: data.description,
       images_data: data.images_data,
+      slug: data.slug,
+      packagePrice: Number(data.packagePrice),
       images: data.images,
       price: Number(data.price),
       unit: data.unit,
@@ -503,6 +521,23 @@ const AddProduct: React.FC<Props> = props => {
                     }}
                     type={TYPE.search}
                     multi
+                  />
+                </FormFields>
+                <FormFields>
+                  <FormLabel>Package price</FormLabel>
+                  <Input
+                      name="packagePrice"
+                      type="number"
+                      value={packagePrice}
+                      onChange={handlePackagePriceChange}
+                  />
+                </FormFields>
+                <FormFields>
+                  <FormLabel>Slug</FormLabel>
+                  <Input
+                      name="slug"
+                      value={slug}
+                      onChange={handleSlugTitleChange}
                   />
                 </FormFields>
                 <FormFields>

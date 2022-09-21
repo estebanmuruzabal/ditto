@@ -48,6 +48,7 @@ const GET_PRODUCTS = gql`
                 description
                 images
                 unit
+                packagePrice
                 price
                 sale_price
                 discount_in_percent
