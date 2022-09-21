@@ -187,7 +187,6 @@ export const ProductCartBtn = styled.div`
   }
 
   .cart-button {
-
     .btn-icon {
       margin-right: 5px;
     }

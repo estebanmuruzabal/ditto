@@ -110,20 +110,20 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
           </BackButton>
 
           <img
-            src={product.gallery[0].url}
-            alt={product.title}
+            src={product?.gallery && product?.gallery[0]?.url}
+            alt={product?.title}
             className="product-image"
           />
         </ProductPreview>
 
         <ProductInfo>
-          <BookTitle>{product.title}</BookTitle>
+          <BookTitle>{product?.title}</BookTitle>
           <AuthorName>
-            <InkPen /> {product.author.name}
+            <InkPen /> {product?.author?.name}
           </AuthorName>
           <BookDescriptionWrapper>
             <BookDescription>
-              {product.description.substring(0, 600)}
+              {product?.description.substring(0, 600)}
               <a
                 href="#"
                 onClick={scrollToDiv}
@@ -133,8 +133,8 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
               </a>
             </BookDescription>
             <BookMetaTable>
-              {product.meta
-                ? Object.entries(product.meta).map(([item], i, arr): any =>
+              {product?.meta
+                ? Object.entries(product?.meta).map(([item], i, arr): any =>
                     i !== arr.length - 1 && i !== arr.length - 2 ? (
                       <BookMetaTableRow key={i}>
                         <BookMetaItem>
@@ -146,13 +146,13 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                         </BookMetaItem>
                         <BookMetaItem>
                           {item === 'languages'
-                            ? product.meta[item].map(
+                            ? product?.meta[item].map(
                                 (lang, i, arr): any =>
                                   lang.charAt(0).toUpperCase() +
                                   lang.slice(1) +
                                   (i !== arr.length - 1 ? ', ' : '')
                               )
-                            : product.meta[item]}
+                            : product?.meta[item]}
                         </BookMetaItem>
                       </BookMetaTableRow>
                     ) : (
@@ -165,16 +165,16 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
           <ProductCartWrapper>
             <ProductPriceWrapper>
-              {product.discountInPercent ? (
+              {product?.discountInPercent ? (
                 <SalePrice>
                   {CURRENCY}
-                  {product.price}
+                  {product?.price}
                 </SalePrice>
               ) : null}
 
               <ProductPrice>
                 {CURRENCY}
-                {product.salePrice ? product.salePrice : product.price}
+                {product?.salePrice ? product?.salePrice : product?.price}
               </ProductPrice>
             </ProductPriceWrapper>
 
@@ -202,7 +202,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                 />
               )}
 
-              {product.meta && product.meta.samplePDF.length !== 0 ? (
+              {product?.meta && product?.meta.samplePDF.length !== 0 ? (
                 <Button
                   title="Read Free Sample"
                   intlButtonId="readFreeSampleButton"
@@ -218,8 +218,8 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
           <ProductMeta>
             <MetaSingle>
-              {product.categories
-                ? product.categories.map((item: any) => (
+              {product?.categories
+                ? product?.categories.map((item: any) => (
                     <Link
                       href={`/${product.type}?category=${item.slug}`}
                       key={`link-${item.id}`}
@@ -244,7 +244,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
             defaultMessage="About The Book"
           />
         </DetailsTitle>
-        <Description>{product.description}</Description>
+        <Description>{product?.description}</Description>
       </DetailsWrapper>
 
       <DetailsWrapper>
@@ -255,21 +255,21 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
           />
         </DetailsTitle>
         <AuthorName>
-          {product.author.avatar && product.author.avatar.length !== 0 ? (
+          {product?.author?.avatar && product?.author.avatar.length !== 0 ? (
             <Avatar>
-              <img src={product.author.avatar} alt={product.author.name} />
+              <img src={product?.author.avatar} alt={product?.author?.name} />
             </Avatar>
           ) : (
             <InkPen />
           )}
 
-          {product.author.name}
+          {product?.author?.name}
         </AuthorName>
 
-        <Description>{product.author.bio}</Description>
+        <Description>{product?.author?.bio}</Description>
         <SocialNetworks>
-          {product.author &&
-            product.author.socials.map((item) =>
+          {product?.author &&
+            product?.author.socials.map((item) =>
               item.profileLink.length !== 0 ? (
                 <SocialIcon>
                   <a key={item.id} href={item.profileLink} target="_blank">
@@ -301,7 +301,8 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
           />
         </h2>
         <Products
-          type={product.type.toLowerCase()}
+          type={product?.type}
+          // type={product?.type?.toLowerCase()}
           deviceType={deviceType}
           loadMore={false}
           fetchLimit={10}

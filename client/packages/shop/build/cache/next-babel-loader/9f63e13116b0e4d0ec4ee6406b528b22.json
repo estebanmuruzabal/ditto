@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { useCreateContext } from '../create-context';\nimport { appReducer, initialState } from './app.reducer';\nconst [state, dispatch, provider] = useCreateContext(appReducer, initialState);\nexport const useAppState = state;\nexport const useAppDispatch = dispatch;\nexport const AppProvider = provider;","map":null,"metadata":{},"sourceType":"module"}

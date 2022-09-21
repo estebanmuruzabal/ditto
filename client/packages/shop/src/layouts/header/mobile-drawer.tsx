@@ -36,7 +36,7 @@ const MobileDrawer: React.FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const { authState: { isAuthenticated }, authDispatch } = useContext<any>(AuthContext);
   const { state } = useContext(ProfileContext);
-  console.log(state)
+
   if (state) {
     const { name, phone } = state;
   }  

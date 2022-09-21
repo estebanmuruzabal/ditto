@@ -144,6 +144,15 @@ export const ProductTitlePriceWrapper = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   margin-bottom: 10px;
+  flex-direction: column;
+
+  .eco-detail {
+    font-family: ${themeGet('fonts.body', 'sans-serif')};
+    font-size: 12px;
+    line-height: 13px;
+    font-weight: ${themeGet('fontWeights.regular', '700')};
+    color: #636579;
+  }
 `;
 
 export const ProductTitle = styled.h1`
@@ -159,12 +168,25 @@ export const ProductTitle = styled.h1`
   }
 `;
 
+export const PriceContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PriceContainerRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
+`;
+
 export const ProductPriceWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-shrink: 0;
   margin-left: 25px;
+  margin-right: 15px;
   line-height: 31px;
+  min-width: 40px;
 
   @media (max-width: 767px) {
     margin-left: 15px;
@@ -219,8 +241,10 @@ export const ProductDescription = styled.p`
 
 export const ProductCartWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-top: 60px;
+  margin-top: 20px;
+  // flex-direction: column,
+  alignItems: 'center',
+  flexDirection: 'row',
   @media (max-width: 767px) {
     margin-top: 40px;
   }
@@ -231,7 +255,7 @@ export const ProductCartBtn = styled.div`
     border-radius: 20px;
     padding-left: 20px;
     padding-right: 20px;
-
+    min-width: 140px;
     .btn-icon {
       margin-right: 5px;
 

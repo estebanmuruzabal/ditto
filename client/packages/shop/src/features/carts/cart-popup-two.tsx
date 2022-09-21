@@ -39,10 +39,11 @@ type CartProps = {
     tablet: boolean;
     desktop: boolean;
   };
+  showBuyNowBtn?: boolean;
 };
 
 const CartPopUp: React.FC<CartProps> = ({
-  deviceType: { mobile, tablet, desktop },
+  deviceType: { mobile, tablet, desktop }, showBuyNowBtn
 }) => {
   const { isOpen, cartItemsCount, toggleCart, calculatePrice } = useCart();
   const handleModal = () => {
@@ -96,22 +97,24 @@ const CartPopUp: React.FC<CartProps> = ({
               <Cart onCloseBtnClick={toggleCart} scrollbarHeight='100vh' />
             )}
           </CartSlidePopup>
-
-          <BoxedCartButtonV2
-            className='product-cart'
-            itemCount={cartItemsCount}
-            btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
-            itemPostfix={
-              cartItemsCount > 1 ? (
-                <FormattedMessage id='cartItems' defaultMessage='items' />
-              ) : (
-                <FormattedMessage id='cartItem' defaultMessage='item' />
-              )
-            }
-            price={calculatePrice()}
-            pricePrefix={CURRENCY}
-            onClick={toggleCart}
-          />
+            
+          {  showBuyNowBtn && (
+            <BoxedCartButtonV2
+              className='product-cart'
+              itemCount={cartItemsCount}
+              btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
+              itemPostfix={
+                cartItemsCount > 1 ? (
+                  <FormattedMessage id='cartItems' defaultMessage='items' />
+                ) : (
+                  <FormattedMessage id='cartItem' defaultMessage='item' />
+                )
+              }
+              price={calculatePrice()}
+              pricePrefix={CURRENCY}
+              onClick={toggleCart}
+            />
+          )}
         </>
       )}
     </>

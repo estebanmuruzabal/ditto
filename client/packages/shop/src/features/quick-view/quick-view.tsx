@@ -134,7 +134,7 @@ const QuickView: React.FunctionComponent<QuickViewProps> = ({
                       <CartIcon />
                       <ButtonText>
                         <FormattedMessage
-                          id="addCartButton"
+                          id="addEcoToCartButton"
                           defaultMessage="Cart"
                         />
                       </ButtonText>

@@ -10,6 +10,7 @@ import {
   TotalItems,
 } from './cart-popup.style';
 import { ShoppingBag } from 'assets/icons/ShoppingBag';
+import { useIntl } from 'react-intl';
 
 type CartButtonProps = {
   style?: React.CSSProperties;
@@ -39,8 +40,8 @@ const CartPopupButton: React.FC<CartButtonProps> = ({
       {itemCount} {itemPostfix}
     </ItemCount>
     <PriceBox>
+      {useIntl().formatMessage({ id: 'payStaticCard', defaultMessage: 'Pay: ' })}
       {pricePrefix}
-      {/* {price} */}
       {parseFloat(`${price}`).toFixed(2)}
     </PriceBox>
   </CartPopupButtonStyled>
@@ -61,6 +62,7 @@ export const BoxedCartButton: React.FC<CartButtonProps> = ({
       {itemCount} {itemPostfix}
     </TotalItems>
     <PriceBoxAlt>
+      {useIntl().formatMessage({ id: 'payStaticCard', defaultMessage: 'Pay: ' })}
       {pricePrefix}
       {parseFloat(`${price}`).toFixed(2)}
     </PriceBoxAlt>

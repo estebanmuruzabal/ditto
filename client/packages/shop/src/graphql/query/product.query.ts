@@ -50,6 +50,7 @@ export const GET_PRODUCT = gql`
       weight
       slug
       price
+      packagePrice
       discountInPercent
       type
       gallery {
@@ -85,6 +86,7 @@ export const GET_PRODUCT_DETAILS = gql`
           unit
           price
           sale_price
+          packagePrice
           discount_in_percent
           product_quantity
           is_featured

@@ -1,0 +1,278 @@
+{
+  "../auth-menu": [
+    {
+      "id": "./src/components/nav-link/nav-link.tsx",
+      "name": "./src/components/nav-link/nav-link.tsx",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./src/layouts/header/menu/auth-menu.tsx",
+      "name": "./src/layouts/header/menu/auth-menu.tsx",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./src/layouts/header/menu/authorized-menu.tsx",
+      "name": "./src/layouts/header/menu/authorized-menu.tsx",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    }
+  ],
+  "./dev/noop": [
+    {
+      "id": "../../node_modules/next/dist/client/dev/noop.js",
+      "name": "../../node_modules/next/dist/client/dev/noop.js",
+      "file": "static/chunks/2.js",
+      "publicPath": "static/chunks/2.js"
+    }
+  ],
+  "./header/mobile-header": [
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/classCallCheck.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/createClass.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/createClass.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/inherits.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/inherits.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/typeof.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/typeof.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/add-px-to-style/index.js",
+      "name": "../../node_modules/add-px-to-style/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/dom-css/index.js",
+      "name": "../../node_modules/dom-css/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/prefix-style/index.js",
+      "name": "../../node_modules/prefix-style/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-drawer/es/DrawerChild.js",
+      "name": "../../node_modules/rc-drawer/es/DrawerChild.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-drawer/es/DrawerWrapper.js",
+      "name": "../../node_modules/rc-drawer/es/DrawerWrapper.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-drawer/es/index.js",
+      "name": "../../node_modules/rc-drawer/es/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-drawer/es/utils.js",
+      "name": "../../node_modules/rc-drawer/es/utils.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-util/es/ContainerRender.js",
+      "name": "../../node_modules/rc-util/es/ContainerRender.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-util/es/KeyCode.js",
+      "name": "../../node_modules/rc-util/es/KeyCode.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-util/es/Portal.js",
+      "name": "../../node_modules/rc-util/es/Portal.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-util/es/PortalWrapper.js",
+      "name": "../../node_modules/rc-util/es/PortalWrapper.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-util/es/getScrollBarSize.js",
+      "name": "../../node_modules/rc-util/es/getScrollBarSize.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-util/es/setStyle.js",
+      "name": "../../node_modules/rc-util/es/setStyle.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/rc-util/es/switchScrollingEffect.js",
+      "name": "../../node_modules/rc-util/es/switchScrollingEffect.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/defaultRenderElements.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/defaultRenderElements.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/index.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/styles.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/styles.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/index.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerHeight.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerHeight.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerWidth.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerWidth.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getScrollbarWidth.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getScrollbarWidth.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/isString.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/isString.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/returnFalse.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/returnFalse.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/to-camel-case/index.js",
+      "name": "../../node_modules/to-camel-case/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/to-no-case/index.js",
+      "name": "../../node_modules/to-no-case/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "../../node_modules/to-space-case/index.js",
+      "name": "../../node_modules/to-space-case/index.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "./src/components/drawer/drawer.tsx",
+      "name": "./src/components/drawer/drawer.tsx",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "./src/components/nav-link/nav-link.tsx",
+      "name": "./src/components/nav-link/nav-link.tsx",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "./src/contexts/profile/profile.context.tsx",
+      "name": "./src/contexts/profile/profile.context.tsx",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "./src/layouts/header/mobile-drawer.tsx",
+      "name": "./src/layouts/header/mobile-drawer.tsx",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "./src/layouts/header/mobile-header.tsx",
+      "name": "./src/layouts/header/mobile-header.tsx",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "./src/utils/debounce.ts",
+      "name": "./src/utils/debounce.ts",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    },
+    {
+      "id": "./src/utils/useComponentSize.js",
+      "name": "./src/utils/useComponentSize.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    }
+  ]
+}

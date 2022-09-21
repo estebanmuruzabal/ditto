@@ -17,6 +17,8 @@ import {
   ProductMeta,
   ProductCartWrapper,
   ProductPriceWrapper,
+  PriceContainerRow,
+  PriceContainer,
   ProductPrice,
   SalePrice,
   ProductCartBtn,
@@ -57,13 +59,13 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
   deviceType,
 }) => {
   const { isRtl } = useLocale();
-  const { addItem, removeItem, isInCart, getItem} = useCart();
+  const { addItem, removeItem, removeRecicledItemHandler, addRecicledItemHandler, isInCart, getItem} = useCart();
   const [showProductQuantityExceededMsg, setShowProductQuantityExceededMsg] = useState(false);
   const data = product;
   const intl = useIntl();
 
   const handleAddClick = (e) => {
-    const currentQuantity = getItem(data.id)?.quantity;
+    const currentQuantity = (getItem(data.id)?.quantity || 0) + (getItem(data.id)?.recicledQuantity || 0);
     const stock = data.product_quantity;
     if (stock <= currentQuantity) {
       e.stopPropagation();
@@ -72,6 +74,18 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
       e.stopPropagation();
       addItem(data);
       
+    }
+  };
+
+  const handleRecicledAddClick = (e) => {
+    const currentQuantity = (getItem(data.id)?.quantity || 0) + (getItem(data.id)?.recicledQuantity || 0);
+    const stock = data.product_quantity;
+    if (stock <= currentQuantity) {
+      e.stopPropagation();
+      showProductQuantityExceededMsgFor5Sec()
+    } else {
+      e.stopPropagation();
+      addRecicledItemHandler(data);
     }
   };
 
@@ -87,13 +101,99 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     e.stopPropagation();
     removeItem(data);
   };
+  const handleRecicledRemoveClick = (e) => {
+    e.stopPropagation();
+    removeRecicledItemHandler(data);
+  };
 
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, 0);
     }, 500);
   }, []);
-
+  const finalPrice = product.sale_price ? product.sale_price : product.price;
+  const noRecicledQuantityInCart = getItem(data.id)?.quantity;
+  const reclicledQuantityInCart = getItem(data.id)?.recicledQuantity;
+  const hasEcoButton = data.packagePrice > 0;
+  const PriceContent = () => (
+    <>
+      {data.product_quantity != 0 ? (<ProductCartWrapper>
+        <ProductCartBtn style={{ display: 'flex' }}>
+            <PriceContainer>
+              <PriceContainerRow>
+                <ProductPriceWrapper>
+                  {data.discountInPercent ? (<SalePrice>{CURRENCY} {data.sale_price}</SalePrice>) : null}
+                  <ProductPrice>
+                    {CURRENCY}
+                    {finalPrice}
+                  </ProductPrice>
+                </ProductPriceWrapper>
+                { noRecicledQuantityInCart ? (
+                  <>
+                    <Counter
+                        value={getItem(data.id).quantity}
+                        onDecrement={handleRemoveClick}
+                        onIncrement={handleAddClick}
+                    />
+                  </>
+                ) : (
+                  <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddClick}>
+                    <ButtonText>
+                      <FormattedMessage id={"addCartButton"} defaultMessage="Cart" />
+                    </ButtonText>
+                  </Button>
+                )}
+              </PriceContainerRow>
+              { hasEcoButton ? (
+                <PriceContainerRow>
+                  <ProductPriceWrapper>
+                    <ProductPrice> {CURRENCY} {Number(finalPrice - data.packagePrice)}</ProductPrice>
+                  </ProductPriceWrapper>
+                  { reclicledQuantityInCart ? (
+                  <>
+                    <Counter
+                        value={reclicledQuantityInCart}
+                        onDecrement={handleRecicledRemoveClick}
+                        onIncrement={handleRecicledAddClick}
+                    />
+                  </>
+                ) : (
+                  <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleRecicledAddClick}>
+                    <ButtonText>
+                      <FormattedMessage id="addEcoToCartButton" defaultMessage="Cart" />
+                    </ButtonText>
+                  </Button>
+                )}
+                </PriceContainerRow>
+                ) : (null)
+              }
+            </PriceContainer>
+        </ProductCartBtn>
+        { (noRecicledQuantityInCart || reclicledQuantityInCart) ? (<CartPopUp showBuyNowBtn={true} deviceType={deviceType}/>) : null}
+      </ProductCartWrapper>
+      )
+      : (<ProductCartWrapper>
+            <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p>
+        </ProductCartWrapper>)
+      }
+      { showProductQuantityExceededMsg && (
+        <ProductQuantityExceededMsg style={{textAlign: 'left'}}>
+          <FormattedMessage id='productStockLimit' defaultMessage='There is no more availability of this product' />
+        </ProductQuantityExceededMsg>
+      )}
+      { hasEcoButton && (
+        <span style={{ display: 'flex', flexDirection: 'row', margin: '0px 10px'}}>
+          *<p className="eco-detail">
+            <FormattedMessage
+              id='ecoDescription'
+              defaultMessage="Eco purchase: you pay ${packageDiscount} if you have a package from us to returned."
+              values={{ packageDiscount: data.packagePrice }}
+            />
+          </p>
+        </span>
+      )}
+    </>
+  )
   return (
     <>
       <ProductDetailsWrapper className="product-card" dir="ltr">
@@ -127,81 +227,24 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
         <ProductInfo dir={isRtl ? 'rtl' : 'ltr'}>
           <ProductTitlePriceWrapper>
             <ProductTitle>{product.name}</ProductTitle>
-            <ProductPriceWrapper>
-              {product.discountInPercent ? (
-                <SalePrice>
-                  {CURRENCY}
-                  {product.sale_price}
-                </SalePrice>
-              ) : null}
-
-              <ProductPrice>
-                {CURRENCY}
-                {product.sale_price ? product.sale_price : product.price}
-              </ProductPrice>
-            </ProductPriceWrapper>
+            <PriceContent />
           </ProductTitlePriceWrapper>
 
-          <ProductWeight>{product.unit}</ProductWeight>
+          {/* <ProductWeight>{product.unit}</ProductWeight> */}
           <ProductDescription>
-            <ReadMore character={600}>{product.description}</ReadMore>
+            {product.description?.includes('<p') ? (
+              <div
+                className="html-content"
+                dangerouslySetInnerHTML={{
+                  __html: product.description,
+                }}
+              />
+            ) : (
+              <ReadMore character={600}>{product.description}</ReadMore>
+            )}
           </ProductDescription>
 
-          {product.product_quantity != 0 ? (<ProductCartWrapper style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}>
-            <ProductCartBtn style={{
-              display: 'flex'
-            }}>
-              {!isInCart(data.id) ? (
-                  <Button
-                      className="cart-button"
-                      variant="secondary"
-                      borderRadius={100}
-                      onClick={handleAddClick}
-                  >
-                  <span style={{
-                    marginRight: "10px"
-                  }}>
-                  <CartIcon/>
-                  </span>
-                    <ButtonText>
-                      <FormattedMessage
-                          id="addCartButton"
-                          defaultMessage="Cart"
-                      />
-                    </ButtonText>
-                  </Button>
-              ) : (
-                  <Counter
-                      value={getItem(data.id).quantity}
-                      onDecrement={handleRemoveClick}
-                      onIncrement={handleAddClick}
-                  />
-              )}
-               { showProductQuantityExceededMsg && (
-                  <ProductQuantityExceededMsg>
-                    <FormattedMessage
-                      id='productStockLimit'
-                      defaultMessage='There is no more availability of this product'
-                    />
-                  </ProductQuantityExceededMsg>
-                )}
-            </ProductCartBtn>
-            <CartPopUp deviceType={deviceType}/>
-          </ProductCartWrapper>) :
-              (<ProductCartWrapper style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}>
-                <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p>
-              </ProductCartWrapper>)
-          }
-
-
+          
 
           <ProductMeta>
             <MetaSingle>
@@ -262,7 +305,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
         />
       </RelatedItems>
 
-      <Footer logo={LogoImage} />
+      {/* <Footer logo={LogoImage} /> */}
     </>
   );
 };

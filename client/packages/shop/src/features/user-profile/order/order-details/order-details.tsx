@@ -108,7 +108,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
                   defaultMessage="Pickup Date"
                 />
               </h3>
-              <Contact>{deliveryDate || '-'}</Contact>
+              <Contact>{deliveryDateAndTime || '-'}</Contact>
               <h3>
                 <FormattedMessage
                   id="deliveryAddressTitle"

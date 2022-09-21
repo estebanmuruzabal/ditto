@@ -16,6 +16,15 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
     dispatch({ type: 'ADD_ITEM', payload: { ...item, quantity } });
   };
 
+  const addRecicledItemHandler = (item, recicledQuantity = 1) => {
+    dispatch({ type: 'ADD_ITEM_RECICLED', payload: { ...item, recicledQuantity } });
+  };
+
+  
+  const removeRecicledItemHandler = (item, recicledQuantity = 1) => {
+    dispatch({ type: 'REMOVE_ITEM_RECICLED', payload: { ...item, recicledQuantity } });
+  };
+
   const removeItemHandler = (item, quantity = 1) => {
     dispatch({ type: 'REMOVE_ITEM', payload: { ...item, quantity } });
   };
@@ -64,6 +73,8 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
     getItemsCount,
     rehydrateLocalState,
     addItemHandler,
+    addRecicledItemHandler,
+    removeRecicledItemHandler,
     removeItemHandler,
     clearItemFromCartHandler,
     clearCartHandler,
@@ -85,6 +96,8 @@ export const CartProvider = ({ children }) => {
     rehydrateLocalState,
     getItemsCount,
     addItemHandler,
+    addRecicledItemHandler,
+    removeRecicledItemHandler,
     removeItemHandler,
     clearItemFromCartHandler,
     clearCartHandler,
@@ -109,6 +122,8 @@ export const CartProvider = ({ children }) => {
         cartItemsCount: state.items?.length,
         itemsCount: getItemsCount,
         addItem: addItemHandler,
+        addRecicledItemHandler: addRecicledItemHandler,
+        removeRecicledItemHandler: removeRecicledItemHandler,
         removeItem: removeItemHandler,
         removeItemFromCart: clearItemFromCartHandler,
         clearCart: clearCartHandler,

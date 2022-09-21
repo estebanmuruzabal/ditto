@@ -193,9 +193,9 @@ export const Products: React.FC<ProductsProps> = ({
       case 'medicine':
         return (
           <MedicineCard
-            title={props.title}
+            title={props.name}
             currency={CURRENCY}
-            image={props.image}
+            image={SHOP_IMAGE_HOST+props.images[0]}
             price={props.price}
             weight={props.unit}
             data={props}
@@ -204,8 +204,8 @@ export const Products: React.FC<ProductsProps> = ({
       case 'furniture':
         return (
           <FurnitureCard
-            title={props.title}
-            image={props.gallery[0].url}
+            title={props.name}
+            image={SHOP_IMAGE_HOST+props.images[0]}
             discountInPercent={props.discount_in_percent}
             onClick={() =>
               handleQuickViewModal(props, deviceType, handleModalClose)

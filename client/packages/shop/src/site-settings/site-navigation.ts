@@ -71,6 +71,13 @@ export const STAFF_MENU_ITEMS = [
 export const AUTHORIZED_MENU_ITEMS = [
   PROFILE_MENU_ITEM,
   ORDER_MENU_ITEM,
+  REQUEST_MEDICINE_MENU_ITEM,
+  // CHECKOUT_PAGE_TWO,
+  // {
+  //   id: 'nav.checkout_two',
+  //   href: CHECKOUT_PAGE_TWO,
+  //   defaultMessage: 'Checkout Alternative',
+  // },
   /*{
     id: 'nav.checkout',
     defaultMessage: 'Checkout',
@@ -144,7 +151,7 @@ export const CATEGORY_MENU_ITEMS = [
     icon: 'Handbag',
     dynamic: true,
   },
-  /*{
+  {
     id: 'nav.clothing',
     defaultMessage: 'Clothing',
     href: CLOTHING_PAGE,
@@ -177,7 +184,7 @@ export const CATEGORY_MENU_ITEMS = [
     defaultMessage: 'Foods',
     href: RESTAURANT_PAGE,
     icon: 'Restaurant',
-  },*/
+  }
 ];
 
 export const MOBILE_DRAWER_MENU = [
@@ -201,6 +208,11 @@ export const LANGUAGE_MENU = [
   //   icon: 'CNFlag',
   // },
   {
+    id: 'es',
+    defaultMessage: 'Spanish',
+    icon: 'ESFlag',
+  },
+  {
     id: 'en',
     defaultMessage: 'English',
     icon: 'USFlag',
@@ -215,9 +227,4 @@ export const LANGUAGE_MENU = [
   //   defaultMessage: 'Hebrew',
   //   icon: 'ILFlag',
   // },
-  {
-    id: 'es',
-    defaultMessage: 'Spanish',
-    icon: 'ESFlag',
-  },
 ];

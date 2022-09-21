@@ -50,9 +50,9 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
       window.print()
     }
   }
-
-  const dateAndTime = `${moment(myOrder.datetime).format('MM/DD/YY')}, ${moment(myOrder.datetime).format('hh:mm A')}`;
-  console.log(myOrder.delivery_method.details)
+  console.log('data',data)
+  const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
+  console.log(myOrder?.delivery_method.details)
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>
@@ -80,7 +80,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                   defaultMessage="Order Number"
                 />
               </Text>
-              <Text>{myOrder.order_code}</Text>
+              <Text>{myOrder?.order_code}</Text>
             </InfoBlock>
 
             <InfoBlock>
@@ -94,7 +94,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               <Text bold className="title">
                 <FormattedMessage id="totalText" defaultMessage="Total" />
               </Text>
-              <Text>{CURRENCY}{myOrder.total}</Text>
+              <Text>{CURRENCY}{myOrder?.total}</Text>
             </InfoBlock>
 
             <InfoBlock>
@@ -107,7 +107,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               <Text>
                 <FormattedMessage
                   id="paymentMethodName"
-                  defaultMessage={myOrder.payment_method}
+                  defaultMessage={myOrder?.payment_method}
                 />
               </Text>
             </InfoBlock>
@@ -132,7 +132,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-              <Text>{myOrder.order_products?.length} </Text>
+              <Text>{myOrder?.order_products?.length} </Text>
             </ListDes>
           </ListItem>
 
@@ -146,7 +146,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-           <Text>{myOrder.delivery_method.details}</Text>
+           <Text>{myOrder?.delivery_method.details}</Text>
             </ListDes>
           </ListItem>
           <ListItem>
@@ -159,7 +159,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-           <Text>{myOrder.delivery_date}</Text>
+           <Text>{myOrder?.delivery_date}</Text>
             </ListDes>
           </ListItem>
           <ListItem>
@@ -173,7 +173,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
             </ListTitle>
             <ListDes>
               <Text>
-                {myOrder.delivery_address}
+                {myOrder?.delivery_address}
               </Text>
             </ListDes>
           </ListItem>
@@ -194,7 +194,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-              <Text>{CURRENCY}{myOrder.sub_total}</Text>
+              <Text>{CURRENCY}{myOrder?.sub_total}</Text>
             </ListDes>
           </ListItem>
 
@@ -208,7 +208,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-              <Text>{myOrder.payment_method}</Text>
+              <Text>{myOrder?.payment_method}</Text>
             </ListDes>
           </ListItem>
 
@@ -219,7 +219,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-              <Text>{CURRENCY}{myOrder.total}</Text>
+              <Text>{CURRENCY}{myOrder?.total}</Text>
             </ListDes>
           </ListItem>
         </TotalAmount>

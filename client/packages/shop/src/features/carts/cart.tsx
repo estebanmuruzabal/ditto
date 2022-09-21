@@ -74,6 +74,10 @@ const Cart: React.FC<CartPropsType> = ({
     }, 1500)
   };
 
+  const addOneMore = (item) => {
+    item.quantity < item.product_quantity ? addItem(item) : showProductQuantityExceededMsgFor5Sec()
+  };
+
   const toggleCoupon = () => {
     showCoupon(true);
   };
@@ -129,8 +133,8 @@ const Cart: React.FC<CartPropsType> = ({
             return (
               <CartItem
                 key={`cartItem-${item.id}`}
-                onIncrement={() => item.quantity < item.product_quantity ? addItem(item) : showProductQuantityExceededMsgFor5Sec()}
-                onDecrement={() => removeItem(item)}
+                onIncrement={() => addItem(item)}
+                onDecrement={() => item.quantity === 1 ? removeItemFromCart(item) : removeItem(item)}
                 onRemove={() => removeItemFromCart(item)}
                 data={item}
               />

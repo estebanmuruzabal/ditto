@@ -27,30 +27,45 @@ export const CartItem: React.FC<Props> = ({
   onIncrement,
   onRemove,
 }) => {
-  const { name, images, price, salePrice, unit, quantity } = data;
-  const displayPrice = salePrice ? salePrice : price;
+  const { name, images, price, salePrice, unit, quantity = 0, recicledQuantity = 0, packagePrice } = data;
+  const recicledPrice = price - packagePrice;
+  const totalQuantity = quantity + recicledQuantity;
+  const displayPrice = salePrice || price;
+  const nonRecicledTotalPrice = displayPrice * quantity;
+  const recicledTotalPrice = recicledPrice * recicledQuantity || 0;
+  const totalPrice = nonRecicledTotalPrice + recicledTotalPrice
+  
   return (
     <ItemBox>
-      <Counter
-        value={quantity}
-        onDecrement={onDecrement}
-        onIncrement={onIncrement}
-        variant="lightVertical"
-      />
+      { recicledQuantity < 1 && (
+        <Counter
+          value={totalQuantity}
+          onDecrement={onDecrement}
+          onIncrement={onIncrement}
+          variant="lightVertical"
+        />
+      )}
       <Image src={SHOP_IMAGE_HOST+images[0]} />
       <Information>
         <Name>{name}</Name>
-        <Price>
+        {/* <Price>
           {CURRENCY}
           {displayPrice}
-        </Price>
-        <Weight>
-          {quantity} X {unit}
-        </Weight>
+        </Price> */}
+        { recicledQuantity > 0 && (
+          <Weight>
+            {recicledQuantity} X {CURRENCY}{recicledPrice}
+          </Weight>
+        )}
+        { quantity > 0 && (
+          <Weight>
+            {quantity} X {CURRENCY}{price}
+          </Weight>
+        )}
       </Information>
       <Total>
         {CURRENCY}
-        {(quantity * displayPrice).toFixed(2)}
+        {(totalPrice).toFixed(2)}
       </Total>
       <RemoveButton onClick={onRemove}>
         <CloseIcon />

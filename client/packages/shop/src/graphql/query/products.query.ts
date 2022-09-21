@@ -26,6 +26,7 @@ query GetProducts(
       name
       slug
       description
+      packagePrice
       images
       unit
       price

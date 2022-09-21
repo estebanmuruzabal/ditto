@@ -68,6 +68,7 @@ const PriceBox = styled('span')`
     height: 41px;
     margin-left: auto;
     margin-right: 0;
+    padding: 0px 3px;
   }
 `;
 
@@ -98,7 +99,7 @@ const CartPopupBoxButton = styled('button')`
 `;
 
 const CartPopupBoxButtonV2 = styled('button')`
-  height: auto;
+  height: fit-content;
   width: auto;
   display: flex;
   flex-direction: column;
@@ -154,6 +155,7 @@ const PriceBoxAlt = styled('span')`
   font-weight: ${themeGet('fontWeights.bold', '700')};
   color: ${themeGet('colors.primary.regular', '#009E7F')};
   margin: 0 10px 10px;
+  padding: 0px 3px;
 `;
 
 export {

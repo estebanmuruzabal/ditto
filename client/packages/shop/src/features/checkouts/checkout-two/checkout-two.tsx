@@ -86,19 +86,38 @@ type CartItemProps = {
 };
 
 const OrderItem: React.FC<CartItemProps> = ({ product }) => {
-  const { id, quantity, title, name, unit, price, salePrice } = product;
-  const displayPrice = salePrice ? salePrice : price;
+  const { name, images, price, salePrice, unit, quantity = 0, recicledQuantity = 0, packagePrice, id } = product;
+  const recicledPrice = price - packagePrice;
+  const totalQuantity = quantity + recicledQuantity;
+  const displayPrice = salePrice || price;
+  const nonRecicledTotalPrice = displayPrice * quantity;
+  const recicledTotalPrice = recicledPrice * recicledQuantity;
+  const totalPrice = nonRecicledTotalPrice + recicledTotalPrice
+  
   const intl = useIntl();
   return (
     <Items key={id}>
-      <Quantity>{quantity}</Quantity>
-      <Multiplier>x</Multiplier>
+      {/* <Multiplier>x</Multiplier> */}
       <ItemInfo>
-        {name ? name : title} {unit ? `| ${unit}` : ''}
+        { recicledQuantity > 0 && (
+          <>
+            <Quantity>{name}</Quantity>
+            <br />
+            {recicledQuantity} X {CURRENCY}{recicledPrice}
+            <br />
+          </>
+        )}
+        { quantity > 0 && (
+          <>
+            <Quantity>{name}</Quantity>
+            <br />
+            {quantity} X {CURRENCY}{price}
+          </>
+        )}
       </ItemInfo>
       <Price>
         {CURRENCY}
-        {(displayPrice * quantity).toFixed(2)}
+        {(totalPrice).toFixed(2)}
       </Price>
     </Items>
   );
@@ -129,17 +148,22 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const intl = useIntl();
 
   let cartProduct= null;
-
-  if(items.length>0){
-    cartProduct = items.map((item: any, index:any) =>({
+  let contains = false;
+  if (items.length > 0) {
+    cartProduct = items.map((item: any, index:any) =>(
+      {
       product_id: item.id,
       unit: item.unit,
-      quantity: Number(item.quantity),
+      quantity: Number(item.quantity) || 0,
+      recicledQuantity: Number(item.recicledQuantity) || 0,
       sale_price: item.sale_price,
       price: item.price,
       image: item.images[0],
       name: item.name,
     }))
+  }
+  if (!cartProduct?.findIndex((product) => product.quantity === 0)) {
+    cartProduct.reverse();
   }
   const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -464,7 +488,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 clearCart();
                 removeCoupon();
                 setHasCoupon(false);
-                Router.push('/order');
+                Router.push('/order-received');
             }
             setLoading(false);
             setIsValid(false);

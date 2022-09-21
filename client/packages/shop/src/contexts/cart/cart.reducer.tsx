@@ -8,12 +8,20 @@ function getDiscountAmount(totalPrice, coupon) {
 }
 
 function getTotalItemPrice(items) {
-  return items.reduce((total, item) => {
-    if (item.salePrice) {
-      return total + item.salePrice * item.quantity;
-    }
-    return total + item.price * item.quantity;
+
+
+  const tot = items.reduce((total, item) => {
+    const { price, salePrice, quantity = 0, recicledQuantity = 0, packagePrice } = item;
+
+    const recicledPrice = price - packagePrice;
+    const displayPrice = salePrice || price;
+    const nonRecicledTotalPrice = displayPrice * quantity;
+    const recicledTotalPrice = recicledPrice * recicledQuantity;
+    const totalPrice = nonRecicledTotalPrice + recicledTotalPrice
+    return total + totalPrice;
   }, 0);
+
+  return tot;
 }
 
 export const cartItemsTotalPrice = (items, coupon = null, deliveryCharge = 0) => {
@@ -43,21 +51,51 @@ const addItemToCart = (state, action) => {
 
   if (existingCartItemIndex > -1) {
     const newState = [...state.items];
+    newState[existingCartItemIndex].quantity = newState[existingCartItemIndex].quantity || 0;
     newState[existingCartItemIndex].quantity += action.payload.quantity;
     return newState;
   }
   return [...state.items, action.payload];
 };
 
+const addRecicledItemToCart = (state, action) => {
+  const existingCartItemIndex = state.items.findIndex(
+    (item) => item.id === action.payload.id
+  );
+
+  if (existingCartItemIndex > -1) {
+    const newState = [...state.items];
+    newState[existingCartItemIndex].recicledQuantity = newState[existingCartItemIndex].recicledQuantity || 0;
+    newState[existingCartItemIndex].recicledQuantity += action.payload.recicledQuantity;
+    return newState;
+  }
+  return [...state.items, action.payload];
+};
+
 // cartItems, cartItemToRemove
+const removeRecicledItemFromCart = (state, action) => {
+  return state.items.reduce((acc, item) => {
+    if (item.id === action.payload.id) {
+      const newQuantity = item.recicledQuantity - action.payload.recicledQuantity;
+
+      return [...acc, { ...item, recicledQuantity: newQuantity }];
+      // return newQuantity > 0
+      //   ? [...acc, { ...item, recicledQuantity: newQuantity }]
+      //   : [...acc]x;
+    }
+    return [...acc, item];
+  }, []);
+};
+
 const removeItemFromCart = (state, action) => {
   return state.items.reduce((acc, item) => {
     if (item.id === action.payload.id) {
       const newQuantity = item.quantity - action.payload.quantity;
 
-      return newQuantity > 0
-        ? [...acc, { ...item, quantity: newQuantity }]
-        : [...acc];
+      return [...acc, { ...item, quantity: newQuantity }];
+      // return newQuantity > 0
+      //   ? [...acc, { ...item, quantity: newQuantity }]
+      //   : [...acc];
     }
     return [...acc, item];
   }, []);
@@ -75,6 +113,10 @@ export const reducer = (state, action) => {
       return { ...state, isOpen: !state.isOpen };
     case 'ADD_ITEM':
       return { ...state, items: addItemToCart(state, action) };
+    case 'ADD_ITEM_RECICLED':
+      return { ...state, items: addRecicledItemToCart(state, action) };
+    case 'REMOVE_ITEM_RECICLED':
+      return { ...state, items: removeRecicledItemFromCart(state, action) };
     case 'REMOVE_ITEM':
       return { ...state, items: removeItemFromCart(state, action) };
     case 'CLEAR_ITEM_FROM_CART':

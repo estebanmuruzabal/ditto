@@ -1,0 +1,1 @@
+{"ast":null,"code":"import gql from 'graphql-tag';\nexport const UPDATE_ME = gql`\n  mutation($meInput: String!) {\n    updateMe(meInput: $meInput) {\n      id\n      name\n      email\n    }\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}

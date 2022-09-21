@@ -65,7 +65,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
       }
     };
   }, []);
-  const productGroups = groupBy(data?.products, 'type');
+  const productGroups = data?.products ? groupBy(data?.products, 'type') : null;
 
   const headerOffset = deviceType.mobile || deviceType.tablet ? -137 : -177;
 
@@ -118,7 +118,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
           >
             <CategoriesWrapper>
               <CategoriesInner>
-                {Object.keys(productGroups).map((item, index) => (
+                {productGroups && Object.keys(productGroups).map((item, index) => (
                   <Link
                     activeClass="active"
                     className="category"
@@ -139,7 +139,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
 
         <MainContent>
           <MenuContainer>
-            {Object.values(productGroups).map((items: any, idx: number) => (
+            {productGroups && Object.values(productGroups).map((items: any, idx: number) => (
               <Element name={Object.keys(productGroups)[idx]} key={idx}>
                 <ItemCategoryWrapper id={Object.keys(productGroups)[idx]}>
                   <ItemCategoryName>

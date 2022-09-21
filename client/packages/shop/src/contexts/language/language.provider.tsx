@@ -10,7 +10,7 @@ import RTLPlugin from 'stylis-plugin-rtl';
 const LanguageContext = React.createContext({} as any);
 
 export const LanguageProvider = ({ children, messages }) => {
-  const [locale, setLocale] = React.useState('en');
+  const [locale, setLocale] = React.useState('es');
   const changeLanguage = (newLocale): void => {
     setLocale(newLocale);
     document.documentElement.lang = newLocale;
