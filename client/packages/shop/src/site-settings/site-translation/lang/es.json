@@ -148,7 +148,7 @@
   "deliveryLocationText": "Lugar de entrega",
   "deliveryAddressTitle": "Dirección de entrega",
   "totalAmountText": "Pago",
-  "loadMoreBtn": "Carga más",
+  "loadMoreBtn": "Cargar más",
   "welcomeBack": "Bienvenido!",
   "loginText": "Inicie sesión con su correo electrónico y contraseña",
   "emailAddressPlaceholder": "Dirección de correo electrónico o número de contacto",
@@ -265,5 +265,5 @@
   "cuisineText": "Cocina",
   "minOrderText": "La orden mínima",
   "fromText": "Desde",
-  "loadMoreButton": "Carga más"
+  "loadMoreButton": "Cargar más"
 }

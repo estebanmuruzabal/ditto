@@ -71,7 +71,7 @@ export const STAFF_MENU_ITEMS = [
 export const AUTHORIZED_MENU_ITEMS = [
   PROFILE_MENU_ITEM,
   ORDER_MENU_ITEM,
-  REQUEST_MEDICINE_MENU_ITEM,
+  // REQUEST_MEDICINE_MENU_ITEM,
   // CHECKOUT_PAGE_TWO,
   // {
   //   id: 'nav.checkout_two',
