@@ -14,7 +14,7 @@ const StyledBox = styled.div(
 
 export const ProductCardWrapper = styled.div(
   css({
-    height: '100%',
+    // height: '100%',
     width: '100%',
     backgroundColor: 'white',
     position: 'relative',
@@ -124,14 +124,16 @@ export const ProductInfo = styled.div`
     font-weight: ${themeGet('fontWeights.bold', '700')};
     color: ${themeGet('colors.text.bold', '#0D1136')};
     margin: 0 0 7px 0;
-    width: 100%;
+    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     // white-space: nowrap;
     min-height: 45px;
     @media (max-width: 767px) {
       font-size: 14px;
-      margin: 0 0 5px 0;
+      min-height: 63px;
+      margin-left: -12px;
+      margin-right: -12px;
     }
   }
   .product-weight {
@@ -203,6 +205,7 @@ export const ProductInfo = styled.div`
         height: 36px;
         padding: 0;
         border-radius: 50%;
+        min-width: 0px;
       }
       .btn-text {
         padding: 0 0 0 6px;
@@ -612,6 +615,12 @@ export const PriceContainerRow = styled.div`
   margin-bottom: 15px;
   min-width: 210px;
   justify-content: space-between;
+  @media (max-width: 767px) {
+    min-width: 0px;
+    justify-content: left;
+    margin-left: -12px;
+    margin-right: -12px;
+  }
 `;
 
 export const ProductPriceWrapper = styled.div`
@@ -624,7 +633,8 @@ export const ProductPriceWrapper = styled.div`
   min-width: 45px;
 
   @media (max-width: 767px) {
-    margin-left: 15px;
+    margin-left: 0px;
+    min-width: 50px;
   }
 `;
 
@@ -691,6 +701,11 @@ export const ProductCartBtn = styled.div`
     padding-left: 20px;
     padding-right: 20px;
     min-width: 140px;
+    
+    @media (max-width: 767px) {
+      min-width: 0px;
+    }
+
     .btn-icon {
       margin-right: 5px;
 
