@@ -112,6 +112,9 @@ exports.ordersResolvers = {
             const paymentOption = yield db.payment_options.findOne({ _id: new mongodb_1.ObjectId(input.payment_option_id) });
             // Products quantity substation
             const products = yield db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
+            console.log('db products', products);
+            console.log('---');
+            console.log('input.products', input.products);
             for (let i = 0; i < products.length; i++) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
@@ -161,7 +164,7 @@ exports.ordersResolvers = {
             const insertResult = yield db.orders.insertOne(insertData);
             if (insertResult.ops[0]) {
                 for (let i = 0; i < products.length; i++) {
-                    yield db.products.updateOne({ _id: products[i]._id }, { $set: { product_quantity: products[i].product_quantity - input.products[i].quantity } });
+                    yield db.products.updateOne({ _id: products[i]._id }, { $set: { product_quantity: products[i].product_quantity - (input.products[i].quantity + input.products[i].recicledQuantity) } });
                 }
             }
             return insertResult.ops[0];

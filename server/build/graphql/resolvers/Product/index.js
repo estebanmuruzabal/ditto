@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.productsResolvers = void 0;
 const mongodb_1 = require("mongodb");
 const utils_1 = require("../../../lib/utils");
-const slugify_1 = require("../../../lib/utils/slugify");
 const search_1 = require("../../../lib/utils/search");
 const image_store_1 = require("../../../lib/utils/image-store");
 exports.productsResolvers = {
@@ -46,9 +45,9 @@ exports.productsResolvers = {
             yield utils_1.authorize(req, db);
             const imagesPath = [];
             const imagesData = JSON.parse(input.images_data);
-            const existsData = yield db.products.findOne({ slug: slugify_1.slugify(input.name) });
+            const existsData = yield db.products.findOne({ slug: input.slug });
             if (existsData) {
-                throw new Error("Resource already exits with this name.");
+                throw new Error("Resource already exits with this slug name.");
             }
             if (imagesData.length) {
                 for (let i = 0; i < input.images.length; i++) {
@@ -63,8 +62,9 @@ exports.productsResolvers = {
                 type: input.type,
                 categories: JSON.parse(input.categories),
                 name: input.name,
-                slug: slugify_1.slugify(input.name),
+                slug: input.slug,
                 description: input.description,
+                packagePrice: input.packagePrice,
                 images: imagesPath,
                 unit: input.unit,
                 price: input.price,
@@ -100,10 +100,11 @@ exports.productsResolvers = {
                 type: input.type,
                 categories: JSON.parse(input.categories),
                 name: input.name,
-                slug: slugify_1.slugify(input.name),
+                slug: input.slug,
                 description: input.description,
                 images: imagesPath,
                 unit: input.unit,
+                packagePrice: input.packagePrice,
                 price: input.price,
                 sale_price: input.sale_price,
                 discount_in_percent: input.discount_in_percent,
