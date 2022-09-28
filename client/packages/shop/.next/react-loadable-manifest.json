@@ -3149,6 +3149,306 @@
   ],
   "features/carts/cart-popup": [
     {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js",
+      "name": "../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/@babel/runtime/regenerator/index.js",
+      "name": "../../node_modules/@babel/runtime/regenerator/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/add-px-to-style/index.js",
+      "name": "../../node_modules/add-px-to-style/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/dom-css/index.js",
+      "name": "../../node_modules/dom-css/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/function-bind/implementation.js",
+      "name": "../../node_modules/function-bind/implementation.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/function-bind/index.js",
+      "name": "../../node_modules/function-bind/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/has/src/index.js",
+      "name": "../../node_modules/has/src/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/localforage/dist/localforage.js",
+      "name": "../../node_modules/localforage/dist/localforage.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/next/dist/build/polyfills/object.assign/index.js",
+      "name": "../../node_modules/next/dist/build/polyfills/object.assign/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/next/dist/client/link.js",
+      "name": "../../node_modules/next/dist/client/link.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/next/link.js",
+      "name": "../../node_modules/next/link.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/performance-now/lib/performance-now.js",
+      "name": "../../node_modules/performance-now/lib/performance-now.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/prefix-style/index.js",
+      "name": "../../node_modules/prefix-style/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/prop-types-exact/build/helpers/isPlainObject.js",
+      "name": "../../node_modules/prop-types-exact/build/helpers/isPlainObject.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/prop-types-exact/build/index.js",
+      "name": "../../node_modules/prop-types-exact/build/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/raf/index.js",
+      "name": "../../node_modules/raf/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/defaultRenderElements.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/defaultRenderElements.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/index.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/styles.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/styles.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/index.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerHeight.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerHeight.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerWidth.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerWidth.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getScrollbarWidth.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getScrollbarWidth.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/isString.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/isString.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/react-custom-scrollbars/lib/utils/returnFalse.js",
+      "name": "../../node_modules/react-custom-scrollbars/lib/utils/returnFalse.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/to-camel-case/index.js",
+      "name": "../../node_modules/to-camel-case/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/to-no-case/index.js",
+      "name": "../../node_modules/to-no-case/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "../../node_modules/to-space-case/index.js",
+      "name": "../../node_modules/to-space-case/index.js",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/assets/icons/CloseIcon.tsx",
+      "name": "./src/assets/icons/CloseIcon.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/assets/icons/NoCartBag.tsx",
+      "name": "./src/assets/icons/NoCartBag.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/assets/icons/PlusMinus.tsx",
+      "name": "./src/assets/icons/PlusMinus.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/assets/icons/ShoppingBag.tsx",
+      "name": "./src/assets/icons/ShoppingBag.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/assets/icons/ShoppingBagLarge.tsx",
+      "name": "./src/assets/icons/ShoppingBagLarge.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/components/cart-item/cart-item.style.tsx",
+      "name": "./src/components/cart-item/cart-item.style.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/components/cart-item/cart-item.tsx",
+      "name": "./src/components/cart-item/cart-item.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/components/cart-popup/cart-popup-button.tsx",
+      "name": "./src/components/cart-popup/cart-popup-button.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/components/cart-popup/cart-popup.style.tsx",
+      "name": "./src/components/cart-popup/cart-popup.style.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/components/counter/counter.style.tsx",
+      "name": "./src/components/counter/counter.style.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/components/counter/counter.tsx",
+      "name": "./src/components/counter/counter.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/contexts/cart/cart.reducer.tsx",
+      "name": "./src/contexts/cart/cart.reducer.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/contexts/cart/use-cart.tsx",
+      "name": "./src/contexts/cart/use-cart.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/features/carts/cart-popup.tsx",
+      "name": "./src/features/carts/cart-popup.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/features/carts/cart.style.tsx",
+      "name": "./src/features/carts/cart.style.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/features/carts/cart.tsx",
+      "name": "./src/features/carts/cart.tsx",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/utils/constant.ts",
+      "name": "./src/utils/constant.ts",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
+      "id": "./src/utils/use-storage.ts",
+      "name": "./src/utils/use-storage.ts",
+      "file": "static/chunks/5.js",
+      "publicPath": "static/chunks/5.js"
+    },
+    {
       "id": "../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js",
       "name": "../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js",
       "file": "static/chunks/13.js",
@@ -3993,306 +4293,6 @@
       "name": "./src/utils/use-storage.ts",
       "file": "static/chunks/13.js",
       "publicPath": "static/chunks/13.js"
-    },
-    {
-      "id": "../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js",
-      "name": "../../node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js",
-      "name": "../../node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js",
-      "name": "../../node_modules/@babel/runtime/helpers/esm/iterableToArray.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js",
-      "name": "../../node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js",
-      "name": "../../node_modules/@babel/runtime/helpers/esm/toConsumableArray.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/@babel/runtime/regenerator/index.js",
-      "name": "../../node_modules/@babel/runtime/regenerator/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/add-px-to-style/index.js",
-      "name": "../../node_modules/add-px-to-style/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/dom-css/index.js",
-      "name": "../../node_modules/dom-css/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/function-bind/implementation.js",
-      "name": "../../node_modules/function-bind/implementation.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/function-bind/index.js",
-      "name": "../../node_modules/function-bind/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/has/src/index.js",
-      "name": "../../node_modules/has/src/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/localforage/dist/localforage.js",
-      "name": "../../node_modules/localforage/dist/localforage.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/next/dist/build/polyfills/object.assign/index.js",
-      "name": "../../node_modules/next/dist/build/polyfills/object.assign/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/next/dist/client/link.js",
-      "name": "../../node_modules/next/dist/client/link.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/next/link.js",
-      "name": "../../node_modules/next/link.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/performance-now/lib/performance-now.js",
-      "name": "../../node_modules/performance-now/lib/performance-now.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/prefix-style/index.js",
-      "name": "../../node_modules/prefix-style/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/prop-types-exact/build/helpers/isPlainObject.js",
-      "name": "../../node_modules/prop-types-exact/build/helpers/isPlainObject.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/prop-types-exact/build/index.js",
-      "name": "../../node_modules/prop-types-exact/build/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/raf/index.js",
-      "name": "../../node_modules/raf/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/defaultRenderElements.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/defaultRenderElements.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/index.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/styles.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/Scrollbars/styles.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/index.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerHeight.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerHeight.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerWidth.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getInnerWidth.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/utils/getScrollbarWidth.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/utils/getScrollbarWidth.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/utils/isString.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/utils/isString.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/react-custom-scrollbars/lib/utils/returnFalse.js",
-      "name": "../../node_modules/react-custom-scrollbars/lib/utils/returnFalse.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/to-camel-case/index.js",
-      "name": "../../node_modules/to-camel-case/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/to-no-case/index.js",
-      "name": "../../node_modules/to-no-case/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "../../node_modules/to-space-case/index.js",
-      "name": "../../node_modules/to-space-case/index.js",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/assets/icons/CloseIcon.tsx",
-      "name": "./src/assets/icons/CloseIcon.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/assets/icons/NoCartBag.tsx",
-      "name": "./src/assets/icons/NoCartBag.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/assets/icons/PlusMinus.tsx",
-      "name": "./src/assets/icons/PlusMinus.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/assets/icons/ShoppingBag.tsx",
-      "name": "./src/assets/icons/ShoppingBag.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/assets/icons/ShoppingBagLarge.tsx",
-      "name": "./src/assets/icons/ShoppingBagLarge.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/components/cart-item/cart-item.style.tsx",
-      "name": "./src/components/cart-item/cart-item.style.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/components/cart-item/cart-item.tsx",
-      "name": "./src/components/cart-item/cart-item.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/components/cart-popup/cart-popup-button.tsx",
-      "name": "./src/components/cart-popup/cart-popup-button.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/components/cart-popup/cart-popup.style.tsx",
-      "name": "./src/components/cart-popup/cart-popup.style.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/components/counter/counter.style.tsx",
-      "name": "./src/components/counter/counter.style.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/components/counter/counter.tsx",
-      "name": "./src/components/counter/counter.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/contexts/cart/cart.reducer.tsx",
-      "name": "./src/contexts/cart/cart.reducer.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/contexts/cart/use-cart.tsx",
-      "name": "./src/contexts/cart/use-cart.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/features/carts/cart-popup.tsx",
-      "name": "./src/features/carts/cart-popup.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/features/carts/cart.style.tsx",
-      "name": "./src/features/carts/cart.style.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/features/carts/cart.tsx",
-      "name": "./src/features/carts/cart.tsx",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/utils/constant.ts",
-      "name": "./src/utils/constant.ts",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
-    },
-    {
-      "id": "./src/utils/use-storage.ts",
-      "name": "./src/utils/use-storage.ts",
-      "file": "static/chunks/5.js",
-      "publicPath": "static/chunks/5.js"
     }
   ],
   "features/carts/cart-popup-two": [
