@@ -60,9 +60,17 @@ const IndexPage: React.FC<{}> = () => {
     selectedMenu = selectedMenu.href;
   }
 
-  useEffect(() => {
-    Router.replace('/[type]', selectedMenu !== null ? selectedMenu : defaultMenu);
-  });
+  try {
+    useEffect(() => {
+      Router.replace('/[type]', selectedMenu !== null ? selectedMenu : defaultMenu);
+    });
+  } catch (exceptionVar) {
+    console.log('catch', exceptionVar)
+  } finally {
+    // BUGGG
+    Router.replace('/home');
+  }
+
   return (
     <Head>
       <meta name="robots" content="noindex, nofollow" />

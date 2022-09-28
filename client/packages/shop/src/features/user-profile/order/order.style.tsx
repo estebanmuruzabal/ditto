@@ -2,14 +2,14 @@ import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 
 const DesktopView = styled.div`
-  display: none;
+  // display: none;
   @media only screen and (min-width: 990px) {
     display: flex;
   }
 `;
 
 const MobileView = styled.div`
-  display: none;
+  // display: none;
   @media only screen and (max-width: 989px) {
     width: 100%;
     display: flex;

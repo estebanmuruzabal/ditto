@@ -126,7 +126,7 @@ export default function SignOutModal() {
               inputProps={{
                 name: 'Numero de telefono',
                 required: true,
-                autoFocus: true
+                autoFocus: false
               }}
               containerStyle={{textAlign: "left"}}
               inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}

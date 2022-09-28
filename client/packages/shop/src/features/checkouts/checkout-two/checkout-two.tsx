@@ -162,9 +162,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       name: item.name,
     }))
   }
-  if (!cartProduct?.findIndex((product) => product.quantity === 0)) {
-    cartProduct.reverse();
-  }
+  // if (!cartProduct?.findIndex((product) => product.quantity === 0)) {
+  //   cartProduct.reverse();
+  // }
   const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
 

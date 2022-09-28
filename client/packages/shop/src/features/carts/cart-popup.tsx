@@ -67,7 +67,7 @@ const CartPopUp: React.FC<CartProps> = ({
   };
 
   let cartSliderClass = isOpen === true ? 'cartPopupFixed' : '';
-  prompt(mobile)
+
   return (
     <>
       {mobile ? (

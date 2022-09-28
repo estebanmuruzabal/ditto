@@ -24,7 +24,7 @@
     "/_polyfills": [
       "static/runtime/polyfills.js"
     ],
-    "/product/[slug]": [
+    "/order-received": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]

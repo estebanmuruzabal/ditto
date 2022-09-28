@@ -161,7 +161,7 @@ const OrdersContent: React.FC<{}> = () => {
               defaultMessage="Order Details"
             />
           </Title>
-          {order &&  (
+          {order ? (
             <OrderDetails
               id={order.id}
               progressStatus={order.status}
@@ -176,6 +176,13 @@ const OrdersContent: React.FC<{}> = () => {
               columns={orderTableColumns}
               deliveryMethod={order.delivery_method}
             />
+          ) : (
+            <NoOrderFound>
+              <FormattedMessage
+                id="intlNoOrderFound"
+                defaultMessage="No order found"
+              />
+            </NoOrderFound>
           )}
         </OrderDetailsWrapper>
       </DesktopView>

@@ -1,97 +1,93 @@
-/* import { useMemo } from 'react'; */
-//import { ApolloClient } from 'apollo-client';
-//import { InMemoryCache } from 'apollo-cache-inmemory';
-//import { HttpLink, createHttpLink } from 'apollo-link-http';
-//import { setContext } from 'apollo-link-context';
-/* 
-import {
-  ApolloClient,
-  HttpLink,
-  ApolloLink,
-  InMemoryCache,
-  concat,
-} from '@apollo/client';
+// import { useMemo } from 'react';
 
-let apolloClient;
+// import {
+//   ApolloClient,
+//   HttpLink,
+//   ApolloLink,
+//   InMemoryCache,
+//   concat,
+// } from '@apollo/client';
 
-const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_API_ENDPOINT,
-  onError: ({ networkError, graphQLErrors }) => {
-    console.log('graphQLErrors', graphQLErrors);
-    console.log('networkError', networkError);
-  },
-});
+// let apolloClient;
 
-const authMiddleware = new ApolloLink((operation, forward) => {
-  // add the authorization to the headers
-  let token = null;
-  if (typeof window !== 'undefined') {
-    token = localStorage.getItem('access_token');
-  }
-  operation.setContext({
-    headers: {
-      'x-access-token': token ? token : '',
-    },
-  });
+// const httpLink = new HttpLink({
+//   uri: process.env.NEXT_PUBLIC_GRAPHQL_API_ENDPOINT,
+//   onError: ({ networkError, graphQLErrors }) => {
+//     console.log('graphQLErrors', graphQLErrors);
+//     console.log('networkError', networkError);
+//   },
+// });
 
-  return forward(operation);
-});
+// const authMiddleware = new ApolloLink((operation, forward) => {
+//   // add the authorization to the headers
+//   let token = null;
+//   if (typeof window !== 'undefined') {
+//     token = localStorage.getItem('access_token');
+//   }
+//   operation.setContext({
+//     headers: {
+//       'x-access-token': token ? token : '',
+//     },
+//   });
 
-const client = new ApolloClient({
-  link: authMiddleware.concat(httpLink),
-  cache: new InMemoryCache(),
-}); */
+//   return forward(operation);
+// });
 
-/*
-console.log(process.env.NEXT_PUBLIC_GRAPHQL_API_ENDPOINT);
-function createApolloClient() {
-  let token = null;
-  if (typeof window !== 'undefined') {
-    token = localStorage.getItem('access_token');
-  }
-  return new ApolloClient({
-    ssrMode: typeof window === 'undefined',
-    link: new HttpLink({
-      uri: process.env.NEXT_PUBLIC_GRAPHQL_API_ENDPOINT, // Server URL (must be absolute)
-      credentials: 'same-origin', // Additional fetch() options like `credentials`
-      headers: {
-        'x-access-token': token ? token : '',
-      }, // Additional fetch() options like `headers`
-      onError: ({ networkError, graphQLErrors }) => {
-        console.log('graphQLErrors', graphQLErrors);
-        console.log('networkError', networkError);
-      },
-    }),
-    cache: new InMemoryCache(),
-  });
-}*/
+// const client = new ApolloClient({
+//   link: authMiddleware.concat(httpLink),
+//   cache: new InMemoryCache(),
+// });
 
-/* export function initializeApollo(initialState = null) {
-  const _apolloClient = apolloClient ?? client;
+// console.log(process.env.NEXT_PUBLIC_GRAPHQL_API_ENDPOINT);
+// function createApolloClient() {
+//   let token = null;
+//   if (typeof window !== 'undefined') {
+//     token = localStorage.getItem('access_token');
+//   }
+//   return new ApolloClient({
+//     ssrMode: typeof window === 'undefined',
+//     link: new HttpLink({
+//       uri: process.env.NEXT_PUBLIC_GRAPHQL_API_ENDPOINT, // Server URL (must be absolute)
+//       credentials: 'same-origin', // Additional fetch() options like `credentials`
+//       headers: {
+//         'x-access-token': token ? token : '',
+//       }, // Additional fetch() options like `headers`
+//       onError: ({ networkError, graphQLErrors }) => {
+//         console.log('graphQLErrors', graphQLErrors);
+//         console.log('networkError', networkError);
+//       },
+//     }),
+//     cache: new InMemoryCache(),
+//   });
+// }
 
-  // If your page has Next.js data fetching methods that use Apollo Client, the initial state
-  // gets hydrated here
-  if (initialState) {
-    _apolloClient.cache.restore(initialState);
-  }
-  // For SSG and SSR always create a new Apollo Client
-  if (typeof window === 'undefined') return _apolloClient;
-  // Create the Apollo Client once in the client
-  if (!apolloClient) apolloClient = _apolloClient;
+// export function initializeApollo(initialState = null) {
+//   const _apolloClient = apolloClient ?? client;
 
-  return _apolloClient;
-}
+//   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
+//   // gets hydrated here
+//   if (initialState) {
+//     _apolloClient.cache.restore(initialState);
+//   }
+//   // For SSG and SSR always create a new Apollo Client
+//   if (typeof window === 'undefined') return _apolloClient;
+//   // Create the Apollo Client once in the client
+//   if (!apolloClient) apolloClient = _apolloClient;
 
-export function useApollo(initialState) {
-  const store = useMemo(() => initializeApollo(initialState), [initialState]);
-  return store;
-} */
+//   return _apolloClient;
+// }
+
+// export function useApollo(initialState) {
+//   const store = useMemo(() => initializeApollo(initialState), [initialState]);
+//   return store;
+// }
 
 
 
 import { useMemo } from 'react';
 import {ApolloClient, ApolloLink, HttpLink, InMemoryCache} from 'apollo-boost';
 const httpLink = new HttpLink({
+  // uri: 'http://localhost:7000/api', // Server URL (must be absolute)
   uri: 'http://54.232.137.175/api', // Server URL (must be absolute)
   credentials: 'same-origin', // Additional fetch() options like `credentials`
   onError: ({ networkError, graphQLErrors }) => {

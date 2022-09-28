@@ -174,7 +174,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
       </ProductCartWrapper>
       )
       : (<ProductCartWrapper>
-            <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p>
+            <p style={{color: '#ff5e5e', fontWeight: 'bold'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p>
         </ProductCartWrapper>)
       }
       { showProductQuantityExceededMsg && (
@@ -182,7 +182,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
           <FormattedMessage id='productStockLimit' defaultMessage='There is no more availability of this product' />
         </ProductQuantityExceededMsg>
       )}
-      { hasEcoButton && (
+      { hasEcoButton && data.product_quantity != 0 && (
         <span style={{ display: 'flex', flexDirection: 'row', margin: '0px 10px'}}>
           *<p className="eco-detail">
             <FormattedMessage
@@ -211,7 +211,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                   border: '1px solid #f1f1f1',
                   color: '#77798c',
                 }}
-                onClick={() => hasBackRoute ? Router.back : Router.push(HOME_PAGE)}
+                onClick={() => hasBackRoute ? Router.back() : Router.push(HOME_PAGE)}
               >
                 <span style={{ marginRight: "5px" }}>
                 <LongArrowLeft />

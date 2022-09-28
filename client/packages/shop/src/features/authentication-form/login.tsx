@@ -28,8 +28,8 @@ export default function SignInModal() {
   const router = useRouter();
   const intl = useIntl();
   const { authDispatch } = useContext<any>(AuthContext);
-  const [phone, setPhone] = React.useState(process.env.ENV === 'development' ? '+543624951926' : '+543624951926');
-  const [password, setPassword] = React.useState('123456');
+  const [phone, setPhone] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
   const toggleSignUpForm = () => {
     authDispatch({
@@ -105,7 +105,7 @@ export default function SignInModal() {
               inputProps={{
                 name: 'phone',
                 required: true,
-                autoFocus: true
+                autoFocus: false
               }}
               containerStyle={{textAlign: "left"}}
               inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
