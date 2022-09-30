@@ -38,6 +38,7 @@
   },
   "scripts": {
     "start": "nodemon src/index.ts",
+    "dev": "NODE_ENV=development;nodemon src/index.ts",
     "build": "tsc -p ./",
     "seed": "ts-node src/temp/seed.ts"
   }

@@ -12,6 +12,16 @@ export const typeDefs = gql`
         status: Boolean
         is_primary: Boolean
     }
+
+    type Plant {
+        id: String!
+        name: String!
+        humedad: Int
+        temperatura: Int
+        mapeoTierra: Int
+        mapeoLuz: Int
+    }
+
     type DeliveryAddress {
         id: String
         title: String
@@ -48,6 +58,7 @@ export const typeDefs = gql`
         workInfo: WorkInfo
         tasks: [Task]
         logs: [Logs]
+        plants: [Plant]
     }
 
     type Task {
@@ -289,6 +300,7 @@ export const typeDefs = gql`
         name: String
         image: String
         quantity: Int!
+        recicledQuantity: Int
         unit: String
         price: Float
         sale_price: Float
@@ -301,7 +313,7 @@ export const typeDefs = gql`
       contact_number: String!
       payment_option_id: String
       datetime: String
-      delivery_method: DeliveryMethod
+      delivery_method_id: String
       delivery_address: String!
       delivery_date: String
       sub_total: Float
@@ -439,6 +451,8 @@ export const typeDefs = gql`
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
+        addPlant(id: ID!, name: String!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): DefaultMessageType!
+        updatePlant(id: ID!, plantId: ID!, name: String!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): Plant!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

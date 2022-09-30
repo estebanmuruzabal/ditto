@@ -1,5 +1,14 @@
 import {Collection, ObjectId} from 'mongodb';
 
+export interface Plant {
+    id?: string;
+    name?: string;
+    humedad?: number;
+    temperatura?: number;
+    mapeoTierra?: number;
+    mapeoLuz?: number;
+}
+
 export interface Phone {
     id: string
     number: string,
@@ -45,6 +54,13 @@ export interface IListings {
     rating?: number;
 }
 
+export interface IPlant {
+    _id?: ObjectId;
+    name: string;
+    created_at: string;
+    logs: Array<Logs>;
+}
+
 export interface IUser {
     _id?: ObjectId;
     name: string;
@@ -53,6 +69,7 @@ export interface IUser {
     email?: string;
     password: string;
     phones?: Array<Phone>;
+    plants?: Array<Plant>;
     delivery_address?: Array<Address>;
     otp?: string;
     role?: Roles;
@@ -245,7 +262,7 @@ export interface IOrder {
     contact_number: string;
     payment_option_id: string;
     datetime: string;
-    delivery_method?: string;
+    delivery_method_id?: string;
     delivery_address: string;
     delivery_date?: string;
     sub_total: number;

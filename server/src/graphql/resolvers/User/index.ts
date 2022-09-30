@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, ICommonMessageReturnType, IUser, IUserAuth, IWorkInfo, Logs, Phone, Roles} from "../../../lib/types";
+import {Address, Database, ICommonMessageReturnType, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize} from "../../../lib/utils";
@@ -135,6 +135,7 @@ export const usersResolvers: IResolvers = {
                     taskRelated: ""
                 },
                 tasks: [],
+                plants: [],
                 logs: []
             };
             await db.users.insertOne(user);
@@ -268,6 +269,92 @@ export const usersResolvers: IResolvers = {
                 status: true,
                 message: "Updated successfully."
             };
+        },
+        addPlant: async (
+            _root: undefined,
+            {   id, 
+                name,
+                humedad,
+                temperatura,
+                mapeoTierra,
+                mapeoLuz
+            }: { id: string, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+            const users = await db.users.find({}).toArray();
+
+            const userResult = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User dose not exits.");
+            }
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // if (userResult.plants.length == 3) {
+            //     throw new Error("Already added two plants. You are not allowed to add more than two.");
+            // }
+
+            const plantObject = {
+                id: shortid.generate(),
+                name,
+                humedad,
+                temperatura,
+                mapeoTierra,
+                mapeoLuz
+            };
+
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$push: {plants: plantObject}}
+            );
+
+            return {
+                status: true,
+                message: "Updated successfully."
+            };
+        },
+        updatePlant: async (
+            _root: undefined,
+            {   id, 
+                plantId,
+                name,
+                humedad,
+                temperatura,
+                mapeoTierra,
+                mapeoLuz
+            }: { id: string, plantId: string, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
+            {db, req}: { db: Database, req: Request }
+        ): Promise<Plant> => {
+            await authorize(req, db);
+
+            const userResult = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User dose not exits.");
+            }
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+
+            await db.users.updateOne(
+                {_id: new ObjectId(id), "plant.id": plantId},
+                {
+                    $set: {
+                        "plant.$.id": plantId,
+                        "plant.$.name": name,
+                        "plant.$.humedad": humedad,
+                        "plant.$.temperatura": temperatura,
+                        "plant.$.mapeoLuz": mapeoLuz,
+                        "plant.$.mapeoTierra": mapeoTierra,
+                    }
+                }
+            );
+
+            const user = await db.users.findOne({_id: new ObjectId(id)});
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const updatedPlant = user.plants.filter(plant => plant.id == plantId);
+
+            return updatedPlant[0];
         },
         addPhoneNumber: async (
             _root: undefined,

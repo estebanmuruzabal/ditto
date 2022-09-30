@@ -140,36 +140,19 @@ export const ordersResolvers: IResolvers = {
 
             // Products quantity substation
             const products: Array<IProduct> = await db.products.find({ _id: {$in: makeObjectIds(input.products)}}).toArray();
-            // console.log('db products', products)
-            // console.log('---')
-            // console.log('input.products', input.products)
-
-
+            
             for (let i = 0; i < input.products.length; i++) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 const dbProduct: IProduct = await db.products.findOne({_id: new ObjectId(input.products[i].product_id)});
-                const totalQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
-                console.log('dbProduct', dbProduct)
-                console.log('totalQuantity', totalQuantity)
-                if (dbProduct && dbProduct.product_quantity < totalQuantity) {
+                if (!dbProduct) {
+                    throw new Error("Something went wrong! Product not found. Please contact support to resolve this problem.");
+                }
+                const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
+                if (dbProduct.product_quantity < purchasedQuantity) {
                     throw new Error(`'${input.products[i].name}', This product do not have enough product quantity. Available quantity: ${products[i].product_quantity}`);
                 }
-
             }
-            
-            // for (let i = 0; i < products.length; i++) {
-            //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //     // @ts-ignore
-
-            //     if (products[i]._id.toString() != input.products[i].product_id) {
-            //         throw new Error("Something went wrong! Please contact support to resolve this problem.");
-            //     }
-
-            //     if (products[i].product_quantity < input.products[i].quantity) {
-            //         throw new Error(`'${input.products[i].name}', This product do not have enough product quantity. Available quantity: ${products[i].product_quantity}`);
-            //     }
-            // }
 
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -194,7 +177,7 @@ export const ordersResolvers: IResolvers = {
                 customer_id: input.customer_id,
                 contact_number: input.contact_number,
                 payment_option_id: input.payment_option_id,
-                delivery_method: input.delivery_method_id,
+                delivery_method_id: input.delivery_method_id,
                 delivery_date: input.delivery_date,
                 datetime: new Date().toUTCString(),
                 delivery_address: input.delivery_address,
@@ -215,22 +198,21 @@ export const ordersResolvers: IResolvers = {
 
             console.log('insertResult', insertResult)
             if (insertResult.ops[0]) {
-                for (let i = 0; i < input.products.length; i++) {
+                for (let i = 0; i < products.length; i++) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     const dbProduct: IProduct = await db.products.findOne({_id: new ObjectId(input.products[i].product_id)});
-                    console.log('dbProduct 2', dbProduct)
-                    const product_quantity = dbProduct.product_quantity - (input.products[i].quantity + input.products[i].recicledQuantity);
-                    const id = input.products[i].product_id;
-                    console.log('id:::', id)
-                    console.log('input.products[i].quantity', input.products[i].quantity)
-                    console.log('input.products[i].recicledQuantity', input.products[i].recicledQuantity)
-                    console.log('product_quantity', product_quantity)
+                    const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
+                    const total = dbProduct.product_quantity - purchasedQuantity;
+                    console.log(dbProduct.name)
+                    console.log(dbProduct.product_quantity)
+                    console.log(purchasedQuantity)
+                    console.log(total)
+                    console.log('----')
+                    
                     await db.products.updateOne(
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        {_id: id},
-                        {$set: {product_quantity }}
+                        {_id: products[i]._id},
+                        {$set: {product_quantity: total }}
                     )
                 }
             }
@@ -318,8 +300,8 @@ export const ordersResolvers: IResolvers = {
         // @ts-ignore
         id: (order: IOrder): string => order._id.toString(),
         // eslint-disable-next-line @typescript-eslint/ban-types
-        delivery_method: async (order: IOrder, _args: {}, { db }: { db: Database }) => {
-            return await db.delivery_methods.findOne({_id: new ObjectId(order.delivery_method)})
-        }
+        // delivery_method_id: async (order: IOrder, _args: {}, { db }: { db: Database }) => {
+        //     return await db.delivery_methods.findOne({_id: new ObjectId(order.delivery_method_id)})
+        // }
     }
 }

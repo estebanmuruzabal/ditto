@@ -4,17 +4,20 @@ import {Database} from "../lib/types";
 require("dotenv").config();
 
 let url: string;
-const dbName = "dittodb";
+const dbName = process.env.DB_NAME;
 const dbUserName = process.env.DB_USER;
 // @ts-ignore
 const dbPassword: string = process.env.DB_USER_PASSWORD;
 
     console.log(process.env.APP_ENV)
 if (process.env.APP_ENV == 'production') {
-    url = `mongodb+srv://estebanmuruzabal:Dallas765@cluster0.cmdfgmr.mongodb.net/test`;
-} else if (process.env.APP_ENV == 'server') {
-    url = `mongodb://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
+    // url = `mongodb+srv://estebanmuruzabal:Dallas765@cluster0.cmdfgmr.mongodb.net/dittodb`;
+    url = `mongodb+srv://${dbUserName}:${dbPassword}@${process.env.DB_CLUSTER}/${dbName}`;
+} else if (process.env.APP_ENV == 'development') {
+    url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}/${dbName}`;
+    // url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
 } else if (process.env.APP_ENV == 'local') {
+    // url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
     url = <string>process.env.DB_URL;
 }
 
