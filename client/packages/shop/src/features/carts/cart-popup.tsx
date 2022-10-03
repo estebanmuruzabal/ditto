@@ -102,7 +102,7 @@ const CartPopUp: React.FC<CartProps> = ({
           <BoxedCartButton
             className='product-cart'
             itemCount={cartItemsCount}
-            btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
+            btnText={intl.formatMessage({ id: 'buyNowIdd', defaultMessage: 'Buy now' })}
             itemPostfix={
               cartItemsCount > 1 ? (
                 <FormattedMessage id='cartItems' defaultMessage='items' />
