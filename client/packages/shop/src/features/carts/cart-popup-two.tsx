@@ -76,7 +76,7 @@ const CartPopUp: React.FC<CartProps> = ({
       {mobile ? (
         <>
           <CartPopupStyle />
-          <CartPopupButton
+          {/* <CartPopupButton
             className='product-cart'
             itemCount={cartItemsCount}
             btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
@@ -90,7 +90,7 @@ const CartPopUp: React.FC<CartProps> = ({
             price={calculatePrice()}
             pricePrefix='$'
             onClick={handleModal}
-          />
+          /> */}
         </>
       ) : (
         <>
@@ -100,7 +100,23 @@ const CartPopUp: React.FC<CartProps> = ({
             )}
           </CartSlidePopup>
             
-         
+          {  showBuyNowBtn && (
+            <BoxedCartButtonV2
+              className='product-cart'
+              itemCount={cartItemsCount}
+              btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
+              itemPostfix={
+                cartItemsCount > 1 ? (
+                  <FormattedMessage id='cartItems' defaultMessage='items' />
+                ) : (
+                  <FormattedMessage id='cartItem' defaultMessage='item' />
+                )
+              }
+              price={calculatePrice()}
+              pricePrefix={CURRENCY}
+              onClick={toggleCart}
+            />
+          )}
         </>
       )}
     </>
