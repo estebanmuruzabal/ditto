@@ -10,6 +10,7 @@ import { CURRENCY } from 'utils/constant';
 import { CartSlidePopup } from './cart.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useCart } from 'contexts/cart/use-cart';
+import { useMedia } from 'utils/use-media';
 
 const CartPopupStyle = createGlobalStyle`
   .cartPopup{
@@ -41,9 +42,10 @@ type CartProps = {
 };
 
 const CartPopUp: React.FC<CartProps> = ({
-  deviceType: { mobile, tablet, desktop },
+  deviceType: {  tablet, desktop },
 }) => {
   const { isOpen, cartItemsCount, toggleCart, calculatePrice } = useCart();
+  const mobile = useMedia('(max-width: 580px)');
   const intl = useIntl();
   const handleModal = () => {
     openModal({

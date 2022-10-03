@@ -25,6 +25,12 @@ export default class AddProductInput implements Partial<Product> {
   categories: CategoryInput[];
 
   @Field(type => Int)
+  packagePrice?: number;
+
+  @Field(type => Int)
+  recicledQuantity?: number;
+
+  @Field(type => Int)
   price: number;
 
   @Field(type => Float, { nullable: true })

@@ -3,6 +3,7 @@ import { Counter } from 'components/counter/counter';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { CURRENCY } from 'utils/constant';
 import { SHOP_IMAGE_HOST } from 'utils/images-path';
+import { useMedia } from 'utils/use-media';
 import {
   ItemBox,
   Image,
@@ -27,6 +28,7 @@ export const CartItem: React.FC<Props> = ({
   onIncrement,
   onRemove,
 }) => {
+  const mobile = useMedia('(max-width: 580px)');
   const { name, images, price, salePrice, unit, quantity = 0, recicledQuantity = 0, packagePrice } = data;
   const recicledPrice = price - packagePrice;
   const totalQuantity = quantity + recicledQuantity;
@@ -45,7 +47,7 @@ export const CartItem: React.FC<Props> = ({
           variant="lightVertical"
         />
       )}
-      <Image src={SHOP_IMAGE_HOST+images[0]} />
+      {!mobile && (<Image src={SHOP_IMAGE_HOST+images[0]} />)}
       <Information>
         <Name>{name}</Name>
         {/* <Price>

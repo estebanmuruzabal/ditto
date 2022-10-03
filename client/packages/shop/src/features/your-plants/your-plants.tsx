@@ -69,7 +69,7 @@ const YourPlants: React.FunctionComponent<YourPlantsProps> = (props) => {
             />
           </BlockTitle>
 
-
+          { userPlants?.length < 1 && (<Text>No tienes plantas registradas</Text>) }
           { userPlants?.map((plant) => {
               return (
                 <OrderListWrapper>

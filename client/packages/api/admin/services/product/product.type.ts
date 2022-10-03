@@ -27,6 +27,12 @@ export default class Product {
   @Field(type => Float)
   salePrice: number;
 
+  @Field(type => Float)
+  packagePrice: number;
+
+  @Field(type => Float)
+  recicledQuantity: number;
+
   @Field(type => Int)
   discountInPercent: number;
 
