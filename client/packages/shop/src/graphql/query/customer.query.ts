@@ -11,6 +11,10 @@ query GetUser{
     plants{
       id
       name
+      temperatura
+      humedad
+      mapeoTierra
+      mapeoLuz
     }
     delivery_address{
       id

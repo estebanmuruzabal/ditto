@@ -229,7 +229,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && selectedAddress.address}, ${selectedAddress && selectedAddress.instructions}, ${selectedAddress && selectedAddress.instructions}` : null;
+  const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && selectedAddress.address}, ${selectedAddress && selectedAddress.instructions}}` : null;
   let toBeDelivered = false;
   useEffect(() => {
     removeCoupon();

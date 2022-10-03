@@ -28,7 +28,7 @@ const OrderBox = styled.div`
 `;
 
 const OrderListWrapper = styled.div`
-  width: 330px;
+  // width: 330px;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@ const OrderListWrapper = styled.div`
   flex-shrink: 0;
   margin-right: 30px;
   overflow: hidden;
-
+  padding: 20px 10px;
   @media only screen and (max-width: 1199px) {
     width: 310px;
     margin-right: 20px;

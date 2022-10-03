@@ -71,7 +71,8 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
     name,
     email,
     id,
-    phones
+    phones,
+    plants
   } = state;
 
   const handleChange = (e) => {

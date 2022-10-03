@@ -17,6 +17,7 @@ export const CHECKOUT_PAGE = '/checkout';
 export const CHECKOUT_PAGE_TWO = '/checkout-alternative';
 export const PROFILE_PAGE = '/profile';
 export const YOUR_ORDER_PAGE = '/order';
+export const YOUR_PLANTS = '/your-plants';
 export const ORDER_RECEIVED_PAGE = '/order-received';
 export const OFFER_PAGE = '/offer';
 export const HELP_PAGE = '/help';
@@ -51,6 +52,13 @@ export const ORDER_MENU_ITEM = {
   href: YOUR_ORDER_PAGE,
   defaultMessage: 'Order',
 };
+
+export const PLANTS_MENU_ITEM = {
+  id: 'nav.plants',
+  href: YOUR_PLANTS,
+  defaultMessage: 'Plants',
+};
+
 export const REQUEST_MEDICINE_MENU_ITEM = {
   id: 'nav.request_medicine',
   defaultMessage: 'Request Medicine',
@@ -71,6 +79,7 @@ export const STAFF_MENU_ITEMS = [
 export const AUTHORIZED_MENU_ITEMS = [
   PROFILE_MENU_ITEM,
   ORDER_MENU_ITEM,
+  PLANTS_MENU_ITEM,
   // REQUEST_MEDICINE_MENU_ITEM,
   // CHECKOUT_PAGE_TWO,
   // {

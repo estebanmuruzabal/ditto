@@ -20,6 +20,7 @@ import OrderReceivedWrapper, {
   ListDes,
 } from './order-received.style';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { DELIVERY_METHOD } from 'graphql/query/delivery';
 
 type OrderReceivedProps = {
   data?: any;
@@ -31,6 +32,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const router = useRouter();
   const intl = useIntl();
   const { data, error, loading } = useQuery(GET_ORDERS);
+  const {data: deliverData, error: deliveryError, loading: deliveryLoading, refetch: deliveryRefetch} = useQuery(DELIVERY_METHOD)
   if (loading) {
     return <ErrorMessage message={'Loading...'} />
   };
@@ -44,17 +46,31 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
 
   const index = ids.indexOf(router.query.itemId);
   // if we dont get an itemId we suppose that the latest order is the one to show!
-  const myOrder = data.getUserOrders[index || 0];
+  const myOrder = data.getUserOrders[index >= 0 ? index : 0];
 
   const printHandler = () =>{
     if (typeof window !== 'undefined') {
       window.print()
     }
   }
+
+  const getDeliverySchedule = (details) => {
+    if (!details) return '';
+    const word = 'Horario';
+
+    const index = details.indexOf(word);   // 8
+    const length = word.length;			// 7
+
+    return details.slice(index + length);
+  }
+
   console.log('data',data)
   const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
-  console.log(myOrder?.delivery_method.details)
-
+  const deliveryMethods = [...deliverData.deliveryMethods.items];
+  // const orderDeliveryMethod = deliveryMethods.filter(method => method.id === myOrder.delivery_method_id)[0];
+  const orderDeliveryMethod = deliveryMethods[4];
+  const deliveryDateAndTime = `${getDeliverySchedule(orderDeliveryMethod?.details)} - ${moment(myOrder.deliveryDate).format('DD MMM')}`
+  console.log(orderDeliveryMethod);
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>
@@ -142,43 +158,59 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
             <ListTitle>
               <Text bold>
                 <FormattedMessage
-                  id="orderMethodText"
+                  id="deliveryMethodTitle"
                   defaultMessage="Order Method"
                 />
               </Text>
             </ListTitle>
             <ListDes>
-           <Text>{myOrder?.delivery_method.details}</Text>
+           <Text>{orderDeliveryMethod.name}</Text>
             </ListDes>
           </ListItem>
-          <ListItem>
+          {/* <ListItem>
             <ListTitle>
               <Text bold>
                 <FormattedMessage
-                  id="deliveryDateTitle"
-                  defaultMessage="Delivery Date"
+                  id="orderMethodDetailText"
+                  defaultMessage="Order Method Details"
                 />
               </Text>
             </ListTitle>
             <ListDes>
-           <Text>{myOrder?.delivery_date}</Text>
+           <Text>{orderDeliveryMethod.details}</Text>
             </ListDes>
-          </ListItem>
-          <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="deliveryLocationText"
-                  defaultMessage="Delivery Location"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Text>
-                {myOrder?.delivery_address}
-              </Text>
-            </ListDes>
-          </ListItem>
+          </ListItem> */}
+          { orderDeliveryMethod.isPickUp ? (
+             <ListItem>
+             <ListTitle>
+               <Text bold>
+                 <FormattedMessage
+                   id="deliveryDateTitle"
+                   defaultMessage="Delivery Date"
+                 />
+               </Text>
+             </ListTitle>
+             <ListDes>
+             <Text>{myOrder?.delivery_address}</Text>
+             </ListDes>
+           </ListItem>
+          ) : (    
+            <ListItem>
+              <ListTitle>
+                <Text bold>
+                  <FormattedMessage
+                    id="deliveryLocationText"
+                    defaultMessage="Delivery Location"
+                  />
+                </Text>
+              </ListTitle>
+              <ListDes>
+                <Text>
+                  {myOrder?.delivery_address}
+                </Text>
+              </ListDes>
+            </ListItem>
+          )}
         </OrderDetails>
 
         <TotalAmount>
