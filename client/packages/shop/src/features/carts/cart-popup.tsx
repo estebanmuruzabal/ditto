@@ -74,7 +74,7 @@ const CartPopUp: React.FC<CartProps> = ({
     <>
       {mobile ? (
         <>
-          <CartPopupStyle />
+          {/* <CartPopupStyle />
           <CartPopupButton
             className='product-cart'
             btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
@@ -89,7 +89,7 @@ const CartPopUp: React.FC<CartProps> = ({
             price={calculatePrice()}
             pricePrefix='$'
             onClick={handleModal}
-          />
+          /> */}
         </>
       ) : (
         <>
