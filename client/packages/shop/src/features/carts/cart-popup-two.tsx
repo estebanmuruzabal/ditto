@@ -71,7 +71,7 @@ const CartPopUp: React.FC<CartProps> = ({
   const intl = useIntl();
   return (
     <>
-      {/* {mobile ? (
+      {mobile ? (
         <>
           <CartPopupStyle />
           <CartPopupButton
@@ -116,7 +116,7 @@ const CartPopUp: React.FC<CartProps> = ({
             />
           )}
         </>
-      )} */}
+      )}
     </>
   );
 };

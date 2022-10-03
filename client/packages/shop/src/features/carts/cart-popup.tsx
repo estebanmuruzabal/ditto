@@ -69,12 +69,12 @@ const CartPopUp: React.FC<CartProps> = ({
   };
 
   let cartSliderClass = isOpen === true ? 'cartPopupFixed' : '';
-
+// aca esta el problema
   return (
     <>
-      {/* {mobile ? (
+      {mobile ? (
         <>
-          <CartPopupStyle />
+          {/* <CartPopupStyle />
           <CartPopupButton
             className='product-cart'
             btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
@@ -89,7 +89,7 @@ const CartPopUp: React.FC<CartProps> = ({
             price={calculatePrice()}
             pricePrefix='$'
             onClick={handleModal}
-          />
+          /> */}
         </>
       ) : (
         <>
@@ -115,7 +115,7 @@ const CartPopUp: React.FC<CartProps> = ({
             onClick={toggleCart}
           />
         </>
-      )} */}
+      )}
     </>
   );
 };
