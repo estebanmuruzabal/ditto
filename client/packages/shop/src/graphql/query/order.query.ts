@@ -12,17 +12,12 @@ export const GET_ORDERS = gql`
       delivery_address
       payment_method
       payment_status
+      delivery_method_id
       status
       discount_amount
       sub_total
       total
       delivery_date
-      delivery_method {
-        name
-        isPickUp
-        pickUpAddress
-        details
-      }
       order_tracking {
         status
         ordering
@@ -33,6 +28,7 @@ export const GET_ORDERS = gql`
         product_id
         image
         quantity
+        recicledQuantity
         unit
         price
       }

@@ -9,6 +9,10 @@
     "static/development/_ssgManifest.js"
   ],
   "pages": {
+    "/": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
     "/[type]": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
@@ -24,7 +28,11 @@
     "/_polyfills": [
       "static/runtime/polyfills.js"
     ],
-    "/order-received": [
+    "/index": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/profile": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]

@@ -8,6 +8,10 @@ query GetUser{
     email
     created_at
     role
+    plants{
+      id
+      name
+    }
     delivery_address{
       id
       title

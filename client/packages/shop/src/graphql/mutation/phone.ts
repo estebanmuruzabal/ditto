@@ -14,6 +14,21 @@ export const ADD_PHONENUMBER = gql`
   }
 `;
 
+export const ADD_PLANT = gql`
+  mutation AddPlant($id: ID!, $name: String!, $humedad: Int, $temperatura: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
+    addPlant(
+      id: $id,
+      name: $number,
+      humedad: $humedad,
+      temperatura: $temperatura,
+      mapeoTierra: $mapeoTierra,
+      mapeoLuz: $mapeoLuz
+    ) {
+      id
+    }
+  }
+`;
+
 export const UPDATE_PHONENUMBER = gql`
   mutation UpdatePhoneNumber ( $id: ID!, $phoneId: String!, $number:  String!) {
     updatePhoneNumber(

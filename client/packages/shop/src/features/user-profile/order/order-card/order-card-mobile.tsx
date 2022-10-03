@@ -64,6 +64,7 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
   //   const displayDetail = className === 'active' ? '100%' : '0';
   const addAllClasses: string[] = ['accordion'];
   const getDeliverySchedule = (details) => {
+    if (!details) return '';
     const word = 'Horario';
 
     const index = details.indexOf(word);   // 8

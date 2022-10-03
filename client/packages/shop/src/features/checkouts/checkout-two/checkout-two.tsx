@@ -488,7 +488,10 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 clearCart();
                 removeCoupon();
                 setHasCoupon(false);
-                Router.push('/order-received');
+                  Router.push({
+                    pathname: '/order-received',
+                    query: { itemId: id }
+                  })
             }
             setLoading(false);
             setIsValid(false);

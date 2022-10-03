@@ -43,7 +43,8 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const ids = data.getUserOrders.map(el => el.id);
 
   const index = ids.indexOf(router.query.itemId);
-  const myOrder = data.getUserOrders[index];
+  // if we dont get an itemId we suppose that the latest order is the one to show!
+  const myOrder = data.getUserOrders[index || 0];
 
   const printHandler = () =>{
     if (typeof window !== 'undefined') {
@@ -53,6 +54,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   console.log('data',data)
   const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
   console.log(myOrder?.delivery_method.details)
+
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>

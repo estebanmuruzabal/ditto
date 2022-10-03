@@ -73,6 +73,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
   }
 
   const getDeliverySchedule = (details) => {
+    if (!details) return '';
     const word = 'Horario';
 
     const index = details.indexOf(word);   // 8
