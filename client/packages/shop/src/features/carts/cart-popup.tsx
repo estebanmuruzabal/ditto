@@ -74,7 +74,7 @@ const CartPopUp: React.FC<CartProps> = ({
     <>
       {mobile ? (
         <>
-          {/* <CartPopupStyle />
+          <CartPopupStyle />
           <CartPopupButton
             className='product-cart'
             btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
@@ -89,11 +89,11 @@ const CartPopUp: React.FC<CartProps> = ({
             price={calculatePrice()}
             pricePrefix='$'
             onClick={handleModal}
-          /> */}
+          />
         </>
       ) : (
         <>
-          <CartSlidePopup className={cartSliderClass}>
+          {/* <CartSlidePopup className={cartSliderClass}>
             {isOpen && (
               <Cart onCloseBtnClick={toggleCart} scrollbarHeight='100vh' />
             )}
@@ -113,7 +113,7 @@ const CartPopUp: React.FC<CartProps> = ({
             price={calculatePrice()}
             pricePrefix={CURRENCY}
             onClick={toggleCart}
-          />
+          /> */}
         </>
       )}
     </>
