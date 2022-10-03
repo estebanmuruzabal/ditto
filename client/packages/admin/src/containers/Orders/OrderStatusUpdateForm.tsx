@@ -41,13 +41,7 @@ const GET_ORDERS = gql`
         discount_amount
         sub_total
         total
-        delivery_method {
-          name
-          isPickUp
-          pickUpAddress
-          details
-          delivery_date
-        }
+        delivery_method_id
         order_tracking {
           status
           ordering
@@ -77,13 +71,7 @@ const GET_ORDERS = gql`
       discount_amount
       sub_total
       total
-      delivery_method {
-        name
-        isPickUp
-        pickUpAddress
-        details
-        delivery_date
-      }
+      delivery_method_id
       order_tracking {
         status
         ordering

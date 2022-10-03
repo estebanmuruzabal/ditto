@@ -98,6 +98,7 @@ const GET_ORDERS = gql`
       creation_date
       amount
       payment_method
+      delivery_method_id
       contact_number
       status
       customer_id
