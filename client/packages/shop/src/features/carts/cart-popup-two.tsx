@@ -11,6 +11,7 @@ import { CURRENCY } from 'utils/constant';
 import { CartSlidePopup } from './cart.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useCart } from 'contexts/cart/use-cart';
+import { useMedia } from 'utils/use-media';
 
 const CartPopupStyle = createGlobalStyle`
   .cartPopup{
@@ -43,9 +44,10 @@ type CartProps = {
 };
 
 const CartPopUp: React.FC<CartProps> = ({
-  deviceType: { mobile, tablet, desktop }, showBuyNowBtn
+  deviceType: { tablet, desktop }, showBuyNowBtn
 }) => {
   const { isOpen, cartItemsCount, toggleCart, calculatePrice } = useCart();
+  const mobile = useMedia('(max-width: 580px)');
   const handleModal = () => {
     openModal({
       show: true,
@@ -71,7 +73,7 @@ const CartPopUp: React.FC<CartProps> = ({
   const intl = useIntl();
   return (
     <>
-      {/* {mobile ? (
+      {mobile ? (
         <>
           <CartPopupStyle />
           <CartPopupButton
@@ -98,25 +100,9 @@ const CartPopUp: React.FC<CartProps> = ({
             )}
           </CartSlidePopup>
             
-          {  showBuyNowBtn && (
-            <BoxedCartButtonV2
-              className='product-cart'
-              itemCount={cartItemsCount}
-              btnText={intl.formatMessage({ id: 'buyNowId', defaultMessage: 'Buy now' })}
-              itemPostfix={
-                cartItemsCount > 1 ? (
-                  <FormattedMessage id='cartItems' defaultMessage='items' />
-                ) : (
-                  <FormattedMessage id='cartItem' defaultMessage='item' />
-                )
-              }
-              price={calculatePrice()}
-              pricePrefix={CURRENCY}
-              onClick={toggleCart}
-            />
-          )}
+         
         </>
-      )} */}
+      )}
     </>
   );
 };
