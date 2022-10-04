@@ -423,7 +423,7 @@ export const typeDefs = gql`
     
     type Mutation {
         login(phone: String!, password: String!): UserAuthPayload!
-        signUp(phone: String!, password: String!): DefaultMessageType!
+        signUp(phone: String!, password: String!, name: String!): DefaultMessageType!
         staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!
         updateUserWorkInfo(id: ID!, isWorking: Boolean, startedWorkTime: String, stoppedWorkTime: String, ratePerHour: Int, logDescription: String, totalWorkingMinutesPerWeek: Int, totalSalaryToPayWeekly: Int, advancedSalaryPaid: Int, taskRelated: String, role: String): DefaultMessageType!
         updateUserLogs(id: ID!, logs: String): Logs

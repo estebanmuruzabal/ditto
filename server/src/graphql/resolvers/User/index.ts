@@ -97,7 +97,7 @@ export const usersResolvers: IResolvers = {
     Mutation: {
         signUp: async (
             _root: undefined,
-            {phone, password}: { phone: string, password: string },
+            {phone, password, name}: { phone: string, password: string, name: string },
             {db}: { db: Database }
         ): Promise<ICommonMessageReturnType> => {
             const userResult = await db.users.findOne({"phones.number": phone});
@@ -106,7 +106,7 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User already registered.");
             }
 
-            if (!phone ||!password) {
+            if (!phone ||!password ||!name) {
                 throw new Error("Every field is required");
             }
 
@@ -117,7 +117,7 @@ export const usersResolvers: IResolvers = {
             const otp = generateOTPCode();
             const user: IUser = {
                 _id: new ObjectId(),
-                name: "",
+                name,
                 email: "",
                 password: await hashPassword(password),
                 phones: [{id: shortid.generate(), number: phone, status: false, is_primary: true}],
