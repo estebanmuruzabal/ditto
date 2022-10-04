@@ -72,7 +72,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
     }
   );
   if (loading) {
-    return <ErrorMessage message={'Loading...'} />
+    return <ErrorMessage message={'Cargando...'} />
   };
 
   if (error) {
@@ -214,7 +214,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
 //     }
 //   );
 //   if (loading) {
-//     return <ErrorMessage message={'Loading...'} />
+//     return <ErrorMessage message={'Cargando...'} />
 //   };
 
 //   if (error) {

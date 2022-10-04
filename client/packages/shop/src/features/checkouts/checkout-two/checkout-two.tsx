@@ -33,7 +33,7 @@ import CheckoutWrapper, {
   HaveCoupon,
   CouponBoxWrapper,
   CouponInputBox,
-  // Input,
+  HeadingWider,
   CouponCode,
   RemoveCoupon,
   ErrorMsg,
@@ -530,12 +530,12 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             {/* DeliverySchedule */}
             <InformationBox>
               <DeliverySchedule>
-                <Heading>
+                <HeadingWider>
                   <FormattedMessage
                     id='deliverySchedule'
                     defaultMessage='Select Your Delivery Schedule'
                   />
-                </Heading>
+                </HeadingWider>
                 { deliveryMethods?.length ? (
                   <RadioGroupTwo
                     items={deliveryMethods}
@@ -545,6 +545,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                         key={item.id}
                         title={item.name}
                         content={item.details}
+                        clickableText={item.isPickUp && item.pickUpAddress ? item.pickUpAddress : null}
                         name='schedule'
                         checked={item.type === 'primary'}
                         withActionButtons={false}
@@ -573,7 +574,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             </InformationBox>
 
             {/* DeliveryAddress */}
-            { pickUpOptionSelected && (
+            { !pickUpOptionSelected && (
               <InformationBox>
                 <Heading>
                   <FormattedMessage

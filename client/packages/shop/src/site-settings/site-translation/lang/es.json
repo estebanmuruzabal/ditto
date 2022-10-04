@@ -68,7 +68,7 @@
   "discountText": "Descuento",
   "vatText": "Incl. IVA",
 
-  "searchPlaceholder": "Busque sus productos desde aquí",
+  "searchPlaceholder": "Buscar",
   "searchButtonText": "Buscar",
 
   "mobileSignInButtonText": "Iniciar sesión",
@@ -172,7 +172,7 @@
   "addressTitleId": "Dirección: ",
   "localidadTitleId": "Localidad: ",
   "instructionsTitleId": "Instrucciones de entrega: ",
-  "selectYourCategoryId": "Seleccioná una categoría",
+  "selectYourCategoryId": "Busca por categoría",
   "passwordPlaceholder": "Contraseña",
   "passwordRepeatPlaceholder": "Repita su contraseña",
   "atLeast6Char": "La contraseña debe tener mínimo 6 caracteres",

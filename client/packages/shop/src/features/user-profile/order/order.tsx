@@ -92,7 +92,7 @@ const OrdersContent: React.FC<{}> = () => {
     }, [data]);
 
     if (loading) {
-      return <ErrorMessage message={'Loading...'} />
+      return <ErrorMessage message={'Cargando...'} />
     };
 
     if (error) {

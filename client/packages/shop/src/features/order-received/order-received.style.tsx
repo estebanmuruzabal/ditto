@@ -81,7 +81,7 @@ export const OrderReceivedContainer = styled.div`
     border-radius: ${themeGet('radii.base', '6px')};
     position: absolute;
     top: 15px;
-    right: 165px;
+    right: 125px;
     cursor: pointer;
     transition: 0.15s ease-in-out;
     @media (max-width: 767px) {

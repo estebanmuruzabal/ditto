@@ -41,7 +41,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
 
 
   if (loading) {
-    return <ErrorMessage message={'Loading...'} />
+    return <ErrorMessage message={'Cargando...'} />
   };
 
   if (error) {

@@ -143,6 +143,7 @@ type RadioCardProps = {
   disabled?: boolean;
   checked?: boolean;
   onChange: () => void;
+  clickableText?: string;
 };
 const RadioCard: React.FC<RadioCardProps> = ({
   id,
@@ -160,6 +161,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
   disabled,
   checked,
   onChange,
+  clickableText
 }) => {
   const getLinkOnly = (text) => {
     if (!text) return;
@@ -172,6 +174,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
   }
 
   const contentDivided = content?.split(' | ');
+  console.log(contentDivided)
   const linkContent = contentDivided?.find((part) => part.includes('http'));
   const linkOnly = getLinkOnly(linkContent);
   const preLinkText = linkContent?.substring(0, linkContent.indexOf('http'));
@@ -196,7 +199,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
       {title && <CardTitle>{title}</CardTitle>}
       {content && <CardContent>{content}</CardContent>}
       {preLinkText && (<CardContent>{preLinkText}</CardContent>)}
-      {linkOnly && <Link href={linkOnly} target="_blank" rel="noopener noreferrer">Click aquí</Link>}
+      {linkOnly && <Link href={linkOnly} target="_blank" rel="noopener noreferrer">{ clickableText || 'Click aquí'}</Link>}
       {withActionButtons && (
         <CardButtons className='button-wrapper'>
           {hasEdit && (

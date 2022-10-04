@@ -273,7 +273,7 @@ export default function SignOutModal() {
           </form>
           {loading && <p style={{
             marginTop: "15px"
-          }}>Loading...</p>}
+          }}>Cargando...</p>}
           {(error || errorMessage) && <p style={{
             marginTop: "15px",
             color: "red"

@@ -73,7 +73,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
 
 
   if (loading || homeCardsLoading) {
-    return <ErrorMessage message={'Loading...'} />
+    return <ErrorMessage message={'Cargando...'} />
   };
 
   if (error || homeCardsError) {

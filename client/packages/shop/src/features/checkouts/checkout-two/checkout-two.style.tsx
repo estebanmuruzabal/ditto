@@ -68,6 +68,21 @@ export const Heading = styled.h3`
     font-size: ${themeGet('fontSizes.md', '19')}px;
   }
 `;
+export const HeadingWider = styled.h3`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.lg', '21')}px;
+  font-weight: ${themeGet('fontWeights.regular', '400')};
+  color: ${themeGet('colors.text.bold', '#0D1136')};
+  line-height: 1.4;
+  margin-bottom: 35px;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 600px) {
+    font-size: ${themeGet('fontSizes.md', '19')}px;
+  }
+`;
 
 export const InformationBox = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
@@ -106,6 +121,31 @@ export const InformationBox = styled.div`
       background-color: ${themeGet('colors.primary.regular', '#009e7f')};
       margin-right: 15px;
 
+      @media (max-width: 600px) {
+        width: 30px;
+        height: 30px;
+        font-size: calc(${themeGet('fontSizes.base', '15')}px - 1px);
+      }
+    }
+  }
+
+  ${HeadingWider} {
+    :before {
+      counter-increment: section-counter;
+      content: counter(section-counter);
+      font-family: ${themeGet('fonts.body', 'Lato')};
+      font-size: calc(${themeGet('fontSizes.base', '15')}px + 1px);
+      font-weight: ${themeGet('fontWeights.regular', '400')};
+      color: ${themeGet('colors.white', '#ffffff')};
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: ${themeGet('colors.primary.regular', '#009e7f')};
+      margin-right: 15px;
+  
       @media (max-width: 600px) {
         width: 30px;
         height: 30px;

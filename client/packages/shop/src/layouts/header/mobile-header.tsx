@@ -127,12 +127,12 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
             <SearchIcon />
           </SearchWrapper>
         ) : null} */}
-        <SearchWrapper
+        {/* <SearchWrapper
           onClick={handleSearchModal}
           className="searchIconWrapper"
         >
           <SearchIcon />
-        </SearchWrapper>
+        </SearchWrapper> */}
       </MobileHeaderInnerWrapper>
     </MobileHeaderWrapper>
   );

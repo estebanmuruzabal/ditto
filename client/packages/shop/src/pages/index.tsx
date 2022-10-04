@@ -38,7 +38,7 @@ const IndexPage: React.FC<{}> = () => {
     }
   );
   if (loading) {
-    return <ErrorMessage message={'Loading...'} />
+    return <ErrorMessage message={'Cargando...'} />
   };
 
   if (error) {

@@ -34,7 +34,7 @@ const YourPlants: React.FunctionComponent<YourPlantsProps> = (props) => {
   const intl = useIntl();
   const { data, error, loading } = useQuery(GET_LOGGED_IN_USER);
   if (loading) {
-    return <ErrorMessage message={'Loading...'} />
+    return <ErrorMessage message={'Cargando...'} />
   };
   console.log(data)
   if (error) {
