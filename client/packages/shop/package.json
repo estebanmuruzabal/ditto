@@ -34,6 +34,7 @@
     "mobile-detect": "^1.4.4",
     "moment": "^2.29.3",
     "next": "^9.4.4",
+    "next-babel-minify": "^1.0.0",
     "next-compose-plugins": "^2.2.0",
     "next-cookies": "^2.0.3",
     "next-optimized-images": "^2.6.1",

@@ -1,5 +1,7 @@
 const withPlugins = require('next-compose-plugins');
 const withOptimizedImages = require('next-optimized-images');
+const withBabelMinify = require('next-babel-minify')()
+module.exports = withBabelMinify()
 
 // next.js configuration
 const nextConfig = {

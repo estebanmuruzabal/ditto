@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 import {NextPage, GetStaticProps} from 'next';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import {useQuery} from '@apollo/react-hooks';
 import {Modal} from '@redq/reuse-modal';
 import { openModal } from '@redq/reuse-modal';
@@ -41,14 +41,36 @@ const LoginMessageDiv = styled.aside({
 const CheckoutPage: NextPage<Props> = ({deviceType}) => {
     const {data: deliverData, error: deliveryError, loading: deliveryLoading, refetch: deliveryRefetch} = useQuery(DELIVERY_METHOD)
     const {data: paymentData, error: paymentError, loading: paymentLoading, refetch: paymentRefetch} = useQuery(PAYMENT_OPTION);
-    const {data, error, loading} = useQuery(GET_LOGGED_IN_USER);
+    const {data, error, loading, refetch: userRefetch} = useQuery(GET_LOGGED_IN_USER);
     const intl = useIntl();
+    const router = useRouter();
+
+    // React.useEffect(() => {
+    //     if (router.query.shouldRefresh) {
+    //         userRefetch();
+    //     }
+    //   }, []);
 
     const {authDispatch} = useContext<any>(AuthContext);
 
     const toggleSignUpForm = () => {
         authDispatch({
             type: 'SIGNUP',
+        });
+
+        openModal({
+            show: true,
+            overlayClassName: 'quick-view-overlay',
+            closeOnClickOutside: true,
+            component: AuthenticationForm,
+            closeComponent: '',
+            config:{
+                enableResizing: false,
+                disableDragging: true,
+                className: 'quick-view-modal',
+                width: 458,
+                height: 'auto',
+            },
         });
     };
 
@@ -73,6 +95,9 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
         });
     };
 
+    if (router.query.shouldRefresh) {
+        userRefetch();
+    }
     if (loading || deliveryLoading || paymentLoading) {
         return <ErrorMessage message={'Loading...'}/>
     }

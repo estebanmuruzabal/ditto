@@ -22,6 +22,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { SIGNUP_MUTATION } from 'graphql/mutation/signup';
 import PhoneInput from 'react-phone-input-2'
 import startsWith from 'lodash.startswith';
+import Router from 'next/router';
 
 export default function SignOutModal() {
   const intl = useIntl();
@@ -41,6 +42,9 @@ export default function SignOutModal() {
   //signup
   const [phone, setPhone] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [repeatPassword, setRepeatPassword] = React.useState('');
+  
   const [errorMessage, setErrorMessage] = React.useState(null);
 
   const [
@@ -59,8 +63,8 @@ export default function SignOutModal() {
       setErrorMessage(null)
     },
     onError: (error) => {
-      setPhone('');
       setPassword('');
+      setRepeatPassword('');
       console.log(error);
       if (error?.toString() && error?.toString().includes('User already registered')) setErrorMessage(intl.formatMessage({ id: 'userAlreadyRegistered', defaultMessage: 'User already registered' }))
       else if (error?.toString() && error?.toString().includes('Incorrect length')) setErrorMessage(intl.formatMessage({ id: 'atLeast6Char', defaultMessage: 'Mínimo 6 caracteres' }))
@@ -74,6 +78,9 @@ export default function SignOutModal() {
 
   const hasMinLength = () => {
     return password.length >= 6;
+  }
+  const passwordsAreEqual = () => {
+    return password === repeatPassword;
   }
 
   // private hasSecurity() {
@@ -99,7 +106,23 @@ export default function SignOutModal() {
   //   return !!this.state.password.match(/[\~\`\!\@\#\$\%\^\&\*\(\)\+\=\_\-\{\}\[\]\\|\:\;\"\'\?\/\<\>\,\.]/);
   // }
 
+  const upperCaseEverything = (str) => {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        // You do not need to check if i is larger than splitStr length, as your for does that for you
+        // Assign it back to the array
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+    }
+    // Directly return the joined string
+    return splitStr.join(' '); 
+ }
 
+  const setErrorFor5Sec = (messageId) => {
+    const error = intl.formatMessage({ id: messageId, defaultMessage: 'Please check the form' })
+      setErrorMessage(error)
+      setTimeout(() => setErrorMessage(null), 1500)
+      return null;
+  };
 
   return (
     <Wrapper>
@@ -116,12 +139,30 @@ export default function SignOutModal() {
           <form method="post" onSubmit={
             async (e) => {
                 e.preventDefault();
+                if (!passwordsAreEqual()) { setErrorFor5Sec('passShouldBeEqual');return; }
+                
                 await signupMeMutation({
-                  variables: {phone, password}
+                  variables: {phone, password, name}
                 });
               }
             }
           >
+            <Input
+              type="text"
+              name="name"
+              value={upperCaseEverything(name)}
+              onChange={(e) => setName(upperCaseEverything(e.target.value))}
+              placeholder={intl.formatMessage({
+                id: 'namePlaceholder',
+                defaultMessage: 'Complete name',
+              })}
+              oninvalid="this.setCustomValidity('Please Enter valid email')"
+              oninput="setCustomValidity('')"
+              height='48px'
+              backgroundColor='#F7F7F7'
+              mb='10px'
+              required
+            />
             <PhoneInput
               inputProps={{
                 name: 'Numero de telefono',
@@ -151,10 +192,31 @@ export default function SignOutModal() {
               mb='10px'
               required
             />
+            <Input
+              type="text"
+              name="password"
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              placeholder={intl.formatMessage({
+                id: 'passwordRepeatPlaceholder',
+                defaultMessage: 'Password (min 6 characters)',
+              })}
+              height='48px'
+              backgroundColor='#F7F7F7'
+              mb='10px'
+              required
+            />
              {!hasMinLength && (
               <SubrequirementContainer>
                 <Dot />
                 <Requirement>{intl.formatMessage({ id: 'atLeast6Char', defaultMessage: 'At least 6 characters' })}</Requirement>
+              </SubrequirementContainer>
+            )}
+
+             {!passwordsAreEqual && (
+              <SubrequirementContainer>
+                <Dot />
+                <Requirement>{intl.formatMessage({ id: 'passShouldBeEqual', defaultMessage: 'Passwords does not match' })}</Requirement>
               </SubrequirementContainer>
             )}
             {/*
@@ -212,7 +274,7 @@ export default function SignOutModal() {
           {loading && <p style={{
             marginTop: "15px"
           }}>Loading...</p>}
-          {error && <p style={{
+          {(error || errorMessage) && <p style={{
             marginTop: "15px",
             color: "red"
           }}>{errorMessage}</p>}

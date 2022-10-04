@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const SIGNUP_MUTATION = gql`
-mutation SignUp($phone: String!, $password: String!) {
-  signUp(phone: $phone, password: $password) {
+mutation SignUp($phone: String!, $password: String!, $name: String!) {
+  signUp(phone: $phone, password: $password, name: $name) {
     status
     message
   }

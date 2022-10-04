@@ -49,7 +49,11 @@ export default function OtpModal() {
         closeModal();
         // Router.push('/[type]', router.asPath);
         // currently sending to profile instead of really checking otp
-        Router.push('/profile', router.asPath);
+        // Router.push('/checkout', router.asPath);
+        Router.push({
+          pathname: '/checkout',
+          query: { shouldRefresh: true }
+        })
       }
     },
     onError: (error) => {
@@ -97,7 +101,7 @@ export default function OtpModal() {
             size='big'
             style={{ width: '100%' }}
             type='submit'
-          >Ir a tu perfil</Button>
+          >Continuar</Button>
         </form>
         {loading && <p style={{
           marginTop: "15px"
