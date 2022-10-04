@@ -170,7 +170,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
               }
             </PriceContainer>
         </ProductCartBtn>
-        { (noRecicledQuantityInCart || reclicledQuantityInCart) ? (<CartPopUp showBuyNowBtn={true} deviceType={deviceType}/>) : null}
+        { (noRecicledQuantityInCart || reclicledQuantityInCart) ? (<CartPopUp deviceType={deviceType}/>) : null}
       </ProductCartWrapper>
       )
       : (<ProductCartWrapper>

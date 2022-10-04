@@ -18,6 +18,7 @@ import OrderReceivedWrapper, {
   ListItem,
   ListTitle,
   ListDes,
+  LinkPickUp
 } from './order-received.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
@@ -54,9 +55,14 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
     }
   }
 
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  
   const getDeliverySchedule = (details) => {
     if (!details) return '';
-    const word = 'Horario';
+    const word = 'Horario: ';
 
     const index = details.indexOf(word);   // 8
     const length = word.length;			// 7
@@ -66,10 +72,10 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
 
   console.log('data',data)
   const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
-  const deliveryMethods = [...deliverData.deliveryMethods.items];
-  // const orderDeliveryMethod = deliveryMethods.filter(method => method.id === myOrder.delivery_method_id)[0];
-  const orderDeliveryMethod = deliveryMethods[4];
-  const deliveryDateAndTime = `${getDeliverySchedule(orderDeliveryMethod?.details)} - ${moment(myOrder.deliveryDate).format('DD MMM')}`
+  const deliveryMethods = [...deliverData?.deliveryMethods?.items];
+  const orderDeliveryMethod = deliveryMethods.filter(method => method.id === myOrder.delivery_method_id)[0];
+  // const orderDeliveryMethod = deliveryMethods[0];
+  const deliveryDateAndTime = `${myOrder?.delivery_date} ${getDeliverySchedule(orderDeliveryMethod?.details)}`;
   console.log(orderDeliveryMethod);
   return (
     <OrderReceivedWrapper>
@@ -164,7 +170,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               </Text>
             </ListTitle>
             <ListDes>
-           <Text>{orderDeliveryMethod.name}</Text>
+           <Text>{orderDeliveryMethod?.name}</Text>
             </ListDes>
           </ListItem>
           {/* <ListItem>
@@ -180,22 +186,22 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
            <Text>{orderDeliveryMethod.details}</Text>
             </ListDes>
           </ListItem> */}
-          { orderDeliveryMethod.isPickUp ? (
+          { orderDeliveryMethod?.isPickUp ? (
+            <>
+              <ListItem>
+                <ListTitle>
+                  <Text bold>
+                    <FormattedMessage
+                      id="deliveryTime"
+                      defaultMessage="Delivery Time"
+                    />
+                  </Text>
+                </ListTitle>
+                <ListDes>
+                <Text>{capitalizeFirstLetter(deliveryDateAndTime)}</Text>
+                </ListDes>
+              </ListItem>
              <ListItem>
-             <ListTitle>
-               <Text bold>
-                 <FormattedMessage
-                   id="deliveryDateTitle"
-                   defaultMessage="Delivery Date"
-                 />
-               </Text>
-             </ListTitle>
-             <ListDes>
-             <Text>{myOrder?.delivery_address}</Text>
-             </ListDes>
-           </ListItem>
-          ) : (    
-            <ListItem>
               <ListTitle>
                 <Text bold>
                   <FormattedMessage
@@ -205,11 +211,46 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                 </Text>
               </ListTitle>
               <ListDes>
-                <Text>
-                  {myOrder?.delivery_address}
-                </Text>
+              { orderDeliveryMethod?.pickUpAddress.includes('http')
+                ? (<LinkPickUp href={orderDeliveryMethod?.pickUpAddress} target="_blank" rel="noopener noreferrer">Click/toque aquí</LinkPickUp>) 
+                : (<Text>{orderDeliveryMethod?.pickUpAddress}</Text>)
+              }
               </ListDes>
             </ListItem>
+           </>
+          ) : (
+            <>
+              <ListItem>
+                <ListTitle>
+                  <Text bold>
+                    <FormattedMessage
+                      id="deliveryDateTitle"
+                      defaultMessage="Delivery Date"
+                    />
+                  </Text>
+                </ListTitle>
+                <ListDes>
+                  <Text>
+                  <Text>{capitalizeFirstLetter(deliveryDateAndTime)}</Text>
+                  </Text>
+                </ListDes>
+              </ListItem>
+              <ListItem>
+                <ListTitle>
+                  <Text bold>
+                    <FormattedMessage
+                      id="deliveryAddress"
+                      defaultMessage="Delivery Address"
+                    />
+                  </Text>
+                </ListTitle>
+                <ListDes>
+                  <Text>
+                    {myOrder?.delivery_address}
+                  </Text>
+                </ListDes>
+              </ListItem>
+            </>
           )}
         </OrderDetails>
 

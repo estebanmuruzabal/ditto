@@ -436,7 +436,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
                         id={index}
                         key={index}
                         title={task.description}
-                        content={`Comenzaste: ${moment(new Date(task.startDate)).format('HH:mm A - DD MMM')}. Terminaste: ${moment(new Date(task.finishDate)).format('HH:mm A - DD MMM')}. Tardaste: ${task.workedHours}hs`}
+                        content={`Comenzaste: ${moment(new Date(task.startDate)).format('HH:mm A - DD MMM')}. /nTerminaste: ${moment(new Date(task.finishDate)).format('HH:mm A - DD MMM')}. Tardaste: ${task.workedHours}hs`}
                         checked={task.isDone}
                         onChange={() => handleTaskChange(task, 'nothing')}
                         name='contact'

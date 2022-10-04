@@ -229,16 +229,17 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && selectedAddress.address}, ${selectedAddress && selectedAddress.instructions}}` : null;
-  let toBeDelivered = false;
+  const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && capitalizeFirstLetter(selectedAddress.address)}, ${selectedAddress && selectedAddress.instructions}` : null;
+
   useEffect(() => {
     removeCoupon();
     setHasCoupon(false);
     
     deliveryCharge = calculateDeliveryCharge();
+    const deliveryAddress = pickUpOptionSelected ? pickUpAddress : deliveryOptionSelected ? selectedAddressText : '';
     setSubmitResult({
       ...submitResult,
-      delivery_address: pickUpAddress || selectedAddressText,
+      delivery_address: deliveryAddress,
       products: cartProduct,
       contact_number: selectedContact.number
     })
@@ -407,24 +408,32 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     const sabado = 6;
     const domingo = 7;
 
-    // case between jueves 14:00 and martes 13:59
-    if ((orderDay >= jueves && orderHour > 13  ) || (orderDay >= lunes && orderDay <= martes && orderHour < 14)) {
-      while (++orderDay === martes) {
-        if (orderDay === domingo) orderDay = 1;
+    const lastOrderTime = 12;
+    switch (orderDay) {
+
+      case viernes:
+      case sabado:
+      case domingo:
+      case lunes:
         deliveryDate.add(1, 'days');
-      }
-      
-      return deliveryDate;
+        break;
+      case martes:
+        if (orderHour >= lastOrderTime) {
+            deliveryDate.add(2, 'days');
+        }
+        break;
+      case miercoles:
+          deliveryDate.add(1, 'days');
+        break;
+      case jueves:
+        if (orderHour >= lastOrderTime) {
+            deliveryDate.add(5, 'days');
+        }
+        break;
+      default:
+        break;
     }
-    // case between martes 14:01 and jueves 13:59
-    if (((orderDay >= martes && orderHour > 13) && orderDay <= jueves) || (orderDay === jueves && orderHour < 14)) {
-      while (++orderDay === jueves) {
-        deliveryDate.add(1, 'days');
-      }
-      
-      // return moment(deliveryDate).format('hh:mm A - dddd DD MMM');
-      return moment(deliveryDate).format('dddd DD MMM');
-    }
+    return moment(deliveryDate).format('dddd DD MMM');
   }
 
   const handleSubmit = async () => {
@@ -453,7 +462,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       discount_amount
     } = otherSubmitResult;
 
-    if (!delivery_address) { setErrorFor5Sec('checkoutDeliveryAddressInvalid');return; }
+    if (deliveryOptionSelected && !delivery_address) { setErrorFor5Sec('checkoutDeliveryAddressInvalid');return; }
     if (!delivery_method_id) { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
     if (!contact_number) { setErrorFor5Sec('checkoutContactNumberInvalid');return; }
     if (!payment_option_id) { setErrorFor5Sec(pickUpAddress ? 'checkoutPaymentMethodInvalidOption3' : 'checkoutPaymentMethodInvalidOption4');return; }
@@ -507,7 +516,11 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const pickedUpOptionIds = deliveryMethods.map(deliveryMethod => {
     return deliveryMethod.isPickUp ? deliveryMethod.id : null;
   });
-  const pickUpOptionSelected = !pickedUpOptionIds.includes(submitResult.delivery_method_id)
+  const deliveryOptionIds = deliveryMethods.map(deliveryMethod => {
+    return !deliveryMethod.isPickUp ? deliveryMethod.id : null;
+  });
+  const pickUpOptionSelected = pickedUpOptionIds.includes(submitResult.delivery_method_id)
+  const deliveryOptionSelected = deliveryOptionIds.includes(submitResult.delivery_method_id)
   return (
     <form>
       <CheckoutWrapper>

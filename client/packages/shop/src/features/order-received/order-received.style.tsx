@@ -12,6 +12,13 @@ const OrderReceivedWrapper = styled.div`
   min-height: 100vh;
 `;
 
+export const LinkPickUp = styled.a`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.base', '15')}px;
+  font-weight: ${themeGet('fontWeights.bold', '700')};
+  color: ${themeGet('colors.blue', '#ea4d4a')};
+`;
+
 export const OrderReceivedContainer = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
@@ -137,6 +144,7 @@ export const Text = styled.p<TextProps>`
   line-height: 1.2;
   display: block;
   margin: 0;
+  min-width: 140px;
 
   &:last-child {
     color: ${themeGet('colors.text.medium', '#424561')};
@@ -187,16 +195,15 @@ export const ListItem = styled.div`
 `;
 
 export const ListTitle = styled.div`
-  flex-basis: 210px;
-  max-width: 210px;
+  // flex-basis: 210px;
   flex-shrink: 0;
   position: relative;
-  @media (max-width: 767px) {
-    flex-basis: 105px;
-    max-width: 105px;
-  }
+  // @media (max-width: 767px) {
+  //   flex-basis: 105px;
+  //   max-width: 105px;
+  // }
   &:after {
-    content: ':';
+    content: '';
     position: absolute;
     top: -1px;
     right: -2px;
@@ -205,7 +212,7 @@ export const ListTitle = styled.div`
 `;
 
 export const ListDes = styled.div`
-  padding-left: 90px;
+  padding-left: 20px;
   @media (max-width: 767px) {
     padding-left: 20px;
   }

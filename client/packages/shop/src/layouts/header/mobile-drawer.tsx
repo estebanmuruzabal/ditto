@@ -27,6 +27,7 @@ import {
   AUTHORIZED_MENU_ITEMS,
   MOBILE_DRAWER_MENU,
   PROFILE_PAGE,
+  STAFF_MENU_ITEMS,
 } from 'site-settings/site-navigation';
 import { useAppState, useAppDispatch } from 'contexts/app/app.provider';
 import { ProfileContext } from 'contexts/profile/profile.context';
@@ -34,7 +35,7 @@ import { ProfileContext } from 'contexts/profile/profile.context';
 const MobileDrawer: React.FunctionComponent = () => {
   const isDrawerOpen = useAppState('isDrawerOpen');
   const dispatch = useAppDispatch();
-  const { authState: { isAuthenticated }, authDispatch } = useContext<any>(AuthContext);
+  const { authState: { isAuthenticated, isStaff }, authDispatch,  } = useContext<any>(AuthContext);
   const { state } = useContext(ProfileContext);
 
   if (state) {
@@ -81,6 +82,7 @@ const MobileDrawer: React.FunctionComponent = () => {
     });
   };
 
+  const menuItems = isStaff ? STAFF_MENU_ITEMS : isAuthenticated ? AUTHORIZED_MENU_ITEMS : []; 
   return (
     <Drawer
       width="316px"
@@ -135,7 +137,7 @@ const MobileDrawer: React.FunctionComponent = () => {
                 />
               </DrawerMenuItem>
             ))}
-            {isAuthenticated && AUTHORIZED_MENU_ITEMS.map((item, idx) => (
+            {menuItems.map((item, idx) => (
               <DrawerMenuItem key={item.id}>
               <NavLink
               onClick={toggleHandler}
