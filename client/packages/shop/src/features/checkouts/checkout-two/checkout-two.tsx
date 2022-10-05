@@ -232,18 +232,16 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   useEffect(() => {
     removeCoupon();
     setHasCoupon(false);
-    
     deliveryCharge = calculateDeliveryCharge();
     const deliveryAddress = pickUpOptionSelected ? pickUpAddress : deliveryOptionSelected ? selectedAddressText : '';
+
     setSubmitResult({
       ...submitResult,
       delivery_address: deliveryAddress,
       products: cartProduct,
       contact_number: selectedContact.number
     })
-    console.log('deliveryMethods', deliveryMethods)
-    console.log('paymentMethods', paymentMethods)
-    console.log('delivery_address', delivery_address)
+
     if (
       calculatePrice() > 0 &&
       cartItemsCount > 0 &&
@@ -461,45 +459,59 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     }
     const delivery_date = getDeliveryDate();
     // if (confirm('Are you sure? You want to place this order?')) {
+      try {
         const {errors: orderCreateError} = await setOrderMutation({
-            variables: {
-                input: {
-                    customer_id,
-                    contact_number,
-                    payment_option_id,
-                    delivery_method_id,
-                    delivery_date,
-                    delivery_address,
-                    sub_total,
-                    total,
-                    coupon_code,
-                    discount_amount,
-                    products
-                }
-            }
-        });
+          variables: {
+              input: {
+                  customer_id,
+                  contact_number,
+                  payment_option_id,
+                  delivery_method_id,
+                  delivery_date,
+                  delivery_address,
+                  sub_total,
+                  total,
+                  coupon_code,
+                  discount_amount,
+                  products
+              }
+          }
+      });
 
-        if (!orderCreateError) {
-            setLoading(true);
-            if (isValid) {
-                clearCart();
-                removeCoupon();
-                setHasCoupon(false);
-                  Router.push({
-                    pathname: '/order-received',
-                    query: { itemId: id }
-                  })
-            }
-            setLoading(false);
-            setIsValid(false);
-        }
+      if (!orderCreateError) {
+          setLoading(true);
+          if (isValid) {
+              clearCart();
+              removeCoupon();
+              setHasCoupon(false);
+                Router.push({
+                  pathname: '/order-received',
+                  query: { itemId: id }
+                })
+          }
+          setLoading(false);
+          setIsValid(false);
+      }
 
-        if (orderCreateError) {
-            setOrderError(orderCreateError[0].message)
+      if (orderCreateError) {
+          setOrderError(orderCreateError[0]?.message || 'Somehting whent wrong')
+      }
+      } catch (error) {
+        if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
+          startAllOver();
         }
+      }
+        
     // }
 
   };
+
+  const startAllOver = () => {
+    clearCart();
+    removeCoupon();
+    setHasCoupon(false);
+    Router.push({ pathname: '/' })
+  }
 
   const pickedUpOptionIds = deliveryMethods.map(deliveryMethod => {
     return deliveryMethod.isPickUp ? deliveryMethod.id : null;

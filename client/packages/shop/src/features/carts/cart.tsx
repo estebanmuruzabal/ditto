@@ -81,7 +81,7 @@ const Cart: React.FC<CartPropsType> = ({
   const toggleCoupon = () => {
     showCoupon(true);
   };
-  console.log(items)
+
   return (
     <CartPopupBody className={className} style={style}>
       <PopupHeader>

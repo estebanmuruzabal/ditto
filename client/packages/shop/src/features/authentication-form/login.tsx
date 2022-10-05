@@ -70,7 +70,7 @@ export default function SignInModal() {
       }
     },
     onError: (error) => {
-      setPhone('');
+      setPhone('54');
       setPassword('');
     }
   });

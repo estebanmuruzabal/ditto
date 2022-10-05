@@ -76,7 +76,6 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
   if (className) {
     addAllClasses.push(className);
   }
-  console.log("orderrs:L", orders)
 
   return (
     <>

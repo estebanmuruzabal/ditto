@@ -48,7 +48,6 @@ const YourPlants: React.FunctionComponent<YourPlantsProps> = (props) => {
       window.print()
     }
   }
-  console.log('data', data?.getUser?.plants)
   // const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
   const userPlants = data?.getUser?.plants;
 

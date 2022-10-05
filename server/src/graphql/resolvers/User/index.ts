@@ -504,12 +504,13 @@ export const usersResolvers: IResolvers = {
         },
         addDeliveryAddress: async (
             _root: undefined,
-            {id, title, address, location, instructions}: {
+            {id, title, address, location, instructions, isPrimary}: {
                 id: string,
                 title: string,
                 address: string,
                 location: string,
-                instructions: string
+                instructions: string,
+                isPrimary: boolean
             },
             {db, req}: { db: Database, req: Request }
         ): Promise<Address> => {
@@ -532,7 +533,7 @@ export const usersResolvers: IResolvers = {
                 address: address,
                 location: location,
                 instructions: instructions,
-                is_primary: false,
+                is_primary: true,
             }
 
             await db.users.updateOne(

@@ -204,11 +204,11 @@ export const ordersResolvers: IResolvers = {
                     const dbProduct: IProduct = await db.products.findOne({_id: new ObjectId(input.products[i].product_id)});
                     const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
                     const total = dbProduct.product_quantity - purchasedQuantity;
-                    console.log(dbProduct.name)
-                    console.log(dbProduct.product_quantity)
-                    console.log(purchasedQuantity)
-                    console.log(total)
-                    console.log('----')
+                    // console.log(dbProduct.name)
+                    // console.log(dbProduct.product_quantity)
+                    // console.log(purchasedQuantity)
+                    // console.log(total)
+                    // console.log('----')
                     
                     await db.products.updateOne(
                         {_id: products[i]._id},
