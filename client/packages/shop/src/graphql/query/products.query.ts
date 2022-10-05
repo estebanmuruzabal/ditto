@@ -5,13 +5,15 @@ query GetProducts(
   $type: String
   $category: String
   $searchText: String
-  $offset: Int
+  $offset: Int,
+  $limit: Int
 ) {
   products(
     type: $type
     category: $category
     searchText: $searchText
-    offset: $offset
+    offset: $offset,
+    limit: $limit
   ) {
     items {
       id

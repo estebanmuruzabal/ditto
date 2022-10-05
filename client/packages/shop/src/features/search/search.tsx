@@ -31,7 +31,7 @@ const Search: React.FC<Props> = ({ onSubmit, ...props  }) => {
   const { data, error, loading } = useQuery(GET_PRODUCTS_SEARCH,
       {
         variables: { 
-          type: query.type || 'definatipos',
+          type: query.type || '',
           offset: 0,
           limit: 20
         }

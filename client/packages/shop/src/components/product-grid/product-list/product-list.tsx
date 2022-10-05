@@ -27,15 +27,15 @@ const QuickView = dynamic(() => import('features/quick-view/quick-view'));
 const GeneralCard = dynamic(
   import('components/product-card/product-card-one/product-card-one')
 );
-const BookCard = dynamic(
-  import('components/product-card/product-card-two/product-card-two')
-);
-const FurnitureCard = dynamic(
-  import('components/product-card/product-card-three/product-card-three')
-);
-const MedicineCard = dynamic(
-  import('components/product-card/product-card-five/product-card-five')
-);
+// const BookCard = dynamic(
+//   import('components/product-card/product-card-two/product-card-two')
+// );
+// const FurnitureCard = dynamic(
+//   import('components/product-card/product-card-three/product-card-three')
+// );
+// const MedicineCard = dynamic(
+//   import('components/product-card/product-card-five/product-card-five')
+// );
 
 type ProductsProps = {
   deviceType?: {
@@ -54,6 +54,7 @@ export const Products: React.FC<ProductsProps> = ({
   type,
 }) => {
   const router = useRouter();
+  console.log('fetchLimit', fetchLimit);
   const { data, error, loading, fetchMore, networkStatus } = useQuery(
     GET_PRODUCTS,
     {
@@ -177,41 +178,41 @@ export const Products: React.FC<ProductsProps> = ({
 
   const renderCard = (productType, props) => {
     switch (productType) {
-      case 'book':
-        return (
-          <BookCard
-            title={props.title}
-            image={props.image}
-            name={props?.author?.name}
-            data={props}
-            deviceType={deviceType}
-            onClick={() =>
-              router.push('/product/[slug]', `/product/${props.slug}`)
-            }
-          />
-        );
-      case 'medicine':
-        return (
-          <MedicineCard
-            title={props.name}
-            currency={CURRENCY}
-            image={SHOP_IMAGE_HOST+props.images[0]}
-            price={props.price}
-            weight={props.unit}
-            data={props}
-          />
-        );
-      case 'furniture':
-        return (
-          <FurnitureCard
-            title={props.name}
-            image={SHOP_IMAGE_HOST+props.images[0]}
-            discountInPercent={props.discount_in_percent}
-            onClick={() =>
-              handleQuickViewModal(props, deviceType, handleModalClose)
-            }
-          />
-        );
+      // case 'book':
+      //   return (
+      //     <BookCard
+      //       title={props.title}
+      //       image={props.image}
+      //       name={props?.author?.name}
+      //       data={props}
+      //       deviceType={deviceType}
+      //       onClick={() =>
+      //         router.push('/product/[slug]', `/product/${props.slug}`)
+      //       }
+      //     />
+      //   );
+      // case 'medicine':
+      //   return (
+      //     <MedicineCard
+      //       title={props.name}
+      //       currency={CURRENCY}
+      //       image={SHOP_IMAGE_HOST+props.images[0]}
+      //       price={props.price}
+      //       weight={props.unit}
+      //       data={props}
+      //     />
+      //   );
+      // case 'furniture':
+      //   return (
+      //     <FurnitureCard
+      //       title={props.name}
+      //       image={SHOP_IMAGE_HOST+props.images[0]}
+      //       discountInPercent={props.discount_in_percent}
+      //       onClick={() =>
+      //         handleQuickViewModal(props, deviceType, handleModalClose)
+      //       }
+      //     />
+      //   );
       default:
         return (
           <GeneralCard
