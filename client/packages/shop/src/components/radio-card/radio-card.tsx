@@ -34,7 +34,7 @@ const CardWrapper = styled.label`
   transition: all 0.25s ease;
 
   &.active {
-    border: 1px solid ${themeGet('colors.primary.regular', '#009E7F')};
+    border: 2px solid ${themeGet('colors.primary.regular', '#009E7F')};
     background-color: ${themeGet('colors.white', '#ffffff')};
   }
 
@@ -174,7 +174,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
   }
 
   const contentDivided = content?.split(' | ');
-  console.log(contentDivided)
+
   const linkContent = contentDivided?.find((part) => part.includes('http'));
   const linkOnly = getLinkOnly(linkContent);
   const preLinkText = linkContent?.substring(0, linkContent.indexOf('http'));

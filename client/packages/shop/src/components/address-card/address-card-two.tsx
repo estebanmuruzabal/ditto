@@ -85,14 +85,14 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
   const handleSubmit = async () => {
     if (isValid) {
       const {id, addressId, title, address, location, instructions} = addressValue;
-      if(Object.keys(addressItem).length === 0){
+      if (Object.keys(addressItem).length === 0) {
         const {data}  = await addAddressMutation({
           variables: { 
             id,
             title,
             address, 
             location,
-            instructions,
+            instructions
            },
         });
         newAddressid = data.addDeliveryAddress.id;

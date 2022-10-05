@@ -174,7 +174,7 @@ export const StyledLink = styled.span `
   padding: 5px 15px;
   height: 36px;
    background-color: #009e7f;
-  border: 1px solid #009e7f;
+  border: 2px solid #009e7f;
   color: #fff;
   border-radius: ${themeGet('radii.base', '6px')};
   position: relative;

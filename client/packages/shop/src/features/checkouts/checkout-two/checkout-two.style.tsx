@@ -357,12 +357,12 @@ export const HaveCoupon = styled.button`
 
 export const ErrorMsg = styled('span')`
   font-family: ${themeGet('fonts.body', 'Lato')};
-  font-size: ${themeGet('fontSizes.xs', '12')}px;
+  font-size: ${themeGet('fontSizes.smm', '16')}px;
   font-weight: ${themeGet('fontWeights.regular', '400')};
   color: ${themeGet('colors.secondary.hover', '#FF282F')};
   padding-top: 10px;
   display: flex;
-  margin-left: 20px;
+  // margin-left: 20px;
 `;
 
 export const TermConditionText = styled.span`

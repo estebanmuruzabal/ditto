@@ -58,19 +58,19 @@ const ProductPage: NextPage<Props> = ({ data, deviceType }) => {
     </>
   );
 };
-export async function getServerSideProps({ params }) {
-  const apolloClient = initializeApollo();
+// export async function getServerSideProps({ params }) {
+//   const apolloClient = initializeApollo();
 
-  const { data } = await apolloClient.query({
-    query: GET_PRODUCT_DETAILS,
-    variables: {
-      slug: params.slug,
-    },
-  });
-  return {
-    props: {
-      data,
-    },
-  };
-}
+//   const { data } = await apolloClient.query({
+//     query: GET_PRODUCT_DETAILS,
+//     variables: {
+//       slug: params.slug,
+//     },
+//   });
+//   return {
+//     props: {
+//       data,
+//     },
+//   };
+// }
 export default ProductPage;

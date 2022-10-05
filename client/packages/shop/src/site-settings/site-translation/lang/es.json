@@ -163,7 +163,7 @@
   "addNewContactId": "Agregar número",
   "addNewAddressId": "Agregar nueva dirección",
   "instructionsId": "¿Alguna instrucción para la entrega? Ej. 'piso 2, dpto 'B', portón gris.'",
-  "addressRefId": "¿Qué nombre le ponemos? ej.:'Casa'",
+  "addressRefId": "Nombre de ref. Ejemplo: 'Casa de Lucas'",
   "locationId": "Localidad",
   "provinciaId": "Provincia",
   "printInvoiceBtn": "Imprimir",

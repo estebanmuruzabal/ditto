@@ -28,7 +28,7 @@ const CardWrapper = styled.label`
   transition: all 0.25s ease;
 
   &.active {
-    border: 1px solid ${themeGet('colors.primary.regular', '#009E7F')};
+    border: 2px solid ${themeGet('colors.primary.regular', '#009E7F')};
     background-color: ${themeGet('colors.white', '#ffffff')};
   }
 

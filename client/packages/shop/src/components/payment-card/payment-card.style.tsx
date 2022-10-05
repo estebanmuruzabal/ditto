@@ -33,7 +33,8 @@ export const PaymentCardWrapper = styled.span`
   background-color: ${(props) => props.color || '#e4f4fc'};
   padding: 15px 20px;
   border-radius: ${themeGet('radii.base', '6px')};
-  border-width: 1px;
+  border-width: 2px;
+  margin-bottom: 10px;
   border-style: solid;
   border-color: ${(props) => props.color || '#e4f4fc'};
 `;

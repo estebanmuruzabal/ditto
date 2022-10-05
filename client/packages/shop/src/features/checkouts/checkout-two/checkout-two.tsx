@@ -8,9 +8,7 @@ import RadioGroupTwo from 'components/radio-group/radio-group-two';
 import RadioGroupThree from 'components/radio-group/radio-group-three';
 import RadioCardTWO from 'components/radio-card/radio-card-two';
 import PaymentGroup from 'components/payment-group/payment-group';
-import UpdateAddress from 'components/address-card/address-card';
 import UpdateContact from 'components/contact-card/contact-card';
-import StripePaymentForm from 'features/payment/stripe-form';
 import { DELETE_ADDRESS, SETPRIMARY_ADDRESS } from 'graphql/mutation/address';
 import { DELETE_PHONENUMBER, SETPRIMARY_PHONENUMBER } from 'graphql/mutation/phone';
 import { CREAT_ORDER } from 'graphql/mutation/order';
@@ -387,7 +385,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const setErrorFor5Sec = (messageId) => {
     const error = intl.formatMessage({ id: messageId, defaultMessage: 'Please check the form' })
       setCheckoutError(error);
-      setTimeout(() => setCheckoutError(null), 1500)
+      setTimeout(() => setCheckoutError(null), 3500)
       return null;
   };
 
@@ -396,21 +394,11 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     moment.locale('es');
     let orderDay = moment(new Date(), 'MM/D/YYYY').day();
     const orderHour = moment(new Date(), 'MM/D/YYYY').hour();
-    const orderMinute = moment(new Date(), 'MM/D/YYYY').minutes();
     let deliveryDate = moment(new Date());
-    const lastOrderHour = 14;
-    const lastOrderMinute = 0;
-    const lunes = 1;
-    const martes = 2;
-    const miercoles = 3;
-    const jueves = 4;
-    const viernes = 5;
-    const sabado = 6;
-    const domingo = 7;
+    const lunes = 1;const martes = 2;const miercoles = 3;const jueves = 4;const viernes = 5;const sabado = 6;const domingo = 7;
 
     const lastOrderTime = 12;
     switch (orderDay) {
-
       case viernes:
       case sabado:
       case domingo:
@@ -796,11 +784,20 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
               </TermConditionText>
 
               {/* CheckoutSubmit */}
+              {checkoutError && (
+                        <ErrorMsg>
+                            <FormattedMessage
+                                id='checkoutError'
+                                defaultMessage={checkoutError}
+                            />
+                        </ErrorMsg>
+                    )}
+
               <CheckoutSubmit>
                 <Button
                     type='button'
                     onClick={handleSubmit}
-                    disabled={!isValid}
+                    // disabled={!isValid}
                     size='big'
                     loading={loading}
                     style={{ width: '100%' }}
@@ -812,15 +809,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 </Button>
               </CheckoutSubmit>
                 <div>
-                    {checkoutError && (
-                        <ErrorMsg>
-                            <FormattedMessage
-                                id='checkoutError'
-                                defaultMessage={checkoutError}
-                            />
-                        </ErrorMsg>
-                    )}
-
+                    
                     {orderError && (
                         <ErrorMsg>
                             <p>{orderError}</p>
