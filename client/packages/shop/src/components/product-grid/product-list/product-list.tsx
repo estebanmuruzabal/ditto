@@ -233,11 +233,12 @@ export const Products: React.FC<ProductsProps> = ({
         );
     }
   };
-  
+  console.log(data.products)
+  const onlineProducts = data.products.items?.filter((product) => product?.is_online === true)
   return (
     <>
       <ProductsRow>
-        {data.products.items.map((item: any, index: number) => (
+        {onlineProducts?.map((item: any, index: number) => (
           <ProductsCol
             key={index}
             style={type === 'book' ? { paddingLeft: 0, paddingRight: 1 } : {}}

@@ -45,6 +45,7 @@ type MobileOrderCardProps = {
   address?: string;
   subtotal?: number;
   discount?: number;
+  deliveryMethod?: any;
   deliveryFee?: number;
   grandTotal?: number;
   orders?: any;
@@ -63,6 +64,13 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
 }) => {
   //   const displayDetail = className === 'active' ? '100%' : '0';
   const addAllClasses: string[] = ['accordion'];
+
+  const intl = useIntl();
+
+  if (className) {
+    addAllClasses.push(className);
+  }
+
   const getDeliverySchedule = (details) => {
     if (!details) return '';
     const word = 'Horario';
@@ -72,10 +80,7 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
 
     return details.slice(index + length);
   }
-  const intl = useIntl();
-  if (className) {
-    addAllClasses.push(className);
-  }
+  
 
   return (
     <>
@@ -96,18 +101,17 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
                   <Status>{progressData[order.status - 1]}</Status>
                 </OrderListHeader>
 
-        
                 <OrderMeta>
                   <Meta>{intl.formatMessage({ id: 'deliveryMethodTitle', defaultMessage: 'Delivery Method' })} <span>{order?.delivery_method?.name}</span></Meta>
                   {/* <Meta>{intl.formatMessage({ id: 'deliveryTime', defaultMessage: 'Delivery Time:' })}<span>18hs a 21hs {order.delivery_date}</span></Meta> */}
                   { order?.delivery_method?.isPickUp ? (
                     <>
-                      <Meta>{intl.formatMessage({ id: 'pickUpDateTitle', defaultMessage: 'Pickup Date:' })}<span>{order.delivery_date}</span></Meta>
+                      <Meta>{intl.formatMessage({ id: 'pickUpDateTitle', defaultMessage: 'Pickup Date:' })}<span>{`${getDeliverySchedule(order?.delivery_method?.details)} - ${moment(order.delivery_date).format('DD MMM')}` || '-'}</span></Meta>
                       <Meta>{intl.formatMessage({ id: 'deliveryAddressTitle', defaultMessage: 'Delivery Address:' })} <span>{order?.delivery_address}</span></Meta>
                     </>
                   ) : (
                     <>
-                      <Meta>{intl.formatMessage({ id: 'deliveryDateTitle', defaultMessage: 'Delivery Date:' })}<span>{`${getDeliverySchedule(order?.delivery_method?.details)} - ${moment(order?.deliveryDate).format('DD MMM')}` || '-'}</span></Meta>
+                      <Meta>{intl.formatMessage({ id: 'deliveryDateTitle', defaultMessage: 'Delivery Date:' })}<span>{`${getDeliverySchedule(order?.delivery_method?.details)} - ${moment(order.delivery_date).format('DD MMM')}` || '-'}</span></Meta>
                       <Meta>{intl.formatMessage({ id: 'deliveryAddressTitle', defaultMessage: 'Delivery Address:' })} <span>{order?.delivery_address}</span></Meta>
                     </>
                   )}

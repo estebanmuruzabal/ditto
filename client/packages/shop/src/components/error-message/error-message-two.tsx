@@ -8,7 +8,7 @@ const StyledAside = styled.aside({
   justifyContent: 'center',
   alignItems: 'center',
   textAlign: 'center',
-  height: '80vh',
+  height: '60vh',
   padding: '80px 1.5rem 0',
   fontSize: '22px',
   color: '#c60505',

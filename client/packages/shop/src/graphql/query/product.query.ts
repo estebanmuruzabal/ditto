@@ -90,6 +90,7 @@ export const GET_PRODUCT_DETAILS = gql`
           discount_in_percent
           product_quantity
           is_featured
+          is_online
           meta_title
           meta_keyword
           meta_description

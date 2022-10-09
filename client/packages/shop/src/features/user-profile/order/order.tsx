@@ -27,6 +27,7 @@ import OrderCardMobile from './order-card/order-card-mobile';
 import useComponentSize from 'utils/useComponentSize';
 import { FormattedMessage } from 'react-intl';
 import {SHOP_IMAGE_HOST} from "../../../utils/images-path";
+import { DELIVERY_METHOD } from 'graphql/query/delivery';
 
 const progressData = ['Order Received', 'Order On The Way', 'Order Delivered'];
 
@@ -82,6 +83,7 @@ const OrdersContent: React.FC<{}> = () => {
   const [active, setActive] = useState('');
   const [targetRef, size] = useComponentSize();
   const orderListHeight = size.height - 79;
+  const {data: deliverData} = useQuery(DELIVERY_METHOD)
 
   const { data, error, loading } = useQuery(GET_ORDERS);
     useEffect( () => {
@@ -109,6 +111,15 @@ const OrdersContent: React.FC<{}> = () => {
     setOrder(order);
     setActive(order.id);
   };
+
+  // const pickedUpOptionIds = deliverData.deliveryMethods.map(deliveryMethod => {
+  //   return deliveryMethod.isPickUp ? deliveryMethod.id : null;
+  // });
+  // // const deliveryOptionIds = deliveryMethods.map(deliveryMethod => {
+  // //   return !deliveryMethod.isPickUp ? deliveryMethod.id : null;
+  // // });
+  // const pickUpOptionSelected = pickedUpOptionIds.includes(order.delivery_method_id)
+
   return (
     <OrderBox>
       <DesktopView>
@@ -187,19 +198,28 @@ const OrdersContent: React.FC<{}> = () => {
         </OrderDetailsWrapper>
       </DesktopView>
 
-      <MobileView>
-        <OrderList>
-          <OrderCardMobile
-            orders={myOrder}
-            className={order && order.id === active ? 'active' : ''}
-            progressData={progressData}
-            columns={orderTableColumns}
-            onClick={() => {
-              handleClick(order);
-            }}
+      {order ? (
+        <MobileView>
+            <OrderList>
+            <OrderCardMobile
+              orders={myOrder}
+              className={order && order.id === active ? 'active' : ''}
+              progressData={progressData}
+              columns={orderTableColumns}
+              onClick={() => {
+                handleClick(order);
+              }}
+            />
+          </OrderList>
+        </MobileView>
+      ) : (
+        <NoOrderFound>
+          <FormattedMessage
+            id="intlNoOrderFound"
+            defaultMessage="No order found"
           />
-        </OrderList>
-      </MobileView>
+        </NoOrderFound>
+      )}
     </OrderBox>
   );
 };
