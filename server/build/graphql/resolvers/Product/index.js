@@ -75,6 +75,7 @@ exports.productsResolvers = {
                 meta_keyword: input.meta_keyword,
                 meta_description: input.meta_description,
                 is_featured: input.is_featured ? input.is_featured : false,
+                is_online: input.is_online ? input.is_online : false,
                 created_at: new Date().toUTCString(),
             };
             const insertResult = yield db.products.insertOne(insertData);
@@ -113,6 +114,7 @@ exports.productsResolvers = {
                 meta_keyword: input.meta_keyword,
                 meta_description: input.meta_description,
                 is_featured: input.is_featured ? input.is_featured : false,
+                is_online: input.is_online ? input.is_online : false,
                 updated_at: new Date().toUTCString(),
             };
             yield db.products.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: updateData });

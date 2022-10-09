@@ -63,6 +63,7 @@ const GET_PRODUCTS = gql`
         discount_in_percent
         product_quantity
         is_featured
+        is_online
         meta_title
         meta_keyword
         meta_description
@@ -134,6 +135,7 @@ const UPDATE_PRODUCT = gql`
       discount_in_percent
       product_quantity
       is_featured
+      is_online
       meta_title
       meta_keyword
       meta_description
@@ -161,6 +163,7 @@ const AddProduct: React.FC<Props> = () => {
   const [category, setCategory] = useState([]);
   const [description, setDescription] = useState(itemData.description ? itemData.description : '');
   const [isFeatured, setIsFeatured] = useState(itemData.is_featured ? itemData.is_featured : false);
+  const [isOnline, setIsOnline] = useState(itemData.is_online ? itemData.is_online : false);
   const [meta_title, setMetaTitle] = useState(itemData.meta_title ? itemData.meta_title : '');
   const [meta_keyword, setMetaKeyword] = useState(itemData.meta_keyword ? itemData.meta_keyword : '');
   const [meta_description, setMetaDescription] = useState(itemData.meta_description ? itemData.meta_description : '');
@@ -285,6 +288,7 @@ const AddProduct: React.FC<Props> = () => {
       discount_in_percent: Number(data.discount_in_percent),
       product_quantity: Number(data.product_quantity),
       is_featured: data.is_featured,
+      is_online: data.is_online,
       meta_title: data.meta_title,
       meta_keyword: data.meta_keyword,
       meta_description: data.meta_description,
@@ -347,6 +351,19 @@ const AddProduct: React.FC<Props> = () => {
                       onChange={e => {
                         setValue('is_featured', e.target.checked)
                         setIsFeatured(e.target.checked)
+                      }}
+                      labelPlacement={LABEL_PLACEMENT.right}
+                  >
+                  </Checkbox>
+                </FormFields>
+
+                <FormFields>
+                  <FormLabel>Product is online</FormLabel>
+                  <Checkbox
+                      checked={isOnline}
+                      onChange={e => {
+                        setValue('is_online', e.target.checked)
+                        setIsOnline(e.target.checked)
                       }}
                       labelPlacement={LABEL_PLACEMENT.right}
                   >

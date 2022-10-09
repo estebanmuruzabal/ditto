@@ -188,6 +188,7 @@ export interface IProduct {
     meta_keyword?: string;
     meta_description?: string;
     is_featured?: boolean;
+    is_online?: boolean;
     created_at?: string;
     updated_at?: string;
 }

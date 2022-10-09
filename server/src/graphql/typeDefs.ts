@@ -173,6 +173,7 @@ export const typeDefs = gql`
         meta_keyword: String
         meta_description: String
         is_featured: Boolean
+        is_online: Boolean
     }
     input ProductUpdateInput {
         type: ProductTypeInput!
@@ -192,6 +193,7 @@ export const typeDefs = gql`
         meta_keyword: String
         meta_description: String
         is_featured: Boolean
+        is_online: Boolean
     }
     
     type ProductCategory {
@@ -222,6 +224,7 @@ export const typeDefs = gql`
         meta_keyword: String
         meta_description: String
         is_featured: Boolean!
+        is_online: Boolean
         created_at: String
         updated_at: String
     }

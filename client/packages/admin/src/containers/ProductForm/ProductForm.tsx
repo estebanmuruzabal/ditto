@@ -61,6 +61,7 @@ const GET_PRODUCTS = gql`
         discount_in_percent
         product_quantity
         is_featured
+        is_online
         meta_title
         meta_keyword
         meta_description
@@ -133,6 +134,7 @@ const CREATE_PRODUCT = gql`
       packagePrice
       product_quantity
       is_featured
+      is_online
       meta_title
       meta_keyword
       meta_description
@@ -162,6 +164,7 @@ const AddProduct: React.FC<Props> = props => {
   const [category, setCategory] = useState([]);
   const [description, setDescription] = useState('');
   const [isFeatured, setIsFeatured] = useState(false);
+  const [isOnline, setIsOnline] = useState(false);
   const [meta_title, setMetaTitle] = useState('');
   const [slug, setSlugTitle] = useState('');
   const [packagePrice, setPackagePrice] = useState(0);
@@ -176,7 +179,8 @@ const AddProduct: React.FC<Props> = props => {
     register({ name: 'slug', required: true });
     register({ name: 'packagePrice' });
     register({ name: 'description' });
-    register({name: 'is_featured'});
+    register({ name: 'is_featured' });
+    register({name: 'is_online'});
     register({name: 'meta_title'});
     register({name: 'meta_keyword'});
     register({name: 'meta_description'});
@@ -287,6 +291,7 @@ const AddProduct: React.FC<Props> = props => {
       discount_in_percent: Number(data.discountInPercent),
       product_quantity: Number(data.quantity),
       is_featured: data.is_featured,
+      is_online: data.is_online,
       meta_title: data.meta_title,
       meta_keyword: data.meta_keyword,
       meta_description: data.meta_description,
@@ -359,6 +364,18 @@ const AddProduct: React.FC<Props> = props => {
                       onChange={e => {
                         setValue('is_featured', e.target.checked)
                         setIsFeatured(e.target.checked)
+                      }}
+                      labelPlacement={LABEL_PLACEMENT.right}
+                  >
+                  </Checkbox>
+                </FormFields>
+                <FormFields>
+                  <FormLabel>Product is online</FormLabel>
+                  <Checkbox
+                      checked={isOnline}
+                      onChange={e => {
+                        setValue('is_online', e.target.checked)
+                        setIsOnline(e.target.checked)
                       }}
                       labelPlacement={LABEL_PLACEMENT.right}
                   >

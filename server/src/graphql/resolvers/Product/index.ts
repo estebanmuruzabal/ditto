@@ -94,6 +94,7 @@ export const productsResolvers: IResolvers = {
                 meta_keyword: input.meta_keyword,
                 meta_description: input.meta_description,
                 is_featured: input.is_featured ? input.is_featured : false,
+                is_online: input.is_online ? input.is_online : false,
                 created_at: new Date().toUTCString(),
             };
 

@@ -164,6 +164,7 @@ exports.typeDefs = apollo_server_express_1.gql `
         meta_keyword: String
         meta_description: String
         is_featured: Boolean
+        is_online: Boolean
     }
     input ProductUpdateInput {
         type: ProductTypeInput!
@@ -183,6 +184,7 @@ exports.typeDefs = apollo_server_express_1.gql `
         meta_keyword: String
         meta_description: String
         is_featured: Boolean
+        is_online: Boolean
     }
     
     type ProductCategory {
@@ -213,6 +215,7 @@ exports.typeDefs = apollo_server_express_1.gql `
         meta_keyword: String
         meta_description: String
         is_featured: Boolean!
+        is_online: Boolean
         created_at: String
         updated_at: String
     }
