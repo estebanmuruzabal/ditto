@@ -87,8 +87,8 @@
 import { useMemo } from 'react';
 import {ApolloClient, ApolloLink, HttpLink, InMemoryCache} from 'apollo-boost';
 const httpLink = new HttpLink({
-  uri: 'http://localhost:7000/api', // Server URL (must be absolute)
-  // uri: 'http://54.232.137.175/api', // Server URL (must be absolute)
+  // uri: 'http://localhost:7000/api', // Server URL (must be absolute)
+  uri: 'http://54.232.137.175/api', // Server URL (must be absolute)
   credentials: 'same-origin', // Additional fetch() options like `credentials`
   onError: ({ networkError, graphQLErrors }) => {
     console.log('graphQLErrors', graphQLErrors);
