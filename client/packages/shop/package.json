@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next -p 9000",
     "shop-dev": "next -p 9000",
-    "prod": "next start -p 9000"
+    "prod": "ENV=production; next start -p 9000"
   },
   "dependencies": {
     "@apollo/client": "^3.2.9",

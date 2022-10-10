@@ -22,6 +22,35 @@ export const DeliveryInfo = styled(DeliveryInfos)`
   flex-direction: column;
 `;
 
+type TextProps = {
+  bold?: any;
+};
+
+export const Text = styled.p<TextProps>`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.base', '15')}px;
+  color: ${themeGet('colors.text.bold', '#0D1136')};
+  font-weight: ${(props) =>
+    props.bold
+      ? themeGet('fontWeights.bold', '700')
+      : themeGet('fontWeights.regular', '400')};
+  line-height: 1.2;
+  display: block;
+  margin: 0;
+  min-width: 140px;
+
+  &:last-child {
+    color: ${themeGet('colors.text.medium', '#424561')};
+  }
+`;
+
+export const LinkPickUp = styled.a`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.base', '15')}px;
+  font-weight: ${themeGet('fontWeights.bold', '700')};
+  color: ${themeGet('colors.blue', '#ea4d4a')};
+`;
+
 export const DeliveryAddress = styled(DeliveryAddresses)`
   border-bottom: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   border-right: 0;
@@ -80,6 +109,7 @@ export const Meta = styled.div`
   color: ${themeGet('colors.text.bold', '#0D1136')};
   display: flex;
   justify-content: space-between;
+
   align-items: center;
   width: 100%;
   margin-bottom: 15px;

@@ -29,7 +29,7 @@ import { FormattedMessage } from 'react-intl';
 import {SHOP_IMAGE_HOST} from "../../../utils/images-path";
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
 
-const progressData = ['Order Received', 'Order On The Way', 'Order Delivered'];
+const progressData = ['Recibido', 'EnTransito ', 'Entregado'];
 
 
 const orderTableColumns = [
@@ -103,7 +103,6 @@ const OrdersContent: React.FC<{}> = () => {
       );
     };
 
-    console.dir(order)
 
   const myOrder = data.getUserOrders;
 

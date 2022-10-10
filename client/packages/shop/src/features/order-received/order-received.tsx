@@ -33,7 +33,8 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const router = useRouter();
   const intl = useIntl();
   const { data, error, loading } = useQuery(GET_ORDERS);
-  const {data: deliverData, error: deliveryError, loading: deliveryLoading, refetch: deliveryRefetch} = useQuery(DELIVERY_METHOD)
+  const { data: deliverData, error: deliveryError, loading: deliveryLoading, refetch: deliveryRefetch } = useQuery(DELIVERY_METHOD)
+  
   if (loading) {
     return <ErrorMessage message={'Cargando...'} />
   };
@@ -73,7 +74,6 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
   const deliveryMethods = deliverData?.deliveryMethods?.items;
   const orderDeliveryMethod = deliveryMethods?.filter(method => method.id === myOrder?.delivery_method_id)[0];
-  // const orderDeliveryMethod = deliveryMethods[0];
   const deliveryDateAndTime = `${myOrder?.delivery_date} ${getDeliverySchedule(orderDeliveryMethod?.details)}`;
 
   return (
