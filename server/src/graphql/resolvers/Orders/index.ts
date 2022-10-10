@@ -13,7 +13,7 @@ import {authorize} from "../../../lib/utils";
 import {IOrderInputArgs, IOrderProductInput} from "./types";
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
-import { sendMailVerification } from '../../../lib/utils/number-verification-otp';
+import { sendMail } from '../../../lib/utils/number-verification-otp';
 
 const oderTracker: Array<IOrderTracker> = [
     {
@@ -196,17 +196,8 @@ export const ordersResolvers: IResolvers = {
             };
 
             const insertResult = await db.orders.insertOne(insertData);
-   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
+            let productsList = [];
 
-            const { data, status } = await sendMailVerification('estebanmuruzabal@gmail.com');
-            
-            if (status != 201) {
-                console.log('email not sent', status)
-            }
-            console.log('status and data', status, data)
-
-            console.log('insertResult', insertResult)
             if (insertResult.ops[0]) {
                 for (let i = 0; i < products.length; i++) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -214,20 +205,22 @@ export const ordersResolvers: IResolvers = {
                     const dbProduct: IProduct = await db.products.findOne({_id: new ObjectId(input.products[i].product_id)});
                     const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
                     const total = dbProduct.product_quantity - purchasedQuantity;
-                    // console.log(dbProduct.name)
-                    // console.log(dbProduct.product_quantity)
-                    // console.log(purchasedQuantity)
-                    // console.log(total)
-                    // console.log('----')
-                    
+
+                    productsList.push({ productName: dbProduct.name }, { purchasedQuantity: purchasedQuantity, quantityLeft: total })
+
                     await db.products.updateOne(
                         {_id: products[i]._id},
                         {$set: {product_quantity: total }}
                     )
                 }
             }
-
-         
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const { data, status } = await sendMail('estebanmuruzabal@gmail.com', JSON.stringify(productsList), 'Te compraron algo papa!');
+            
+            if (status != 201) {
+                console.log('email not sent', status)
+            }
             return insertResult.ops[0];
         },
         updateOrderStatus: async (

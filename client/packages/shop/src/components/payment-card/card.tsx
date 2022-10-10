@@ -41,9 +41,9 @@ const Card: React.FC<Props> = ({
 
   return (
     <PaymentCardWrapper className="payment-card" color={color}>
-      <CardLogo>
+      {/* <CardLogo>
         <img src={SHOP_IMAGE_HOST+image} alt={`card-${id}`} />
-      </CardLogo>
+      </CardLogo> */}
       <CardTitle>{name}</CardTitle>
       <CardContent>{details}</CardContent>
     </PaymentCardWrapper>

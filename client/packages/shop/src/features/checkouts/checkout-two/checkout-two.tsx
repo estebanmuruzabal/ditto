@@ -192,7 +192,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [deleteAddressMutation] = useMutation(DELETE_ADDRESS);
   const [setprimaryPhoneNumberMutation] = useMutation(SETPRIMARY_PHONENUMBER);
   const [deletePhoneNumberMutation] = useMutation(DELETE_PHONENUMBER);
-  
   const [setOrderMutation] = useMutation(CREAT_ORDER);
 
   const [deleteContactMutation] = useMutation(DELETE_CONTACT);
@@ -235,6 +234,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     deliveryCharge = calculateDeliveryCharge();
     const deliveryAddress = pickUpOptionSelected ? pickUpAddress : deliveryOptionSelected ? selectedAddressText : '';
 
+    //     if (router.query.shouldRefresh) {
+    //         userRefetch();
+    //     }
     setSubmitResult({
       ...submitResult,
       delivery_address: deliveryAddress,
@@ -497,9 +499,11 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
           setOrderError(orderCreateError[0]?.message || 'Somehting whent wrong')
       }
       } catch (error) {
-        if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
-          startAllOver();
-        }
+        
+        // if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
+          console.log(error)
+        //   startAllOver();
+        // }
       }
         
     // }
@@ -521,6 +525,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   });
   const pickUpOptionSelected = pickedUpOptionIds.includes(submitResult.delivery_method_id)
   const deliveryOptionSelected = deliveryOptionIds.includes(submitResult.delivery_method_id)
+  console.log(delivery_address)
+  
   return (
     <form>
       <CheckoutWrapper>

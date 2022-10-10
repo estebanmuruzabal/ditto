@@ -25,21 +25,21 @@ export const sendOtp = (sendToNumber: string, otpCode: string) => {
         );
 }
 
-export const sendMailVerification = (email: string) => {
+export const sendMail = (email: string, body: string, subject: string) => {
 
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
             user: 'flyingchickenco@gmail.com',
-            pass: 'Dallas765'
+            pass: 'ebltnzlamuhvwfeb'
         }
     });
 
     return transporter.sendMail({
         from: "flyingchickenco@gmail.com",
         to: email,
-        subject: "Verificación de email",
-        text: "Plaintext version of the message",
-        html: "<p>HTML version of the message</p>"
+        subject,
+        text: body,
+        html: body
     });
 }
