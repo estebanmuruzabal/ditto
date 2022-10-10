@@ -153,13 +153,13 @@ const UpdateOrderStatus: React.FC<Props> = props => {
                     name="number"
                     align={ALIGN.vertical}
                 >
-                  <Radio value="1">Pending</Radio>
-                  <Radio value="2">Received</Radio>
-                  <Radio value="3">Processing</Radio>
-                  <Radio value="4">InTransit</Radio>
-                  <Radio value="5">Delivered</Radio>
-                  <Radio value="6">Cancel</Radio>
-                  <Radio value="7">Failed</Radio>
+                  <Radio value="1">Pendiente</Radio>
+                  <Radio value="2">Recibido</Radio>
+                  <Radio value="3">Procesando</Radio>
+                  <Radio value="4">EnTransito</Radio>
+                  <Radio value="5">Entregado</Radio>
+                  <Radio value="6">Cancelado</Radio>
+                  <Radio value="7">Fallado</Radio>
                 </RadioGroup>
               </DrawerBox>
             </Col>

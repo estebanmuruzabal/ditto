@@ -120,13 +120,13 @@ const nextButtonDisabledStyles = {
 // const intl = useIntl();
 // const pendingLabel = intl.formatMessage({ id: 'pendingStatusId', defaultMessage: 'Pending' });
 const statusSelectOptions = [
-    {value: 'Pending', label: 'Pending'},
-    {value: 'Received', label: 'Received'},
-    {value: 'Processing', label: 'Processing'},
-    {value: 'InTransit', label: 'InTransit'},
-    {value: 'Delivered', label: 'Delivered'},
-    {value: 'Cancel', label: 'Cancel'},
-    {value: 'Failed', label: 'Failed'},
+    {value: 'Pendiente', label: 'Pendiente'},
+    {value: 'Recibido', label: 'Recibido'},
+    {value: 'Procesando', label: 'Procesando'},
+    {value: 'EnTransito', label: 'EnTransito'},
+    {value: 'Entregado', label: 'Entregado'},
+    {value: 'Cancelado', label: 'Cancelado'},
+    {value: 'Fallado', label: 'Fallado'},
 ];
 
 export default function Orders() {

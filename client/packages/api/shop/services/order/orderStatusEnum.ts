@@ -1,10 +1,10 @@
 import { registerEnumType } from 'type-graphql';
 
 export enum OrderStatusEnum {
-  RECEIVED = 'Received',
-  PROCESSING = 'Processing',
-  ON_THE_WAY = 'On the way',
-  DELIVERED = 'Delivered',
+  RECEIVED = 'Recibido',
+  PROCESSING = 'EnProceso',
+  ON_THE_WAY = 'EnCamino',
+  DELIVERED = 'Entregado',
 }
 
 registerEnumType(OrderStatusEnum, {
