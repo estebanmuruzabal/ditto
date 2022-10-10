@@ -13,6 +13,7 @@ import {authorize} from "../../../lib/utils";
 import {IOrderInputArgs, IOrderProductInput} from "./types";
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
+import { sendMailVerification } from '../../../lib/utils/number-verification-otp';
 
 const oderTracker: Array<IOrderTracker> = [
     {
@@ -195,6 +196,15 @@ export const ordersResolvers: IResolvers = {
             };
 
             const insertResult = await db.orders.insertOne(insertData);
+   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+
+            const { data, status } = await sendMailVerification('estebanmuruzabal@gmail.com');
+            
+            if (status != 201) {
+                console.log('email not sent', status)
+            }
+            console.log('status and data', status, data)
 
             console.log('insertResult', insertResult)
             if (insertResult.ops[0]) {
@@ -217,6 +227,7 @@ export const ordersResolvers: IResolvers = {
                 }
             }
 
+         
             return insertResult.ops[0];
         },
         updateOrderStatus: async (

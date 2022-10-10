@@ -27,7 +27,7 @@ export const Image = styled.div<any>(
     top: 0,
     left: 0,
     '@media (max-width: 990px) ': {
-      backgroundPosition: 'unset',
+      // backgroundPosition: 'unset',
     },
   },
   background

@@ -140,9 +140,10 @@ export const productsResolvers: IResolvers = {
                 meta_keyword: input.meta_keyword,
                 meta_description: input.meta_description,
                 is_featured: input.is_featured ? input.is_featured : false,
+                is_online: input.is_online ? input.is_online : false,
                 updated_at: new Date().toUTCString(),
             };
-
+            console.log(updateData)
             await db.products.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: updateData}

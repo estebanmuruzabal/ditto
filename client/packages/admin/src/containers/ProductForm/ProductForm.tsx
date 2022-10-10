@@ -554,6 +554,7 @@ const AddProduct: React.FC<Props> = props => {
                   <Input
                       name="slug"
                       value={slug}
+                      inputRef={register({ required: true })}
                       onChange={handleSlugTitleChange}
                   />
                 </FormFields>

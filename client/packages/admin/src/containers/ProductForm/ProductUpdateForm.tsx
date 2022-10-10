@@ -186,7 +186,8 @@ const AddProduct: React.FC<Props> = () => {
     register({ name: 'slug', required: true });
     register({ name: 'packagePrice' });
     register({ name: 'description' });
-    register({name: 'is_featured'});
+    register({ name: 'is_featured' });
+    register({name: 'is_online'});
     register({name: 'meta_title'});
     register({name: 'meta_keyword'});
     register({name: 'meta_description'});
