@@ -232,8 +232,9 @@ export const Products: React.FC<ProductsProps> = ({
         );
     }
   };
-  console.log(data.products)
+  console.log('products',data.products)
   const onlineProducts = data.products.items?.filter((product) => product?.is_online === true)
+  console.log('onlineProducts',data.onlineProducts)
   return (
     <>
       <ProductsRow>

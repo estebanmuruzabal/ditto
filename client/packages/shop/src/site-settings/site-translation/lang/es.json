@@ -78,7 +78,7 @@
   "payStaticCard": "Pagar ",
   "cartItem": "articulo",
   "addEcoToCartButton": "EcoCompra",
-  "ecoDescription": "EcoCompra: pagás ${packageDiscount} menos si tenés un envase de este art. para devolvernos.",
+  "ecoDescription": "EcoCompra: pagás ${packageDiscount} menos si tenés envases/bolsas de este art. para devolvernos.",
   "addCartButton": "Comprar",
   "outOfStock": "Sin Stock",
   "backBtn": "Ir atrás",

@@ -310,6 +310,8 @@ export default function Products() {
                         currency={CURRENCY}
                         price={item.price}
                         salePrice={item.sale_price}
+                        quantity={item.product_quantity}
+                        isOnline={true}
                         discountInPercent={item.discount_in_percent}
                         itemsOffset={offset}
                         data={item}

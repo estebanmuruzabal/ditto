@@ -412,6 +412,26 @@ const AddProduct: React.FC<Props> = props => {
                 </FormFields>
 
                 <FormFields>
+                  <FormLabel>Package price</FormLabel>
+                  <Input
+                      name="packagePrice"
+                      type="number"
+                      value={packagePrice}
+                      onChange={handlePackagePriceChange}
+                  />
+                </FormFields>
+
+                <FormFields>
+                  <FormLabel>Product Quantity</FormLabel>
+                  <Input
+                    type="number"
+                    inputRef={register({ required: true })}
+                    name="quantity"
+                  />
+                </FormFields>
+
+
+                <FormFields>
                   <FormLabel>Sale Price</FormLabel>
                   <NumberInput
                       type="number"
@@ -426,15 +446,6 @@ const AddProduct: React.FC<Props> = props => {
                     type="number"
                     inputRef={register}
                     name="discountInPercent"
-                  />
-                </FormFields>
-
-                <FormFields>
-                  <FormLabel>Product Quantity</FormLabel>
-                  <Input
-                    type="number"
-                    inputRef={register({ required: true })}
-                    name="quantity"
                   />
                 </FormFields>
 
@@ -538,15 +549,6 @@ const AddProduct: React.FC<Props> = props => {
                     }}
                     type={TYPE.search}
                     multi
-                  />
-                </FormFields>
-                <FormFields>
-                  <FormLabel>Package price</FormLabel>
-                  <Input
-                      name="packagePrice"
-                      type="number"
-                      value={packagePrice}
-                      onChange={handlePackagePriceChange}
                   />
                 </FormFields>
                 <FormFields>

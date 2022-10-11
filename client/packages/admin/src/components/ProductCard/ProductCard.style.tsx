@@ -81,8 +81,8 @@ export const DiscountPercent = styled('span', ({ $theme }) => ({
 }));
 
 export const ProductInfo = styled('div', ({ $theme }) => ({
-  padding: '20px 25px 30px',
-
+  padding: '5px 30px 5px',
+  flexDirection: 'row',
   '@media only screen and (max-width: 767px)': {
     padding: '15px 20px',
     // minHeight: '123px',
@@ -113,7 +113,8 @@ export const ProductWeight = styled('span', ({ $theme }) => ({
 export const ProductMeta = styled('div', ({ $theme }) => ({
   marginTop: '15px',
   display: 'flex',
-  alignItems: 'center',
+  flexDirection: 'column',
+  alignItems: 'left',
   justifyContent: 'space-between',
 
   '@media only screen and (max-width: 767px)': {

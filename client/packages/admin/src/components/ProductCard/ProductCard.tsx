@@ -30,6 +30,8 @@ type ProductCardProps = {
   orderId?: number;
   discountInPercent?: number;
   itemsOffset?: number;
+  quantity?: number;
+  isOnline?: boolean;
   data: any;
 };
 const Icon = ({icon, width = '18px', height = '18px'}) => {
@@ -48,6 +50,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
  itemsOffset,
   data,
   orderId,
+  quantity,
+  isOnline,
   ...props
 }) => {
   const dispatch = useDrawerDispatch();
@@ -79,6 +83,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <ProductTitle>{title}</ProductTitle>
         <ProductWeight>{weight}</ProductWeight>
         <ProductMeta>
+          <ProductWeight>Quantity: {quantity}</ProductWeight>
+          <ProductWeight>Is visible: {isOnline ? 'true' : 'false'}</ProductWeight>
           <ProductPriceWrapper>
             <ProductPrice>
               {currency}

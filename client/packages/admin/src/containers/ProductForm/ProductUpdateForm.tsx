@@ -402,6 +402,16 @@ const AddProduct: React.FC<Props> = () => {
                 </FormFields>
 
                 <FormFields>
+                  <FormLabel>Package price</FormLabel>
+                  <Input
+                      name="packagePrice"
+                      type="number"
+                      value={packagePrice}
+                    onChange={handlePackagePriceChange}
+                  />
+                </FormFields>
+
+                <FormFields>
                   <FormLabel>Sale Price</FormLabel>
                   <Input type="number" inputRef={register} name="sale_price" />
                 </FormFields>
@@ -415,15 +425,7 @@ const AddProduct: React.FC<Props> = () => {
                   />
                 </FormFields>
 
-                <FormFields>
-                  <FormLabel>Package price</FormLabel>
-                  <Input
-                      name="packagePrice"
-                      type="number"
-                      value={packagePrice}
-                    onChange={handlePackagePriceChange}
-                  />
-                </FormFields>
+                
                 <FormFields>
                   <FormLabel>Slug</FormLabel>
                   <Input
