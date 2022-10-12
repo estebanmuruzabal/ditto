@@ -197,7 +197,7 @@ export const ordersResolvers: IResolvers = {
 
             const insertResult = await db.orders.insertOne(insertData);
             let productsList = [];
-
+            console.log(insertResult)
             if (insertResult.ops[0]) {
                 for (let i = 0; i < products.length; i++) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

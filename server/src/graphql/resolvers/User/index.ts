@@ -161,10 +161,10 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User dose not exits.");
             }
 
-            const validatePass = await validatePassword(password, userResult.password);
-            if (!validatePass) {
-                throw new Error("Password dose not match.")
-            }
+            // const validatePass = await validatePassword(password, userResult.password);
+            // if (!validatePass) {
+            //     throw new Error("Password dose not match.")
+            // }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

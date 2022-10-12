@@ -152,10 +152,10 @@ exports.usersResolvers = {
             if (!userResult) {
                 throw new Error("User dose not exits.");
             }
-            const validatePass = yield exports.validatePassword(password, userResult.password);
-            if (!validatePass) {
-                throw new Error("Password dose not match.");
-            }
+            // const validatePass = yield exports.validatePassword(password, userResult.password);
+            // if (!validatePass) {
+            //     throw new Error("Password dose not match.");
+            // }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const phoneObject = userResult.phones.filter(userPhone => {

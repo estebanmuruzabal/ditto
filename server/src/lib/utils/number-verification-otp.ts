@@ -30,13 +30,13 @@ export const sendMail = (email: string, body: string, subject: string) => {
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'flyingchickenco@gmail.com',
-            pass: 'ebltnzlamuhvwfeb'
+            user: 'dittofarmresistencia@gmail.com',
+            pass: 'omnhypvscthkfnvr'
         }
     });
 
     return transporter.sendMail({
-        from: "flyingchickenco@gmail.com",
+        from: "dittofarmresistencia@gmail.com",
         to: email,
         subject,
         text: body,
