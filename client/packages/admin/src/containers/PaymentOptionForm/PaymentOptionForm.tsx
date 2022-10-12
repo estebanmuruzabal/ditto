@@ -36,7 +36,6 @@ const GET_PAYMENT_OPTIONS = gql`
                 image
                 details
                 created_at
-                isPick
             }
             totalCount
             hasMore

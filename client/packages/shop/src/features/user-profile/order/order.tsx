@@ -32,7 +32,7 @@ import { DELIVERY_METHOD } from 'graphql/query/delivery';
 const progressData = ['Recibido', 'EnTransito ', 'Entregado'];
 
 
-const orderTableColumns = [
+export const orderTableColumns = [
   {
     title: <FormattedMessage id="cartItems" defaultMessage="Items" />,
     dataIndex: '',
@@ -42,13 +42,13 @@ const orderTableColumns = [
     render: (text, record) => {
       return (
         <ItemWrapper>
-          <ImageWrapper>
+          {/* <ImageWrapper>
             <img src={SHOP_IMAGE_HOST+record.image} alt={record.name} />
-          </ImageWrapper>
+          </ImageWrapper> */}
 
           <ItemDetails>
             <ItemName>{record.name}</ItemName>
-            <ItemSize>{record.unit}</ItemSize>
+            {/* <ItemSize>{record.unit}</ItemSize> */}
             <ItemPrice>${record.price}</ItemPrice>
             {record.sale_price ? <ItemSalePrice>${record.sale_price}</ItemSalePrice> : "" }
           </ItemDetails>
@@ -62,6 +62,15 @@ const orderTableColumns = [
     ),
     dataIndex: 'quantity',
     key: 'quantity',
+    align: 'center',
+    width: 100,
+  },
+  {
+    title: (
+      <FormattedMessage id="intlTableColTitle4" defaultMessage="Quantity" />
+    ),
+    dataIndex: 'recicledQuantity',
+    key: 'recicledQuantity',
     align: 'center',
     width: 100,
   },

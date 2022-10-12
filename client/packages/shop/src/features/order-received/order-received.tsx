@@ -1,5 +1,6 @@
 import React,  { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Table from 'rc-table';
 import { useRouter } from 'next/router'
 import moment from 'moment';
 import { useQuery } from '@apollo/react-hooks';
@@ -18,10 +19,14 @@ import OrderReceivedWrapper, {
   ListItem,
   ListTitle,
   ListDes,
-  LinkPickUp
+  LinkPickUp,
+  OrderTableWrapper,
+  OrderTable
 } from './order-received.style';
+import Progress from 'components/progress-box/progress-box';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
+import { orderTableColumns } from 'features/user-profile/order/order';
 
 type OrderReceivedProps = {
   data?: any;
@@ -39,6 +44,9 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
     return <ErrorMessage message={'Cargando...'} />
   };
 
+  const components = {
+    table: OrderTable,
+  };
   if (error) {
     return (
       <ErrorMessage message={error.message} />
@@ -75,7 +83,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const deliveryMethods = deliverData?.deliveryMethods?.items;
   const orderDeliveryMethod = deliveryMethods?.filter(method => method.id === myOrder?.delivery_method_id)[0];
   const deliveryDateAndTime = `${myOrder?.delivery_date} ${getDeliverySchedule(orderDeliveryMethod?.details)}`;
-
+  console.log(myOrder)
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>
@@ -91,7 +99,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
         <OrderInfo>
           <BlockTitle>
             <FormattedMessage
-              id="orderReceivedText"
+              id="orderReceivedSuccess"
               defaultMessage="Order"
             />
           </BlockTitle>
@@ -286,6 +294,16 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
             </ListDes>
           </ListItem>
 
+          {/* <OrderTableWrapper>
+            <Table
+              columns={orderTableColumns}
+              data={myOrder?.order_products}
+              rowKey={(record) => record.id}
+              components={components}
+              className="orderDetailsTable"
+              // scroll={{ y: 350 }}
+            />
+        </OrderTableWrapper> */}
           <ListItem>
             <ListTitle>
               <Text bold>

@@ -19,6 +19,50 @@ export const LinkPickUp = styled.a`
   color: ${themeGet('colors.blue', '#ea4d4a')};
 `;
 
+export const OrderTable = styled('table')`
+  && {
+    border-collapse: collapse;
+
+    thead {
+      th {
+        padding: 8px 20px;
+        font-family: ${themeGet('fonts.body', 'Lato')};
+        font-size: ${themeGet('fontSizes.sm', '13')}px;
+        font-weight: ${themeGet('fontWeights.bold', '700')};
+        color: ${themeGet('colors.text.bold', '#0D1136')};
+        border: none;
+
+        &:first-child {
+          padding-left: 110px;
+          text-align: left;
+        }
+      }
+    }
+
+    tr {
+      &:hover {
+        background-color: inherit;
+      }
+
+      td {
+        padding: 20px;
+        font-family: ${themeGet('fonts.body', 'Lato')};
+        font-size: ${themeGet('fontSizes.base', '15')}px;
+        font-weight: ${themeGet('fontWeights.regular', '400')};
+        color: ${themeGet('colors.text.bold', '#0D1136')};
+        border-bottom: 0;
+        border: none;
+      }
+    }
+  }
+`;
+
+export const OrderTableWrapper = styled.div`
+  .rc-table-content {
+    border: 0;
+  }
+`;
+
 export const OrderReceivedContainer = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
@@ -127,6 +171,7 @@ export const BlockTitle = styled.h2`
   color: ${themeGet('colors.text.bold', '#0D1136')};
   line-height: 1;
   margin-bottom: 32px;
+  margin-top: 5px;
   @media (max-width: 767px) {
     font-size: calc(${themeGet('fontSizes.base', '15')}px + 1px);
     margin-bottom: 25px;

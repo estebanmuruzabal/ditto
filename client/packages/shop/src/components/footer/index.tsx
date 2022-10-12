@@ -356,7 +356,7 @@ const Footer: React.FC<Props> = ({ logo }) =>{
                 <h2>3624-951926</h2>
               </div>
               <p className="footer-email">or email 
-                <strong>flyingchickenco@gmail.com</strong>
+                <strong>dittofarmresistencia@gmail.com</strong>
               </p>
             </div>
             <ul className="footer-social">
@@ -370,7 +370,7 @@ const Footer: React.FC<Props> = ({ logo }) =>{
                 <a href=""><img src={Twitter} alt="" /></a>
               </li> */}
               <li>
-                <a href="https://www.instagram.com/flying.chicken.farm"><img src={Instagram} alt="" /></a>
+                <a href="https://www.instagram.com/dittofarmresistencia"><img src={Instagram} alt="" /></a>
               </li>
             </ul>
           </div>

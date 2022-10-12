@@ -30,6 +30,7 @@ export const GET_ORDERS = gql`
         quantity
         recicledQuantity
         unit
+        name
         price
       }
     }

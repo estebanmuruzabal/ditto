@@ -81,7 +81,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
     }
     return <SidebarLoader />;
   }
-  console.log(data.shopCategories)
+
   return (
     <CategoryWrapper>
       <PopoverWrapper>

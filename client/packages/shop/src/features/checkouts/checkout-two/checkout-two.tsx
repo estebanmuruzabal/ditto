@@ -148,21 +148,19 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   let cartProduct= null;
   let contains = false;
   if (items.length > 0) {
-    cartProduct = items.map((item: any, index:any) =>(
+    cartProduct = items.map((item: any, index:any) => (
       {
       product_id: item.id,
       unit: item.unit,
       quantity: Number(item.quantity) || 0,
       recicledQuantity: Number(item.recicledQuantity) || 0,
       sale_price: item.sale_price,
+      // price: (Number(item.quantity || 0) * item.price) + (Number(item.recicledQuantity || 0) * (item.price - (item.packagePrice || 0))),
       price: item.price,
       image: item.images[0],
       name: item.name,
     }))
   }
-  // if (!cartProduct?.findIndex((product) => product.quantity === 0)) {
-  //   cartProduct.reverse();
-  // }
   const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
 
@@ -411,7 +409,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
         }
         break;
       case miercoles:
-          deliveryDate.add(1, 'days');
+          // deliveryDate.add(1, 'days');
         break;
       case jueves:
         if (orderHour >= lastOrderTime) {
@@ -459,6 +457,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       setCheckoutError('Please place a valid order!');
       return null;
     }
+    setLoading(true);
     const delivery_date = getDeliveryDate();
     // if (confirm('Are you sure? You want to place this order?')) {
       try {
@@ -477,37 +476,36 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   discount_amount,
                   products
               }
-          }
-      });
+            }
+        });
 
-      if (!orderCreateError) {
-          setLoading(true);
-          if (isValid) {
-              clearCart();
-              removeCoupon();
-              setHasCoupon(false);
-                Router.push({
-                  pathname: '/order-received',
-                  query: { itemId: id }
-                })
-          }
-          setLoading(false);
-          setIsValid(false);
-      }
+        if (!orderCreateError) {
+            if (isValid) {
+                clearCart();
+                removeCoupon();
+                setHasCoupon(false);
+                  Router.push({
+                    pathname: '/order-received',
+                    query: { itemId: id }
+                  })
+            }
+            setLoading(false);
+            setIsValid(false);
+        }
 
-      if (orderCreateError) {
+        if (orderCreateError) {
           setOrderError(orderCreateError[0]?.message || 'Somehting whent wrong')
-      }
+          setLoading(false);
+        }
       } catch (error) {
-        
-        // if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
-          console.log(error)
-        //   startAllOver();
-        // }
+        console.log(error)
+        if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
+          setLoading(false);
+          startAllOver();
+        }
       }
-        
+        setLoading(false);
     // }
-
   };
 
   const startAllOver = () => {
@@ -525,7 +523,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   });
   const pickUpOptionSelected = pickedUpOptionIds.includes(submitResult.delivery_method_id)
   const deliveryOptionSelected = deliveryOptionIds.includes(submitResult.delivery_method_id)
-  console.log(delivery_address)
   
   return (
     <form>
@@ -815,14 +812,14 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 <Button
                     type='button'
                     onClick={handleSubmit}
-                    // disabled={!isValid}
+                    disabled={loading}
                     size='big'
                     loading={loading}
                     style={{ width: '100%' }}
                 >
                   <FormattedMessage
-                      id='processCheckout'
-                      defaultMessage='Proceed to Checkout'
+                    id={loading ? 'processesingCheckout' : 'processCheckout'}
+                    defaultMessage='Proceed to Checkout'
                   />
                 </Button>
               </CheckoutSubmit>
