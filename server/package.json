@@ -12,6 +12,7 @@
     "express": "^4.17.1",
     "fuse.js": "^6.0.0",
     "graphql": "^15.3.0",
+    "graphql-mqtt-subscriptions": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "lodash.merge": "^4.6.2",
     "mongodb": "^3.6.0",

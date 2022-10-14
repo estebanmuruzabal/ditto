@@ -16,13 +16,13 @@ export const authorize = async (req: Request, db: Database): Promise<IUser | nul
     try {
         jwt.verify(token, secret);
     } catch(err) {
-        throw new Error("Unknown error verifying token:");
+        throw new Error("El token de tu sesión ha expirado! Por favor ingrese nuevamente a su cuenta")
     }
 
     const {UserId, exp} = <any>jwt.verify(token, secret);
 
     if (exp < Date.now().valueOf() / 1000) {
-        throw new Error("Token has expired, please login to obtain a new one")
+        throw new Error("El token de tu sesión ha expirado! Por favor ingrese nuevamente a su cuenta")
     }
 
     const user = await db.users.findOne({_id:  new ObjectId(UserId)});

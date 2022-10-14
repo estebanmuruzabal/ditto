@@ -1,6 +1,6 @@
 import {gql} from 'apollo-server-express';
 
-export const typeDefs = gql`    
+export const typeDefs = gql`
     input File {
         name: String!
         size: Int!
@@ -15,6 +15,7 @@ export const typeDefs = gql`
 
     type Plant {
         id: String!
+        controllerId: Int!
         name: String!
         humedad: Int
         temperatura: Int
@@ -454,8 +455,8 @@ export const typeDefs = gql`
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): DefaultMessageType!
-        updatePlant(id: ID!, plantId: ID!, name: String!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): Plant!
+        addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
+        updatePlant(id: ID!, contollerId: Int!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

@@ -274,11 +274,8 @@ export const usersResolvers: IResolvers = {
             _root: undefined,
             {   id, 
                 name,
-                humedad,
-                temperatura,
-                mapeoTierra,
-                mapeoLuz
-            }: { id: string, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
+                controllerId
+            }: { id: string, name: string, controllerId: number },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -292,17 +289,18 @@ export const usersResolvers: IResolvers = {
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            // if (userResult.plants.length == 3) {
-            //     throw new Error("Already added two plants. You are not allowed to add more than two.");
-            // }
+            if (userResult.plants.length == 3) {
+                throw new Error("Already added two plants. You are not allowed to add more than two.");
+            }
 
             const plantObject = {
                 id: shortid.generate(),
                 name,
-                humedad,
-                temperatura,
-                mapeoTierra,
-                mapeoLuz
+                controllerId,
+                humedad: 0,
+                temperatura: 0,
+                mapeoTierra: 0,
+                mapeoLuz: 0,
             };
 
             await db.users.updateOne(
@@ -312,21 +310,20 @@ export const usersResolvers: IResolvers = {
 
             return {
                 status: true,
-                message: "Updated successfully."
+                message: "Created successfully."
             };
         },
         updatePlant: async (
             _root: undefined,
             {   id, 
-                plantId,
-                name,
+                controllerId,
                 humedad,
                 temperatura,
                 mapeoTierra,
                 mapeoLuz
-            }: { id: string, plantId: string, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
+            }: { id: string, controllerId: string, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
             {db, req}: { db: Database, req: Request }
-        ): Promise<Plant> => {
+        ): Promise<ICommonMessageReturnType> => {
             await authorize(req, db);
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
@@ -337,11 +334,10 @@ export const usersResolvers: IResolvers = {
             // @ts-ignore
 
             await db.users.updateOne(
-                {_id: new ObjectId(id), "plant.id": plantId},
+                {_id: new ObjectId(id), "plant.controllerId": controllerId},
                 {
                     $set: {
-                        "plant.$.id": plantId,
-                        "plant.$.name": name,
+                        "plant.$.id": controllerId,
                         "plant.$.humedad": humedad,
                         "plant.$.temperatura": temperatura,
                         "plant.$.mapeoLuz": mapeoLuz,
@@ -350,12 +346,10 @@ export const usersResolvers: IResolvers = {
                 }
             );
 
-            const user = await db.users.findOne({_id: new ObjectId(id)});
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const updatedPlant = user.plants.filter(plant => plant.id == plantId);
-
-            return updatedPlant[0];
+             return {
+                status: true,
+                message: "updated successfully."
+            };
         },
         addPhoneNumber: async (
             _root: undefined,
