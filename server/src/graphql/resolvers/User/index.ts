@@ -321,7 +321,7 @@ export const usersResolvers: IResolvers = {
                 temperatura,
                 mapeoTierra,
                 mapeoLuz
-            }: { id: string, controllerId: string, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
+            }: { id: string, controllerId: number, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -330,22 +330,44 @@ export const usersResolvers: IResolvers = {
             if (!userResult) {
                 throw new Error("User dose not exits.");
             }
+            const plants = userResult.plants;
+            const index = userResult.plants?.findIndex(plant => (plant.controllerId == controllerId));
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-
+            if (index < 0) {
+                throw new Error("Controller id does not exists.");
+            } else {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                plants[index].humedad = humedad;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                plants[index].temperatura = temperatura;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                plants[index].mapeoTierra = mapeoTierra;
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                plants[index].mapeoLuz = mapeoLuz;
+            }
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             await db.users.updateOne(
-                {_id: new ObjectId(id), "plant.controllerId": controllerId},
-                {
-                    $set: {
-                        "plant.$.id": controllerId,
-                        "plant.$.humedad": humedad,
-                        "plant.$.temperatura": temperatura,
-                        "plant.$.mapeoLuz": mapeoLuz,
-                        "plant.$.mapeoTierra": mapeoTierra,
-                    }
-                }
+                {_id: new ObjectId(id)},
+                {$set: {plants}}
             );
-
+            // await db.users.updateOne(
+            //     {_id: new ObjectId(id), "plant.controllerId": controllerId},
+            //     {
+            //         $set: {
+            //             "plant.$.humedad": humedad,
+            //             "plant.$.temperatura": temperatura,
+            //             "plant.$.mapeoLuz": mapeoLuz,
+            //             "plant.$.mapeoTierra": mapeoTierra,
+            //         }
+            //     }
+            // );
+            
              return {
                 status: true,
                 message: "updated successfully."

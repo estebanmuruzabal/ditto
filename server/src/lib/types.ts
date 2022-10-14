@@ -2,6 +2,7 @@ import {Collection, ObjectId} from 'mongodb';
 
 export interface Plant {
     id?: string;
+    controllerId: number;
     name?: string;
     humedad?: number;
     temperatura?: number;
