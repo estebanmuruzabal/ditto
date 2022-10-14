@@ -456,7 +456,7 @@ export const typeDefs = gql`
         updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
-        updatePlant(id: ID!, contollerId: Int!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): DefaultMessageType!
+        updatePlant(id: ID!, controllerId: Int!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!
