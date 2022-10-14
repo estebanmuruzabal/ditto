@@ -324,7 +324,7 @@ export const usersResolvers: IResolvers = {
             }: { id: string, controllerId: string, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
-            await authorize(req, db);
+            // await authorize(req, db);
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
