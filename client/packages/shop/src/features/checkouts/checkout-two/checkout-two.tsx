@@ -82,6 +82,15 @@ interface MyFormProps {
 type CartItemProps = {
   product: any;
 };
+const getDeliverySchedule = (details: string) => {
+if (!details) return '';
+const word = 'Horario';
+
+const index = details.indexOf(word);   // 8
+const length = word.length;			// 7
+
+return details.slice(index + length);
+}
 
 const OrderItem: React.FC<CartItemProps> = ({ product }) => {
   const { name, images, price, salePrice, unit, quantity = 0, recicledQuantity = 0, packagePrice, id } = product;
@@ -458,7 +467,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       return null;
     }
     setLoading(true);
-    const delivery_date = getDeliveryDate();
+    const delivery_date = deliveryOptionSelected?.details.split("|")[1]?.trim();
+    // const deliveryDateAndTime = `${getDeliverySchedule(deliveryOptionSelected?.details)} - ${moment(deliveryDate).format('DD MMM')}`;
     // if (confirm('Are you sure? You want to place this order?')) {
       try {
         const {errors: orderCreateError} = await setOrderMutation({
@@ -522,8 +532,11 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     return !deliveryMethod.isPickUp ? deliveryMethod.id : null;
   });
   const pickUpOptionSelected = pickedUpOptionIds.includes(submitResult.delivery_method_id)
-  const deliveryOptionSelected = deliveryOptionIds.includes(submitResult.delivery_method_id)
-  
+  // const deliveryOptionSelected = deliveryOptionIds.includes(submitResult.delivery_method_id)
+  const deliveryOptionSelected = deliveryMethods.find(deliveryMethod => {
+    return deliveryMethod.id === submitResult.delivery_method_id;
+  });
+  console.log(deliveryOptionSelected)
   return (
     <form>
       <CheckoutWrapper>

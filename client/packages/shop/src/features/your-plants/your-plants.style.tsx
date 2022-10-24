@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import { Row as Rows } from 'react-styled-flexboxgrid';
 import { themeGet } from '@styled-system/theme-get';
-
+import { compose, layout, space, color, border } from 'styled-system';
+import css from '@styled-system/css';
 type TextProps = {
   bold?: any;
 };
@@ -10,6 +12,54 @@ const OrderReceivedWrapper = styled.div`
   position: relative;
   padding: 100px 0 60px 0;
   min-height: 100vh;
+`;
+
+export const InputUpper = styled.input<any>(
+  css({
+    display: 'block',
+    width: '100%',
+    textTransform: 'capitalize',
+    p: '0 18px',
+    appearance: 'none',
+    fontFamily: 'body',
+    fontSize: 'base',
+    lineHeight: 'inherit',
+    border: '1px solid',
+    borderColor: 'gray.500',
+    borderRadius: 'base',
+    backgroundColor: 'white',
+    color: 'text.bold',
+    height: '48px',
+    transition: 'all 0.25s ease',
+    // mb: 3,
+    '&:focus': {
+      borderColor: 'primary.regular',
+    },
+  }),
+  {
+    '&:hover,&:focus': {
+      outline: 0,
+    },
+
+    '&::placeholder': {
+      color: '',
+    },
+    '&::-webkit-inner-spin-button,&::-webkit-outer-spin-button': {
+      '-webkit-appearance': 'none',
+      margin: 0,
+    },
+    '&.disabled': {
+      cursor: 'not-allowed',
+      opacity: 0.6,
+    },
+  },
+  compose(layout, space, color, border)
+);
+
+export const ButtonText = styled.span`
+/* @media (max-width: 767px) {
+  display: none;
+} */
 `;
 
 const OrderListWrapper = styled.div`
@@ -119,6 +169,15 @@ export const OrderInfo = styled.div`
     margin-bottom: 30px;
   }
 `;
+
+export const Row = styled(Rows)`
+  margin-bottom: 40px;
+
+  @media only screen and (min-width: 0em) and (max-width: 47.99em) {
+    margin-bottom: 30px;
+  }
+`;
+
 
 export const OrderDetails = styled.div`
   margin-bottom: 60px;

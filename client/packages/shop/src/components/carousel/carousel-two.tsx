@@ -6,6 +6,7 @@ import { ArrowNext } from 'assets/icons/ArrowNext';
 import { ArrowPrev } from 'assets/icons/ArrowPrev';
 import { useLocale } from 'contexts/language/language.provider';
 import { SHOP_IMAGE_HOST } from 'utils/images-path';
+import { Banner } from 'components/banner/banner';
 
 const ButtonPrev = styled('button')`
   height: 40px;

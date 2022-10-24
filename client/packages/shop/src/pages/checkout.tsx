@@ -28,7 +28,7 @@ type Props = {
     };
 };
 
-const LoginMessageDiv = styled.aside({
+export const LoginMessageDiv = styled.aside({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

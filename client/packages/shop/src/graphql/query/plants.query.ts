@@ -1,16 +1,30 @@
 import gql from 'graphql-tag';
 
 export const ADD_PLANT = gql`
-mutation AddPlant($id: ID!, $name: String!, $humedad: Int, $temperatura: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
+mutation AddPlant($id: ID!, $name: String!, $controllerId: Int!) {
   addPlant(
     id: $id,
-    name: $number,
+    name: $name,
+    controllerId: $controllerId
+  ) {
+    message
+    status
+  }
+}
+`;
+
+export const UPDATE_PLANT = gql`
+mutation UpdatePlant($id: ID!, $controllerId: Int!, $humedad: Int, $temperatura: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
+  updatePlant(
+    id: $id,
+    controllerId: $controllerId,
     humedad: $humedad,
     temperatura: $temperatura,
     mapeoTierra: $mapeoTierra,
     mapeoLuz: $mapeoLuz
   ) {
-    id
+    message
+    status
   }
 }
 `;
