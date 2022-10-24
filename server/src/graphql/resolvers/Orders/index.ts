@@ -13,7 +13,18 @@ import {authorize} from "../../../lib/utils";
 import {IOrderInputArgs, IOrderProductInput} from "./types";
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
-import { sendMail } from '../../../lib/utils/number-verification-otp';
+import { sendConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
+
+const getDeliverySchedule = (details: string) => {
+if (!details) return '';
+const word = 'Horario';
+
+const index = details.indexOf(word);   // 8
+const length = word.length;			// 7
+
+return details.slice(index + length);
+}
+
 
 const oderTracker: Array<IOrderTracker> = [
     {
@@ -180,7 +191,7 @@ export const ordersResolvers: IResolvers = {
                 payment_option_id: input.payment_option_id,
                 delivery_method_id: input.delivery_method_id,
                 delivery_date: input.delivery_date,
-                datetime: new Date().toUTCString(),
+                datetime: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
                 delivery_address: input.delivery_address,
                 sub_total: input.sub_total,
                 total: input.total,
@@ -192,12 +203,11 @@ export const ordersResolvers: IResolvers = {
                 status: "Pendiente",
                 order_tracking: oderTracker,
                 order_products: input.products,
-                created_at: new Date().toUTCString(),
+                created_at: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
             };
 
             const insertResult = await db.orders.insertOne(insertData);
-            let productsList = [];
-            console.log(insertResult)
+            // let productsList = [];
             if (insertResult.ops[0]) {
                 for (let i = 0; i < products.length; i++) {
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -206,7 +216,7 @@ export const ordersResolvers: IResolvers = {
                     const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
                     const total = dbProduct.product_quantity - purchasedQuantity;
 
-                    productsList.push({ productName: dbProduct.name }, { purchasedQuantity: purchasedQuantity, quantityLeft: total })
+                    // productsList.push({ productName: dbProduct.name }, { purchasedQuantity: purchasedQuantity, quantityLeft: total })
 
                     await db.products.updateOne(
                         {_id: products[i]._id},
@@ -216,11 +226,22 @@ export const ordersResolvers: IResolvers = {
             }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            const { data, status } = await sendMail('estebanmuruzabal@gmail.com', JSON.stringify(productsList), 'Te compraron algo papa!');
-            
-            if (status != 201) {
-                console.log('email not sent', status)
+            const deliveryMethod = await db.delivery_methods.findOne({ _id: new ObjectId(input.delivery_method_id) });
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethod?.details)} - ${moment(deliveryDate).format('DD MMM')}`;
+            const customer = await db.users.findOne({_id: new ObjectId(input.customer_id)});
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const { data, status } = await sendConfirmationMail('estebanmuruzabal@gmail.com', customer, input, deliveryMethod.name, paymentOption?.name);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            if (customer?.email?.length > 0) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+                const { data: data1, status: status1 } = await sendClientConfirmationMail(customer?.email, customer, input, deliveryMethod.name, paymentOption?.name);
             }
+
             return insertResult.ops[0];
         },
         updateOrderStatus: async (
