@@ -34,7 +34,8 @@
     "admin": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "serve": "serve -s build"
+    "serve": "serve -s build",
+    "prod": "ENV=production; next start -p 9000"
   },
   "eslintConfig": {
     "extends": "react-app"
