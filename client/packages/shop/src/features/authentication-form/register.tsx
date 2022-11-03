@@ -43,6 +43,7 @@ export default function SignOutModal() {
   const [phone, setPhone] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [repeatPassword, setRepeatPassword] = React.useState('');
   
   const [errorMessage, setErrorMessage] = React.useState(null);
@@ -160,7 +161,33 @@ export default function SignOutModal() {
               backgroundColor='#F7F7F7'
               mb='10px'
               required
+          />
+           <Input
+              type='email'
+              name='email'
+              placeholder={intl.formatMessage({ id: 'emailSignUpPlaceholder', defaultMessage: 'Email address' })}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              backgroundColor='#F7F7F7'
+              marginBottom='10px'
+              // intlInputLabelId="profileEmailField"
             />
+           {/* <Input
+              type="text"
+              name="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={intl.formatMessage({
+                id: 'namePlaceholder',
+                defaultMessage: 'Dirección de correo',
+              })}
+              oninvalid="this.setCustomValidity('Please Enter valid email')"
+              oninput="setCustomValidity('')"
+              height='48px'
+              backgroundColor='#F7F7F7'
+              mb='10px'
+              required
+            /> */}
             <PhoneInput
               inputProps={{
                 name: 'Numero de telefono',

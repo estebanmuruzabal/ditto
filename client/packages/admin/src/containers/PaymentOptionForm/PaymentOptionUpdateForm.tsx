@@ -44,7 +44,7 @@ const GET_PAYMENT_OPTIONS = gql`
 `;
 
 const UPDATE_PAYMENT_OPTION = gql`
-  mutation CreatePaymentOption($id: ID!, $name: String!, $type: String!, $image: String!, $image_data: String!, $details: String!) {
+  mutation CreatePaymentOption($id: ID!, $name: String!, $type: String!, $image: String!, $image_data: String, $details: String!) {
     updatePaymentOption(id: $id, name: $name, type: $type, image: $image, image_data: $image_data, details: $details) {
       id
       name
@@ -86,7 +86,6 @@ const UpdatePaymentOption: React.FC<Props> = props => {
         name: name,
         type: type,
         details: details,
-        image_data: image_data,
         image: image,
       },
     });

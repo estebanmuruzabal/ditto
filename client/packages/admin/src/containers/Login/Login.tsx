@@ -64,7 +64,7 @@ export default () => {
   let history = useHistory();
   let location = useLocation();
   const { authenticate, isAuthenticated, error: signinErrors } = useContext(AuthContext);
-  if (isAuthenticated) return <Redirect to={{ pathname: '/admin' }} />;
+  if (isAuthenticated) return <Redirect to={{ pathname: '/' }} />;
 
   let { from } = (location.state as any) || { from: { pathname: '/' } };
   let login = ({ phone, password }) => {

@@ -168,7 +168,7 @@ const AddProduct: React.FC<Props> = () => {
   const [meta_keyword, setMetaKeyword] = useState(itemData.meta_keyword ? itemData.meta_keyword : '');
   const [meta_description, setMetaDescription] = useState(itemData.meta_description ? itemData.meta_description : '');
   const [slug, setSlugTitle] = useState(itemData.slug ? itemData.slug : '');
-  const [packagePrice, setPackagePrice] = useState(itemData.packagePrice ? itemData.packagePrice : 0);
+  const [packagePrice, setPackagePrice] = useState(itemData.packagePrice ? itemData.packagePrice : '');
 
   React.useEffect(() => {
     setCategory(itemData.categories.map(category => ({
