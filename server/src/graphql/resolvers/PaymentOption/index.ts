@@ -40,7 +40,7 @@ export const paymentOptionsResolvers: IResolvers = {
             await authorize(req, db);
             image_data = JSON.parse(image_data);
             let imagePath = '';
-            const existsData = await db.payment_options.findOne({name: name});
+            const existsData = await db.payment_options.findOne({ name: name });
 
             if (existsData) {
                 throw new Error("Resource already exits.");
@@ -71,19 +71,20 @@ export const paymentOptionsResolvers: IResolvers = {
         ): Promise<IPaymentOption> => {
             await authorize(req, db);
 
-            const existsData = await db.payment_options.findOne({_id: new ObjectId(id)});
+            const existsData = await db.payment_options.findOne({ _id: new ObjectId(id) });
+            console.log(existsData)
             if (!existsData) {
                 throw new Error("Resource not found.");
             }
 
             image_data = JSON.parse(image_data);
             let imagePath = '';
-
-            if (image_data) {
-                imagePath = storeImage(image, image_data.name);
-            } else {
+            // disabling new photo update so that the frontend doesnt have to do the inverse process of creating the image_data property
+            // if (image_data) {
+            //     imagePath = storeImage(image, image_data.name);
+            // } else {
                 imagePath = image;
-            }
+            // }
 
             const updateData: IPaymentOption = {
                 name: name,

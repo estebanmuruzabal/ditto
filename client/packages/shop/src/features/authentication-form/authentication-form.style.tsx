@@ -181,7 +181,8 @@ export const LinkButton = styled.button`
   outline: 0;
   box-shadow: none;
   padding: 0;
-  font-size: calc(${themeGet('fontSizes.base', '15')}px - 1px);
+
+  font-size: 17px;
   font-weight: ${themeGet('fontWeights.bold', '700')};
   color: ${themeGet('colors.primary.regular', '#009e7f')};
   text-decoration: underline;

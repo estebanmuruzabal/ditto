@@ -153,7 +153,7 @@ export default function SignInModal() {
           marginTop: "15px", fontSize: '16px'
         }}> {`${error?.message || error}. Please try again`}</p>}
       
-        <Offer style={{ padding: '20px 0' }}>
+        <Offer style={{ padding: '20px 0', fontSize: '20px' }}>
           <FormattedMessage
             id='dontHaveAccount'
             defaultMessage="Don't have any account?"

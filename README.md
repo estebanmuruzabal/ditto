@@ -13,11 +13,12 @@
 
 
 here are all the tabs and language settings: client/packages/shop/src/site-settings/site-navigation.ts
-
+<!-- "ecoDescription": "EcoCompra: pagás ${packageDiscount} menos si tenés envases/bolsas de este art. para devolvernos.", -->
 # To do:
 
 - poner mejores datos en los cards de las tasks (start, end time).
 - better ui in task listing edit staff modal
+
 
 # Improvements: 
 - add delete user func in staffmembers.tsx
@@ -25,6 +26,8 @@ here are all the tabs and language settings: client/packages/shop/src/site-setti
 
 # Bugs:
 0- se puede agregar mas cant de productos de la que hay en stock. El error recien salta en el pago (unhandled: This product do not have enough product quantity. Available quantity: 3)
+!!!!! se muestra el error de token expirado todo "GraphQL error: E ", buscar "GraphQL error: useQuery(GET_LOGGED_IN_USER);" en el proyectop y agregar handler para el error asi como esta en checkout:
+/Users/estebanmuruzabal/work/Mahdi-Fashion/client/packages/shop/src/pages/checkout.tsx
 
 1- clear session, login, logout, crash on src/pages/index.tsx (63:12) @ IndexPage
 

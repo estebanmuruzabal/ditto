@@ -42,9 +42,21 @@ const GET_ORDERS = gql`
                 customer_id
                 contact_number
                 datetime
+                customer_name
+                delivery_method_name
+                delivery_pickup_date
                 delivery_address
                 payment_method
                 payment_status
+                order_products {
+                    product_id
+                    image
+                    quantity
+                    recicledQuantity
+                    unit
+                    name
+                    price
+                }
                 status
                 coupon_code
                 discount_amount
@@ -74,7 +86,6 @@ const Status = styled('div', ({$theme}) => ({
     alignItems: 'center',
     lineHeight: '1',
     textTransform: 'capitalize',
-
     ':before': {
         content: '""',
         width: '10px',
@@ -83,7 +94,7 @@ const Status = styled('div', ({$theme}) => ({
         borderTopLeftRadius: '10px',
         borderTopRightRadius: '10px',
         borderBottomRightRadius: '10px',
-        borderBottomLeftRadius: '10px',
+        borderBottomLeftRadius: '10px', 
         backgroundColor: $theme.borders.borderE6,
         marginRight: '10px',
     },
@@ -251,31 +262,28 @@ export default function Orders() {
                     <Wrapper style={{boxShadow: '0 0 5px rgba(0, 0 , 0, 0.05)'}}>
                         <TableWrapper>
                             <StyledTable
-                                $gridTemplateColumns="minmax(150px, auto) minmax(150px, auto) minmax(200px, auto) minmax(200px, auto) minmax(200px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
-                                <StyledHeadCell>Action</StyledHeadCell>
+                                // $gridTemplateColumns="minmax(100px, auto) minmax(150px, auto) minmax(200px, auto) minmax(200px, auto) minmax(200px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto) minmax(150px, auto)">
+                                $gridTemplateColumns="minmax(100px, auto) minmax(100px, auto) minmax(120px, auto) minmax(130px, auto) minmax(100px, auto) minmax(110px, auto) minmax(100px, auto) minmax(110px, auto) minmax(65px, auto) minmax(300px, auto)">
                                 <StyledHeadCell>Status</StyledHeadCell>
-                                <StyledHeadCell>Order Code</StyledHeadCell>
-                                <StyledHeadCell>Customer ID</StyledHeadCell>
-                                <StyledHeadCell>Customer Contact</StyledHeadCell>
-                                <StyledHeadCell>Delivery Address</StyledHeadCell>
+                                <StyledHeadCell>Customer</StyledHeadCell>
+                                <StyledHeadCell>Phone Num</StyledHeadCell>
+                                <StyledHeadCell>Deli/Pickup Address</StyledHeadCell>
                                 <StyledHeadCell>Delivery Method</StyledHeadCell>
                                 <StyledHeadCell>Payment Method</StyledHeadCell>
                                 <StyledHeadCell>Payment Status</StyledHeadCell>
-                                <StyledHeadCell>SubTotal</StyledHeadCell>
+                                <StyledHeadCell>Deli/Pickup Date</StyledHeadCell>
                                 <StyledHeadCell>Total</StyledHeadCell>
-                                <StyledHeadCell>Coupon Code</StyledHeadCell>
-                                <StyledHeadCell>Discount Amount</StyledHeadCell>
-                                
-                                <StyledHeadCell>DateTime</StyledHeadCell>
+                                <StyledHeadCell>Productos comprados</StyledHeadCell>
 
                                 {data ? (
                                     data.orders.items.length ? (
                                         data.orders.items.map((item: any, index: number) => {
+                                            console.log(item)
                                             return (
                                                 <React.Fragment key={index + 1}>
-                                                    <StyledCell>
+                                                    {/* <StyledCell>
                                                         <ActionWrapper itemsOffset={offset} itemData={item}/>
-                                                    </StyledCell>
+                                                    </StyledCell> */}
                                                     <StyledCell style={{justifyContent: 'center'}}>
                                                         <Status
                                                             className={
@@ -293,24 +301,18 @@ export default function Orders() {
                                                             {item.status}
                                                         </Status>
                                                     </StyledCell>
-                                                    <StyledCell>{item.order_code}</StyledCell>
-                                                    <StyledCell>{item.customer_id}</StyledCell>
+                                                    <StyledCell>{item.customer_name}</StyledCell>
                                                     <StyledCell>{item.contact_number}</StyledCell>
                                                     <StyledCell>{item.delivery_address}</StyledCell>
                                                     <StyledCell>
-                                                        {item.delivery_method ? item.delivery_method.name+', ' : ''}
-                                                        {item.delivery_method ? item.delivery_method.details : ''}
+                                                        {item.delivery_method_name}
                                                     </StyledCell>
                                                     <StyledCell>{item.payment_method}</StyledCell>
                                                     <StyledCell>{item.payment_status}</StyledCell>
-                                                    <StyledCell>{item.sub_total}</StyledCell>
-                                                    <StyledCell>{item.total}</StyledCell>
-                                                    <StyledCell>{item.coupon_code}</StyledCell>
-                                                    <StyledCell>{item.discount_amount}</StyledCell>
+                                                    <StyledCell>{item.delivery_pickup_date}</StyledCell>
+                                                    <StyledCell>${item.total}</StyledCell>
+                                                    <StyledCell>{item.order_products.map((product) => (<div>{product.quantity + product.recicledQuantity} - {product.name} - ${product.price}</div>))}</StyledCell>
                                                     
-                                                    <StyledCell>
-                                                        {/*{dayjs(item.datetime).format('DD MMM YYYY hh:mm:ss A')}*/}
-                                                    </StyledCell>
                                                 </React.Fragment>
                                             );
                                         })

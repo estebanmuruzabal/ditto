@@ -75,11 +75,7 @@ const Topbar = ({ refs }: any) => {
 
   return (
     <TopbarWrapper ref={refs}>
-      <Logo>
-        <Link to='/'>
-          <LogoImage src={siteSettingData ? ADMIN_IMAGE_HOST+siteSettingData.image : ''} alt={siteSettingData ? siteSettingData.site_title : ''} />
-        </Link>
-      </Logo>
+      
 
       <DrawerWrapper>
         <DrawerIcon onClick={() => setIsDrawerOpen(true)}>
@@ -125,6 +121,12 @@ const Topbar = ({ refs }: any) => {
         </Drawer>
       </DrawerWrapper>
 
+      <Logo>
+        <Link to='/'>
+          <LogoImage src={siteSettingData ? ADMIN_IMAGE_HOST+siteSettingData.image : ''} alt={siteSettingData ? siteSettingData.site_title : ''} />
+        </Link>
+      </Logo>
+      
       <TopbarRightSide>
         {/*<Button startEnhancer={() => <Plus />} style={{ marginRight: "20px" }} onClick={openDrawer}>Add Products</Button>*/}
 

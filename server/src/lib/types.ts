@@ -266,7 +266,6 @@ export interface IOrder {
     datetime: string;
     delivery_method_id?: string;
     delivery_address: string;
-    delivery_date?: string;
     sub_total: number;
     total: number;
     coupon_code?: string;
@@ -279,6 +278,9 @@ export interface IOrder {
     order_products: Array<OrderProducts>;
     created_at?: string;
     updated_at?: string;
+    customer_name?: string;
+    delivery_method_name?: string;
+    delivery_pickup_date?: string;
 }
 
 export interface ICommonMessageReturnType {

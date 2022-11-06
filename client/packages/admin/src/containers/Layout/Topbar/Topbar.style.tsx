@@ -44,12 +44,12 @@ export const TopbarWrapper = styled('div', () => ({
 }));
 
 export const Logo = styled('div', () => ({
-  marginRight: 'auto',
+  // marginRight: 'auto',
   cursor: 'pointer',
 
-  '@media only screen and (max-width: 1199px)': {
-    display: 'none',
-  },
+  // '@media only screen and (max-width: 1199px)': {
+  //   display: 'none',
+  // },
 }));
 
 export const DrawerIcon = styled('div', ({ $theme }) => ({
@@ -143,7 +143,7 @@ export const CloseButton = styled('button', ({ $theme }) => ({
 }));
 
 export const DrawerWrapper = styled('div', ({ $theme }) => ({
-  '@media only screen and (min-width: 1200px)': {
-    display: 'none',
-  },
+  // '@media only screen and (min-width: 1200px)': {
+  //   display: 'none',
+  // },
 }));

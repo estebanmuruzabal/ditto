@@ -14,18 +14,10 @@ import {IOrderInputArgs, IOrderProductInput} from "./types";
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
 import { sendConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
-
-const getDeliverySchedule = (details: string) => {
-if (!details) return '';
-const word = 'Horario';
-
-const index = details.indexOf(word);   // 8
-const length = word.length;			// 7
-
-return details.slice(index + length);
-}
-
-
+import { client } from '../../../index';
+import { sendMessage } from '../../../controllers/send';
+import { deliveryPurchaseWithTransferPayment, deliveryPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment } from '../../../messages/messages';
+import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_EMAIL, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD } from '../../../lib/utils/constant';
 const oderTracker: Array<IOrderTracker> = [
     {
         status: "Pendiente",
@@ -147,14 +139,21 @@ export const ordersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         )/*: Promise<IOrder>*/ => {
             await authorize(req, db);
-
-            const paymentOption = await db.payment_options.findOne({_id: new ObjectId(input.payment_option_id)});
-
-            // Products quantity substation
-            const products: Array<IProduct> = await db.products.find({ _id: {$in: makeObjectIds(input.products)}}).toArray();
+            const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
+            const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
+            // @ts-ignore
+            const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
+            const deliveryMethod = await db.delivery_methods.findOne({ _id: new ObjectId(input.delivery_method_id) });
+            // @ts-ignore
+            const { name: deliveryMethodName } = deliveryMethod;
+            const customer = await db.users.findOne({ _id: new ObjectId(input.customer_id) });
+            if (!customer) throw new Error('Customer not found');
+            const { name: customerName, email: customerEmail } = customer;
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            let message: string;
             
+            // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 const dbProduct: IProduct = await db.products.findOne({_id: new ObjectId(input.products[i].product_id)});
                 if (!dbProduct) {
@@ -166,10 +165,6 @@ export const ordersResolvers: IResolvers = {
                 }
             }
 
-
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const {name: PaymentName, type: paymentType} = paymentOption;
             /*let paymentStatus = "";
             if (paymentType.toLowerCase() == 'cod' || paymentType.toLowerCase() == 'cash on delivery') {
                 paymentStatus = "Unpaid";
@@ -177,46 +172,38 @@ export const ordersResolvers: IResolvers = {
                 paymentStatus = "Paid";
             }*/
 
-            // name
-            //     isPickUp
-            //     pickUpAddress
-            //     details
-            //     delivery_date
-
             const insertData: IOrder = {
                 _id: new ObjectId(),
                 order_code: generateOrderCode(),
                 customer_id: input.customer_id,
                 contact_number: input.contact_number,
+                customer_name: customerName,
+                delivery_method_name: deliveryMethodName,
+                delivery_pickup_date: input.delivery_date,
                 payment_option_id: input.payment_option_id,
                 delivery_method_id: input.delivery_method_id,
-                delivery_date: input.delivery_date,
-                datetime: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                datetime: purchasedDate,
                 delivery_address: input.delivery_address,
                 sub_total: input.sub_total,
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
                 payment_id: input.payment_id,
-                payment_method: PaymentName,
+                payment_method: paymentOptionName,
                 payment_status: "Sin pagar",
                 status: "Pendiente",
                 order_tracking: oderTracker,
                 order_products: input.products,
-                created_at: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                created_at: purchasedDate,
             };
 
             const insertResult = await db.orders.insertOne(insertData);
-            // let productsList = [];
             if (insertResult.ops[0]) {
                 for (let i = 0; i < products.length; i++) {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     const dbProduct: IProduct = await db.products.findOne({_id: new ObjectId(input.products[i].product_id)});
                     const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
                     const total = dbProduct.product_quantity - purchasedQuantity;
-
-                    // productsList.push({ productName: dbProduct.name }, { purchasedQuantity: purchasedQuantity, quantityLeft: total })
 
                     await db.products.updateOne(
                         {_id: products[i]._id},
@@ -224,23 +211,33 @@ export const ordersResolvers: IResolvers = {
                     )
                 }
             }
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const deliveryMethod = await db.delivery_methods.findOne({ _id: new ObjectId(input.delivery_method_id) });
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            // const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethod?.details)} - ${moment(deliveryDate).format('DD MMM')}`;
-            const customer = await db.users.findOne({_id: new ObjectId(input.customer_id)});
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            const { data, status } = await sendConfirmationMail('estebanmuruzabal@gmail.com', customer, input, deliveryMethod.name, paymentOption?.name);
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            if (customer?.email?.length > 0) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-                const { data: data1, status: status1 } = await sendClientConfirmationMail(customer?.email, customer, input, deliveryMethod.name, paymentOption?.name);
+
+            // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
+            await sendConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
+            if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+
+            switch (paymentOptionType) {
+                case BANK_TRANSFER_PAYMENT_OPTION:
+                    if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
+                        message = pickUpPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
+                    } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
+                        message = deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
+                    }
+                case CASH_PAYMENT_OPTION:
+                case CC_PAYMENT_OPTION:
+                    if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
+                        message = pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
+                    } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
+                        message = deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
+                    }            
+                default:
+                    break;
             }
+            // @ts-ignore
+            console.log(message)
+            // @ts-ignore
+            sendMessage(client, input.contact_number, message, null);
+            // END OF EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
 
             return insertResult.ops[0];
         },

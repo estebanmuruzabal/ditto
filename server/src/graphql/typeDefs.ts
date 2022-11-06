@@ -324,8 +324,11 @@ export const typeDefs = gql`
       total: Float
       coupon_code: String
       discount_amount: Float
-      payment_id:  String
+      payment_id: String
       payment_method: String!
+      customer_name: String
+      delivery_method_name: String
+      delivery_pickup_date: String
       payment_status: String!
       status: String!
       order_tracking: [OrderTracker]

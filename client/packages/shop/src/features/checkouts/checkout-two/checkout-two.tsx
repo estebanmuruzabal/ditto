@@ -16,7 +16,7 @@ import { GET_COUPON } from 'graphql/query/coupon';
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
 import { DELETE_CARD } from 'graphql/mutation/card';
 import { DELETE_CONTACT } from 'graphql/mutation/contact';
-import { CURRENCY } from 'utils/constant';
+import { CC_PAYMENT_OPTION, CURRENCY } from 'utils/constant';
 import { openModal } from '@redq/reuse-modal';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -229,6 +229,19 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     return Number(chargeFormatted);
   }
 
+  const calculateCCCharge = () => {
+    const paymentOptionSelected = paymentMethods.find(paymentMethod => {
+      return submitResult?.payment_option_id === paymentMethod?.id;
+    });
+    const total = Number(calculateSubTotalPrice());
+
+    if (paymentOptionSelected?.name?.toLowerCase().includes('tarjeta')) {
+      const ccCharge = paymentOptionSelected?.name?.replace(/\D/g, '');
+      return total * (ccCharge / 100);
+    }
+    return 0;
+  }
+
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -432,12 +445,12 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   }
 
   const handleSubmit = async () => {
-    const deliveryCharge = calculateDeliveryCharge();
-
+    const deliveryCharge: number = calculateDeliveryCharge();
+    const ccCharge: number = calculateCCCharge();
     const otherSubmitResult = {
       customer_id: id,
       sub_total: Number(calculateSubTotalPrice()),
-      total: Number(calculatePrice(deliveryCharge)),
+      total: Number(calculatePrice(deliveryCharge+ccCharge)),
       discount_amount: Number(calculateDiscount()),
     }
 
@@ -532,11 +545,11 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     return !deliveryMethod.isPickUp ? deliveryMethod.id : null;
   });
   const pickUpOptionSelected = pickedUpOptionIds.includes(submitResult.delivery_method_id)
-  // const deliveryOptionSelected = deliveryOptionIds.includes(submitResult.delivery_method_id)
+
   const deliveryOptionSelected = deliveryMethods.find(deliveryMethod => {
     return deliveryMethod.id === submitResult.delivery_method_id;
   });
-  console.log(deliveryOptionSelected)
+
   return (
     <form>
       <CheckoutWrapper>
@@ -834,6 +847,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                     id={loading ? 'processesingCheckout' : 'processCheckout'}
                     defaultMessage='Proceed to Checkout'
                   />
+                   . ({CURRENCY}{calculatePrice(calculateDeliveryCharge()+calculateCCCharge())})
                 </Button>
               </CheckoutSubmit>
                 <div>
@@ -905,50 +919,39 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 <CalculationWrapper>
                   <TextWrapper>
                     <Text>
-                      <FormattedMessage
-                        id='subTotal'
-                        defaultMessage='Subtotal'
-                      />
+                      <FormattedMessage id='subTotal' defaultMessage='Subtotal' />
                     </Text>
                     <Text>
-                      {CURRENCY}
-                      {calculateSubTotalPrice()}
-                    </Text>
-                  </TextWrapper>
-
-                 {/* <TextWrapper>
-                    <Text>
-                      <FormattedMessage
-                        id='intlOrderDetailsDelivery'
-                        defaultMessage='Delivery Fee'
-                      />
-                    </Text>
-                    <Text>{CURRENCY}0.00</Text>
-                  </TextWrapper>*/}
-
-                  <TextWrapper>
-                    <Text>
-                      <FormattedMessage
-                        id='discountText'
-                        defaultMessage='Discount'
-                      />
-                    </Text>
-                    <Text>
-                      {CURRENCY}
-                      {calculateDiscount()}
+                      {CURRENCY} {calculateSubTotalPrice()}
                     </Text>
                   </TextWrapper>
 
                   <TextWrapper>
                     <Text>
-                      <FormattedMessage
-                        id='deliveryChargeText'
-                        defaultMessage='Delivery charge'
-                      />
+                      <FormattedMessage id='discountText' defaultMessage='Discount' />
                     </Text>
                     <Text>
-                      {CURRENCY}
-                      {calculateDeliveryCharge()}
+                      {CURRENCY} {calculateDiscount()}
+                    </Text>
+                  </TextWrapper>
+
+                  {calculateCCCharge() > 0 && (
+                    <TextWrapper>
+                      <Text>
+                        <FormattedMessage id='ccrChargeText' defaultMessage='Card charge' />
+                      </Text>
+                      <Text>
+                        {CURRENCY} {calculateCCCharge()}
+                      </Text>
+                    </TextWrapper>
+                  )}
+
+                  <TextWrapper>
+                    <Text>
+                      <FormattedMessage id='deliveryChargeText' defaultMessage='Delivery charge' />
+                    </Text>
+                    <Text>
+                      {CURRENCY} {calculateDeliveryCharge()}
                     </Text>
                   </TextWrapper>
 
@@ -957,8 +960,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       <FormattedMessage id='totalText' defaultMessage='Total' />{' '}
                     </Bold>
                     <Bold>
-                      {CURRENCY}
-                      {calculatePrice(calculateDeliveryCharge())}
+                      {CURRENCY} {calculatePrice(calculateDeliveryCharge()+calculateCCCharge())}
                     </Bold>
                   </TextWrapper>
                 </CalculationWrapper>

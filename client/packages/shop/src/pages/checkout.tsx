@@ -117,7 +117,7 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
                     >
                         {intl.formatMessage({ id: 'loginBtnText', defaultMessage: 'loginBtnText' })}
                     </Button>
-                    <Offer style={{ padding: '20px 20px' }}>
+                    <Offer style={{ padding: '20px 20px', fontSize: '20px' }}>
                         <FormattedMessage
                             id='dontHaveAccount'
                             defaultMessage="Don't have any account?"
@@ -146,7 +146,7 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
                     >
                         {intl.formatMessage({ id: 'loginBtnText', defaultMessage: 'loginBtnText' })}
                     </Button>
-                    <Offer style={{ padding: '20px 20px' }}>
+                    <Offer style={{ padding: '20px 20px', fontSize: '20px' }}>
                         <FormattedMessage
                             id='dontHaveAccount'
                             defaultMessage="Don't have any account?"

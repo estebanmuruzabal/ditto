@@ -88,7 +88,6 @@ const OrderCard: React.FC<MobileOrderCardProps> = ({
 
     return details.slice(index + length);
   }
-  console.log(orders)
   const deliveryMethods = deliverData?.deliveryMethods?.items;
 
   return (

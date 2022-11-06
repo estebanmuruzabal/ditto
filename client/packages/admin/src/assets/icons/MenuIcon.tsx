@@ -1,8 +1,8 @@
 import React from 'react';
 export const MenuIcon = ({
   color = 'currentColor',
-  width = '18px',
-  height = '18px',
+  width = '30px',
+  height = '30px',
 }) => {
   return (
     <svg

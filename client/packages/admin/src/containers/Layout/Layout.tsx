@@ -33,14 +33,14 @@ const AdminLayout = ({ children }: any) => {
       >
         {desktop ? (
           <>
-            <SidedbarDesktop>
+            {/* <SidedbarDesktop>
               <Sidebar
                 refs={sidebarRef}
                 style={{
                   height: `calc(100vh - ${height}px)`,
                 }}
               />
-            </SidedbarDesktop>
+            </SidedbarDesktop> */}
             <ContentWrapper
               style={{
                 width: `calc(100% - ${width}px)`,
