@@ -17,7 +17,7 @@ export const GET_ORDERS = gql`
       discount_amount
       sub_total
       total
-      delivery_date
+      delivery_pickup_date
       order_tracking {
         status
         ordering
