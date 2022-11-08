@@ -15,6 +15,20 @@ import {
 } from '../DrawerItems/DrawerItems.style';
 import { RadioGroup, Radio, ALIGN } from "baseui/radio";
 
+const CREATE_COUPON = gql`
+  mutation CreateCoupon($coupon: CouponInput!) {
+    createCoupon(input: $coupon)  {
+        id
+        title
+        code
+        percentage
+        maximum_discount_amount
+        expiration_date
+        status
+        created_at
+    }
+  }
+`;
 
 const GET_ORDERS = gql`
   query GetOrders(
@@ -119,9 +133,42 @@ const UpdateOrderStatus: React.FC<Props> = props => {
     updateOrderStatus({
       variables: { id: itemData.id, orderingPosition: parseInt(radioValue) },
     });
+    // createCouponAndSendClientSuccessPurchaseMsg();
+    // sendFeedbackWhatsapp();
     refetch();
     closeDrawer();
   };
+
+  // const createCouponAndSendClientSuccessPurchaseMsg = () => {
+
+  //   const newCoupon = {
+  //     title: title,
+  //     code: code,
+  //     percentage: parseFloat(percentage),
+  //     maximum_discount_amount: parseFloat(maximumDiscountAmount),
+  //     expiration_date: dateExpired,
+  //     status: status[0] && status[0].value
+  //   };
+
+  //   createCoupon({
+  //     variables: { coupon: newCoupon },
+  //   });
+  //   closeDrawer();
+  // };
+  // const [createCoupon] = useMutation(CREATE_COUPON, {
+
+  //   onCompleted: () => {
+  //     // displaySuccessNotification("You've successfully created your Coupon!");
+  //     // sendWhatsappWithCoupon
+  //   },
+  //   onError: (e) => {
+
+  //     // displayErrorMessage(
+  //     //   "Sorry! We weren't able to create your Coupon. Please try again later."
+  //     // );
+  //   },
+  // });
+
 
   return (
     <>

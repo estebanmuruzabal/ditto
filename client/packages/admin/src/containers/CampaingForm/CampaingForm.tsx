@@ -94,7 +94,6 @@ const AddCampaing: React.FC<Props> = props => {
       variables: { coupon: newCoupon },
     });
     closeDrawer();
-    console.log(newCoupon, 'newCoupon');
   };
   const handleCategoryChange = ({ value }) => {
     setValue('category', value);

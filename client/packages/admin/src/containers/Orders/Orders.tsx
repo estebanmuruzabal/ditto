@@ -278,7 +278,7 @@ export default function Orders() {
                                 {data ? (
                                     data.orders.items.length ? (
                                         data.orders.items.map((item: any, index: number) => {
-                                            console.log(item)
+
                                             return (
                                                 <React.Fragment key={index + 1}>
                                                     {/* <StyledCell>

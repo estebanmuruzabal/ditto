@@ -76,7 +76,7 @@ const UpdateDeliveryMethod: React.FC<Props> = props => {
   const [updateDeliveryMethod] = useMutation(UPDATE_DELIVERY_METHOD);
 
   const onSubmit = ({ name, details, isPickUp, pickUpAddress}) => {
-    console.log(name, details, isPickUp, pickUpAddress);
+
     updateDeliveryMethod({
       variables: {
         id: itemData.id,

@@ -99,7 +99,7 @@ export default function Customers() {
   }
   function handleSearch(event) {
     const value = event.currentTarget.value;
-    console.log(value, 'cus val');
+
 
     setSearch(value);
     refetch({ searchBy: value });

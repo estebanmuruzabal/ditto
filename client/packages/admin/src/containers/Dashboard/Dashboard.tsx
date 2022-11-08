@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { withStyle, useStyletron } from 'baseui';
 import { Grid, Row, Col as Column } from '../../components/FlexBox/FlexBox';
 import RadialBarChart from '../../components/Widgets/RadialBarChart/RadialBarChart';
@@ -16,6 +16,89 @@ import { CoinIcon } from '../../assets/icons/CoinIcon';
 import { CartIconBig } from '../../assets/icons/CartIconBig';
 import { UserIcon } from '../../assets/icons/UserIcon';
 import { DeliveryIcon } from '../../assets/icons/DeliveryIcon';
+import { gql } from 'apollo-boost';
+import { useQuery } from '@apollo/react-hooks';
+import moment from 'moment';
+import _ from 'lodash';
+
+const GET_CUSTOMERS = gql`
+  query getUsers {
+    users {
+      id
+      name
+      email
+      role
+      created_at
+      phones{
+        number
+        id
+        is_primary
+      }
+      workInfo{
+        stoppedWorkTime
+        startedWorkTime
+        ratePerHour
+        totalWorkingMinutesPerWeek
+        totalSalaryToPayWeekly
+        advancedSalaryPaid
+        isWorking
+        taskRelated
+      }
+      tasks{
+        taskId
+        startDate
+        finishDate
+        plannedDate
+        isRepetitived
+        completationTimes
+        isDone
+        description
+        workedHours
+      }
+      logs{
+        logDescription
+        timestamp
+      }
+    }
+  }
+`;
+
+
+export const GET_ORDERS = gql`
+  query AllOrders {
+    allOrders {
+      id
+      order_code
+      customer_id
+      contact_number
+      datetime
+      delivery_address
+      payment_method
+      payment_status
+      delivery_method_id
+      status
+      discount_amount
+      sub_total
+      total
+      delivery_pickup_date
+      order_tracking {
+        status
+        ordering
+        is_current
+        step_competed
+      }
+      order_products {
+        product_id
+        image
+        quantity
+        recicledQuantity
+        unit
+        name
+        price
+      }
+    }
+  }
+`;
 
 const Col = withStyle(Column, () => ({
   '@media only screen and (max-width: 574px)': {
@@ -29,11 +112,92 @@ const Col = withStyle(Column, () => ({
 
 const Dashboard = () => {
   const [css] = useStyletron();
+  const date30DaysBeforeToday = moment([new Date().getFullYear(), new Date().getMonth() - 1, new Date().getDate()]);
+  const date60DaysBeforeToday = moment([new Date().getFullYear(), new Date().getMonth() - 2, new Date().getDate()]);
+  const [lastMonthTotalRevenue, setLastMonthTotalRevenue] = useState(0);
+  const [lastMonthOrders, setLastMonthOrders] = useState(0);
+  const [last2MonthTotalRevenue, setLast2MonthTotalRevenue] = useState(0);
+  const [last2MonthOrders, setLast2MonthOrders] = useState(0);
+    
+
   const mb30 = css({
     '@media only screen and (max-width: 990px)': {
       marginBottom: '16px',
     },
   });
+
+  const { data: ordersData, error: ordersError } = useQuery(GET_ORDERS);  
+  const { data: customersDate, error: customerErrors } = useQuery(GET_CUSTOMERS);
+
+  useEffect(() => {
+    setLast2MonthsOrdersRevenueAndTotalQnty();
+  }, [ordersData]);
+
+
+  if (ordersError || customerErrors) {
+      const error = customerErrors || ordersError;
+      return <div>Error! {error.message}</div>;
+  }
+
+
+  const getLastMonthTotalOrders = () => {
+    return ordersData.orders.items.find(order => {
+      const lastMonth = moment(order.datetime, 'MM/D/YYYY').day();
+      
+      
+    })
+  }
+
+  const setLast2MonthsOrdersRevenueAndTotalQnty = (): any => {
+    ordersData?.allOrders.map(order => {
+      const orderDate = moment(order.datetime, 'MM/D/YYYY');
+      
+      const orderIsInsideLast30Days = date30DaysBeforeToday.isBefore(orderDate);
+      const orderIsInsideLast60Days = date60DaysBeforeToday.isBefore(orderDate) && orderDate.isBefore(date30DaysBeforeToday);
+      
+      if (orderIsInsideLast30Days) {
+        setLastMonthOrders((prevState) => prevState + 1)
+        setLastMonthTotalRevenue((prevState) => prevState + order.total)
+      } else if (orderIsInsideLast60Days) {
+        setLast2MonthOrders((prevState) => prevState + 1)
+        setLast2MonthTotalRevenue((prevState) => prevState + order.total)
+      }
+    })
+  }
+
+  const groupByDate = () => {
+    let groupsByDate = {};
+    let totalSalesByDate = {};
+
+    ordersData?.allOrders?.forEach((val) => {
+      const date = moment(val.datetime).format('MM/D/YYYY');
+      let totalSale = 0;
+        if (date in groupsByDate) {
+          groupsByDate[date].push(val);
+          totalSalesByDate[date].push(totalSale + val.total)
+        } else {
+          groupsByDate[date] = new Array(val);
+          totalSalesByDate[date] = new Array(val.total)
+        }
+    });
+
+    console.log(groupsByDate);
+    console.log(totalSalesByDate);
+    return groupsByDate;
+  }
+
+  ordersData?.allOrders?.length && groupByDate();
+
+      // series={[lastSalesAmount[6], lastSalesAmount[5], lastSalesAmount[4], lastSalesAmount[3], lastSalesAmount[2], lastSalesAmount[1], lastSalesAmount[0]]}
+            // labels={[
+            //   lastSalesDate[6],
+            //   lastSalesDate[5],
+            //   lastSalesDate[4],
+            //   lastSalesDate[3],
+            //   lastSalesDate[2],
+            //   lastSalesDate[1],
+            //   lastSalesDate[0],
+            // ]}
   return (
     <Grid fluid={true}>
       <Row>
@@ -89,8 +253,8 @@ const Dashboard = () => {
             title='Total Revenue'
             subtitle='(Last 30 Days)'
             icon={<CoinIcon />}
-            price='$711.66'
-            indicator='up'
+            price={`$${lastMonthTotalRevenue.toLocaleString()}`}
+            indicator={last2MonthTotalRevenue > lastMonthTotalRevenue ? 'down' : 'up'}
             indicatorText='Revenue up'
             note='(previous 30 days)'
             link='#'
@@ -102,8 +266,8 @@ const Dashboard = () => {
             title='Total Order'
             subtitle='(Last 30 Days)'
             icon={<CartIconBig />}
-            price='88,568'
-            indicator='down'
+            price={`${lastMonthOrders.toLocaleString()}`}
+            indicator={last2MonthTotalRevenue > lastMonthTotalRevenue ? 'down' : 'up'}
             indicatorText='Order down'
             note='(previous 30 days)'
             link='#'
@@ -153,6 +317,16 @@ const Dashboard = () => {
               '2019-05-17',
               '2019-05-18',
             ]}
+                // series={[lastSalesAmount[6], lastSalesAmount[5], lastSalesAmount[4], lastSalesAmount[3], lastSalesAmount[2], lastSalesAmount[1], lastSalesAmount[0]]}
+            // labels={[
+            //   lastSalesDate[6],
+            //   lastSalesDate[5],
+            //   lastSalesDate[4],
+            //   lastSalesDate[3],
+            //   lastSalesDate[2],
+            //   lastSalesDate[1],
+            //   lastSalesDate[0],
+            // ]}
           />
         </Col>
 

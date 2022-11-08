@@ -108,7 +108,7 @@ const AddDeliveryMethod: React.FC<Props> = props => {
         });
         closeDrawer();
     };
-    console.log(itemData)
+
     return (
         <>
             <DrawerTitleWrapper>
