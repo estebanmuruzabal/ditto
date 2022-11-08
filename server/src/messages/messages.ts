@@ -11,11 +11,11 @@ const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: strin
 *Detalle:*
 *Fecha de compra:*
 ${purchasedDate}
-*Método de envío/pickup:*
+*Método de envio/pickup:*
 ${deliveryMethod}
-*Fecha de envio o pickup:*
+*Fecha de envio/pickup:*
 ${delivery_pickup_date}
-*Dirección de pickup/envío:*
+*Dirección de pickup/envio:*
 ${address}
 *Método de pago:*
 ${paymentMethod}
@@ -37,11 +37,11 @@ const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, t
 *Detalle:*
 *Fecha de compra:*
 ${purchasedDate}
-*Método de envío/pickup:*
+*Método de envio/pickup:*
 ${deliveryMethod}
-*Fecha de envio o pickup:*
+*Fecha de envio/pickup:*
 ${delivery_pickup_date}
-*Dirección de pickup/envío:*
+*Dirección de pickup/envio:*
 ${address}
 *Método de pago:*
 ${paymentMethod}
@@ -63,11 +63,11 @@ const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: str
 *Detalle:*
 *Fecha de compra:*
 ${purchasedDate}
-*Método de envío/pickup:*
+*Método de envio/pickup:*
 ${deliveryMethod}
 *Fecha de envio o pickup:*
 ${delivery_pickup_date}
-*Dirección de pickup/envío:*
+*Dirección de pickup/envio:*
 ${address}
 *Método de pago:*
 ${paymentMethod}
@@ -88,11 +88,11 @@ const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string,
 *Detalle:*
 *Fecha de compra:*
 ${purchasedDate}
-*Método de envío/pickup:*
+*Método de envio/pickup:*
 ${deliveryMethod}
-*Fecha de envio o pickup:*
+*Fecha de envio/pickup:*
 ${delivery_pickup_date}
-*Dirección de pickup/envío:*
+*Dirección de pickup/envio:*
 ${address}
 *Método de pago:*
 ${paymentMethod}
@@ -116,7 +116,7 @@ const orderDeliveredAndFeedBack = (customerName: string) =>
 `Hola ${customerName}, has recibido tu pedido con exito!
 
 Sabemos que errar es humano, y tu opinion nos importa!
-Ganate un cupón de 5% de descuento con tan solo contarnos como llegó tu pedido y si de paso, tenés alguna recomendación/consejo 🙌
+Ganate un cupón de 10% de descuento con tan solo contarnos como llegó tu pedido y si de paso, tenés alguna recomendación/consejo 🙌
 
 Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.

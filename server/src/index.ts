@@ -101,14 +101,15 @@ const withSession = () => {
         // }
     });
     
-    client.sendMessage('+5493624951926', 'test');
+    // client.sendMessage('+5493624951926', 'test');
     client.initialize();
     
     return client;
 }
 
 const mount = async (app: Application) => {
-    client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
+    // client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
+    client = withOutSession();
 
     const hostname = 'localhost';
     // const hostname = '0.0.0.0';

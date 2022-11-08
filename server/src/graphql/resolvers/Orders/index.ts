@@ -223,7 +223,7 @@ export const ordersResolvers: IResolvers = {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
                 await sendConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
                 if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
-
+                console.log(deliveryMethodName, paymentOptionType)
                 switch (paymentOptionType) {
                     case BANK_TRANSFER_PAYMENT_OPTION:
                         if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
@@ -316,8 +316,8 @@ export const ordersResolvers: IResolvers = {
             const currentStatus = statuses.filter(item => {
                 if (item.ordering == orderingPosition) return item;
             })[0];
-
-            if (currentStatus.status === 'DELIVERED') {
+            console.log(currentStatus.status, customer_name)
+            if (currentStatus.status === 'Entregado') {
                 const message: string = orderDeliveredAndFeedBack(customer_name);
                 // @ts-ignore
                 sendMessage(client, contact_number, message, null);
