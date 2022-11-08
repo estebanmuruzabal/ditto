@@ -22,17 +22,6 @@ export const staffMethodsResolvers: IResolvers = {
             _root: undefined,
             _args: undefined,
             {db, req}: { db: Database, req: Request }
-        // ): Promise<any> => {
-        //     await authorize(req, db);
-        //     const workersAndAdmins = await db.users.find((user: IUser) => {
-        //         if (user) {
-        //             return user;
-        //         }
-        //     });
-            
-        //     // return await db.users.find({}).toArray()
-        //     return workersAndAdmins;
-        // },
         ): Promise<IUser[]> => {
             await authorize(req, db);
             return await db.users.find({}).toArray();

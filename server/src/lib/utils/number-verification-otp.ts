@@ -2,6 +2,7 @@ import axios from "axios";
 import nodemailer from "nodemailer";
 import { IOrderInputArgs } from "../../graphql/resolvers/Orders/types";
 import { IProduct, IUser } from "../types";
+import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD } from "./constant";
 
 const fromNumber = process.env.OTP_FROM_NUMBER
 const apiToken = process.env.OTP_API_TOKEN
@@ -32,8 +33,8 @@ export const sendConfirmationMail = (email: string, customer: any, input: any, d
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'dittofarmresistencia@gmail.com',
-            pass: 'omnhypvscthkfnvr'
+            user: COMPANY_EMAIL,
+            pass: COMPANY_EMAIL_PASSWORD
         }
     });
 

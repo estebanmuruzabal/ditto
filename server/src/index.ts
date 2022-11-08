@@ -10,26 +10,37 @@ import path from "path";
 const fs = require('fs');
 const DELAY_TIME = 170; //ms
 import { fstat, fstatSync } from 'fs';
+import { cleanNumber, isValidNumber } from './controllers/handle';
+import { saveChat } from './controllers/send';
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json'
-   
-export let client: any = new Client();
+
+export let client: any =  new Client({
+        authStrategy: new LocalAuth(),
+        puppeteer: { headless: true }
+});
+
 let sessionData: any;
 
-const cleanNumber = (number: any) => {
-    number = number.replace('@c.us', '');
-    number = `${number}@c.us`;
-    return number
-}
-const sendMessage = async (client: any, number = null, text = null, trigger = null) => {
-   setTimeout(async () => {
-    number = cleanNumber(number)
-    const message = text
-    client.sendMessage(number, message);
-    console.log(`⚡⚡⚡ Enviando mensajes....`);
-   },DELAY_TIME)
-}
+/**
+ * Escuchamos cuando entre un mensaje
+ */
+// const listenMessage = () => client.on('message', async (msg: any) => {
+//     const { from, body, hasMedia } = msg;
+//     const message = body.toLowerCase();
+//     const numberClean = cleanNumber(from)
+
+//     if(!isValidNumber(from)) return;
+//     if (from === 'status@broadcast') return;
+
+//     await saveChat(numberClean, message)    
+//     const feedBackMessage = await getMessages(message);
+
+//     if (feedBackMessage) {
+//         await sendMessage(client, numberClean, response.replyMessage, response.trigger);
+//     }
+// });
 
 const withOutSession = () => {
 
@@ -39,6 +50,7 @@ const withOutSession = () => {
 
     client.on('ready', () => {
         console.log('Client is ready!');
+        // listenMessage();
     });
 
 
@@ -47,14 +59,9 @@ const withOutSession = () => {
         if (from === 'status@broadcast') {
             return;
         }
-        console.log('From:', from);
-        console.log('To:', to);
-        console.log('Message:', body);
-        // if(message.body === 'ping') {
-        //     message.reply('pong');
-        // }
-        // @ts-ignore
-        // sendMessage(client, '5493624951926', 'test');
+        // console.log('From:', from);
+        // console.log('To:', to);
+        // console.log('Message:', body);
     });
     
     
@@ -86,9 +93,9 @@ const withSession = () => {
 
     client.on('message', (message: any) => {
         const {from, to, body } = message;
-        console.log('From:', from);
-        console.log('To:', to);
-        console.log('Message:', body);
+        // console.log('From:', from);
+        // console.log('To:', to);
+        // console.log('Message:', body);
         // if(message.body === 'ping') {
         //     message.reply('pong');
         // }

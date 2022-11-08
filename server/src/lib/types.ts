@@ -278,9 +278,9 @@ export interface IOrder {
     order_products: Array<OrderProducts>;
     created_at?: string;
     updated_at?: string;
-    customer_name?: string;
-    delivery_method_name?: string;
-    delivery_pickup_date?: string;
+    customer_name: string;
+    delivery_method_name: string;
+    delivery_pickup_date: string;
 }
 
 export interface ICommonMessageReturnType {

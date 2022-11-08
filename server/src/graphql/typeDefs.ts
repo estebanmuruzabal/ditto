@@ -406,7 +406,7 @@ export const typeDefs = gql`
     }
     
     type Query {
-        users: [User!]!
+        getUsers: [User!]!
         types(limit: Int = 12, offset: Int = 0, searchText: String): MainTypePaginationType!
         categories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
         shopCategories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
@@ -415,6 +415,7 @@ export const typeDefs = gql`
         deliveryMethods(limit: Int = 12, offset: Int = 0, searchText: String): DeliveryMethodPaginationType!
         paymentOptions(limit: Int = 12, offset: Int = 0, searchText: String): PaymentOptionPaginationType!
         orders(status: String, limit: Int = 12, offset: Int = 0, searchText: String): OrderPaginationType!
+        allOrders: [Order!]!
         getUserOrders: [Order!]!
         getSetting(key: String!): Setting!
         getSiteSetting(key: String!): Setting!
@@ -425,7 +426,6 @@ export const typeDefs = gql`
         homeCards(limit: Int = 12, offset: Int = 0, searchText: String): HomeCardPaginationType!
         getHomeCards(type: String!): [HomeCard]!
         getStaffs: [User!]!
-        
     }
     
     type Mutation {

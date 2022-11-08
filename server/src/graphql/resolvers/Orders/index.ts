@@ -16,7 +16,7 @@ import shortid from "shortid";
 import { sendConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
 import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
-import { deliveryPurchaseWithTransferPayment, deliveryPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment } from '../../../messages/messages';
+import { deliveryPurchaseWithTransferPayment, deliveryPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, orderDeliveredAndFeedBack } from '../../../messages/messages';
 import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_EMAIL, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD } from '../../../lib/utils/constant';
 const oderTracker: Array<IOrderTracker> = [
     {
@@ -81,6 +81,13 @@ const generateOrderCode = () => {
 
 export const ordersResolvers: IResolvers = {
     Query: {
+        allOrders: async (
+            _root: undefined,
+            _args: undefined,
+            {db, req}: { db: Database, req: Request }
+        ): Promise<IOrder[]> => {
+            return await db.orders.find().sort({_id: -1}).toArray();
+        },
         orders: async (
             _root: undefined,
             {status, limit, offset, searchText}: {
@@ -253,7 +260,7 @@ export const ordersResolvers: IResolvers = {
                 throw new Error("Order dose not exits.");
             }
             let statuses = [];
-
+            const { contact_number, customer_name } = orderResult;
             statuses = orderResult.order_tracking.map(item => {
                if (item.ordering == orderingPosition) {
                    return  {
@@ -305,6 +312,11 @@ export const ordersResolvers: IResolvers = {
                 if (item.ordering == orderingPosition) return item;
             })[0];
 
+            if (currentStatus.status === 'DELIVERED') {
+                const message: string = orderDeliveredAndFeedBack(customer_name);
+                // @ts-ignore
+                sendMessage(client, contact_number, message, null);
+            }
 
             await db.orders.updateOne(
                 {_id: new ObjectId(id)},

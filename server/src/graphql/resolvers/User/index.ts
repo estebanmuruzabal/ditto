@@ -55,7 +55,7 @@ export const generateOTPCode = () => {
 
 export const usersResolvers: IResolvers = {
     Query: {
-        users: async (
+        getUsers: async (
             _root: undefined,
             _args: undefined,
             {db, req}: { db: Database, req: Request }

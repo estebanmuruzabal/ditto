@@ -17,3 +17,4 @@ export const BANK_TRANSFER_PAYMENT_OPTION = 'bank_transfer';
 export const BANK_TRANSFER_ALIAS = 'dittofarm';
 export const BANK_TRANSFER_CBU = '0000003100030458924685';
 export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
+export const COMPANY_EMAIL_PASSWORD = 'glbequknuqtduxxc';

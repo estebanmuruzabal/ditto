@@ -103,12 +103,11 @@ Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.
 `;
 
-const orderDeliveredConfirmation = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
+const orderDeliveredAndFeedBack = (customerName: string) =>  
 `Hola ${customerName}, has recibido tu pedido con exito!
 
 Sabemos que errar es humano, y tu opinion nos importa!
-Si nos ayudas con una devolución sobre como llegó tu pedido y si de paso, tenés alguna recomendación/consejo,
-te vamos a regalar un cupón de 5% de descuento para tu próxima compra 🙌
+Ganate un cupón de 5% de descuento con tan solo contarnos como llegó tu pedido y si de paso, tenés alguna recomendación/consejo 🙌
 
 Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.
@@ -120,5 +119,5 @@ export {
     pickUpPurchaseWithTransferPayment,
     pickUpPurchaseWithCashPayment,
     orderPaidConfirmation,
-    orderDeliveredConfirmation
+    orderDeliveredAndFeedBack
 };
