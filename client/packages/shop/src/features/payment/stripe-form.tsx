@@ -36,7 +36,7 @@ const StripeForm = ({ buttonText, getToken }) => {
       dispatch({ type: 'ADD_CARD', payload: token.card });
       closeModal();
     }
-    console.log(token, 'token');
+
   };
   return (
     <StripeFormWrapper>

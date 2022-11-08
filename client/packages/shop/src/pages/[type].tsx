@@ -87,7 +87,8 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
     );
   };
 
-  const { home_title, home_subtitle, image  } = data.types.items.find((item) => item.slug === router.query.type);
+  const { home_title, home_subtitle, image } = data.types.items.find((item) => item.slug === router.query.type);
+
   return (
     <>
       <SEO title={home_title} description={home_subtitle} />

@@ -83,7 +83,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const deliveryMethods = deliverData?.deliveryMethods?.items;
   const orderDeliveryMethod = deliveryMethods?.filter(method => method.id === myOrder?.delivery_method_id)[0];
   const deliveryDateAndTime = `${myOrder?.delivery_pickup_date} ${getDeliverySchedule(orderDeliveryMethod?.details)}`;
-  console.log(myOrder)
+
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>

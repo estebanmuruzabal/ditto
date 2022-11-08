@@ -240,7 +240,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     });
   };
 
-  console.log("working info changed:", state)
+
   const h = state.workInfo?.totalWorkingMinutesPerWeek / 60 | 0;
   const m = state.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
   const subtotalSalario = Number(state.workInfo?.totalWorkingMinutesPerWeek) / 60 * Number(state.workInfo?.ratePerHour);

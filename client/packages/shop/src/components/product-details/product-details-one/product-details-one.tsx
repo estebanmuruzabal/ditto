@@ -196,7 +196,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
     </>
   )
   const hasBackRoute = Object.keys(Router.router?.sdc).length !== 0;
-  console.log(hasBackRoute)
+
   return (
     <>
       <ProductDetailsWrapper className="product-card" dir="ltr">
