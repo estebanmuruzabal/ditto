@@ -1,6 +1,7 @@
+import { IProduct } from "../lib/types";
 import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, CURRENCY } from "../lib/utils/constant";
 
-const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
+const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: IProduct[], delivery_pickup_date: string) =>
 `Hola ${customerName}, tu compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
@@ -12,6 +13,8 @@ const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: strin
 ${purchasedDate}
 *Método de envío/pickup:*
 ${deliveryMethod}
+*Fecha de envio o pickup:*
+${delivery_pickup_date}
 *Dirección de pickup/envío:*
 ${address}
 *Método de pago:*
@@ -25,7 +28,7 @@ Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.
 `;
 
-const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
+const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: IProduct[], delivery_pickup_date: string) =>
 `Hola ${customerName}, tu compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
@@ -36,6 +39,8 @@ const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, t
 ${purchasedDate}
 *Método de envío/pickup:*
 ${deliveryMethod}
+*Fecha de envio o pickup:*
+${delivery_pickup_date}
 *Dirección de pickup/envío:*
 ${address}
 *Método de pago:*
@@ -49,7 +54,7 @@ Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.
 `;
 
-const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
+const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: IProduct[], delivery_pickup_date: string) =>  
 `Hola ${customerName}, tu compra ha sido realizada con éxito!
 📢 Importante 📢
  - Te vamos a escribir una hora antes de llevar tu pedido.
@@ -60,6 +65,8 @@ const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: str
 ${purchasedDate}
 *Método de envío/pickup:*
 ${deliveryMethod}
+*Fecha de envio o pickup:*
+${delivery_pickup_date}
 *Dirección de pickup/envío:*
 ${address}
 *Método de pago:*
@@ -73,7 +80,7 @@ Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.
 `;
 
-const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
+const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: IProduct[], delivery_pickup_date: string) =>  
 `Hola ${customerName}, tu compra ha sido realizada con éxito!
 📢 *Importante* 📢
  - Te vamos a escribir una hora antes de llevar tu pedido.
@@ -81,8 +88,8 @@ const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string,
 *Detalle:*
 *Fecha de compra:*
 ${purchasedDate}
-*Método de envío/pickup:*
-${deliveryMethod}
+*Fecha de envio o pickup:*
+${delivery_pickup_date}
 *Dirección de pickup/envío:*
 ${address}
 *Método de pago:*

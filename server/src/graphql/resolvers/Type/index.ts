@@ -68,7 +68,7 @@ export const typesResolvers: IResolvers = {
             };
 
             const insertResult = await db.types.insertOne(typeData);
-            console.log(insertResult)
+
             return insertResult.ops[0];
         },
 

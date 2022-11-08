@@ -24,5 +24,5 @@ export const sendMessage = async (client: any, number: string, text: string, tri
 export const saveChat = async (number: string, message: string, trigger = null) => {
     number = cleanNumber(number)
    //  await saveMessage( message, trigger, number )
-    console.log('Saved')
+    // console.log('Saved')
 }

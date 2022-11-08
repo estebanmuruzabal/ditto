@@ -164,7 +164,7 @@ export const staffMethodsResolvers: IResolvers = {
             const taskIndex = tasks?.findIndex(task => task.taskId === taskId) || 0;
 
             tasks.splice(taskIndex, 1);
-            console.log(tasks)
+
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {tasks: tasks}}
@@ -222,7 +222,7 @@ export const staffMethodsResolvers: IResolvers = {
             } else {
                 tasks.push(task)
             }
-            console.log(tasks)
+
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {tasks: tasks}}

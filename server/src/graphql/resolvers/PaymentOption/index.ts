@@ -72,7 +72,7 @@ export const paymentOptionsResolvers: IResolvers = {
             await authorize(req, db);
 
             const existsData = await db.payment_options.findOne({ _id: new ObjectId(id) });
-            console.log(existsData)
+
             if (!existsData) {
                 throw new Error("Resource not found.");
             }

@@ -54,7 +54,7 @@ export const sendConfirmationMail = (email: string, customer: any, input: any, d
         `;
 
     return transporter.sendMail({
-        from: "dittofarmresistencia@gmail.com",
+        from: COMPANY_EMAIL,
         to: email,
         subject: 'Confirmación de orden',
         text: template,
@@ -67,8 +67,8 @@ export const sendClientConfirmationMail = (email: string, customer: any, input: 
     const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'dittofarmresistencia@gmail.com',
-            pass: 'omnhypvscthkfnvr'
+            user: COMPANY_EMAIL,
+            pass: COMPANY_EMAIL_PASSWORD
         }
     });
 
@@ -89,7 +89,7 @@ export const sendClientConfirmationMail = (email: string, customer: any, input: 
         `;
 
     return transporter.sendMail({
-        from: "dittofarmresistencia@gmail.com",
+        from: COMPANY_EMAIL,
         to: email,
         subject: 'Confirmación de compra',
         text: template,

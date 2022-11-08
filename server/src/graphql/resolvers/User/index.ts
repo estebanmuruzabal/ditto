@@ -282,7 +282,7 @@ export const usersResolvers: IResolvers = {
             const users = await db.users.find({}).toArray();
 
             const userResult = await db.users.findOne({ _id: new ObjectId(id) });
-            console.log(userResult)
+
             if (!userResult) {
                 throw new Error("User dose not exits.");
             }

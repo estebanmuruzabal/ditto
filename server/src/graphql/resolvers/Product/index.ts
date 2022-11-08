@@ -143,7 +143,7 @@ export const productsResolvers: IResolvers = {
                 is_online: input.is_online ? input.is_online : false,
                 updated_at: new Date().toUTCString(),
             };
-            console.log(updateData)
+
             await db.products.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: updateData}

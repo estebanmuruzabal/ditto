@@ -219,33 +219,38 @@ export const ordersResolvers: IResolvers = {
                 }
             }
 
-            // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-            await sendConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
-            if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+            try {
+                // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
+                await sendConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
+                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
 
-            switch (paymentOptionType) {
-                case BANK_TRANSFER_PAYMENT_OPTION:
-                    if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
-                        message = pickUpPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
-                    } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
-                        message = deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
-                    }
-                case CASH_PAYMENT_OPTION:
-                case CC_PAYMENT_OPTION:
-                    if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
-                        message = pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
-                    } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
-                        message = deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products); break;
-                    }            
-                default:
-                    break;
+                switch (paymentOptionType) {
+                    case BANK_TRANSFER_PAYMENT_OPTION:
+                        if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
+                            message = pickUpPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
+                        } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
+                            message = deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
+                        }
+                    case CASH_PAYMENT_OPTION:
+                    case CC_PAYMENT_OPTION:
+                        if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
+                            message = pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
+                        } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
+                            message = deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
+                        }            
+                    default:
+                        break;
+                }
+                // @ts-ignore
+                console.log(message)
+                // @ts-ignore
+                sendMessage(client, input.contact_number, message, null);
+                // END OF EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
+
+            } catch (error) {
+                console.log('error in sending mail/whatsapp', error)
             }
-            // @ts-ignore
-            console.log(message)
-            // @ts-ignore
-            sendMessage(client, input.contact_number, message, null);
-            // END OF EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-
+            
             return insertResult.ops[0];
         },
         updateOrderStatus: async (
