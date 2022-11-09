@@ -42,7 +42,7 @@ const ActionWrapper: React.FC<Props> =
         return (
             <div>
                 <ActionStyle>
-                    <IconWrapper onClick={openDrawer} style={{marginRight: '10px', cursor: 'pointer'}}>
+                    <IconWrapper onClick={openDrawer} style={{marginRight: '0px', cursor: 'pointer'}}>
                         <Icon icon="ArrowNext"/>
                     </IconWrapper>
                 </ActionStyle>

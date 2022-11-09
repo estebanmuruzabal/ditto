@@ -23,7 +23,7 @@ import _ from 'lodash';
 
 const GET_CUSTOMERS = gql`
   query getUsers {
-    users {
+    getUsers {
       id
       name
       email
@@ -130,7 +130,7 @@ const Dashboard = () => {
   const { data: customersDate, error: customerErrors } = useQuery(GET_CUSTOMERS);
 
   useEffect(() => {
-    setLast2MonthsOrdersRevenueAndTotalQnty();
+    // setLast2MonthsOrdersRevenueAndTotalQnty();
   }, [ordersData]);
 
 

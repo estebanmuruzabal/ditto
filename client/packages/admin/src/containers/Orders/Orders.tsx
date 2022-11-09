@@ -281,9 +281,6 @@ export default function Orders() {
 
                                             return (
                                                 <React.Fragment key={index + 1}>
-                                                    {/* <StyledCell>
-                                                        <ActionWrapper itemsOffset={offset} itemData={item}/>
-                                                    </StyledCell> */}
                                                     <StyledCell style={{justifyContent: 'center'}}>
                                                         <Status
                                                             className={
@@ -298,6 +295,7 @@ export default function Orders() {
                                                                             : ''
                                                             }
                                                         >
+                                                            <ActionWrapper itemsOffset={offset} itemData={item}/>
                                                             {item.status}
                                                         </Status>
                                                     </StyledCell>
