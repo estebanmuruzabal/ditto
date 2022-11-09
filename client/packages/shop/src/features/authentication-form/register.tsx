@@ -67,7 +67,7 @@ export default function SignOutModal() {
       setRepeatPassword('');
       if (error?.toString() && error?.toString().includes('User already registered')) setErrorMessage(intl.formatMessage({ id: 'userAlreadyRegistered', defaultMessage: 'User already registered' }))
       else if (error?.toString() && error?.toString().includes('Incorrect length')) setErrorMessage(intl.formatMessage({ id: 'atLeast6Char', defaultMessage: 'Mínimo 6 caracteres' }))
-      else setErrorMessage(intl.formatMessage({ id: 'somethingWentWrong' }))
+      else setErrorMessage(error?.toString())
     }
   });
 
