@@ -1,7 +1,8 @@
 const DELAY_TIME = 170; //ms
 const cleanNumber = (number: any) => {
    number = number.replace('@c.us', '');
-   number = number.replace('+', '');
+    number = number.replace('+', '');
+    number = number[0] === '5' && number[1] === '4' ? number.replace('54', '549') : number;
     number = `${number}@c.us`;
     return number
 }

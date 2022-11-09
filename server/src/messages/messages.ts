@@ -5,8 +5,8 @@ const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: strin
 `Hola ${customerName}, tu compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
- - Te recordamos llevar bolsas llevar tus productos por favor!
- - Para pagar, enviános una transfercia por ${CURRENCY}${total} al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante aquí antes de retirar tu pedido 🙏.
+ - Te recordamos llevar bolsas para retirar tus productos!
+ - Para pagar, enviános una transferencia por ${CURRENCY}${total} al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Detalle:*
 *Fecha de compra:*
@@ -24,7 +24,7 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!
+Muchas gracias por su compra eco-sustentable!💚
 Juntos transformamos el mundo ♻️ Ditto Farm.
 `;
 
