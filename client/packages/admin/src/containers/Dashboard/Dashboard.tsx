@@ -130,7 +130,7 @@ const Dashboard = () => {
   const { data: customersDate, error: customerErrors } = useQuery(GET_CUSTOMERS);
 
   useEffect(() => {
-    // setLast2MonthsOrdersRevenueAndTotalQnty();
+    setLast2MonthsOrdersRevenueAndTotalQnty();
   }, [ordersData]);
 
 
@@ -164,40 +164,82 @@ const Dashboard = () => {
       }
     })
   }
-
-  const groupByDate = () => {
+  
+  const generateWeeklyTotalSalesAndTotalSalesSum = () => {
     let groupsByDate = {};
-    let totalSalesByDate = {};
+    let salesByDateWithTotalSelledAndTotalSumByDate = {};
+    let totalSelledPerDate = 0;
+    let totalSumOfSales = 0;
 
-    ordersData?.allOrders?.forEach((val) => {
-      const date = moment(val.datetime).format('MM/D/YYYY');
-      let totalSale = 0;
-        if (date in groupsByDate) {
-          groupsByDate[date].push(val);
-          totalSalesByDate[date].push(totalSale + val.total)
-        } else {
-          groupsByDate[date] = new Array(val);
-          totalSalesByDate[date] = new Array(val.total)
-        }
+    ordersData?.allOrders?.forEach((order) => {
+      const dayOfWeek = moment(order.datetime, 'MM/D/YYYY').day();
+      const date = moment(order.datetime).format('MM/D/YYYY');
+      
+      // if (dayOfMonth >=1 ) {
+      if (dayOfWeek !== 1) {
+        totalSelledPerDate += order.total;  
+        totalSumOfSales += 1;
+        salesByDateWithTotalSelledAndTotalSumByDate[date] = { totalSelledPerDate: totalSelledPerDate, dailyTotalSalesByDate: totalSumOfSales };
+      } else {
+        groupsByDate[date] = new Array();
+        salesByDateWithTotalSelledAndTotalSumByDate[date] = new Array()
+        totalSumOfSales = 1;
+        totalSelledPerDate = order.total;
+      }
     });
 
-    console.log(groupsByDate);
-    console.log(totalSalesByDate);
-    return groupsByDate;
+    return salesByDateWithTotalSelledAndTotalSumByDate;
+    }
+  
+  const generateDailyTotalSalesAndTotalSalesSum = () => {
+    let groupsByDate = {};
+    let salesByDateWithTotalSelledAndTotalSumByDate = {};
+    let totalSelledPerDate = 0;
+    let totalSumOfSales = 0;
+
+    ordersData?.allOrders?.forEach((order) => {
+      const date = moment(order.datetime).format('MM/D/YYYY');
+      
+      if (date in groupsByDate) {
+        totalSelledPerDate += order.total;  
+        totalSumOfSales += 1;
+        salesByDateWithTotalSelledAndTotalSumByDate[date] = { totalSelledPerDate: totalSelledPerDate, dailyTotalSalesByDate: totalSumOfSales };
+      } else {
+        groupsByDate[date] = new Array();
+        salesByDateWithTotalSelledAndTotalSumByDate[date] = new Array()
+        totalSumOfSales = 1;
+        totalSelledPerDate = order.total;
+      }
+    });
+
+    return salesByDateWithTotalSelledAndTotalSumByDate;
+    }
+
+  const dailyTotalSalesAndTotalSalesSum = ordersData?.allOrders?.length && generateDailyTotalSalesAndTotalSalesSum();
+  const weeklyTotalSalesAndTotalSalesSum = ordersData?.allOrders?.length && generateWeeklyTotalSalesAndTotalSalesSum();
+
+// weekly aproach
+  let salesDates = [];
+  let salesTotalAmounts = [];
+  if (weeklyTotalSalesAndTotalSalesSum) { 
+    Object.keys(weeklyTotalSalesAndTotalSalesSum).forEach(function (key, index) {
+        salesDates.push(key)
+        salesTotalAmounts.push(weeklyTotalSalesAndTotalSalesSum[key].dailyTotalSalesByDate)
+    });
+    // console.log(weeklyTotalSalesAndTotalSalesSum)
   }
 
-  ordersData?.allOrders?.length && groupByDate();
+ // dayly aproach
+  // let salesDates = [];
+  // let salesTotalAmounts = [];
+  // if (dailyTotalSalesAndTotalSalesSum) { 
+  //   Object.keys(dailyTotalSalesAndTotalSalesSum).forEach(function (key, index) {
+  //       salesDates.push(key)
+  //       salesTotalAmounts.push(dailyTotalSalesAndTotalSalesSum[key].dailyTotalSalesByDate)
+  //   });
+  //   console.log(salesTotalAmounts.reverse())
+  // }
 
-      // series={[lastSalesAmount[6], lastSalesAmount[5], lastSalesAmount[4], lastSalesAmount[3], lastSalesAmount[2], lastSalesAmount[1], lastSalesAmount[0]]}
-            // labels={[
-            //   lastSalesDate[6],
-            //   lastSalesDate[5],
-            //   lastSalesDate[4],
-            //   lastSalesDate[3],
-            //   lastSalesDate[2],
-            //   lastSalesDate[1],
-            //   lastSalesDate[0],
-            // ]}
   return (
     <Grid fluid={true}>
       <Row>
@@ -214,35 +256,9 @@ const Dashboard = () => {
           <LineChart
             widgetTitle='User Hit Rate'
             color={['#03D3B5']}
-            categories={[
-              'January',
-              'February',
-              'March',
-              'April',
-              'May',
-              'June',
-              'July',
-              'August',
-              'September',
-              'October',
-              'November',
-              'December',
-            ]}
+            categories={salesDates.sort()}
             seriesName='Unique visitors'
-            series={[
-              200,
-              150,
-              430,
-              320,
-              600,
-              468,
-              309,
-              500,
-              273,
-              370,
-              260,
-              180,
-            ]}
+            series={salesTotalAmounts}
           />
         </Col>
       </Row>
@@ -307,26 +323,8 @@ const Dashboard = () => {
           <GraphChart
             widgetTitle='Sales From Social Media'
             colors={['#03D3B5']}
-            series={[25, 30, 14, 30, 55, 60, 48]}
-            labels={[
-              '2019-05-12',
-              '2019-05-13',
-              '2019-05-14',
-              '2019-05-15',
-              '2019-05-16',
-              '2019-05-17',
-              '2019-05-18',
-            ]}
-                // series={[lastSalesAmount[6], lastSalesAmount[5], lastSalesAmount[4], lastSalesAmount[3], lastSalesAmount[2], lastSalesAmount[1], lastSalesAmount[0]]}
-            // labels={[
-            //   lastSalesDate[6],
-            //   lastSalesDate[5],
-            //   lastSalesDate[4],
-            //   lastSalesDate[3],
-            //   lastSalesDate[2],
-            //   lastSalesDate[1],
-            //   lastSalesDate[0],
-            // ]}
+            series={salesTotalAmounts}
+            labels={salesDates}
           />
         </Col>
 
