@@ -48,6 +48,32 @@ export const typeDefs = gql`
         timestamp: String
     }
 
+
+    type ShoppingCart {
+        delivery_date: String
+        customer_id: String
+        contact_number: String
+        payment_option_id: String
+        delivery_method_id: String
+        delivery_address: String
+        payment_method_name: String
+        payment_option_type: String
+        delivery_method_name: String
+        sub_total: Int
+        total: Int
+        coupon_code: String
+        discount_amount: Int
+        products: [ProductInputOrder!]!
+        payment_id: String
+    }
+
+    type Chat {
+        id: ID
+        message: String
+        trigger: String
+        datetime: String
+    }
+
     type User {
         id: ID!
         name: String
@@ -57,10 +83,14 @@ export const typeDefs = gql`
         role: String
         created_at: String
         workInfo: WorkInfo
+        shoppingCart: ShoppingCart
+        chatHistory: [Chat]
         tasks: [Task]
         logs: [Logs]
         plants: [Plant]
     }
+
+
 
     type Task {
         taskId: String
@@ -266,6 +296,17 @@ export const typeDefs = gql`
         hasMore: Boolean
     }
 
+    type ProductInputOrder {
+        product_id: String!
+        name: String
+        image: String
+        quantity: Int!
+        recicledQuantity: Int!
+        unit: String
+        price: Float!
+        sale_price: Float
+    }
+
     # Orders
     input OrderProductInput {
         product_id: String!
@@ -282,8 +323,28 @@ export const typeDefs = gql`
         contact_number: String!
         payment_option_id: String!
         delivery_method_id: String!
+        payment_option_type: String!
+        isWhatsappPurchase: Boolean!
         delivery_address: String!
         delivery_date: String
+        sub_total: Float
+        total: Float
+        coupon_code: String
+        discount_amount: Float
+        products: [OrderProductInput!]!
+        payment_id:  String
+    }
+    
+    input OrderInputNotRequires {
+        customer_id: String
+        contact_number: String
+        payment_option_id: String
+        delivery_method_id: String
+        payment_method_name: String
+        payment_option_type: String
+        delivery_address: String
+        delivery_date: String
+        delivery_method_name: String
         sub_total: Float
         total: Float
         coupon_code: String
@@ -411,6 +472,8 @@ export const typeDefs = gql`
         categories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
         shopCategories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
         products(type: String, category: String, limit: Int = 12, offset: Int = 0, searchText: String): ProductPaginationType!
+        getAvailableProducts: [Product!]!
+        getUserShoppingCart: Order
         getProduct(slug: String!): Product!
         deliveryMethods(limit: Int = 12, offset: Int = 0, searchText: String): DeliveryMethodPaginationType!
         paymentOptions(limit: Int = 12, offset: Int = 0, searchText: String): PaymentOptionPaginationType!
@@ -420,6 +483,7 @@ export const typeDefs = gql`
         getSetting(key: String!): Setting!
         getSiteSetting(key: String!): Setting!
         getUser: User!
+        getCustomer(phone: String!): UserAuthPayload!
         coupons(limit: Int = 12, offset: Int = 0, searchText: String): CouponPaginationType!
         validateCoupon(code: String!): CouponValid!
         userAuthCheck: DefaultMessageType!
@@ -455,6 +519,7 @@ export const typeDefs = gql`
         updatePaymentOption(id: ID!, name: String!, type: String!, image: String!, image_data: String, details: String): PaymentOption!
         deletePaymentOption(id: ID!): DefaultMessageType!
         createOrder(input: OrderInput): Order!
+        updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
@@ -469,6 +534,7 @@ export const typeDefs = gql`
         deleteDeliveryAddress(id: ID!, addressId: String!): DefaultMessageType!
         changePassword(id: ID!, old_password: String!, new_password: String!, confirm_password: String!): DefaultMessageType!
         updateOrderStatus(id: ID!, orderingPosition: Int!): Order!
+        updateUserChat(message: String!, number: String!, trigger: String): DefaultMessageType!
         createCoupon(input: CouponInput): Coupon!
         updateCoupon(id: ID!, input: CouponInput): Coupon!
         deleteCoupon(id: ID!): DefaultMessageType!

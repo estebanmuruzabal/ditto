@@ -7,6 +7,7 @@ import {IProductInput, IProductsArgs, IUpdateProductInputArgs} from "./types";
 import {slugify} from "../../../lib/utils/slugify";
 import {search} from "../../../lib/utils/search";
 import {storeImage} from "../../../lib/utils/image-store";
+import { Product } from 'whatsapp-web';
 
 export const productsResolvers: IResolvers = {
     Query: {
@@ -28,6 +29,9 @@ export const productsResolvers: IResolvers = {
                 products = products.filter((product) => product.type.slug === type);
             }
 
+            products = products.filter((product) => product.is_online === true);
+
+
             products = search(products, ['name', 'slug'], searchText);
             const hasMore = products.length > offset + limit;
 
@@ -36,6 +40,17 @@ export const productsResolvers: IResolvers = {
                 totalCount: products.length,
                 hasMore,
             }
+        },
+        getAvailableProducts: async (
+            _root: undefined,
+            {type, category, limit, offset, searchText}: IProductsArgs,
+            {db, req}: { db: Database, req: Request }
+        ): Promise<IProduct[]> => {
+            let products = await db.products.find({}).toArray();
+
+            products = products.filter((product) => (product.is_online === true) && product.product_quantity > 0);
+
+            return products;
         },
         getProduct: async (
             _root: undefined,

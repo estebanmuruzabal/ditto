@@ -1,4 +1,5 @@
 import {Collection, ObjectId} from 'mongodb';
+import { IOrderInput, IOrderInputArgs } from '../graphql/resolvers/Orders/types';
 
 export interface Plant {
     id?: string;
@@ -70,14 +71,23 @@ export interface IUser {
     email?: string;
     password: string;
     phones?: Array<Phone>;
-    plants?: Array<Plant>;
+    plants: Array<Plant>;
     delivery_address?: Array<Address>;
     otp?: string;
     role?: Roles;
+    shoppingCart?: IOrderInput;
+    chatHistory: IChat[];
     created_at: string;
     workInfo: IWorkInfo;
     tasks: Array<Task>;
     logs: Array<Logs>;
+}
+
+export interface IChat {
+    _id?: ObjectId;
+    message: string;
+    trigger?: string;
+    datetime: string;
 }
 
 export enum Roles {
@@ -88,7 +98,33 @@ export enum Roles {
     CLIENT = 'CLIENT',
     STAFF = 'STAFF'
 }
-  
+
+export enum TriggerStaffSteps {
+    STAFF_MAIN_MENU = 'STEP_1',
+    MAIN_MENU_ANSWER = 'STEP_2',
+}
+
+export enum TriggerSteps {
+    INITIAL_UNAUTHENTICATED_USER = 'STEP_0',
+    USER_SHOULD_INPUT_HIS_NAME = 'STEP_0_1',
+    INITIAL_UNAUTHENTICATED_USER_AGAIN = 'STEP_0_2',
+    AUTHENTICATED_USER_MAIN_MENU = 'STEP_0_3',
+    MAIN_MENU = 'STEP_1',
+    GET_PRODUCTS_LIST_STEP = 'STEP_2',
+    GET_PRODUCTS_INFO_STEP = 'STEP_3',
+    ADD_PRODUCT_TO_CART = 'STEP_4',
+    SELECT_QUANTITY_OF_PRODUCT = 'STEP_5',
+    UNKNOWN_ERROR_STEP = 'STEP_100',
+    // listing products again
+    ADD_MORE_PRODUCTS_STEP = 'STEP_6',
+    DELIVERY_OR_PICKUP_OPT_SELECTED = 'STEP_7',
+    PICKUP_OPT_SELECTED = 'STEP_8',
+    DELIVERY_OPT_SELECTED = 'STEP_9',
+    SELECT_PAYMENT_METHOD = 'STEP_10',
+    ORDER_CHECK_CONFIRMATION = 'STEP_11',
+    DELETE_COMPLETE_CHAT_HISTORY = 'delete_chat_history'
+
+}
 
 export interface IWorkInfo {
     stoppedWorkTime: string | null;
@@ -185,6 +221,7 @@ export interface IProduct {
     sale_price?: number;
     discount_in_percent?: number;
     product_quantity: number;
+    recicledQuantity?: number;
     meta_title?: string;
     meta_keyword?: string;
     meta_description?: string;
@@ -286,6 +323,7 @@ export interface IOrder {
 export interface ICommonMessageReturnType {
     message: string;
     status: boolean;
+    access_token?: string;
 }
 
 export interface ISetting {

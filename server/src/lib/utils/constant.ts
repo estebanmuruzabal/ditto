@@ -14,7 +14,13 @@ export const CASH_PAYMENT_OPTION = 'cash';
 export const CC_PAYMENT_OPTION = 'cc';
 export const BANK_TRANSFER_PAYMENT_OPTION = 'bank_transfer';
 
-export const BANK_TRANSFER_ALIAS = 'dittofarm';
-export const BANK_TRANSFER_CBU = '0000003100030458924685';
+export const BANK_TRANSFER_ALIAS = 'ditto.farm.rcia';
+export const BANK_TRANSFER_CBU = '0000168300000003376935';
 export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
 export const COMPANY_EMAIL_PASSWORD = 'glbequknuqtduxxc';
+export const INITIAL_DITTO_USERNAME = 'nonamed';
+export const INITIAL_DITTO_PASSWORD = 'Initial_ditt0_pa$$word';
+
+export const AVAILABLE_PRODUCTS_OPT = 1;
+export const TECNICAS_DE_CULTIVO_OPT = 2;
+export const CHECKOUT_OPTION_SELECTED = 99;

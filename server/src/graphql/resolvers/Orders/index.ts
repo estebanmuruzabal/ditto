@@ -13,11 +13,12 @@ import {authorize} from "../../../lib/utils";
 import {IOrderInputArgs, IOrderProductInput} from "./types";
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
-import { sendConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
+import { sendCompanyConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
 import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
-import { deliveryPurchaseWithTransferPayment, deliveryPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, orderDeliveredAndFeedBack } from '../../../messages/messages';
+import { deliveryPurchaseWithTransferPayment, deliveryPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
 import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_EMAIL, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD } from '../../../lib/utils/constant';
+import { getOrderConfirmationMsgText, getCleanNumber } from '../../../lib/utils/shoppingUtils';
 const oderTracker: Array<IOrderTracker> = [
     {
         status: "Pendiente",
@@ -64,7 +65,7 @@ const oderTracker: Array<IOrderTracker> = [
 ];
 
 
-const makeObjectIds =  (productsInput: IOrderProductInput[]) =>  {
+export const makeObjectIds =  (productsInput: IOrderProductInput[]) =>  {
     const objIds: Array<ObjectId> = [];
 
     productsInput.forEach(item => {
@@ -145,7 +146,7 @@ export const ordersResolvers: IResolvers = {
             {input}: IOrderInputArgs,
             {db, req}: { db: Database, req: Request }
         )/*: Promise<IOrder>*/ => {
-            await authorize(req, db);
+            // await authorize(req, db);
             const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
             const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
             // @ts-ignore
@@ -157,7 +158,6 @@ export const ordersResolvers: IResolvers = {
             if (!customer) throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
             const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
-            let message: string;
             
             // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {
@@ -205,6 +205,7 @@ export const ordersResolvers: IResolvers = {
             };
 
             const insertResult = await db.orders.insertOne(insertData);
+            console.log('input:::::::', input)
             if (insertResult.ops[0]) {
                 for (let i = 0; i < products.length; i++) {
                     // @ts-ignore
@@ -218,39 +219,24 @@ export const ordersResolvers: IResolvers = {
                     )
                 }
             }
-
+            
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-                await sendConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
+                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
                 if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
-                console.log(deliveryMethodName, paymentOptionType)
-                switch (paymentOptionType) {
-                    case BANK_TRANSFER_PAYMENT_OPTION:
-                        if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
-                            message = pickUpPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
-                        } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
-                            message = deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
-                        }
-                    case CASH_PAYMENT_OPTION:
-                    case CC_PAYMENT_OPTION:
-                        if (PICKUP_GUEMES_DELIVERY_METHOD === deliveryMethodName || PICKUP_GRANJA_DELIVERY_METHOD === deliveryMethodName) {
-                            message = pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
-                        } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === deliveryMethodName) {
-                            message = deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, customerName, deliveryMethodName, paymentOptionName, input?.products, input.delivery_date); break;
-                        }            
-                    default:
-                        break;
+
+                // whatsapp confirmation whatsapp is handled in another logic
+                if (!input.isWhatsappPurchase) {
+                    const input2 = { delivery_method_name: deliveryMethodName, payment_option_type: paymentOptionType, delivery_address: input.delivery_address, payment_method_name: paymentOptionName, products: input.products, delivery_date: input.delivery_date, total: input.total }
+                    const message = getOrderConfirmationMsgText(input2, customer);
+                    // @ts-ignore
+                    sendMessage(client, input.contact_number, message, null);
                 }
-                // @ts-ignore
-                console.log(message)
-                // @ts-ignore
-                sendMessage(client, input.contact_number, message, null);
-                // END OF EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
 
             } catch (error) {
                 console.log('error in sending mail/whatsapp', error)
             }
-            
+
             return insertResult.ops[0];
         },
         updateOrderStatus: async (
@@ -262,7 +248,7 @@ export const ordersResolvers: IResolvers = {
 
             const orderResult = await db.orders.findOne({_id: new ObjectId(id)});
             if (!orderResult) {
-                throw new Error("Order dose not exits.");
+                throw new Error("Order does not exits.");
             }
             let statuses = [];
             const { contact_number, customer_name } = orderResult;

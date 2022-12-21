@@ -69,6 +69,8 @@ export const staffMethodsResolvers: IResolvers = {
                     taskRelated: ""
                 },
                 tasks: [],
+                chatHistory: [],
+                plants: [],
                 logs: []
             };
             await db.users.insertOne(user);
@@ -94,7 +96,7 @@ export const staffMethodsResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
             const logs = userResult.logs || [];
             logs.push({
@@ -134,7 +136,7 @@ export const staffMethodsResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             await db.users.updateOne(
@@ -158,7 +160,7 @@ export const staffMethodsResolvers: IResolvers = {
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
             const { tasks } = userResult;
             const taskIndex = tasks?.findIndex(task => task.taskId === taskId) || 0;
@@ -196,7 +198,7 @@ export const staffMethodsResolvers: IResolvers = {
             // console.log(taskId, description ,startDate ,finishDate ,plannedDate, isRepetitived, completationTimes, workedHours, isDone)
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
             
 

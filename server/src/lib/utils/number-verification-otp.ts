@@ -28,7 +28,7 @@ export const sendOtp = (sendToNumber: string, otpCode: string) => {
         );
 }
 
-export const sendConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string) => {
+export const sendCompanyConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string) => {
 
     const transporter = nodemailer.createTransport({
         service: 'Gmail',

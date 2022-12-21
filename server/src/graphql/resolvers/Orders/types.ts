@@ -7,13 +7,17 @@ export interface IOrderProductInput {
     unit?: string;
     price: number;
 }
-interface IOrderInput {
+export interface IOrderInput {
     delivery_date: string;
     customer_id: string;
     contact_number: string;
     payment_option_id: string;
     delivery_method_id: string;
+    isWhatsappPurchase?: boolean;
     delivery_address: string;
+    payment_method_name: string;
+    payment_option_type: string;
+    delivery_method_name: string;
     sub_total: number;
     total: number;
     coupon_code?: string;

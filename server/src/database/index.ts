@@ -11,8 +11,8 @@ const dbPassword: string = process.env.DB_USER_PASSWORD;
 
     console.log(process.env.APP_ENV)
 if (process.env.APP_ENV == 'production') {
-    // url = `mongodb+srv://estebanmuruzabal:Dallas765@cluster0.cmdfgmr.mongodb.net/dittodb`;
-    url = `mongodb+srv://${dbUserName}:${dbPassword}@${process.env.DB_CLUSTER}/${dbName}`;
+    url = `mongodb+srv://estebanmuruzabal:Dallas765@cluster0.cmdfgmr.mongodb.net/?retryWrites=true&w=majority`;
+    // url = `mongodb+srv://${dbUserName}:${dbPassword}@${process.env.DB_CLUSTER}/${dbName}`;
 } else if (process.env.APP_ENV == 'development') {
     url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}/${dbName}`;
     // url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
@@ -44,6 +44,7 @@ export const connectDatabase = async (): Promise<Database> => {
         settings: db.collection('settings'),
         coupons: db.collection('coupons'),
         home_cards: db.collection('home_cards'),
+        chats: db.collection('chats'),
     };
 
     return allCollections;

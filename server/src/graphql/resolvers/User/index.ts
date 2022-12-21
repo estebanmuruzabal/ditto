@@ -1,12 +1,14 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, ICommonMessageReturnType, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles} from "../../../lib/types";
+import {Address, Database, ICommonMessageReturnType, IProduct, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize} from "../../../lib/utils";
 import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
+import { IOrderInput, IOrderInputArgs } from '../Orders/types';
+import { makeObjectIds } from '../Orders';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -18,7 +20,7 @@ export const validatePassword = async (plainPassword: string, hashPassword: stri
 
 export const accessToken = (id: any) => {
     const secret = <string>process.env.JWT_SECRET;
-    return jwt.sign({UserId: id}, secret, {expiresIn: "1d"})
+    return jwt.sign({UserId: id}, secret )
 };
 
 export const authChecker = (token: string, secret: string) => {
@@ -26,17 +28,17 @@ export const authChecker = (token: string, secret: string) => {
         return false;
     }
 
-    try {
-        jwt.verify(token, secret);
-    } catch(err) {
-        return false;
-    }
+    // try {
+    //     jwt.verify(token, secret);
+    // } catch(err) {
+    //     return false;
+    // }
 
-    const {UserId, exp} = <any>jwt.verify(token, secret);
+    // const {UserId, exp} = <any>jwt.verify(token, secret);
 
-    if (exp < Date.now().valueOf() / 1000) {
-        return false;
-    }
+    // if (exp < Date.now().valueOf() / 1000) {
+    //     return false;
+    // }
 
     return true;
 }
@@ -72,6 +74,22 @@ export const usersResolvers: IResolvers = {
             // @ts-ignore
             return await authorize(req, db);
         },
+         getCustomer: async (
+            _root: undefined,
+            {phone}: { phone: string},
+            {db, req}: { db: Database, req: Request }
+        ): Promise<IUserAuth> => {
+            const userResult = await db.users.findOne({"phones.number": phone});
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
+             const token = accessToken(userResult._id);
+
+             return {
+                 user: userResult,
+                 access_token: token
+             };
+        },
         userAuthCheck: async (
             _root: undefined,
             _args: undefined,
@@ -95,6 +113,35 @@ export const usersResolvers: IResolvers = {
     },
 
     Mutation: {
+        updateUserChat: async (
+            _root: undefined,
+            {message, number, trigger}: { message: string, number: string, trigger: string },
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+
+            const userResult = await db.users.findOne({"phones.number": number});
+            let chatHistory: any = [];
+            if (!userResult) {
+                throw new Error("User not found");
+            }
+
+            if (trigger !== TriggerSteps.DELETE_COMPLETE_CHAT_HISTORY) {
+                const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                chatHistory = userResult.chatHistory?.length > 0 ? userResult.chatHistory : [];
+                chatHistory.push({message, trigger, datetime })
+            }
+
+            await db.users.updateOne(
+                {_id: new ObjectId(userResult._id)},
+                {$set: {chatHistory}}
+            );
+
+            return {
+                status: true,
+                message: "Successfully saved chat history."
+            };
+        },
         signUp: async (
             _root: undefined,
             {phone, password, name}: { phone: string, password: string, name: string },
@@ -135,6 +182,8 @@ export const usersResolvers: IResolvers = {
                     taskRelated: ""
                 },
                 tasks: [],
+                chatHistory: [],
+                shoppingCart: undefined,
                 plants: [],
                 logs: []
             };
@@ -148,7 +197,8 @@ export const usersResolvers: IResolvers = {
 
             return {
                 status: true,
-                message: "Successfully send otp to your number."
+                message: "Successfully send otp to your number.",
+                access_token: accessToken(user._id),
             };
         },
         login: async (
@@ -158,13 +208,13 @@ export const usersResolvers: IResolvers = {
         ): Promise<IUserAuth> => {
             const userResult = await db.users.findOne({"phones.number": phone});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
-            // const validatePass = await validatePassword(password, userResult.password);
-            // if (!validatePass) {
-            //     throw new Error("Password dose not match.")
-            // }
+            const validatePass = await validatePassword(password, userResult.password);
+            if (!validatePass) {
+                throw new Error("Password dose not match.")
+            }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -189,7 +239,7 @@ export const usersResolvers: IResolvers = {
         ): Promise<ICommonMessageReturnType> => {
             const userResult = await db.users.findOne({"phones.number": phone});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -223,7 +273,7 @@ export const usersResolvers: IResolvers = {
         ): Promise<IUserAuth> => {
             const userResult = await db.users.findOne({"phones.number": phone});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // if (userResult.otp != verification_code) {
@@ -257,7 +307,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             await db.users.updateOne(
@@ -268,6 +318,57 @@ export const usersResolvers: IResolvers = {
             return {
                 status: true,
                 message: "Updated successfully."
+            };
+        },
+        updateUserShoppingCart: async (
+            _root: undefined,
+            {input}: IOrderInputArgs,
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+            
+            // const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
+            const userResult = await db.users.findOne({ _id: new ObjectId(input.customer_id) });
+            if (!userResult) throw new Error("User does not exits.");
+
+            const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
+
+            for (let i = 0; i < input.products.length; i++) {
+                // @ts-ignore
+                const dbProduct: IProduct = await db.products.findOne({ _id: new ObjectId(input.products[i].product_id) });
+                const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
+
+                if (dbProduct.product_quantity < purchasedQuantity) {
+                    throw new Error(`'${input.products[i].name}', No hay suficiente cantidad de este producto. Cantidad disponible: ${products[i].product_quantity}`);
+                }
+            }
+
+            const shoppingCart: IOrderInput = {
+                customer_id: input.customer_id,
+                contact_number: input.contact_number,
+                payment_option_id: input.payment_option_id,
+                delivery_method_id: input.delivery_method_id,
+                delivery_method_name: input.delivery_method_name,
+                payment_option_type: input.payment_option_type,
+                payment_method_name: input.payment_method_name,
+                isWhatsappPurchase: input.isWhatsappPurchase,
+                delivery_date: input.delivery_date,
+                delivery_address: input.delivery_address,
+                sub_total: input.sub_total,
+                total: input.total,
+                coupon_code: input.coupon_code,
+                discount_amount: input.discount_amount,
+                products: input.products
+            };
+
+            await db.users.updateOne(
+                {_id: new ObjectId(input.customer_id)},
+                {$set: {shoppingCart}}
+            );
+
+            return {
+                status: true,
+                message: "updated successfully."
             };
         },
         addPlant: async (
@@ -284,11 +385,9 @@ export const usersResolvers: IResolvers = {
             const userResult = await db.users.findOne({ _id: new ObjectId(id) });
 
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             if (userResult.plants.length == 3) {
                 throw new Error("Already added two plants. You are not allowed to add more than two.");
             }
@@ -328,46 +427,25 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
             const plants = userResult.plants;
             const index = userResult.plants?.findIndex(plant => (plant.controllerId == controllerId));
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            if (index < 0) {
+
+            if (index <= 0) {
                 throw new Error("Controller id does not exists.");
             } else {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 plants[index].humedad = humedad;
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 plants[index].temperatura = temperatura;
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 plants[index].mapeoTierra = mapeoTierra;
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 plants[index].mapeoLuz = mapeoLuz;
             }
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
+
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}
             );
-            // await db.users.updateOne(
-            //     {_id: new ObjectId(id), "plant.controllerId": controllerId},
-            //     {
-            //         $set: {
-            //             "plant.$.humedad": humedad,
-            //             "plant.$.temperatura": temperatura,
-            //             "plant.$.mapeoLuz": mapeoLuz,
-            //             "plant.$.mapeoTierra": mapeoTierra,
-            //         }
-            //     }
-            // );
-            
+
              return {
                 status: true,
                 message: "updated successfully."
@@ -382,7 +460,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -414,7 +492,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             await db.users.updateOne(
@@ -443,7 +521,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -485,7 +563,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -535,7 +613,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -576,7 +654,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -614,7 +692,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -660,7 +738,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -708,7 +786,7 @@ export const usersResolvers: IResolvers = {
 
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
 
             const validatePass = await validatePassword(old_password, userResult.password);
@@ -730,6 +808,9 @@ export const usersResolvers: IResolvers = {
     User: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        id: (user: IUser): string => user._id.toString(),
+        id: (user: IUser): string => {
+            // @ts-ignore
+            return user?.user?._id?.toString() || user?._id?.toString();
+        }
     }
 }
