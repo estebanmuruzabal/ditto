@@ -205,7 +205,7 @@ export const ordersResolvers: IResolvers = {
             };
 
             const insertResult = await db.orders.insertOne(insertData);
-            console.log('input:::::::', input)
+
             if (insertResult.ops[0]) {
                 for (let i = 0; i < products.length; i++) {
                     // @ts-ignore
@@ -302,7 +302,7 @@ export const ordersResolvers: IResolvers = {
             const currentStatus = statuses.filter(item => {
                 if (item.ordering == orderingPosition) return item;
             })[0];
-            console.log(currentStatus.status, customer_name)
+
             if (currentStatus.status === 'Entregado') {
                 const message: string = orderDeliveredAndFeedBack(customer_name);
                 // @ts-ignore

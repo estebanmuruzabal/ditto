@@ -473,7 +473,7 @@ export const typeDefs = gql`
         types(limit: Int = 12, offset: Int = 0, searchText: String): MainTypePaginationType!
         categories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
         shopCategories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
-        products(type: String, category: String, limit: Int = 12, offset: Int = 0, searchText: String): ProductPaginationType!
+        products(type: String, category: String, limit: Int = 12, offset: Int = 0, searchText: String, filterUnstockProducts: Boolean): ProductPaginationType!
         getAvailableProducts: [Product!]!
         getUserShoppingCart: Order
         getProduct(slug: String!): Product!

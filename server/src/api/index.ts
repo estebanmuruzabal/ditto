@@ -110,7 +110,8 @@ export const getProducts  = (category: string) => new Promise((resolve, reject) 
             category,
             limit: 20,
             offset: 0,
-            searchText: ''
+            searchText: '',
+            filterUnstockProducts: true
         }
     }).then((res: ICategory[]) => {
         console.log('[getProducts]:',res);

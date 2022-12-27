@@ -13,11 +13,11 @@ export const productsResolvers: IResolvers = {
     Query: {
         products: async (
             _root: undefined,
-            {type, category, limit, offset, searchText}: IProductsArgs,
+            {type, category, limit, offset, searchText, filterUnstockProducts}: IProductsArgs,
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonPaginationReturnType> => {
             let products = await db.products.find({}).sort({is_featured: -1}).toArray();
-            console.log('category', category)
+
             if (category) {
                 products = products.filter((product) =>
                     product.categories.find(
@@ -29,8 +29,9 @@ export const productsResolvers: IResolvers = {
                 products = products.filter((product) => product.type.slug === type);
             }
 
-            // products = products.filter((product) => product.is_online === true);
+            products = products.filter((product) => product.is_online === true);
 
+            if (filterUnstockProducts) products = products.filter((product) =>  product.product_quantity > 0);
 
             products = search(products, ['name', 'slug'], searchText);
             const hasMore = products.length > offset + limit;
@@ -41,6 +42,7 @@ export const productsResolvers: IResolvers = {
                 hasMore,
             }
         },
+        // unsused @delete bellow method
         getAvailableProducts: async (
             _root: undefined,
             {type, category, limit, offset, searchText}: IProductsArgs,
@@ -48,7 +50,7 @@ export const productsResolvers: IResolvers = {
         ): Promise<IProduct[]> => {
             let products = await db.products.find({}).toArray();
 
-            products = products.filter((product) => (product.is_online === true) && product.product_quantity > 0);
+            products = products.filter((product) =>  product.product_quantity > 0);
 
             return products;
         },

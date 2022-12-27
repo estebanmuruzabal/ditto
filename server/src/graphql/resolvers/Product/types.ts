@@ -60,4 +60,5 @@ export interface IProductsArgs {
     limit: number;
     offset: number;
     searchText?: string;
+    filterUnstockProducts?: boolean;
 }

@@ -201,8 +201,6 @@ export const staffMethodsResolvers: IResolvers = {
                 throw new Error("User does not exits.");
             }
             
-
-            // console.log(userResult)
             const { tasks } = userResult;
             const taskIndex = tasks?.findIndex(task => task.taskId === taskId) || 0;
 

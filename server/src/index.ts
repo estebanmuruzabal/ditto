@@ -122,7 +122,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     const number: string = cleanNumber(from)
     let user, access_token;
     
-    if (number !== '5493624885763') return;
+    // if (number !== '5493624885763') return;
     console.log('recevvinggg: ', body)
     const res: any = await fetchCustomerAndToken(number);
 

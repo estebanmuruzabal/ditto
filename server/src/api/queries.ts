@@ -166,13 +166,15 @@ export const GET_PRODUCTS = `
         $type: String
         $category: String
         $searchText: String
-        $offset: Int
+        $offset: Int,
+        $filterUnstockProducts: Boolean
     ) {
         products(
         type: $type
         category: $category
         searchText: $searchText
-        offset: $offset
+        offset: $offset,
+        filterUnstockProducts: $filterUnstockProducts
         ) {
         items {
             id

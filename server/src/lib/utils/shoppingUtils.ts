@@ -130,7 +130,6 @@ export const calculateSubTotalPrice = (delivery_method: any) => {
     if (delivery_method.isPickUp) return 0;
 
     const charge = delivery_method?.name?.split("$");
-    console.log('charge::', charge)
     const chargeFormatted = charge[charge?.length - 1]?.replace(/\D/g, '');
     
     return Number(chargeFormatted);
