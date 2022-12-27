@@ -128,7 +128,22 @@ const Dashboard = () => {
 
   const { data: ordersData, error: ordersError } = useQuery(GET_ORDERS);  
   const { data: customersDate, error: customerErrors } = useQuery(GET_CUSTOMERS);
-
+  const setLast2MonthsOrdersRevenueAndTotalQnty = (): any => {
+    ordersData?.allOrders.map(order => {
+      const orderDate = moment(order.datetime, 'MM/D/YYYY');
+      
+      const orderIsInsideLast30Days = date30DaysBeforeToday.isBefore(orderDate);
+      const orderIsInsideLast60Days = date60DaysBeforeToday.isBefore(orderDate) && orderDate.isBefore(date30DaysBeforeToday);
+      
+      if (orderIsInsideLast30Days) {
+        setLastMonthOrders((prevState) => prevState + 1)
+        setLastMonthTotalRevenue((prevState) => prevState + order.total)
+      } else if (orderIsInsideLast60Days) {
+        setLast2MonthOrders((prevState) => prevState + 1)
+        setLast2MonthTotalRevenue((prevState) => prevState + order.total)
+      }
+    })
+  }
   useEffect(() => {
     setLast2MonthsOrdersRevenueAndTotalQnty();
   }, [ordersData]);
@@ -148,22 +163,7 @@ const Dashboard = () => {
     })
   }
 
-  const setLast2MonthsOrdersRevenueAndTotalQnty = (): any => {
-    ordersData?.allOrders.map(order => {
-      const orderDate = moment(order.datetime, 'MM/D/YYYY');
-      
-      const orderIsInsideLast30Days = date30DaysBeforeToday.isBefore(orderDate);
-      const orderIsInsideLast60Days = date60DaysBeforeToday.isBefore(orderDate) && orderDate.isBefore(date30DaysBeforeToday);
-      
-      if (orderIsInsideLast30Days) {
-        setLastMonthOrders((prevState) => prevState + 1)
-        setLastMonthTotalRevenue((prevState) => prevState + order.total)
-      } else if (orderIsInsideLast60Days) {
-        setLast2MonthOrders((prevState) => prevState + 1)
-        setLast2MonthTotalRevenue((prevState) => prevState + order.total)
-      }
-    })
-  }
+
   
   const generateWeeklyTotalSalesAndTotalSalesSum = () => {
     let groupsByDate = {};
