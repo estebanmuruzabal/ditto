@@ -17,6 +17,7 @@ export const getCustomerQuery = `
                     delivery_method_id
                     delivery_method_name
                     payment_method_name
+                    selectedCategorySlug
                     payment_option_type
                     delivery_date
                     delivery_address
@@ -105,6 +106,23 @@ export const updateUserChatQuery = `
     }
 `;
 
+export const GET_CATEGORIES = `
+    query GetCategories {
+        categories(limit: 0) {
+        items {
+            id
+            parent_id
+            name
+            slug
+            banner
+            icon
+        }
+        totalCount
+        hasMore
+        }
+    }
+`;
+
 export const getDeliveryMethodsQuery = `
         query GetDeliveryMethods(
         $searchText: String
@@ -143,6 +161,53 @@ export const getAvailableProductsQuery = `
     }
 `;
 
+export const GET_PRODUCTS = `
+    query GetProducts(
+        $type: String
+        $category: String
+        $searchText: String
+        $offset: Int
+    ) {
+        products(
+        type: $type
+        category: $category
+        searchText: $searchText
+        offset: $offset
+        ) {
+        items {
+            id
+            type {
+                id
+                slug
+                name
+            }
+            categories {
+                id
+                slug
+                name
+            }
+            name
+            slug
+            packagePrice
+            description
+            images
+            unit
+            price
+            sale_price
+            discount_in_percent
+            product_quantity
+            is_featured
+            is_online
+            meta_title
+            meta_keyword
+            meta_description
+        }
+        totalCount
+        hasMore
+        }
+    }
+`;
+
 export const getUserShoppingCartsQuery = `
     query GetUserShoppingCart {
         getUserShoppingCart {
@@ -150,6 +215,7 @@ export const getUserShoppingCartsQuery = `
             contact_number
             payment_option_id
             delivery_method_id
+            selectedCategorySlug
             delivery_date
             delivery_address
             sub_total

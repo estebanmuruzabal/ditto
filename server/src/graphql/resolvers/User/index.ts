@@ -4,7 +4,7 @@ import {Request} from "express";
 import {Address, Database, ICommonMessageReturnType, IProduct, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
-import {authorize} from "../../../lib/utils";
+import {authorize, takeNineOutIfItHasIt} from "../../../lib/utils";
 import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
@@ -78,8 +78,10 @@ export const usersResolvers: IResolvers = {
             _root: undefined,
             {phone}: { phone: string},
             {db, req}: { db: Database, req: Request }
-        ): Promise<IUserAuth> => {
-            const userResult = await db.users.findOne({"phones.number": phone});
+         ): Promise<IUserAuth> => {
+             // when comming from whatsapp, numbers has 9, like 549blabla, so we take it off to match web signups users.
+             const phoneFormatted = takeNineOutIfItHasIt(phone)
+            const userResult = await db.users.findOne({"phones.number": phoneFormatted});
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
@@ -119,22 +121,24 @@ export const usersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
-
-            const userResult = await db.users.findOne({"phones.number": number});
+            const phoneFormatted = takeNineOutIfItHasIt(number)
+            const userResult = await db.users.findOne({"phones.number": phoneFormatted});
             let chatHistory: any = [];
+            let shoppingCart: any = undefined;
             if (!userResult) {
                 throw new Error("User not found");
             }
 
-            if (trigger !== TriggerSteps.DELETE_COMPLETE_CHAT_HISTORY) {
+            if (trigger !== TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART) {
                 const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
                 chatHistory = userResult.chatHistory?.length > 0 ? userResult.chatHistory : [];
-                chatHistory.push({message, trigger, datetime })
+                chatHistory.push({ message, trigger, datetime })
+                shoppingCart = userResult?.shoppingCart;
             }
 
             await db.users.updateOne(
                 {_id: new ObjectId(userResult._id)},
-                {$set: {chatHistory}}
+                { $set: { chatHistory, shoppingCart } }
             );
 
             return {
@@ -147,7 +151,8 @@ export const usersResolvers: IResolvers = {
             {phone, password, name}: { phone: string, password: string, name: string },
             {db}: { db: Database }
         ): Promise<ICommonMessageReturnType> => {
-            const userResult = await db.users.findOne({"phones.number": phone});
+            const phoneFormatted = takeNineOutIfItHasIt(phone)
+            const userResult = await db.users.findOne({"phones.number": phoneFormatted});
             
             if (userResult) {
                 throw new Error("User already registered.");
@@ -167,7 +172,7 @@ export const usersResolvers: IResolvers = {
                 name,
                 email: "",
                 password: await hashPassword(password),
-                phones: [{id: shortid.generate(), number: phone, status: false, is_primary: true}],
+                phones: [{id: shortid.generate(), number: phoneFormatted, status: false, is_primary: true}],
                 otp: otp,
                 role: Roles.CLIENT,
                 created_at: new Date().toString(),
@@ -342,13 +347,14 @@ export const usersResolvers: IResolvers = {
                     throw new Error(`'${input.products[i].name}', No hay suficiente cantidad de este producto. Cantidad disponible: ${products[i].product_quantity}`);
                 }
             }
-
+            console.log(input.selectedCategorySlug)
             const shoppingCart: IOrderInput = {
                 customer_id: input.customer_id,
                 contact_number: input.contact_number,
                 payment_option_id: input.payment_option_id,
                 delivery_method_id: input.delivery_method_id,
                 delivery_method_name: input.delivery_method_name,
+                selectedCategorySlug: input.selectedCategorySlug,
                 payment_option_type: input.payment_option_type,
                 payment_method_name: input.payment_method_name,
                 isWhatsappPurchase: input.isWhatsappPurchase,

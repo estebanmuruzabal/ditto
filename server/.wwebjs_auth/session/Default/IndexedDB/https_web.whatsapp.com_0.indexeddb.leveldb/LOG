@@ -1,0 +1,29 @@
+2022/12/27-18:58:52.283 9503 Reusing MANIFEST /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2022/12/27-18:58:52.284 9503 Recovering log #2035
+2022/12/27-18:58:52.316 9503 Reusing old log /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/002035.log 
+2022/12/27-18:59:09.297 27e03 Level-0 table #2062: started
+2022/12/27-18:59:09.350 27e03 Level-0 table #2062: 1153708 bytes OK
+2022/12/27-18:59:09.388 27e03 Delete type=0 #2035
+2022/12/27-18:59:09.420 9103 Compacting 1@0 + 0@1 files
+2022/12/27-18:59:09.454 9103 Generated table #2063@0: 14923 keys, 476418 bytes
+2022/12/27-18:59:09.473 9103 Generated table #2064@0: 43 keys, 2859 bytes
+2022/12/27-18:59:09.473 9103 Compacted 1@0 + 0@1 files => 479277 bytes
+2022/12/27-18:59:09.511 9103 compacted to: files[ 0 2 20 0 0 0 0 ]
+2022/12/27-18:59:09.512 9103 Delete type=2 #2062
+2022/12/27-18:59:17.649 27e03 Compacting 1@1 + 6@2 files
+2022/12/27-18:59:17.736 27e03 Generated table #2065@1: 29533 keys, 2257428 bytes
+2022/12/27-18:59:17.800 27e03 Generated table #2066@1: 23975 keys, 2272478 bytes
+2022/12/27-18:59:17.857 27e03 Generated table #2067@1: 24032 keys, 2271939 bytes
+2022/12/27-18:59:17.919 27e03 Generated table #2068@1: 23621 keys, 2271978 bytes
+2022/12/27-18:59:18.001 27e03 Generated table #2069@1: 94057 keys, 2260912 bytes
+2022/12/27-18:59:18.054 27e03 Generated table #2070@1: 27332 keys, 2240013 bytes
+2022/12/27-18:59:18.075 27e03 Generated table #2071@1: 259 keys, 139886 bytes
+2022/12/27-18:59:18.075 27e03 Compacted 1@1 + 6@2 files => 13714634 bytes
+2022/12/27-18:59:18.113 27e03 compacted to: files[ 0 1 21 0 0 0 0 ]
+2022/12/27-18:59:18.114 27e03 Delete type=2 #2049
+2022/12/27-18:59:18.114 27e03 Delete type=2 #2063
+2022/12/27-18:59:18.114 27e03 Delete type=2 #2052
+2022/12/27-18:59:18.114 27e03 Delete type=2 #2053
+2022/12/27-18:59:18.114 27e03 Delete type=2 #2051
+2022/12/27-18:59:18.114 27e03 Delete type=2 #2050
+2022/12/27-18:59:18.114 27e03 Delete type=2 #2054

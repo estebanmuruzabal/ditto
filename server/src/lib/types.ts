@@ -100,29 +100,33 @@ export enum Roles {
 }
 
 export enum TriggerStaffSteps {
-    STAFF_MAIN_MENU = 'STEP_1',
-    MAIN_MENU_ANSWER = 'STEP_2',
+    STAFF_ALL_CATEGORIES = 'STEP_1',
+    ALL_CATEGORIES_ANSWER = 'STEP_2',
 }
 
 export enum TriggerSteps {
     INITIAL_UNAUTHENTICATED_USER = 'STEP_0',
     USER_SHOULD_INPUT_HIS_NAME = 'STEP_0_1',
     INITIAL_UNAUTHENTICATED_USER_AGAIN = 'STEP_0_2',
-    AUTHENTICATED_USER_MAIN_MENU = 'STEP_0_3',
-    MAIN_MENU = 'STEP_1',
+    AUTHENTICATED_USER_ALL_CATEGORIES = 'STEP_0_3',
+    ALL_CATEGORIES = 'STEP_1',
+    SELECT_CATEGORY = 'select_category',
     GET_PRODUCTS_LIST_STEP = 'STEP_2',
     GET_PRODUCTS_INFO_STEP = 'STEP_3',
     ADD_PRODUCT_TO_CART = 'STEP_4',
     SELECT_QUANTITY_OF_PRODUCT = 'STEP_5',
-    UNKNOWN_ERROR_STEP = 'STEP_100',
-    // listing products again
     ADD_MORE_PRODUCTS_STEP = 'STEP_6',
     DELIVERY_OR_PICKUP_OPT_SELECTED = 'STEP_7',
     PICKUP_OPT_SELECTED = 'STEP_8',
     DELIVERY_OPT_SELECTED = 'STEP_9',
     SELECT_PAYMENT_METHOD = 'STEP_10',
     ORDER_CHECK_CONFIRMATION = 'STEP_11',
-    DELETE_COMPLETE_CHAT_HISTORY = 'delete_chat_history'
+    // other types
+    RESET_CHAT_HISTORY_AND_SHOPPING_CART = 'delete_chat_history',
+    UNKNOWN_ERROR_STEP = 'STEP_100',
+    BLOCK_CHAT = 'block_chat',
+    UNBLOCK_CHAT = 'unblock_chat',
+    END_CONVERSATION_AND_RESET_CHAT = 'end_conversation'
 
 }
 
@@ -170,7 +174,7 @@ export interface ICategory {
     type_id: string;
     parent_id?: string | null;
     name: string;
-    slug?: string;
+    slug: string;
     banner?: string;
     icon: string;
     children?: Array<ICategoryChildren>

@@ -13,6 +13,7 @@ export interface IOrderInput {
     contact_number: string;
     payment_option_id: string;
     delivery_method_id: string;
+    selectedCategorySlug?: string;
     isWhatsappPurchase?: boolean;
     delivery_address: string;
     payment_method_name: string;

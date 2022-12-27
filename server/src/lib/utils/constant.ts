@@ -22,5 +22,6 @@ export const INITIAL_DITTO_USERNAME = 'nonamed';
 export const INITIAL_DITTO_PASSWORD = 'Initial_ditt0_pa$$word';
 
 export const AVAILABLE_PRODUCTS_OPT = 1;
-export const TECNICAS_DE_CULTIVO_OPT = 2;
+export const HABLAR_CON_UN_REPRESENTANTE_OPT = 2;
+export const TECNICAS_DE_CULTIVO_OPT = 3;
 export const CHECKOUT_OPTION_SELECTED = 99;

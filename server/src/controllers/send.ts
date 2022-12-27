@@ -2,7 +2,7 @@
 import { saveUserChatHistory, signUpUser } from "../api";
 import { ISetting, IUser, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_DITTO_USERNAME } from "../lib/utils/constant";
-import { getCleanNumber, isUserStaff } from "../lib/utils/shoppingUtils";
+import { endConversationKeys, getCleanNumber, initialConversationKeys, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
 
 const ExcelJS = require('exceljs');
 const fs = require('fs');
@@ -87,21 +87,27 @@ export const sendMessageButton = async (client: any, number = null, text = null,
 /**
  * Opte
  */
-export const lastTrigger = async (customer: IUser | any) => {
-    if (!customer) {
-        return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
-    } else if (customer?.name === INITIAL_DITTO_USERNAME) {
-        return TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
-    } 
+export const lastTrigger = async (customer: IUser, userMessage: string) => {
+    userMessage = normalizeText(userMessage);
+    
+    if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+    if (customer?.name === INITIAL_DITTO_USERNAME) return TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
 
-    const { chatHistory } = customer;
-    const lastDittoMessageSent = chatHistory?.length >= 1 ? chatHistory[chatHistory.length - 1] : { trigger: TriggerSteps.AUTHENTICATED_USER_MAIN_MENU };
+    // if is initial, we reset conversation and we start all over again, non matter what
+    if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+    if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
 
-    if (isUserStaff(customer) && lastDittoMessageSent?.trigger === null) {
-        return TriggerStaffSteps.STAFF_MAIN_MENU
-    }
+    let lastDittoMessageSent: any = { trigger: undefined };
 
-    return lastDittoMessageSent?.trigger || 'Error: no triggerStep found';
+    if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
+    //staff checks
+    if (isUserStaff(customer) && lastDittoMessageSent?.trigger === null) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+
+    // block unblock checks
+    if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && !userMessage.includes('menu')) return TriggerSteps.BLOCK_CHAT;
+    if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && userMessage.includes('menu')) return TriggerSteps.UNBLOCK_CHAT;
+
+    return lastDittoMessageSent?.trigger || TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
     
         
 

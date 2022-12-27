@@ -1,4 +1,4 @@
-import { IDeliveryMethod, IPaymentOption, IProduct } from "../lib/types";
+import { ICategory, IDeliveryMethod, IPaymentOption, IProduct } from "../lib/types";
 import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, CURRENCY } from "../lib/utils/constant";
 import { getDeliveryOrPickUpDatetime, getTotalAmount } from "../lib/utils/shoppingUtils";
 
@@ -137,10 +137,10 @@ const thereWasAProblemWaitForAssistance = () =>
 `Algo salío mal, pero revisaremos pronto este chat para corregirlo, 
 mientras tanto tenés las siguientes opciones:
 
-1 - Ver listado con precios de frutas/verduras y hacer pedido.
-2 - Conocer las técnicas agrosustentables que aplicamos.
+*1 - Ver listado con precios de frutas/verduras y hacer pedido.*
+*2 - Hablar con un encargado para ayudarte con alguna opción fuera de este menú*
 
-Por favor solamente escribí el número elegido 1 o 2.
+Por favor escribí un número entre el 1 y el 2 para elegir una opción
 `;
 
 const thereWasAProblemWaitForAssistance2 = () =>  
@@ -156,14 +156,14 @@ Para comenzar necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲
 `;
 
 // 2 - Ver listado con precios mayorista de frutas/verduras.
-const mainMenuAuthenticatedUser = (customerName: string) =>  
-`Hola ${customerName}, Muchas gracias por comunicarte con nosotros. Soy *Ditto*😎 
-tu asistente virtual y estoy para ayudarte. Tenés las siguientes opciones:
+const mainMenuAuthenticatedUser = (customerName: string, categories: ICategory[]) =>  
+    `Hola ${customerName}, muchas gracias por comunicarte con nosotros. Soy *Ditto*😎 tu asistente virtual y estoy para ayudarte.
 
-*1 - Ver listado con precios de frutas/verduras y hacer pedido.*
-*2 - Conocer las técnicas agrosustentables que aplicamos.*
+Seleccioná una de las siguientes categorías para ver sus productos:
 
-Por favor escribí un número entre el 1 y el 2 para elegir una opción
+${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
+
+*Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
 `;
 
 const listAvailableProducts = (products: any) =>  
@@ -174,8 +174,16 @@ ${products.map((product: any, i: number) => (`${i+1} - ${product.name} - $${prod
 *Por favor ingresá un número entre el 1 y el ${products.length} para agregarlo a tu carrito*
 `;
 
+const listCategories = (categories: ICategory[]) =>  
+`*Seleccione una categoría:*
+
+${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
+
+*Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
+`;
+
 const reListingAvailableProducts = (productsAdded: any, availableProducts: any) => {
-    const totalItemsAmount = getTotalAmount(productsAdded);
+const totalItemsAmount = getTotalAmount(productsAdded);
     return (
 `*Producto agregado al carrito correctamente!*
 *Su carrito:*
@@ -197,10 +205,13 @@ const tecnicasDeCultivoInfo = () =>
  Tenés las sig. opciones:
 
 1 - Ver listado con precios de frutas/verduras y hacer pedido.
-2 - Conocer las técnicas agrosustentables que aplicamos.
+*2 - Hablar con un encargado para ayudarte con alguna opción fuera de este menú*
 
 Por favor escribí un número entre el 1 y el 2 para elegir una opción
 `;
+
+const hablarConUnRepMsg = () =>  
+`Por favor aguarde y un representante se va a comunicar con usted.`;
 
 const enterValidAddress = () =>  
 `Por favor ingrese una dirección válida. Ejemplo: Belgrano 432, piso 3A`;
@@ -228,7 +239,7 @@ const unknownUserInput = () =>
 entre las siguientes:
 
 *1 - Ver listado con precios de frutas/verduras y hacer pedido.*
-*2 - Conocer las técnicas agrosustentables que aplicamos.*
+*2 - Hablar con un encargado para ayudarte con alguna opción fuera de este menú*
 
 Por favor escribí un número entre el 1 y el 2 para elegir una opción
 `;
@@ -297,7 +308,9 @@ ${getPrelinkText(deliOption.details)}: ${getAddressLinkText(deliOption.details)}
 - *Responda escribiendo un núm. entre el 1 y el ${deliveryOptions.length} para elegir una opción.*`
 );};
 
-const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption: IDeliveryMethod, paymentMethods: any, delivery_address: string) =>  
+const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption: IDeliveryMethod, paymentMethods: any, delivery_address: string) => {
+    const hasDeliveryAddress = deliOption?.pickUpAddress || delivery_address;
+    return hasDeliveryAddress ? (
 `*Método seleccionado con éxito!*
 
 *- Tipo de envío:* ${deliOption.name} 
@@ -305,12 +318,24 @@ const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption: IDeli
 *- ${getPickUpAddress(deliOption?.pickUpAddress || delivery_address)}
 *- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
 
- *Por favor seleccione su forma de pago:*
+*Por favor seleccione su forma de pago:*
 
 ${paymentMethods.map((method: IPaymentOption, i: number) => (`*${i + 1} - ${method.name}* \n${method.details}\n`)).join('')}
 
 - Responda escribiendo un núm. entre el 1 y el ${paymentMethods.length}.
-`;
+`): (
+`*Método seleccionado con éxito!*
+
+*- Tipo de envío:* ${deliOption.name} 
+*- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
+*- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
+
+*Por favor seleccione su forma de pago:*
+
+${paymentMethods.map((method: IPaymentOption, i: number) => (`*${i + 1} - ${method.name}* \n${method.details}\n`)).join('')}
+
+- Responda escribiendo un núm. entre el 1 y el ${paymentMethods.length}.
+`)};
 
 const thanksMsg = () =>  
 `Muchas gracias por tu compra!!
@@ -338,8 +363,8 @@ https://cutt.ly/4Cvlc59 , si está fuera de esta zona, su compra va a ser cancel
 `;
 
 const paymentMethodSelectedAndOrderConfirmationMsj = (shoppingCart: any) => {
-    const ccString = `Recargo por tarjeta: $${shoppingCart.ccCharge}`;
-    const deliveryFeeString = `Recargo por envío: $${shoppingCart.deliveryFee}`;
+    const ccString = `Recargo por tarjeta: $${(shoppingCart.ccCharge).toFixed(2)}`;
+    const deliveryFeeString = `Recargo por envío: $${(shoppingCart.deliveryFee).toFixed(2)}`;
     const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
     return `*Por favor verifique que su orden sea correcta.*
 
@@ -350,9 +375,9 @@ ${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${
 *Método de envío:* ${shoppingCart.delivery_method_name}
 *Dirección:* ${shoppingCart.delivery_address}
 
-Subtotal productos: $${shoppingCart.total}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `${deliveryFeeString}\n` : ''}
+Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `${deliveryFeeString}\n` : ''}
 
-*Total a Pagar: $${total}*
+*Total a Pagar: $${(total).toFixed(2)}*
 
 *Por favor ingresa un número del 1 al 5 para elegir una opción*
 1 - Para confirmar tu compra
@@ -393,5 +418,7 @@ export {
     thanksMsgNoPurchase,
     purchaseErrorMsg,
     thereWasAProblemWaitForAssistance2,
-    invalidProductQuantity
+    invalidProductQuantity,
+    hablarConUnRepMsg,
+    listCategories
 };

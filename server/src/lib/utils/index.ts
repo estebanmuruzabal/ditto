@@ -33,3 +33,11 @@ export const authorize = async (req: Request, db: Database): Promise<IUser | nul
 
     return user;
 };
+
+export const takeNineOutIfItHasIt = (phone: string) => {
+    if (phone.startsWith('549')) {
+        return '54' + phone.substring(3, phone.length)
+    }
+
+    return phone;
+}

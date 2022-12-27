@@ -1,27 +1,13 @@
 import { cleanNumber } from "../controllers/handle";
 import { IOrderInput } from "../graphql/resolvers/Orders/types";
-import { IPaymentOption, IProduct, IUser } from "../lib/types";
-import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery } from "./queries";
+import { ICategory, IPaymentOption, IProduct, IUser } from "../lib/types";
+import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery } from "./queries";
 
 const { createApolloFetch } = require('apollo-fetch');
 
-const fetch = createApolloFetch({
-    uri: 'http://localhost:7000/api',
-    headers: { 'Content-Type': 'application/json' },
-});
-
-
-const fetchWithToken = (token: string) => createApolloFetch({
-    uri: 'http://localhost:7000/api',
-    headers: { 'Content-Type': 'application/json', 'x-access-token': token },
-});
 
 const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
-
-
-
-
 
 export const fetchCustomerAndToken = (phone: string) => new Promise((resolve, reject) => {
     apolloFetch({
@@ -104,6 +90,37 @@ export const saveUserChatHistory = (message: string, number: string, trigger: st
     });
 });
 
+export const getCategories  = () => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: GET_CATEGORIES
+    }).then((res: ICategory[]) => {
+        console.log('[getCategories]:',res);
+        resolve(res);
+    }).catch((err: any) => {
+        console.log('[getCategories error]:', err);
+        resolve(err);
+    });
+});
+
+export const getProducts  = (category: string) => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: GET_PRODUCTS,
+        variables: { 
+            type: '',
+            category,
+            limit: 20,
+            offset: 0,
+            searchText: ''
+        }
+    }).then((res: ICategory[]) => {
+        console.log('[getProducts]:',res);
+        resolve(res);
+    }).catch((err: any) => {
+        console.log('[getProducts error]:', err);
+        resolve(err);
+    });
+});
+
 export const getPaymentMethods = () => new Promise((resolve, reject) => {
     apolloFetch({
         query: getPaymentMethodsQuery
@@ -153,6 +170,7 @@ export const getUserShoppingCart = () => new Promise((resolve, reject) => {
 });
 
 export const updateUserShoppingCart = (input: IOrderInput) => new Promise((resolve, reject) => {
+    console.log('input',input)
     apolloFetch({
         query: updateUserShoppingCartQuery,
         variables: {
@@ -161,6 +179,7 @@ export const updateUserShoppingCart = (input: IOrderInput) => new Promise((resol
                 contact_number: input.contact_number,
                 payment_option_id: input.payment_option_id,
                 delivery_method_id: input.delivery_method_id,
+                selectedCategorySlug: input.selectedCategorySlug,
                 payment_option_type: input.payment_option_type,
                 payment_method_name: input.payment_method_name,
                 delivery_date: input.delivery_date,

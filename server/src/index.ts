@@ -113,18 +113,17 @@ const sendMsg = (text: string) => ({
 
 
 // const listenMessage = async (msg: any) => {
-    const listenMessage = () => client.on('message', async (msg: any) => {
+const listenMessage = () => client.on('message', async (msg: any) => {
     const { from, body, hasMedia } = msg;
     const message = body;
     
     if (!isValidNumber(from)) return;
     if (from === 'status@broadcast') return;
-
     const number: string = cleanNumber(from)
     let user, access_token;
     
     if (number !== '5493624885763') return;
-    // console.log('recevvinggg: ', body)
+    console.log('recevvinggg: ', body)
     const res: any = await fetchCustomerAndToken(number);
 
     if (!!(res?.data?.getCustomer.user && res?.data?.getCustomer.access_token)) {
@@ -132,14 +131,15 @@ const sendMsg = (text: string) => ({
         access_token = res.data.getCustomer.access_token;
     }
 
-    // const isRegisteredSettedName = !!(!res?.errors?.length && user?.name && user?.name !== INITIAL_DITTO_USERNAME);
-
-    
     // nextTrigger means that we use the latest nextTrigger saved in user history chat, that was setted by us, 
     // depending on what client's latest answer.
-    const nextTrigger: TriggerSteps = await lastTrigger(user);
+    // @ts-ignore
+    const nextTrigger: TriggerSteps = await lastTrigger(user, message);
+    const isChatBlocked = nextTrigger === TriggerSteps.BLOCK_CHAT;
+
+    if (isChatBlocked && !message.includes('menu')) return;
+
     const userIsRegistered = !!access_token;
-    
     if (userIsRegistered) await saveUserChatHistory(message, number, nextTrigger, access_token)
     const msgResponse = await findResponseMsg(nextTrigger, user, message, number, access_token);
     await sendMessage(client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);

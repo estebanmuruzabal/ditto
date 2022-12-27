@@ -55,6 +55,7 @@ export const typeDefs = gql`
         contact_number: String
         payment_option_id: String
         delivery_method_id: String
+        selectedCategorySlug: String
         delivery_address: String
         payment_method_name: String
         payment_option_type: String
@@ -344,6 +345,7 @@ export const typeDefs = gql`
         payment_option_type: String
         delivery_address: String
         delivery_date: String
+        selectedCategorySlug: String
         delivery_method_name: String
         sub_total: Float
         total: Float

@@ -1,5 +1,5 @@
 import { deliveryPurchaseWithCashPayment, deliveryPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
-import { IDeliveryMethod, IPaymentOption, IUser, Roles } from "../types";
+import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles } from "../types";
 import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD } from "./constant";
 
 export const isUserInputInvalid = (userInput: number, maxOptions: number) => { 
@@ -7,6 +7,9 @@ export const isUserInputInvalid = (userInput: number, maxOptions: number) => {
 }
 
 export const getDeliveryPickUpDate = (details: string) => details.split("|")[1]?.trim();
+
+const unusedCategories = ['hortalizas-de-hojas', 'remedios-naturales', 'plaguicida', 'repelente', 'bioestimulante', 'fertilizantes', 'todos-los-productos', 'insumos-para-cultivos'];
+export const harcodedFilterOfUnusedCategories = (categories: ICategory[]) => categories.filter((category: ICategory) => !unusedCategories.includes(category.slug))
 
 export const getEmptyShoppingCart = (user: any) => { 
     return {
@@ -17,6 +20,7 @@ export const getEmptyShoppingCart = (user: any) => {
         delivery_method_id: null,
         delivery_date: null,
         delivery_address: null,
+        selectedCategorySlug: null,
         sub_total: null,
         total: null,
         coupon_code: null,
@@ -158,3 +162,30 @@ export const getTotalAmount = (products: any) => {
 
   return totalItemsAmount;
 };
+
+export const initialConversationKeys = [
+    "hola",
+    "hola!",
+    "buenas",
+    "buenas!",
+    "que tal!",
+    "que tal",
+    "buenos días",
+    "buenas tardes",
+    "buenas noches",
+    "me dieron este número",
+    "quisiera saber si venden",
+    "necesito saber"
+];
+
+export const endConversationKeys = [
+    "muchas gracias",
+    "ok",
+    "gracias",
+    "vale gracias",
+    "adios"
+]
+
+export const normalizeText = (texto: string) => {
+    return texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"");
+}

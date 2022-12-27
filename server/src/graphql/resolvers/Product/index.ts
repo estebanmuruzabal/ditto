@@ -17,7 +17,7 @@ export const productsResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonPaginationReturnType> => {
             let products = await db.products.find({}).sort({is_featured: -1}).toArray();
-
+            console.log('category', category)
             if (category) {
                 products = products.filter((product) =>
                     product.categories.find(
@@ -29,7 +29,7 @@ export const productsResolvers: IResolvers = {
                 products = products.filter((product) => product.type.slug === type);
             }
 
-            products = products.filter((product) => product.is_online === true);
+            // products = products.filter((product) => product.is_online === true);
 
 
             products = search(products, ['name', 'slug'], searchText);
