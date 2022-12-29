@@ -432,6 +432,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 case 1:
                     const res: any = await createOrder(shoppingCart);
                     if (res?.data?.createOrder?.customer_id) {
+                        console.log('shoppingCart::::::', shoppingCart)
                         resData.replyMessage = getOrderConfirmationMsgText(shoppingCart)
                         resData.trigger = TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
                         await updateUserShoppingCart(shoppingCart);
