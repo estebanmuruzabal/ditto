@@ -60,13 +60,15 @@ export const getOrderConfirmationMsgText = (
             } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === input.delivery_method_name) {
                 return deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date);
             }
+            break;
         case CASH_PAYMENT_OPTION:
         case CC_PAYMENT_OPTION:
             if (PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
                 return pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date); 
             } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === input.delivery_method_name) {
                 return deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date);
-            }            
+            }         
+            break;
         default:
             console.log('no case found in: switch (input.payment_option_type)')
             break;

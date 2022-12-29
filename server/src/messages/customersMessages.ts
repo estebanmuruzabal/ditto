@@ -375,8 +375,7 @@ ${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${
 *Método de envío:* ${shoppingCart.delivery_method_name}
 *Dirección:* ${shoppingCart.delivery_address}
 
-Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `${deliveryFeeString}\n` : ''}
-
+Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
 *Total a Pagar: $${(total).toFixed(2)}*
 
 *Por favor ingresa un número del 1 al 5 para elegir una opción*
