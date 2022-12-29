@@ -17,6 +17,7 @@ import { findResponseMsg } from './controllers/flows';
 import { fetchCustomerAndToken, saveUserChatHistory } from './api';
 import { TriggerSteps } from './lib/types';
 import { INITIAL_DITTO_USERNAME } from './lib/utils/constant';
+import { normalizeText } from './lib/utils/shoppingUtils';
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json'
@@ -120,7 +121,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     if (!isValidNumber(from)) return;
     if (from === 'status@broadcast') return;
     const number: string = cleanNumber(from)
-    let user, access_token;
+    let user, access_token;q
     
     // if (number !== '5493624885763') return;
     console.log('recevvinggg: ', body)
@@ -137,7 +138,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     const nextTrigger: TriggerSteps = await lastTrigger(user, message);
     const isChatBlocked = nextTrigger === TriggerSteps.BLOCK_CHAT;
 
-    if (isChatBlocked && !message.includes('menu')) return;
+    if (isChatBlocked && !normalizeText(message).includes('menu')) return;
 
     const userIsRegistered = !!access_token;
     if (userIsRegistered) await saveUserChatHistory(message, number, nextTrigger, access_token)

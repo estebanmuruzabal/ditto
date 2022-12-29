@@ -40,6 +40,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
     let paymentMethodsResponse: any;
     let categories: any;
     let maxOptions: any;
+    let productInShoppingCart: any;
     let categoriesRes: any;
     const num = cleanNumber(number);
 
@@ -77,6 +78,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 resolve(resData);
             }
             break;
+        case TriggerSteps.UNBLOCK_CHAT:
         case TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES:
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
@@ -219,7 +221,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 break;
             } 
 
-            const productAdded = {
+            const productAdded: any = {
                 product_id: productSelected.id,
                 unit: productSelected.unit,
                 quantity: 0,
@@ -230,8 +232,12 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 name: productSelected.name,
             };
 
-            shoppingCart.products.push(productAdded)
-            await updateUserShoppingCart(shoppingCart);
+            // still fix case when trying to add a product were it was added in cart with all the possible stock available
+            const productIsNotInCart = !shoppingCart?.products.find(((prod: any) => prod.id === productAdded.id))
+            if (productIsNotInCart) {
+                shoppingCart.products.push(productAdded)
+                await updateUserShoppingCart(shoppingCart);   
+            }
 
             resData.replyMessage = getQuantityOfProduct(productSelected.name, productSelected.product_quantity)
             resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
@@ -243,22 +249,23 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             shoppingCart = user?.shoppingCart;
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
             availableProducts = availableProducts?.data?.products?.items;
-
+            const prodSelectedIndex = shoppingCart.products.length - 1;
             if (availableProducts?.length <= 0 || !!!availableProducts) throw new Error('Error 3: no available products');
 
-            productSelected = shoppingCart?.products?.length > 0 ? shoppingCart.products[shoppingCart.products.length - 1] : null; 
+            productInShoppingCart = shoppingCart?.products?.length > 0 ? shoppingCart.products[prodSelectedIndex] : null; 
 
-            if (!productSelected) {
+            if (!productInShoppingCart) {
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
                 resData.replyMessage = invalidNumberInput(availableProducts?.length);
                 resolve(resData);
                 break;
             } 
 
-            const product = availableProducts.find(((prod: IProduct) => prod._id === productSelected.id))
+            const product = availableProducts.find(((prod: any) => prod.id === productInShoppingCart.product_id))
 
             if (!product) { resolve(resData); break; }
-
+            console.log('product', product)
+            console.log('productInShoppingCart', productInShoppingCart)
             if (isUserInputInvalid(userInputNumber, Number(product.product_quantity))) {
                 resData.replyMessage = invalidProductQuantity(product.product_quantity);
                 resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
@@ -266,8 +273,10 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 break;
             }
 
+         
+
             // actualizamos la cantidad y preguntamos que otro producto quiere agregar
-            shoppingCart.products[shoppingCart.products.length - 1].quantity = Number(userInput);
+            shoppingCart.products[prodSelectedIndex].quantity = userInputNumber;
             const updateShoppingCartResponse: any = await updateUserShoppingCart(shoppingCart);
 
             // one last check, just in case:

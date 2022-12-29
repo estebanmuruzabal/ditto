@@ -93,10 +93,6 @@ export const lastTrigger = async (customer: IUser, userMessage: string) => {
     if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
     if (customer?.name === INITIAL_DITTO_USERNAME) return TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
 
-    // if is initial, we reset conversation and we start all over again, non matter what
-    if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
-    if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
-
     let lastDittoMessageSent: any = { trigger: undefined };
 
     if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
@@ -106,6 +102,10 @@ export const lastTrigger = async (customer: IUser, userMessage: string) => {
     // block unblock checks
     if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && !userMessage.includes('menu')) return TriggerSteps.BLOCK_CHAT;
     if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && userMessage.includes('menu')) return TriggerSteps.UNBLOCK_CHAT;
+
+    // if is initial, we reset conversation and we start all over again, non matter what
+    if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+    if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
 
     return lastDittoMessageSent?.trigger || TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
     
