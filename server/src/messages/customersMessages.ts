@@ -170,7 +170,6 @@ const listAvailableProducts = (products: any) =>
 `*Tenemos disponibles los siguientes productos:*
 
 ${products.map((product: any, i: number) => (`${i+1} - ${product.name} - $${product.price}\n`)).join('')}
-
 *Por favor ingresá un número entre el 1 y el ${products.length} para agregarlo a tu carrito*
 `;
 
@@ -186,8 +185,8 @@ const reListingAvailableProducts = (productsAdded: any, availableProducts: any) 
 const totalItemsAmount = getTotalAmount(productsAdded);
     return (
 `*Producto agregado al carrito correctamente!*
-*Su carrito:*
 
+*Su carrito:*
 ${productsAdded.map((product: any, i: number) => (`- ${product.name} - Cantidad: ${product.quantity}\n`)).join('')}
 Total: $${totalItemsAmount}
 
@@ -232,8 +231,7 @@ const getQuantityOfProduct = (productName: string, quantity: string) =>
 
  querés agregar a tu pedido?
 `;
-// (Ingresa un numero entre el 1 y el ${quantity})
-
+//  Ingresa un numero entre el 1 y el ${quantity})
 const unknownUserInput = () =>  
 `Disculpe no reconocimos su respuesta, por favor elija una opción
 entre las siguientes:
@@ -368,13 +366,12 @@ const paymentMethodSelectedAndOrderConfirmationMsj = (shoppingCart: any) => {
     const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
     return `*Por favor verifique que su orden sea correcta.*
 
-Su carrito:
-${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}`)).join('')}
-
 *Método de pago:* ${shoppingCart.payment_method_name}
 *Método de envío:* ${shoppingCart.delivery_method_name}
 *Dirección:* ${shoppingCart.delivery_address}
 
+*Su carrito:*
+${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
 Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
 *Total a Pagar: $${(total).toFixed(2)}*
 

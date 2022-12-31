@@ -183,8 +183,8 @@ export const endConversationKeys = [
     "muchas gracias",
     "ok",
     "gracias",
-    "vale gracias",
-    "adios"
+    "adios",
+    "chau"
 ]
 
 export const normalizeText = (texto: string) => {

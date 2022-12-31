@@ -117,14 +117,12 @@ const sendMsg = (text: string) => ({
 const listenMessage = () => client.on('message', async (msg: any) => {
     const { from, body, hasMedia } = msg;
     const message = body;
-    
-    if (!isValidNumber(from) || !!message || message === '') return;
-    if (from === 'status@broadcast') return;
+    console.log('recevvinggg: ', message?.toString())
+    if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
+
     const number: string = cleanNumber(from)
     let user, access_token;
-    
     // if (number !== '5493624885763') return;
-    console.log('recevvinggg: ', body)
     const res: any = await fetchCustomerAndToken(number);
 
     if (!!(res?.data?.getCustomer.user && res?.data?.getCustomer.access_token)) {

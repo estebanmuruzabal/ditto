@@ -108,30 +108,6 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             resData.trigger = TriggerSteps.SELECT_CATEGORY;
             resolve(resData);
             break;
-
-            // switch (userInputNumber) {
-            //     case AVAILABLE_PRODUCTS_OPT:
-            //         resData.replyMessage = listAvailableProducts(productResponse?.data?.products?.items)
-            //         resData.trigger = TriggerSteps.ADD_PRODUCT_TO_CART;
-            //         resolve(resData);
-            //         break;
-            //     case HABLAR_CON_UN_REPRESENTANTE_OPT:
-            //         resData.replyMessage = hablarConUnRepMsg()
-            //         resData.trigger = TriggerSteps.BLOCK_CHAT;
-            //         resolve(resData);
-            //         break;
-            //     // case TECNICAS_DE_CULTIVO_OPT:
-            //     //     resData.replyMessage = tecnicasDeCultivoInfo()
-            //     //     resData.trigger = TriggerSteps.ALL_CATEGORIES;
-            //     //     resolve(resData);
-            //     //     break;
-            //     default:
-            //         resData.replyMessage = unknownUserInput();
-            //         resData.trigger = TriggerSteps.ALL_CATEGORIES;
-            //         resolve(resData);
-            //         break;
-            // }
-            break;
             
         case TriggerSteps.SELECT_CATEGORY:
             userInputNumber = Number(userInput);
@@ -154,8 +130,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             } 
 
             const selectedCategory = categories[userInputNumber - 1];
-
-             const talkToARepresentativeOpt = userInputNumber === categories?.length + 1;
+            const talkToARepresentativeOpt = userInputNumber === categories?.length + 1;
 
             if (talkToARepresentativeOpt) {   
                 resData.replyMessage = hablarConUnRepMsg()
@@ -233,11 +208,13 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             };
 
             // still fix case when trying to add a product were it was added in cart with all the possible stock available
-            const productIsNotInCart = !shoppingCart?.products.find(((prod: any) => prod.id === productAdded.id))
-            if (productIsNotInCart) {
-                shoppingCart.products.push(productAdded)
-                await updateUserShoppingCart(shoppingCart);   
-            }
+            
+            
+            const productIndexFound = shoppingCart?.products.findIndex(((prod: any) => prod.product_id === productSelected.id))
+
+            if (productIndexFound >= 0) shoppingCart.products.splice(productIndexFound, 1);
+            shoppingCart.products.push(productAdded)
+            await updateUserShoppingCart(shoppingCart);   
 
             resData.replyMessage = getQuantityOfProduct(productSelected.name, productSelected.product_quantity)
             resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
@@ -264,16 +241,13 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             const product = availableProducts.find(((prod: any) => prod.id === productInShoppingCart.product_id))
 
             if (!product) { resolve(resData); break; }
-            console.log('product', product)
-            console.log('productInShoppingCart', productInShoppingCart)
+
             if (isUserInputInvalid(userInputNumber, Number(product.product_quantity))) {
                 resData.replyMessage = invalidProductQuantity(product.product_quantity);
                 resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
                 resolve(resData);
                 break;
             }
-
-         
 
             // actualizamos la cantidad y preguntamos que otro producto quiere agregar
             shoppingCart.products[prodSelectedIndex].quantity = userInputNumber;
