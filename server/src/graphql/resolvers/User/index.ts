@@ -442,7 +442,7 @@ export const usersResolvers: IResolvers = {
             const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
 
             if (index < 0) {
-                throw new Error("Controller id does not exists.", controllerId);
+                throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
                 plants[index].humedad = humedad;
                 plants[index].temperatura = temperatura;
@@ -452,7 +452,7 @@ export const usersResolvers: IResolvers = {
 
             if (humedad < 60) {
                 const whatsappMsg = `Pestañeaste! Tu planta: ${plants[index].name} esta necesitando agua!`;
-                await sendMessage(client, userResult?.phones[0]?.number, whatsappMsg, null);
+                await sendMessage(client, userResult?.phones[0]?.number, whatsappMsg, undefined, undefined);
             }
                 
             await db.users.updateOne(

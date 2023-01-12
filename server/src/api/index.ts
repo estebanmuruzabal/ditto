@@ -80,7 +80,7 @@ export const updateUserNameAndEmail = (id: string, name: string, email: string, 
     });
 });
 
-export const saveUserChatHistory = (message: string, number: string, trigger: string, token: string) => new Promise((resolve, reject) => {
+export const saveUserChatHistory = (message: string, number: string, trigger?: string, token?: string) => new Promise((resolve, reject) => {
     // @ts-ignore
     apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
     if (number.includes('@')) number = cleanNumber(number);

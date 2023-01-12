@@ -128,7 +128,7 @@ const list = new List(`/n Por favor, selecciona una opción en el siguiente men�
     'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
     'footer');
             
-export const sendMessage = async (client: any, number: string, text: string, trigger: TriggerSteps, token: string) => {
+export const sendMessage = async (client: any, number: string, text: string, trigger?: TriggerSteps, token?: string) => {
    setTimeout(async () => {
      const message: any = text
      
@@ -140,7 +140,7 @@ export const sendMessage = async (client: any, number: string, text: string, tri
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )
     }
-    await saveUserChatHistory('', number, trigger, token)
+    if (token) await saveUserChatHistory('', number, trigger, token)
     
    },DELAY_TIME)
 }
