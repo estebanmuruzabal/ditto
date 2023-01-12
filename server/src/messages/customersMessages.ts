@@ -1,5 +1,5 @@
 import { ICategory, IDeliveryMethod, IPaymentOption, IProduct } from "../lib/types";
-import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, CURRENCY } from "../lib/utils/constant";
+import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, COMPANY_DESCRIPTION_TEXT, CURRENCY } from "../lib/utils/constant";
 import { getDeliveryOrPickUpDatetime, getTotalAmount } from "../lib/utils/shoppingUtils";
 
 const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>
@@ -26,14 +26,15 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
-Juntos transformamos el mundo ♻️ Ditto Farm.
+Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
 `;
 
 const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>
 `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
- - Te recordamos llevar bolsas llevar tus productos por favor!
+ - Te recordamos llevar bolsas para retirar tus productos!
 
 *Detalle:*
 *Fecha de compra:*
@@ -51,8 +52,9 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!
-Juntos transformamos el mundo ♻️ Ditto Farm.
+Muchas gracias por su compra eco-sustentable!💚
+Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
 `;
 
 const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
@@ -77,8 +79,9 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!
-Juntos transformamos el mundo ♻️ Ditto Farm.
+Muchas gracias por su compra eco-sustentable!💚
+Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
 `;
 
 const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
@@ -102,8 +105,9 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!
-Juntos transformamos el mundo ♻️ Ditto Farm.
+Muchas gracias por su compra eco-sustentable!💚
+Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
 `;
 
 const orderPaidConfirmation = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
@@ -148,16 +152,28 @@ const thereWasAProblemWaitForAssistance2 = () =>
 mientras tanto tenés las siguientes opciones:
 `;
 
+export const welcomeTextAndCategoriesOpts = () =>  
+`Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.
+
+${COMPANY_DESCRIPTION_TEXT}
+
+Por favor, selecciona una opción en el siguiente menú:
+`;
+
+
 const welcomeMsgNameRequired = () =>  
-`Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy *Ditto*😎 
-tu asistente virtual y estoy para ayudarte.
+`Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.
+
+${COMPANY_DESCRIPTION_TEXT}
+
 Para comenzar necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 
 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, (Por ejemplo: Sofia Martinez )
 `;
 
+
 // 2 - Ver listado con precios mayorista de frutas/verduras.
 const mainMenuAuthenticatedUser = (customerName: string, categories: ICategory[]) =>  
-    `Hola ${customerName}, muchas gracias por comunicarte con nosotros. Soy *Ditto*😎 tu asistente virtual y estoy para ayudarte.
+    `Hola ${customerName},
 
 Seleccioná una de las siguientes categorías para ver sus productos:
 
@@ -340,7 +356,10 @@ const thanksMsg = () =>
 `;
 
 const thanksMsgNoPurchase = () =>  
-`Esperemos leerte pronto, hasta luego!
+`Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra pagina web!
+Aprovecho para invitarte a que nos sigas en Instagram 😊:    https://www.instagram.com/dittofarm.rcia/                                                 
+
+Gracias por tu tiempo, te invitamos a que vuelvas en el momento que desees.
 `;
 
 const thanksMsgNoDevelopedFunction = () =>  

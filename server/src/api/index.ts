@@ -1,13 +1,26 @@
 import { cleanNumber } from "../controllers/handle";
 import { IOrderInput } from "../graphql/resolvers/Orders/types";
 import { ICategory, IPaymentOption, IProduct, IUser } from "../lib/types";
-import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery } from "./queries";
+import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery } from "./queries";
 
 const { createApolloFetch } = require('apollo-fetch');
 
 
 const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
+
+export const getSettings  = () => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: GET_SETTINGS
+    }).then((res: any) => {
+        // console.log('[getSettings]:',res);
+        resolve(res);
+    }).catch((err: any) => {
+        console.log('[getSettings error]:', err);
+        resolve(err);
+    });
+});
+
 
 export const fetchCustomerAndToken = (phone: string) => new Promise((resolve, reject) => {
     apolloFetch({

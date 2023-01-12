@@ -1,6 +1,8 @@
 import { deliveryPurchaseWithCashPayment, deliveryPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
-import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles } from "../types";
-import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD } from "./constant";
+import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles, TriggerSteps } from "../types";
+import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE } from "./constant";
+const { MessageMedia, List } = require('whatsapp-web.js');
+import { Buttons } from "whatsapp-web.js"
 
 export const isUserInputInvalid = (userInput: number, maxOptions: number) => { 
     return !userInput || userInput < 1 || userInput > maxOptions;
@@ -53,11 +55,12 @@ export const getOrderConfirmationMsgText = (
     user: any = null
 ) => { 
     const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+    console.log(input.payment_option_type)
     switch (input.payment_option_type) {
         case BANK_TRANSFER_PAYMENT_OPTION:
             if (PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
                 return pickUpPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date);
-            } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === input.delivery_method_name) {
+            } else if (normalizeText(input.delivery_method_name).includes(normalizeText(CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
                 return deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date);
             }
             break;
@@ -65,7 +68,7 @@ export const getOrderConfirmationMsgText = (
         case CC_PAYMENT_OPTION:
             if (PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
                 return pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date); 
-            } else if (CUSTOMER_ADDRESS_DELIVERY_METHOD === input.delivery_method_name) {
+            } else if (normalizeText(input.delivery_method_name).includes(normalizeText(CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
                 return deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date);
             }         
             break;
@@ -104,6 +107,155 @@ export const getDeliveryOrPickUpDatetime = (detailsText: string) => {
 
     return `${dateText} ${timeText}`;
 }
+
+export const addTalkToRepresentativeOptToList = (section: { title?: string; rows?: any; row?: any; }) => {
+    section?.rows.push({
+        title: section?.rows?.length + 1 + ' - Necesito ayuda',
+        description: 'Hablar con un encargado para ayudarte con alguna opción fuera de este menú',
+        id: 'talk-to-rep-opt',
+    })
+    return section;
+};
+
+export const addTalkToRepresentativeOptToButtons = (buttons: { body: string;}[]) => {
+    const body = buttons?.length + 1 + ' - Necesito ayuda';
+    buttons.push({
+        body
+        // description: 'Hablar con un encargado para ayudarte con alguna opción fuera de este menú',
+        // id: 'talk-to-rep-opt',
+    })
+    return buttons;
+};
+
+export const getListButtons = (bodyDescription: string, listButtonText: string, listSections: any, listTitle: string, footer: any) => {
+    return new List(bodyDescription,
+        listButtonText,
+        [listSections],
+        listTitle,
+        footer);
+};
+
+export const getButtons = (bodyDescription: string, buttonsTexts: any[], buttonTitle: string, footer: any) => {
+    return new Buttons(bodyDescription,
+        buttonsTexts,
+        buttonTitle,
+        footer);
+
+};
+            
+export const getCategoriesButtons = (resData: any, categories: any) => {
+    console.log(categories)
+    if (categories.length === 1 || categories.length === 2) {
+        const buttonsBodies: any = [];
+        categories.map((category: any, idx: number) => buttonsBodies.push({ body: idx + 1 + ' - ' + category.name })) ;
+        TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToButtons(buttonsBodies);
+        console.log('buttonsBodies:',buttonsBodies, buttonsBodies.toString())
+        resData.replyMessage = getButtons(
+            COMPANY_DESCRIPTION_TEXT,
+            buttonsBodies,
+            'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
+            'Seleccione una opción:'
+        );
+    } else {
+        const menuRows = getRowsFrom(categories);
+        const listSections = getSectionWith('Seleccioná una categoría', menuRows)
+        TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToList(listSections);
+
+        resData.replyMessage = getListButtons(
+            COMPANY_DESCRIPTION_TEXT + '/n Seleccione una opción en el siguiente menú:',
+            'Ver menú',
+            listSections,
+            'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
+        '');
+    } 
+    resData.trigger = TriggerSteps.SELECT_CATEGORY;
+    console.log('resData:::', resData)
+    return resData;
+};
+    
+export const getAddQuantityButtons = (resData: any, product_quantity: any) => {
+    const menuRows = getButtonTextBodiesFrom(Number(product_quantity));
+            
+    resData.replyMessage = getButtons(
+        'Por favor, seleccione que cantidad desea agregar, si la opción que busca no esta en los botones, es porque no hay suficiente stock :)',
+        menuRows,
+        'Ingrese la cantidad',
+        ''
+    );
+
+    resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
+    return resData;
+};
+    
+const getRowsFrom = (items: any) => items.map((item: any, idx: number) => {
+    return {
+        title: idx + 1 + ' - ' + item.name,
+        description: item.meta_description,
+        id: item.id
+    }
+});
+
+const getButtonTextBodiesFrom = (maxOptNumber: number) => {
+    if (maxOptNumber > 3) {
+        return [{ body: '1' }, { body: '2' }, { body: 'Ingresar otra cantidad' }];
+    } else if (maxOptNumber === 3) {
+        return [{ body: '1' }, { body: '2' }, { body: '3' }];
+    } else if (maxOptNumber === 2) {
+        return [{ body: '1' }, { body: '2' }];
+    } else {
+        return [{ body: '1' }];
+    }
+};
+
+export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string) => {
+    // later on add buttons option if number is bellow 3
+
+    const menuRows = getProductRowsFrom(availableProducts);
+    const listSections = getSectionWith('Productos', menuRows)
+
+    resData.replyMessage = getListButtons(
+        'Seleccion de productos',
+        'Ver productos',
+        listSections,
+        title,
+        '');
+    resData.trigger = trigger;
+
+    return resData;
+};
+
+export const getDeliveryMethodsButtons = (resData: any, deliveryMethods: any, trigger: TriggerSteps, title: string) => {
+    const menuRows = getRowsFrom(deliveryMethods);
+        const listSections = getSectionWith('Selecciona envío/pickup', menuRows)
+        TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToList(listSections);
+
+        resData.replyMessage = getListButtons(
+            'Seleccione si va a buscar su envio o quiere enviarlo:',
+            'Seleccionar metodo',
+            listSections,
+            'Metodo de envio/pickup',
+        '');
+    
+    resData.trigger = TriggerSteps.DELIVERY_OPT_SELECTED;
+    console.log('resData:::', resData)
+    return resData;
+};
+  
+    
+const getSectionWith = (title: string, rows: any) => {
+    return {
+        title,
+        rows,
+    }
+};
+
+const getProductRowsFrom = (items: any) => items.map((item: any, idx: number) => {
+    return {
+        title: idx + 1 + ' - ' + item.name + ' $' + item.price,
+        description: item.description,
+        id: item.id
+    }
+});
 
 const geTimeScheduleOnly = (details: string) => {
     if (!details) return '';

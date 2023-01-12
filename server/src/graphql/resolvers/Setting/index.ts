@@ -71,6 +71,7 @@ export const settingsResolvers: IResolvers = {
                         site_title: settingValues.site_title,
                         site_keyword: settingValues.site_keyword,
                         site_description: settingValues.site_description,
+                        whatsapp_bot_is_on: false,
                     }
                 };
                 const insertResult = await db.settings.insertOne(settingData);
@@ -106,6 +107,7 @@ export const settingsResolvers: IResolvers = {
                     site_title: settingValues.site_title,
                     site_keyword: settingValues.site_keyword,
                     site_description: settingValues.site_description,
+                    whatsapp_bot_is_on: settingValues.whatsapp_bot_is_on,
                 }
             };
 

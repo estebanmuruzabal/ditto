@@ -1,10 +1,12 @@
 import { getAvailableProducts, signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IDeliveryMethod, IProduct, IUser, TriggerStaffSteps, TriggerSteps } from "../lib/types"
-import { AVAILABLE_PRODUCTS_OPT, CHECKOUT_OPTION_SELECTED, HABLAR_CON_UN_REPRESENTANTE_OPT, INITIAL_DITTO_PASSWORD, INITIAL_DITTO_USERNAME, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
-import { getDeliveryPickUpDate, getCustomerPrimaryNumber, containsValidName, getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories } from "../lib/utils/shoppingUtils"
+import { AVAILABLE_PRODUCTS_OPT, CHECKOUT_OPTION_SELECTED, COMPANY_DESCRIPTION_TEXT, HABLAR_CON_UN_REPRESENTANTE_OPT, INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
+import { getDeliveryPickUpDate, getCustomerPrimaryNumber, containsValidName, getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getListButtons, getButtons, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons } from "../lib/utils/shoppingUtils"
 import { mainMenuStaffUser } from "../messages/staffMessages"
-import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reListingAvailableProducts, tecnicasDeCultivoInfo, thanksMsg, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
+import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reListingAvailableProducts, tecnicasDeCultivoInfo, thanksMsg, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired, welcomeTextAndCategoriesOpts } from "../messages/customersMessages"
+import { Buttons } from "whatsapp-web.js"
+import { AddArgumentsAsVariables } from "apollo-server-express"
 
 const { saveMessageJson } = require('./jsonDb')
 // const { getDataIa } = require('./diaglogflow')
@@ -31,7 +33,7 @@ export const getReplyBasedOnStaffMsg = async (triggerStep: string, user: IUser |
 
 export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
 
-    let resData = { replyMessage: '', media: null, trigger: '' }
+    let resData: any = { replyMessage: '', media: null, trigger: '' };
     let availableProducts: any;
     let deliveryOpts: any;
     let userInputNumber: number;
@@ -43,74 +45,103 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
     let productInShoppingCart: any;
     let categoriesRes: any;
     const num = cleanNumber(number);
+    let menuRows: any;
+    let listSections: any;
+
+    
+    // //  let content = new Buttons('message',[{body:"hello",id:"1"},{body:"hello2",id:"3"}],"hello","lol");
+    //   let sections = [{title:'pilih hari',rows:[{title:'senin',},{title:'selasa'},{title:'rabu'},{title:'kamis'},{title:'jumat'},{title:'sabtu'},{title:'minggu'}]}];
+    //  let list = new List('', 'pilih hari', sections, 'Jadwal Praktek', 'footer');
+// let button = new Buttons('Button body',[{body:'bt1'},{body:'bt2'},{body:'bt3'}, ,{body:'bt4'}],'title','footer');
+//     await client.sendMessage(from, list);
+//     return;
 
     console.log('nextTriggerStep received in Switch:', triggerStep)
     switch (triggerStep) {
+        // case TriggerSteps.INITIAL_UNAUTHENTICATED_USER:
+        //     const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
+        //     const registeredSuccessfully = res?.data?.signUp?.status;
+        //     if (registeredSuccessfully) {
+        //             resData.replyMessage = welcomeMsgNameRequired();
+        //             resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
+        //             resolve(resData);
+        //         } else {
+        //             resData.replyMessage = thereWasAProblemWaitForAssistance();
+        //             resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
+        //             resolve(resData);
+        //         }
+        //     break;
+
+        // case TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN:
+        // case TriggerSteps.USER_SHOULD_INPUT_HIS_NAME:
+        //     categoriesRes = await getCategories();
+        //     categories = categoriesRes?.data?.categories?.items;
+        //     categories = harcodedFilterOfUnusedCategories(categories);
+        //     if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+
+        //     if (containsValidName(userInput) && user?.id) {
+        //         const res: any = await updateUserNameAndEmail(user.id, userInput, '', access_token);
+        //         resData.replyMessage = mainMenuAuthenticatedUser(userInput, categories);
+        //         resData.trigger = TriggerSteps.SELECT_CATEGORY;
+        //         resolve(resData);
+        //     } else {
+        //         resData.replyMessage = enterValidName()
+        //         resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
+        //         resolve(resData);
+        //     }
+        //     break;
         case TriggerSteps.INITIAL_UNAUTHENTICATED_USER:
-            const res: any = await signUpUser(INITIAL_DITTO_USERNAME, num, INITIAL_DITTO_PASSWORD);
-            const registeredSuccessfully = res?.data?.signUp?.status;
-            if (registeredSuccessfully) {
-                    resData.replyMessage = welcomeMsgNameRequired();
-                    resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
-                    resolve(resData);
-                } else {
-                    resData.replyMessage = thereWasAProblemWaitForAssistance();
-                    resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
-                    resolve(resData);
-                }
-            break;
-
-        case TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN:
-        case TriggerSteps.USER_SHOULD_INPUT_HIS_NAME:
-            categoriesRes = await getCategories();
-            categories = categoriesRes?.data?.categories?.items;
-            categories = harcodedFilterOfUnusedCategories(categories);
-            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
-
-            if (containsValidName(userInput) && user?.id) {
-                const res: any = await updateUserNameAndEmail(user.id, userInput, '', access_token);
-                resData.replyMessage = mainMenuAuthenticatedUser(userInput, categories);
-                resData.trigger = TriggerSteps.SELECT_CATEGORY;
-                resolve(resData);
-            } else {
-                resData.replyMessage = enterValidName()
-                resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
-                resolve(resData);
-            }
-            break;
         case TriggerSteps.UNBLOCK_CHAT:
         case TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES:
+            let registeredSuccessfully;
+
+            if (triggerStep === TriggerSteps.INITIAL_UNAUTHENTICATED_USER) {
+                const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
+                registeredSuccessfully = res?.data?.signUp?.status;
+            }
+            
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
             categories = harcodedFilterOfUnusedCategories(categories);
             if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
-            if (user?.id && user?.name) {
-                resData.replyMessage = mainMenuAuthenticatedUser(user?.name, categories);
-                resData.trigger = TriggerSteps.SELECT_CATEGORY;
-                resolve(resData);
-            } else {
-                resData.replyMessage = 'error heere: 22020'
-                resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
-                resolve(resData);
-            }
+            
+            resData = getCategoriesButtons(resData, categories);
+            
+            resolve(resData);  
+            // if (user?.id && user?.name) {
+            //     resData.replyMessage = mainMenuAuthenticatedUser(user?.name, categories);
+            //     resData.trigger = TriggerSteps.SELECT_CATEGORY;
+            //     resolve(resData);
+            // } else if (!!registeredSuccessfully) {
+                
+            //     resData.replyMessage = welcomeTextAndCategoriesOpts();
+            //     resData.trigger = TriggerSteps.SELECT_CATEGORY;
+            //     resolve(resData);
+            // } else {
+            //     resData.replyMessage = 'error heere: 22020'
+            //     resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
+            //     resolve(resData);
+            // }
             break;
         case TriggerSteps.BLOCK_CHAT:
-        case TriggerSteps.ALL_CATEGORIES:
-            // el usuario esta autenticado y respondio al menu inicial
-            userInputNumber = Number(userInput)
-            categoriesRes = await getCategories();
-            categories = categoriesRes?.data?.categories?.items;
-            categories = harcodedFilterOfUnusedCategories(categories);
-            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+        // case TriggerSteps.ALL_CATEGORIES:
+        //     // el usuario esta autenticado y respondio al menu inicial
+        //     userInputNumber = Number(userInput.match(/[0-9]+/))
+        //     console.log(userInputNumber)
+        //     categoriesRes = await getCategories();
+        //     categories = categoriesRes?.data?.categories?.items;
+        //     categories = harcodedFilterOfUnusedCategories(categories);
+        //     if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
-            resData.replyMessage = listCategories(categories);
-            resData.trigger = TriggerSteps.SELECT_CATEGORY;
-            resolve(resData);
-            break;
+        //     resData.replyMessage = listCategories(categories);
+        //     resData.trigger = TriggerSteps.SELECT_CATEGORY;
+        //     resolve(resData);
+        //     break;
             
         case TriggerSteps.SELECT_CATEGORY:
-            userInputNumber = Number(userInput);
+            userInputNumber = Number(userInput.match(/[0-9]+/))
+            console.log(userInputNumber)
             shoppingCart = user?.shoppingCart;
             
            // if it doestn have a shopping cart we create an empty one
@@ -119,6 +150,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
             categories = harcodedFilterOfUnusedCategories(categories);
+
             maxOptions = categories?.length + 1;
 
             // +1 because of the got to pay option
@@ -140,6 +172,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 break;
             } 
 
+            console.log('selectedCategory:', selectedCategory)
             if (!selectedCategory) {
                 resData.trigger = TriggerSteps.SELECT_CATEGORY;
                 resData.replyMessage = invalidNumberInput(categories?.length);
@@ -152,14 +185,14 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
             availableProducts = availableProducts?.data?.products?.items;
             
-            resData.replyMessage = listAvailableProducts(availableProducts)
-            resData.trigger = TriggerSteps.ADD_PRODUCT_TO_CART;
+            // resData.replyMessage = listAvailableProducts(availableProducts)
+            resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_TO_CART, 'Agregar productos a tu pedido');
             resolve(resData);
             break;
 
         case TriggerSteps.ADD_MORE_PRODUCTS_STEP:
         case TriggerSteps.ADD_PRODUCT_TO_CART:
-            userInputNumber = Number(userInput);
+            userInputNumber = Number(userInput.match(/[0-9]+/))
             shoppingCart = user?.shoppingCart;
 
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
@@ -216,8 +249,8 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             shoppingCart.products.push(productAdded)
             await updateUserShoppingCart(shoppingCart);   
 
-            resData.replyMessage = getQuantityOfProduct(productSelected.name, productSelected.product_quantity)
-            resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
+            // resData.replyMessage = getQuantityOfProduct(productSelected.name, productSelected.product_quantity)
+            resData = getAddQuantityButtons(resData, productSelected.product_quantity)
             resolve(resData);
             break;
 
@@ -257,14 +290,15 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (updateShoppingCartResponse?.errors?.[0]?.message?.includes("No hay suficiente cantidad de este producto")) {
                 resData.replyMessage = invalidProductQuantity(product.product_quantity);
                 resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
-                resolve(resData);
             } else {
                 // added success case, we relist the products again
-                resData.replyMessage = reListingAvailableProducts(shoppingCart.products, availableProducts)
-                resData.trigger = TriggerSteps.ADD_MORE_PRODUCTS_STEP;
-                resolve(resData);
+                // ACA VER DE DEVOLVER DOS MENSAJES: UNA LISTA PARA AGREGAR MAS PRODUCTOS Y LISTA DEL CARRITO AddArgumentsAsVariables, Y OTRO MENSAJE APARTE CON UN BOTON DE IR A PAGAR
+                resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_MORE_PRODUCTS_STEP, 'Agregue más productos a su carrito');    
+                const resData2 = getDeliveryMethodsButtons(resData, availableProducts, TriggerSteps.ADD_MORE_PRODUCTS_STEP, 'Agregue más productos a su carrito');    
+                    
+                    // Object.assign({}, person);
+                resolve([resData2, resData]);
             }
-
             break;
 
         case TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED:
@@ -515,3 +549,75 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
     //          break;
     // }
 // })
+
+const productRows = (products: IProduct[]) => products.map((product: any) => {
+    return {
+        title: product.name,
+        description: product.description || '',
+        id: product.id
+    }
+});
+
+const productSections = {
+  title: 'Selecciona un producto',
+    rows: [
+    {
+        title: 'Test 4',
+        description: 'This is a smaller text field, a description',
+        id: 'test-4',
+    },
+    {
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    }
+  ],
+};

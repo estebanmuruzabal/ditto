@@ -9,6 +9,8 @@ import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
+import { client } from '../../..';
+import { sendMessage } from '../../../controllers/send';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -426,19 +428,20 @@ export const usersResolvers: IResolvers = {
                 temperatura,
                 mapeoTierra,
                 mapeoLuz
-            }: { id: string, controllerId: number, name: string, humedad?: number, temperatura?: number, mapeoTierra?: number, mapeoLuz?: number },
+            }: { id: string, controllerId: number, name: string, humedad: number, temperatura: number, mapeoTierra: number, mapeoLuz: number },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
 
-            const userResult = await db.users.findOne({_id: new ObjectId(id)});
+            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
+            console.log(controllerId)
             const plants = userResult.plants;
             const index = userResult.plants?.findIndex(plant => (plant.controllerId == controllerId));
 
-            if (index <= 0) {
+            if (index < 0) {
                 throw new Error("Controller id does not exists.");
             } else {
                 plants[index].humedad = humedad;
@@ -447,6 +450,11 @@ export const usersResolvers: IResolvers = {
                 plants[index].mapeoLuz = mapeoLuz;
             }
 
+            if (humedad < 60) {
+                const whatsappMsg = `Pestañeaste! Tu planta: ${plants[index].name} esta necesitando agua!`;
+                await sendMessage(client, userResult?.phones[0]?.number, whatsappMsg, null);
+            }
+                
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}

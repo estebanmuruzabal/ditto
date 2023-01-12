@@ -1,3 +1,13 @@
+export const GET_SETTINGS = `
+  query GetSetting {
+    getSiteSetting(key: "site-settings") {
+      id
+      key
+      value
+    }
+  }
+`;
+
 export const getCustomerQuery = `
     query GetCustomer($phone: String!) {
         getCustomer(phone: $phone) {
@@ -114,8 +124,7 @@ export const GET_CATEGORIES = `
             parent_id
             name
             slug
-            banner
-            icon
+            meta_description
         }
         totalCount
         hasMore

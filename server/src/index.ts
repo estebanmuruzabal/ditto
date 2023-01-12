@@ -14,11 +14,12 @@ const DELAY_TIME = 170; //ms
 import { cleanNumber, isValidNumber } from './controllers/handle';
 import { lastTrigger, sendMedia, sendMessage, sendMessageButton } from './controllers/send';
 import { findResponseMsg } from './controllers/flows';
-import { fetchCustomerAndToken, saveUserChatHistory } from './api';
+import { fetchCustomerAndToken, getSettings, saveUserChatHistory } from './api';
 import { TriggerSteps } from './lib/types';
-import { INITIAL_DITTO_USERNAME } from './lib/utils/constant';
+import { INITIAL_USER_USERNAME } from './lib/utils/constant';
 import { normalizeText } from './lib/utils/shoppingUtils';
-const { Client, LocalAuth } = require('whatsapp-web.js');
+import { readInboxContent } from './lib/utils/number-verification-otp';
+const { Client, LocalAuth, List, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json'
 
@@ -34,95 +35,24 @@ export let client: any =  new Client({
  */
 
 
-const sendMsg = (text: string) => ({
-    _data: {
-        id: {
-            fromMe: false,
-            remote: '5493624885763@c.us',
-            id: '186D67502EFCE99A8B',
-            _serialized: 'false_5493624885763@c.us_186D67502EFCE99A8B'
-        },
-        body: text,
-        type: 'chat',
-        t: 1670288146,
-        notifyName: '5493624885763',
-        from: '5493624885763@c.us',
-        to: '5493624951926@c.us',
-        self: 'in',
-        ack: 1,
-        isNewMsg: true,
-        star: false,
-        kicNotified: false,
-        recvFresh: true,
-        isFromTemplate: false,
-        pollInvalidated: false,
-        latestEditMsgKey: null,
-        latestEditSenderTimestampMs: null,
-        broadcast: false,
-        mentionedJidList: [],
-        isVcardOverMmsDocument: false,
-        isForwarded: false,
-        hasReaction: false,
-        ephemeralOutOfSync: false,
-        privacyModeWhenSent: { actualActors: 2, hostStorage: 1, privacyModeTs: 1612483200 },
-        productHeaderImageRejected: false,
-        lastPlaybackProgress: 0,
-        isDynamicReplyButtonsMsg: false,
-        isMdHistoryMsg: false,
-        stickerSentTs: 0,
-        isAvatar: false,
-        requiresDirectConnection: false,
-        pttForwardedFeaturesEnabled: true,
-        isEphemeral: false,
-        isStatusV3: false,
-        links: []
-    },
-    mediaKey: undefined,
-    id: {
-        fromMe: false,
-        remote: '5493624885763@c.us',
-        id: '186D67502EFCE99A8B',
-        _serialized: 'false_5493624885763@c.us_186D67502EFCE99A8B'
-    },
-    ack: 1,
-    hasMedia: false,
-    body: text,
-    type: 'chat',
-    timestamp: 1670288146,
-    from: '5493624885763@c.us',
-    to: '5493624951926@c.us',
-    author: undefined,
-    deviceType: 'web',
-    isForwarded: false,
-    forwardingScore: 0,
-    isStatus: false,
-    isStarred: false,
-    broadcast: false,
-    fromMe: false,
-    hasQuotedMsg: false,
-    duration: undefined,
-    location: undefined,
-    vCards: [],
-    inviteV4: undefined,
-    mentionedIds: [],
-    orderId: undefined,
-    token: undefined,
-    isGif: false,
-    isEphemeral: false,
-    links: []
-});
-
 
 // const listenMessage = async (msg: any) => {
 const listenMessage = () => client.on('message', async (msg: any) => {
     const { from, body, hasMedia } = msg;
+    let settingResponse: any = await getSettings();
+    // settingResponse = settingResponse?.data?.getSiteSetting?.value;
+
+    // const settingValues = JSON.parse(settingResponse);
+    // if (!settingValues?.whatsapp_bot_is_on) return;
+
     const message = body;
     console.log('recevvinggg: ', message?.toString())
     if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
 
     const number: string = cleanNumber(from)
     let user, access_token;
-    // if (number !== '5493624885763') return;
+    if (number !== '5493624885763') return;
+
     const res: any = await fetchCustomerAndToken(number);
 
     if (!!(res?.data?.getCustomer.user && res?.data?.getCustomer.access_token)) {
@@ -141,62 +71,31 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     const userIsRegistered = !!access_token;
     if (userIsRegistered) await saveUserChatHistory(message, number, nextTrigger, access_token)
     const msgResponse = await findResponseMsg(nextTrigger, user, message, number, access_token);
-    await sendMessage(client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);
+
+    if (msgResponse?.length === 2) {
+        const firstMsg = msgResponse[0];
+        const secondMsg = msgResponse[1];
+        await sendMessage(client, from, firstMsg.replyMessage, firstMsg.trigger, access_token);
+        await sendMessage(client, from, secondMsg.replyMessage, secondMsg.trigger, access_token);
+    } else {
+        await sendMessage(client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);
+    }
+    
 // };
 });
 
 
 const withOutSession = () => {
+    
     client.on('qr', (qr: any) => {
         qrcode.generate(qr, {small: true});
     });
 
-    client.on('ready', () => {
+    client.on('ready', async () => {
         console.log('Client is ready!');
-
         listenMessage();
-        //  setTimeout(() => {
-        //     listenMessage(sendMsg('hola'));
-        //  }, 1000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('seba muruzabal'));
-        //  }, 3000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('1'));
-        //  }, 6000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('1'));
-        // }, 9000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('1'));
-        // }, 12000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('11'));
-        //  }, 15000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('3'));
-        // }, 18000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('Belgrano 291, porton negro'));
-        // }, 21000);
-        
-        // setTimeout(() => {
-        //     listenMessage(sendMsg('2'));
-        // }, 24000);
-        
-        //  setTimeout(() => {
-        //     listenMessage(sendMsg('1'));
-        //  }, 27000);
-        
     });
-
+    
     // client.on('authenticated', (session: any) => {
     //     sessionData = session;
     //     fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), (err: any) => {
@@ -240,6 +139,7 @@ const withOutSession = () => {
 
 const mount = async (app: Application) => {
     // client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
+
     client = withOutSession();
 
     const hostname = 'localhost';
@@ -267,7 +167,7 @@ const mount = async (app: Application) => {
             limit: '30mb', // Your Limited Here
         },
     });
-
+    // readInboxContent("from:info@mercadopago.com");
     const port = process.env.PORT;
     app.listen(7000, hostname, () => {
         console.log(`Server running at http://${hostname}:${port}`)

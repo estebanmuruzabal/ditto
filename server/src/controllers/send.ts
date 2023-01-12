@@ -1,7 +1,8 @@
 // import { saveMessage } from "../adapter";
+import { List } from "whatsapp-web";
 import { saveUserChatHistory, signUpUser } from "../api";
 import { ISetting, IUser, TriggerStaffSteps, TriggerSteps } from "../lib/types";
-import { INITIAL_DITTO_USERNAME } from "../lib/utils/constant";
+import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
 import { endConversationKeys, getCleanNumber, initialConversationKeys, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
 
 const ExcelJS = require('exceljs');
@@ -56,9 +57,81 @@ export const sendMedia = (client: any, number = null, fileName = null) => {
  * Enviamos un mensaje simple (texto) a nuestro cliente
  * @param {*} number 
  */
+
+const productSections = {
+  title: 'Selecciona un producto',
+    rows: [
+    {
+        title: 'Test 4',
+        description: 'This is a smaller text field, a description',
+        id: 'test-4',
+    },
+    {
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    },{
+      title: 'Test 4',
+      description: 'This is a smaller text field, a description',
+      id: 'test-4',
+    }
+  ],
+};
+
+const list = new List(`/n Por favor, selecciona una opción en el siguiente menú:`,
+    'Ver menu',
+    [productSections],
+    'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
+    'footer');
+            
 export const sendMessage = async (client: any, number: string, text: string, trigger: TriggerSteps, token: string) => {
    setTimeout(async () => {
-    const message: any = text
+     const message: any = text
+     
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
         if (!number.endsWith('@c.us')) number += '@c.us';
@@ -67,7 +140,7 @@ export const sendMessage = async (client: any, number: string, text: string, tri
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )
     }
-    await saveUserChatHistory(message, number, trigger, token)
+    await saveUserChatHistory('', number, trigger, token)
     
    },DELAY_TIME)
 }
@@ -91,7 +164,7 @@ export const lastTrigger = async (customer: IUser, userMessage: string) => {
     userMessage = normalizeText(userMessage);
     
     if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
-    if (customer?.name === INITIAL_DITTO_USERNAME) return TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
+    // if (customer?.name === INITIAL_USER_USERNAME) return TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
 
     let lastDittoMessageSent: any = { trigger: undefined };
 
