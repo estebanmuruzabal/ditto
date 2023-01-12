@@ -439,10 +439,10 @@ export const usersResolvers: IResolvers = {
             }
             console.log(controllerId)
             const plants = userResult.plants;
-            const index = userResult.plants?.findIndex(plant => (plant.controllerId == controllerId));
+            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
 
             if (index < 0) {
-                throw new Error("Controller id does not exists.");
+                throw new Error("Controller id does not exists.", controllerId);
             } else {
                 plants[index].humedad = humedad;
                 plants[index].temperatura = temperatura;
