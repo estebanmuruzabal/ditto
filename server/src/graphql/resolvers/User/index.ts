@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, ICommonMessageReturnType, IProduct, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
+import {Address, Database, ICommonMessageReturnType, IPlantReturnType, IProduct, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize, takeNineOutIfItHasIt} from "../../../lib/utils";
@@ -388,7 +388,6 @@ export const usersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
-            const users = await db.users.find({}).toArray();
 
             const userResult = await db.users.findOne({ _id: new ObjectId(id) });
 
@@ -404,10 +403,13 @@ export const usersResolvers: IResolvers = {
                 id: shortid.generate(),
                 name,
                 controllerId,
-                humedad: 0,
-                temperatura: 0,
-                mapeoTierra: 0,
-                mapeoLuz: 0,
+                soilHumidity: 0,
+                airHumidity: 0,
+                tempeture: 0,
+                isRelayOneOn: "false",
+                isRelayTwoOn: "false",
+                isRelayThirdOn: "false",
+                isRelayFourthOn: "false"
             };
 
             await db.users.updateOne(
@@ -424,13 +426,16 @@ export const usersResolvers: IResolvers = {
             _root: undefined,
             {   id, 
                 controllerId,
-                humedad,
-                temperatura,
-                mapeoTierra,
-                mapeoLuz
-            }: { id: string, controllerId: number, name: string, humedad: number, temperatura: number, mapeoTierra: number, mapeoLuz: number },
+                soilHumidity,
+                airHumidity,
+                tempeture,
+                isRelayOneOn,
+                isRelayTwoOn,
+                isRelayThirdOn,
+                isRelayFourthOn
+            }: { id: string, controllerId: number, soilHumidity: number, airHumidity: number, tempeture: number, isRelayOneOn: string, isRelayTwoOn: string, isRelayThirdOn: string, isRelayFourthOn: string },
             {db, req}: { db: Database, req: Request }
-        ): Promise<ICommonMessageReturnType> => {
+        ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
 
             const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
@@ -444,14 +449,17 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
-                plants[index].humedad = humedad;
-                plants[index].temperatura = temperatura;
-                plants[index].mapeoTierra = mapeoTierra;
-                plants[index].mapeoLuz = mapeoLuz;
+                plants[index].soilHumidity = soilHumidity;
+                plants[index].airHumidity = airHumidity;
+                plants[index].tempeture = tempeture;
+                plants[index].isRelayOneOn = isRelayOneOn;
+                plants[index].isRelayTwoOn = isRelayTwoOn;
+                plants[index].isRelayThirdOn = isRelayThirdOn;
+                plants[index].isRelayFourthOn = isRelayFourthOn;
             }
 
-            if (humedad < 60) {
-                const whatsappMsg = `Pestañeaste! Tu planta: ${plants[index].name} esta necesitando agua!`;
+            if (soilHumidity < 60) {
+                const whatsappMsg = `Pestañeaste! Tu ${plants[index].name} esta necesitando agua!`;
                 await sendMessage(client, userResult?.phones[0]?.number, whatsappMsg, undefined, undefined);
             }
                 
@@ -461,8 +469,10 @@ export const usersResolvers: IResolvers = {
             );
 
              return {
-                status: true,
-                message: "updated successfully."
+                isRelayOneOn,
+                isRelayTwoOn,
+                isRelayThirdOn,
+                isRelayFourthOn
             };
         },
         addPhoneNumber: async (

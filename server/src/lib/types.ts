@@ -5,10 +5,13 @@ export interface Plant {
     id?: string;
     controllerId: number;
     name?: string;
-    humedad?: number;
-    temperatura?: number;
-    mapeoTierra?: number;
-    mapeoLuz?: number;
+    soilHumidity: number;
+    airHumidity: number;
+    tempeture: number;
+    isRelayOneOn: string;
+    isRelayTwoOn: string;
+    isRelayThirdOn: string;
+    isRelayFourthOn: string;
 }
 
 export interface Phone {
@@ -328,6 +331,13 @@ export interface ICommonMessageReturnType {
     message: string;
     status: boolean;
     access_token?: string;
+}
+
+export interface IPlantReturnType {
+    isRelayOneOn: string;
+    isRelayTwoOn: string;
+    isRelayThirdOn: string;
+    isRelayFourthOn: string;
 }
 
 export interface ISetting {

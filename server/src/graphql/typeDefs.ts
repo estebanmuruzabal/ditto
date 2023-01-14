@@ -17,10 +17,13 @@ export const typeDefs = gql`
         id: String!
         controllerId: Int!
         name: String!
-        humedad: Int
-        temperatura: Int
-        mapeoTierra: Int
-        mapeoLuz: Int
+        soilHumidity: Int
+        airHumidity: Int
+        tempeture: Int
+        isRelayOneOn: String
+        isRelayTwoOn: String
+        isRelayThirdOn: String
+        isRelayFourthOn: String
     }
 
     type DeliveryAddress {
@@ -409,6 +412,13 @@ export const typeDefs = gql`
         message: String!
         status: Boolean!
     }
+
+    type IPlantReturnType {
+        isRelayOneOn: String
+        isRelayTwoOn: String
+        isRelayThirdOn: String
+        isRelayFourthOn: String
+    }
     
     type Setting {
         id: ID
@@ -526,7 +536,7 @@ export const typeDefs = gql`
         updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
-        updatePlant(id: ID!, controllerId: Int!, humedad: Int, temperatura: Int, mapeoTierra: Int, mapeoLuz: Int): DefaultMessageType!
+        updatePlant(id: ID!, controllerId: Int!, soilHumidity: Int, airHumidity: Int, tempeture: Int, isRelayOneOn: String, isRelayTwoOn: String, isRelayThirdOn: String, isRelayFourthOn: String): IPlantReturnType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

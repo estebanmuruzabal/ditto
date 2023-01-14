@@ -4,8 +4,7 @@ import nodemailer from "nodemailer";
 import { IOrderInputArgs } from "../../graphql/resolvers/Orders/types";
 import { IProduct, IUser } from "../types";
 import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD, READ_MAIL_CONFIG } from "./constant";
-const imaps = require('imap-simple');
-const { convert } = require('html-to-text');
+// const imaps = require('imap-simple');
 
 const fromNumber = process.env.OTP_FROM_NUMBER
 const apiToken = process.env.OTP_API_TOKEN
@@ -36,30 +35,30 @@ export const sendOtp = (sendToNumber: string, otpCode: string) => {
         );
 }
 
-export const readMail = async () => {
-  try {
-    const connection = await imaps.connect(READ_MAIL_CONFIG);
-    console.log('CONNECTION SUCCESSFUL', new Date().toString());
-    const box = await connection.openBox('INBOX');
-    const searchCriteria = ['UNSEEN'];
-    const fetchOptions = {
-      bodies: ['HEADER', 'TEXT'],
-      markSeen: false,
-    };
-    const results = await connection.search(searchCriteria, fetchOptions);
-    results.forEach((res: any) => {
-      const text = res.parts.filter((part: any) => {
-        return part.which === 'TEXT';
-      });
-      let emailHTML = text[0].body;
-      let emailText = convert(emailHTML);
-      console.log(emailText);
-    });
-    connection.end();
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const readMail = async () => {
+//   try {
+//     const connection = await imaps.connect(READ_MAIL_CONFIG);
+//     console.log('CONNECTION SUCCESSFUL', new Date().toString());
+//     const box = await connection.openBox('INBOX');
+//     const searchCriteria = ['UNSEEN'];
+//     const fetchOptions = {
+//       bodies: ['HEADER', 'TEXT'],
+//       markSeen: false,
+//     };
+//     const results = await connection.search(searchCriteria, fetchOptions);
+//     results.forEach((res: any) => {
+//       const text = res.parts.filter((part: any) => {
+//         return part.which === 'TEXT';
+//       });
+//       let emailHTML = text[0].body;
+//       let emailText = convert(emailHTML);
+//       console.log(emailText);
+//     });
+//     connection.end();
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const sendCompanyConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string) => {
 
@@ -190,55 +189,55 @@ const gmail = google.gmail('v1');
   };
 
   
-export const searchGmail = async (searchItem: string, accessToken: string) => {
-    var config1 = {
-      method: "get",
-      url:
-        "https://www.googleapis.com/gmail/v1/users/me/messages?q=" + searchItem,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
-    var threadId = "";
+// export const searchGmail = async (searchItem: string, accessToken: string) => {
+//     var config1 = {
+//       method: "get",
+//       url:
+//         "https://www.googleapis.com/gmail/v1/users/me/messages?q=" + searchItem,
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     };
+//     var threadId = "";
 
-    // @ts-ignore
-    await axios(config1)
-      .then(async function (response) {
-        threadId = await response.data["messages"][0].id;
+//     // @ts-ignore
+//     await axios(config1)
+//       .then(async function (response) {
+//         threadId = await response.data["messages"][0].id;
 
-        console.log("ThreadId = " + threadId);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+//         console.log("ThreadId = " + threadId);
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
 
-    return threadId;
-  };
+//     return threadId;
+//   };
 
-  export const readGmailContent = async (messageId: string, accessToken: string) => {
-    var config = {
-      method: "get",
-      url: `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
+  // export const readGmailContent = async (messageId: string, accessToken: string) => {
+  //   var config = {
+  //     method: "get",
+  //     url: `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}`,
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${accessToken}`,
+  //     },
+  //   };
 
-    var data = {};
+  //   var data = {};
 
-    // @ts-ignore
-    await axios(config)
-      .then(async function (response) {
-        data = await response.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  //   // @ts-ignore
+  //   await axios(config)
+  //     .then(async function (response) {
+  //       data = await response.data;
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
 
-    return data;
-  };
+  //   return data;
+  // };
 
 export const readInboxContent = async (searchText: string) => {
     const accessToken = await getAccesToken();
