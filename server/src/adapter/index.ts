@@ -2,11 +2,12 @@ import { getAvailableProducts, signUpUser, updateUserShoppingCart, getDeliveryMe
 import { cleanNumber } from "../controllers/handle"
 import { IDeliveryMethod, IProduct, IUser, TriggerStaffSteps, TriggerSteps } from "../lib/types"
 import { AVAILABLE_PRODUCTS_OPT, CHECKOUT_OPTION_SELECTED, COMPANY_DESCRIPTION_TEXT, HABLAR_CON_UN_REPRESENTANTE_OPT, INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
-import { getDeliveryPickUpDate, getCustomerPrimaryNumber, containsValidName, getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getListButtons, getButtons, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons } from "../lib/utils/shoppingUtils"
+import { getDeliveryPickUpDate, getCustomerPrimaryNumber, containsValidName, getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getListButtons, getButtons, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons } from "../lib/utils/shoppingUtils"
 import { mainMenuStaffUser } from "../messages/staffMessages"
-import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reListingAvailableProducts, tecnicasDeCultivoInfo, thanksMsg, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired, welcomeTextAndCategoriesOpts } from "../messages/customersMessages"
+import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reListingAvailableProducts, tecnicasDeCultivoInfo, thanksMsg, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired, welcomeTextAndCategoriesOpts } from "../messages/customersMessages"
 import { Buttons } from "whatsapp-web.js"
 import { AddArgumentsAsVariables } from "apollo-server-express"
+import { getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
 
 const { saveMessageJson } = require('./jsonDb')
 // const { getDataIa } = require('./diaglogflow')
@@ -22,10 +23,30 @@ export const getReplyBasedOnStaffMsg = async (triggerStep: string, user: IUser |
     let shoppingCart: any;
     const num = cleanNumber(number);
 
+    console.log('nextTriggerStep received in Switch Staff:', triggerStep)
     switch (triggerStep) {
         case TriggerStaffSteps.STAFF_ALL_CATEGORIES:
-            resData.replyMessage = mainMenuStaffUser(user?.name);
-            resData.trigger = TriggerStaffSteps.ALL_CATEGORIES_ANSWER;
+            resData = getStuffMainMenuButtons(resData, user);
+            
+            resolve(resData);
+            break;
+        
+        case TriggerStaffSteps.ALL_CATEGORIES_ANSWER:
+            userInputNumber = Number(userInput.match(/[0-9]+/))
+            resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+            if (user.workInfo.isWorking && userInputNumber === 1) {
+                await stopWorking(user);
+                resData.replyMessage = 'Termino de trabajar! Muchas gracias por su esfuerzo! Descansa y te esperamos mañana!!';
+                resolve(resData)
+            } else if (!user.workInfo.isWorking && userInputNumber === 1) {
+                resData.replyMessage = 'Empezo a trabajar exitosamente! Metale pata muchacho/a!';
+                await startWorking(user);
+                resolve(resData)
+            }
+            break;
+        default:
+            resData = getStuffMainMenuButtons(resData, user);
+            
             resolve(resData);
             break;
     }
@@ -186,7 +207,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             availableProducts = availableProducts?.data?.products?.items;
             
             // resData.replyMessage = listAvailableProducts(availableProducts)
-            resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_TO_CART, 'Agregar productos a tu pedido');
+            resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_TO_CART, 'Agregar productos a tu pedido', 'Ver lista de productos');
             resolve(resData);
             break;
 
@@ -208,20 +229,21 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 resolve(resData);
                 break;
             } 
-            const goToSetDeliveryStepSelected = userInputNumber === availableProducts?.length + 1;
-         
-            if (goToSetDeliveryStepSelected) {   
-                deliveryOpts = await getDeliveryMethods();
-                if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !!!deliveryOpts?.data?.deliveryMethods?.items) { throw new Error('No delivery methods set'); };
+            // const goToSetDeliveryStepSelected = userInputNumber === availableProducts?.length + 1;
 
-                resData.replyMessage = deliveryOptions(deliveryOpts?.data?.deliveryMethods?.items)
-                resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
-                resolve(resData);
-                break;
-            } 
+            // if (goToSetDeliveryStepSelected) {   
+            //     deliveryOpts = await getDeliveryMethods();
+            //     if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !!!deliveryOpts?.data?.deliveryMethods?.items) { throw new Error('No delivery methods set'); };
+
+            //     resData.replyMessage = deliveryOptions(deliveryOpts?.data?.deliveryMethods?.items)
+            //     resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
+            //     resolve(resData);
+            //     break;
+            // } 
             
             productSelected = availableProducts[userInputNumber - 1];
-
+            console.log('productSelected', userInputNumber)
+            console.log('userInputNumber', productSelected)
             if (!productSelected) {
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
                 resData.replyMessage = invalidNumberInput(availableProducts?.length);
@@ -255,10 +277,16 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             break;
 
         case TriggerSteps.SELECT_QUANTITY_OF_PRODUCT:
-            userInputNumber = Number(userInput)
+            userInputNumber = Number(userInput.match(/[0-9]+/))
             shoppingCart = user?.shoppingCart;
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
+            deliveryOpts = await getDeliveryMethods();
+
             availableProducts = availableProducts?.data?.products?.items;
+            deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;            
+            
+            if (deliveryOpts?.length <= 0 || !!!deliveryOpts) { throw new Error('Error1: No delivery methods set'); };
+
             const prodSelectedIndex = shoppingCart.products.length - 1;
             if (availableProducts?.length <= 0 || !!!availableProducts) throw new Error('Error 3: no available products');
 
@@ -293,16 +321,16 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             } else {
                 // added success case, we relist the products again
                 // ACA VER DE DEVOLVER DOS MENSAJES: UNA LISTA PARA AGREGAR MAS PRODUCTOS Y LISTA DEL CARRITO AddArgumentsAsVariables, Y OTRO MENSAJE APARTE CON UN BOTON DE IR A PAGAR
-                resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_MORE_PRODUCTS_STEP, 'Agregue más productos a su carrito');    
-                const resData2 = getDeliveryMethodsButtons(resData, availableProducts, TriggerSteps.ADD_MORE_PRODUCTS_STEP, 'Agregue más productos a su carrito');    
-                    
-                    // Object.assign({}, person);
-                resolve([resData2, resData]);
+                resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_MORE_PRODUCTS_STEP, 'Seguir comprando', 'Agregar más productos');    
+                const resData3 = Object.assign({}, resData);
+                const resData2 = getDeliveryMethodsButtons(resData3, deliveryOpts, TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED, 'Finalizar compra');    
+
+                resolve([resData, resData2]);
             }
             break;
 
         case TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED:
-            userInputNumber = Number(userInput);
+            userInputNumber = Number(userInput.match(/[0-9]+/))
             deliveryOpts = await getDeliveryMethods();
             shoppingCart = user?.shoppingCart;
             
@@ -318,33 +346,42 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             }
             
             const delyOptSelected = deliveryOpts[userInputNumber - 1];
-
-            if (delyOptSelected) {
-                // encontramos que opcion eligio el usuario y setteamos en el shoppingCart con ese delivery method seleccionado
-                shoppingCart.delivery_method_id = delyOptSelected.id;
-                // arreglar aca abajo::
-                shoppingCart.delivery_date = getDeliveryOrPickUpDatetime(delyOptSelected.details);
-                shoppingCart.delivery_method_name = delyOptSelected.name;
-                shoppingCart.delivery_address = delyOptSelected.pickUpAddress;
-
-                await updateUserShoppingCart(shoppingCart);
-                paymentMethodsResponse = await getPaymentMethods();
-
-                 if (!paymentMethodsResponse?.data?.paymentOptions?.items) {
-                    resData.replyMessage = unknownUserInput();
-                    resData.trigger = TriggerSteps.ALL_CATEGORIES;
-                    resolve(resData);
-                }
-                resData.replyMessage = delyOptSelected?.isPickUp ? getDeliveryOrPickupOptSelectedAndGetPaymentMethodText(delyOptSelected, paymentMethodsResponse?.data?.paymentOptions.items, shoppingCart.delivery_address) : getDeliveryAddress();
-                resData.trigger = delyOptSelected?.isPickUp ? TriggerSteps.SELECT_PAYMENT_METHOD : TriggerSteps.DELIVERY_OPT_SELECTED;
+            console.log('delyOptSelected', delyOptSelected)
+            console.log('userInputNumber',userInputNumber)
+            if (!delyOptSelected) {
+                resData.replyMessage = unknownDeliPickUpOptInput(deliveryOpts)
+                resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
                 resolve(resData)
                 break;
             }
-            resData.replyMessage = unknownDeliPickUpOptInput(deliveryOpts)
-            resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
-            resolve(resData)
-            break;
+            // encontramos que opcion eligio el usuario y setteamos en el shoppingCart con ese delivery method seleccionado
+            shoppingCart.delivery_method_id = delyOptSelected.id;
+            // arreglar aca abajo::
+            shoppingCart.delivery_date = getDeliveryOrPickUpDatetime(delyOptSelected.details);
+            shoppingCart.delivery_method_name = delyOptSelected.name;
+            shoppingCart.delivery_address = delyOptSelected.pickUpAddress;
+
+            await updateUserShoppingCart(shoppingCart);
+            paymentMethodsResponse = await getPaymentMethods();
+            paymentMethodsResponse = paymentMethodsResponse?.data?.paymentOptions?.items;
+            if (!paymentMethodsResponse || paymentMethodsResponse?.length < 1) {
+                resData.replyMessage = unknownUserInput();
+                console.log('0')
+                resData.trigger = TriggerSteps.ALL_CATEGORIES;
+                resolve(resData);
+                break;
+            }
+            console.log('1')
+            resData = delyOptSelected?.isPickUp
+                ? getPaymentButtons(resData, paymentMethodsResponse, TriggerSteps.SELECT_PAYMENT_METHOD, 'Método seleccionado con éxito!', delyOptSelected)
+                : getInputDeliveryAddress(resData, TriggerSteps.DELIVERY_OPT_SELECTED, 'Delivery seleccionado');
+            console.log('2')
+
+            const resData3 = Object.assign({}, resData);
+            resData3.replyMessage = 'Método seleccionado con éxito!';
         
+            delyOptSelected?.isPickUp ? resolve([resData3, resData]) : resolve(resData);
+            break;
         // CAMBIAR LUEGO A BUSCAR OPTIONS DE FECHAS DE PICKUP
         // caso en que usuario elije envio a domicilio
         case TriggerSteps.DELIVERY_OPT_SELECTED:
@@ -360,7 +397,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
 
             await updateUserShoppingCart(shoppingCart);
             const newAddress = getEmptyAddress(user.id, userInput);
-            const addressAddResponse = await addAddressToUser(user.id, newAddress.address, newAddress.title, newAddress.location, newAddress.instructions, newAddress.is_primary);
+            // const addressAddResponse = await addAddressToUser(user.id, newAddress.address, newAddress.title, newAddress.location, newAddress.instructions, newAddress.is_primary);
 
             // now we ask for the payment method
             paymentMethodsResponse = await getPaymentMethods();
@@ -382,7 +419,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             break;
 
         case TriggerSteps.SELECT_PAYMENT_METHOD:
-            userInputNumber = Number(userInput);
+            userInputNumber = Number(userInput.match(/[0-9]+/))
             paymentMethodsResponse = await getPaymentMethods();
 
             if (!paymentMethodsResponse?.data?.paymentOptions?.items) {
@@ -402,39 +439,39 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
 
             const paymentSelected = paymentMethodsOpts[userInputNumber - 1];
 
-            if (paymentSelected) {
-                // encuentra que opcion eligio el usuario y setteamos el shoppingCart con ese metodo
-                deliveryOpts = await getDeliveryMethods();                
-                const deliveryMethodSelected = deliveryOpts?.data?.deliveryMethods?.items?.find((deliOpt: any) => deliOpt.id === shoppingCart.delivery_method_id)
-
-                if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !deliveryMethodSelected) { throw new Error('No delivery methods set or deliveryMethodSelected'); };
-                shoppingCart.payment_method_name = paymentSelected.name;
-                shoppingCart.payment_option_type = paymentSelected.type;
-                shoppingCart.payment_option_id = paymentSelected.id;
-                // now we calculate total
-                const totalItemsAmount = getTotalAmount(shoppingCart.products);
-                const ccCharge = calculateCCCharge(paymentSelected, totalItemsAmount);
-                const deliveryFee = calculateDeliveryCharge(deliveryMethodSelected);
-
-                shoppingCart.discount_amount = 0;
-                shoppingCart.sub_total = totalItemsAmount;
-                
-                shoppingCart.ccCharge = ccCharge;
-                shoppingCart.deliveryFee = deliveryFee;
-                shoppingCart.total = totalItemsAmount + ccCharge + deliveryFee;
-                await updateUserShoppingCart(shoppingCart);
-
-                resData.replyMessage = paymentMethodSelectedAndOrderConfirmationMsj(shoppingCart);
-                resData.trigger = TriggerSteps.ORDER_CHECK_CONFIRMATION;
-                resolve(resData);
+            if (!paymentSelected) {
+                resData.replyMessage = unknownPaymentOptInput(paymentMethodsOpts)
+                resData.trigger = TriggerSteps.SELECT_PAYMENT_METHOD;
+                resolve(resData)
                 break;
             }
-            resData.replyMessage = unknownPaymentOptInput(paymentMethodsOpts)
-            resData.trigger = TriggerSteps.SELECT_PAYMENT_METHOD;
-            resolve(resData)
+            // encuentra que opcion eligio el usuario y setteamos el shoppingCart con ese metodo
+            deliveryOpts = await getDeliveryMethods();                
+            const deliveryMethodSelected2 = deliveryOpts?.data?.deliveryMethods?.items?.find((deliOpt: any) => deliOpt.id === shoppingCart.delivery_method_id)
+
+            if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !deliveryMethodSelected2) { throw new Error('No delivery methods set or deliveryMethodSelected2'); };
+            shoppingCart.payment_method_name = paymentSelected.name;
+            shoppingCart.payment_option_type = paymentSelected.type;
+            shoppingCart.payment_option_id = paymentSelected.id;
+            // now we calculate total
+            const totalItemsAmount = getTotalAmount(shoppingCart.products);
+            const ccCharge = calculateCCCharge(paymentSelected, totalItemsAmount);
+            const deliveryFee = calculateDeliveryCharge(deliveryMethodSelected2);
+
+            shoppingCart.discount_amount = 0;
+            shoppingCart.sub_total = totalItemsAmount;
+            
+            shoppingCart.ccCharge = ccCharge;
+            shoppingCart.deliveryFee = deliveryFee;
+            shoppingCart.total = totalItemsAmount + ccCharge + deliveryFee;
+            await updateUserShoppingCart(shoppingCart);
+
+            resData = getOrderConfirmationButtons(resData, shoppingCart, TriggerSteps.ORDER_CHECK_CONFIRMATION);
+            resolve(resData);
             break;
+        
         case TriggerSteps.ORDER_CHECK_CONFIRMATION:
-            userInputNumber = Number(userInput);
+            userInputNumber = Number(userInput.match(/[0-9]+/))
             shoppingCart = user?.shoppingCart;
             switch (userInputNumber) {
                 case 1:

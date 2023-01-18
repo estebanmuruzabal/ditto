@@ -5,7 +5,10 @@ import { saveExternalFile, checkIsUrl } from './handle';
 const stepsReponse = require('../flow/response.json')
 
 export const findResponseMsg = async (trigger: string, customer: IUser, message: string, number: string, access_token: string) => {
-    const data: any = isUserStaff(customer)
+    const isEmployee = isUserStaff(customer);
+    console.log(customer, isEmployee, trigger);
+
+    const data: any = isEmployee
         ? getReplyBasedOnStaffMsg(trigger, customer, message, number, access_token)
         : getReplyBasedOnTriggerStep(trigger, customer, message, number, access_token);
     if(data && data.media){

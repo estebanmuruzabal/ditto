@@ -1,7 +1,7 @@
 import { cleanNumber } from "../controllers/handle";
 import { IOrderInput } from "../graphql/resolvers/Orders/types";
 import { ICategory, IPaymentOption, IProduct, IUser } from "../lib/types";
-import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery } from "./queries";
+import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO } from "./queries";
 
 const { createApolloFetch } = require('apollo-fetch');
 
@@ -56,6 +56,31 @@ export const signUpUser = (name: string, phone: string, password: string) => new
         resolve(res);
     }).catch((err: any) => {
         console.log('Signup error:', err);
+        resolve(err);
+    });
+});
+export const updateUserWorkInfoMutation = (user: any, logDescription: string) => new Promise((resolve, reject) => {
+    console.log(user, logDescription)
+    apolloFetch({
+        query: UPDATE_USER_WORK_INFO,
+        variables: {
+            id: user.id,
+            isWorking: user.workInfo.isWorking,
+            startedWorkTime: user.workInfo.startedWorkTime,
+            stoppedWorkTime: user.workInfo.stoppedWorkTime,
+            ratePerHour: user.workInfo.ratePerHour,
+            logDescription,
+            totalWorkingMinutesPerWeek: Math.round(user.workInfo.totalWorkingMinutesPerWeek),
+            totalSalaryToPayWeekly: Math.round(user.workInfo.totalSalaryToPayWeekly),
+            advancedSalaryPaid: Math.round(user.workInfo.advancedSalaryPaid),
+            taskRelated: user.workInfo.taskRelated,
+            role: user.role
+        }
+    }).then((res: ICategory[]) => {
+        console.log('[updateUserWorkInfoMutation]:', res);
+        resolve(res);
+    }).catch((err: any) => {
+        console.log('[updateUserWorkInfoMutation error]:', err);
         resolve(err);
     });
 });

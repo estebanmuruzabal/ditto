@@ -1,5 +1,5 @@
-import { deliveryPurchaseWithCashPayment, deliveryPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
-import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles, TriggerSteps } from "../types";
+import { deliveryPurchaseWithCashPayment, deliveryPurchaseWithTransferPayment, getAddressLinkText, getDeliveryAddress, getPickUpAddress, getPrelinkText, pickUpPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
+import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles, TriggerStaffSteps, TriggerSteps } from "../types";
 import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE } from "./constant";
 const { MessageMedia, List } = require('whatsapp-web.js');
 import { Buttons } from "whatsapp-web.js"
@@ -142,7 +142,7 @@ export const getButtons = (bodyDescription: string, buttonsTexts: any[], buttonT
         footer);
 
 };
-            
+
 export const getCategoriesButtons = (resData: any, categories: any) => {
     console.log(categories)
     if (categories.length === 1 || categories.length === 2) {
@@ -177,7 +177,7 @@ export const getAddQuantityButtons = (resData: any, product_quantity: any) => {
     const menuRows = getButtonTextBodiesFrom(Number(product_quantity));
             
     resData.replyMessage = getButtons(
-        'Por favor, seleccione que cantidad desea agregar, si la opción que busca no esta en los botones, es porque no hay suficiente stock :)',
+        'Por favor, seleccione cuantas unidades desea comprar, si la opción que busca no esta en los botones, es porque no hay suficiente stock :)',
         menuRows,
         'Ingrese la cantidad',
         ''
@@ -195,6 +195,25 @@ const getRowsFrom = (items: any) => items.map((item: any, idx: number) => {
     }
 });
 
+const getDeliveryRowsFrom = (items: any) => items.map((item: any, idx: number) => {
+    return {
+        title: idx + 1 + ' - ' + item.name,
+        description: item.details,
+        id: item.id
+    }
+});
+
+const getPaymentRowsFrom = (items: any) => items.map((item: any, idx: number) => {
+    return {
+        body: idx + 1 + ' - ' + item.name,
+    }
+});
+
+
+const getConfirmationTextBodiesFrom = () => {
+    return [{ body: '1 - Confirmar compra 😎' }, { body: '2 - Empezar todo de vuelta 😭' }, { body: 'Cancelar compra 🤨' }];
+};
+
 const getButtonTextBodiesFrom = (maxOptNumber: number) => {
     if (maxOptNumber > 3) {
         return [{ body: '1' }, { body: '2' }, { body: 'Ingresar otra cantidad' }];
@@ -207,15 +226,15 @@ const getButtonTextBodiesFrom = (maxOptNumber: number) => {
     }
 };
 
-export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string) => {
+export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string, buttonText: string) => {
     // later on add buttons option if number is bellow 3
 
     const menuRows = getProductRowsFrom(availableProducts);
-    const listSections = getSectionWith('Productos', menuRows)
-
+    const listSections = getSectionWith('Seleccione de a 1 opción', menuRows)
+console.log('listSections2:::', listSections.rows)
     resData.replyMessage = getListButtons(
-        'Seleccion de productos',
-        'Ver productos',
+        '.',
+        buttonText,
         listSections,
         title,
         '');
@@ -225,22 +244,98 @@ export const getProductsList = (resData: any, availableProducts: any, trigger: T
 };
 
 export const getDeliveryMethodsButtons = (resData: any, deliveryMethods: any, trigger: TriggerSteps, title: string) => {
-    const menuRows = getRowsFrom(deliveryMethods);
-        const listSections = getSectionWith('Selecciona envío/pickup', menuRows)
-        TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToList(listSections);
 
+    
+    const menuRows = getDeliveryRowsFrom(deliveryMethods);
+        const listSections = getSectionWith('Selecciona envío/pickup', menuRows)
+        // TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToList(listSections);
+    console.log('listSections:::', listSections.rows)
         resData.replyMessage = getListButtons(
-            'Seleccione si va a buscar su envio o quiere enviarlo:',
-            'Seleccionar metodo',
+            'Si ya tiene todo lo que necesita, presione el siguiente botón para ver si va a buscar su envío o quiere enviarlo a una dirección:',
+            'Seleccionar envío/pickup',
             listSections,
-            'Metodo de envio/pickup',
+            title,
         '');
     
-    resData.trigger = TriggerSteps.DELIVERY_OPT_SELECTED;
+    resData.trigger = trigger;
+    console.log('resData:::', resData)
+    return resData;
+};
+
+export const getInputDeliveryAddress = (resData: any, trigger: TriggerSteps, title: string) => {
+    console.log('A')
+    resData.replyMessage = getDeliveryAddress();
+    resData.trigger = trigger;
+
     console.log('resData:::', resData)
     return resData;
 };
   
+export const getPaymentButtons = (resData: any, paymentMethods: any, trigger: TriggerSteps, title: string, deliOption: any) => {
+
+    // resData.replyMessage = delyOptSelected?.isPickUp ? getDeliveryOrPickupOptSelectedAndGetPaymentMethodText(delyOptSelected, paymentMethodsResponse?.data?.paymentOptions.items, shoppingCart.delivery_address) : getDeliveryAddress();
+    // resData.trigger = delyOptSelected?.isPickUp ? TriggerSteps.SELECT_PAYMENT_METHOD : TriggerSteps.DELIVERY_OPT_SELECTED;
+    console.log('0')
+    const buttonsBodies = getPaymentRowsFrom(paymentMethods);
+    console.log('buttonsBodies', buttonsBodies)
+    resData.replyMessage = getButtons(
+        'Por favor seleccione su forma de pago:',
+        buttonsBodies,
+        'Método de pago',
+        '',
+    );
+    resData.trigger = trigger;
+    console.log('resData:::', resData)
+    return resData;
+};
+  
+// const paymentMethodSelectedAndOrderConfirmationMsj = (shoppingCart: any) => {
+//     const ccString = `Recargo por tarjeta: $${(shoppingCart.ccCharge).toFixed(2)}`;
+//     const deliveryFeeString = `Recargo por envío: $${(shoppingCart.deliveryFee).toFixed(2)}`;
+//     const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
+//     return `*Por favor verifique que su orden sea correcta.*
+
+// *Método de pago:* ${shoppingCart.payment_method_name}
+// *Método de envío:* ${shoppingCart.delivery_method_name}
+// *Dirección:* ${shoppingCart.delivery_address}
+
+// *Su carrito:*
+// ${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
+// Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
+// *Total a Pagar: $${(total).toFixed(2)}*
+
+// *Por favor ingresa un número del 1 al 5 para elegir una opción*
+// 1 - Para confirmar tu compra
+// 2 - Para cambiar forma de pago
+// 3 - Para cambiar método de envio
+// 4 - Cambiar productos de tu carrito
+// 5 - Para desistir de tu compra :(
+// `
+export const getOrderConfirmationButtons = (resData: any, shoppingCart: any, trigger: TriggerSteps) => {
+    const buttonsBodies = getConfirmationTextBodiesFrom();
+
+    const ccString = `Recargo por tarjeta: $${(shoppingCart.ccCharge).toFixed(2)}`;
+    const deliveryFeeString = `Recargo por envío: $${(shoppingCart.deliveryFee).toFixed(2)}`;
+    const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
+    resData.replyMessage = getButtons(
+        `*Método de pago:* ${shoppingCart.payment_method_name}
+*Método de envío:* ${shoppingCart.delivery_method_name}
+*Dirección:* ${shoppingCart.delivery_address}
+
+*Su carrito:*
+${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
+Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
+*Total a Pagar: $${(total).toFixed(2)}*
+`,
+        buttonsBodies,
+        '*Por favor verifique que su orden sea correcta.*',
+        '',
+    );
+    resData.trigger = trigger;
+    console.log('resData:::', resData)
+    return resData;
+};
+
     
 const getSectionWith = (title: string, rows: any) => {
     return {

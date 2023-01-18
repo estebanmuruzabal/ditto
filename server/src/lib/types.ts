@@ -137,8 +137,8 @@ export interface IWorkInfo {
     stoppedWorkTime: string | null;
     startedWorkTime: string | null;
     ratePerHour: number | null;
-    totalWorkingMinutesPerWeek: number | null;
-    totalSalaryToPayWeekly: number | null;
+    totalWorkingMinutesPerWeek: number;
+    totalSalaryToPayWeekly: number;
     advancedSalaryPaid: number | null;
     isWorking: boolean;
     taskRelated: string | null;

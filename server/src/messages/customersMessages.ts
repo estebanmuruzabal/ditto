@@ -258,6 +258,10 @@ entre las siguientes:
 Por favor escribí un número entre el 1 y el 2 para elegir una opción
 `;
 
+const unknownInputDefault = () =>  
+`Disculpe no reconocimos su respuesta.`;
+
+
 
 
 const unknownDeliPickUpOptInput = (deliveryOptions: any) =>  
@@ -278,7 +282,7 @@ ${paymentMethods.map((method: any, i: number) => (`${i + 1} - ${method.name}\n${
 - Responda escribiendo un núm. entre el 1 y el ${deliveryOptions.length}.
 `;
 
-const getLinkOnly = (text: string) => {
+export const getLinkOnly = (text: string) => {
     if (!text) return;
     const word = 'https';
 
@@ -288,7 +292,7 @@ const getLinkOnly = (text: string) => {
     return text.slice(index + length - 5);
 }
 
-const getPrelinkText = (detailsText: string) => {
+export const getPrelinkText = (detailsText: string) => {
 
     const contentDivided = detailsText?.split(' | ');
 
@@ -297,7 +301,7 @@ const getPrelinkText = (detailsText: string) => {
     return preLinkText;
 }
 
-const getAddressLinkText = (detailsText: string) => {
+export const getAddressLinkText = (detailsText: string) => {
     const contentDivided = detailsText?.split(' | ');
 
     const linkContent: any = contentDivided?.find((part) => part.includes('http'));
@@ -305,7 +309,7 @@ const getAddressLinkText = (detailsText: string) => {
     return linkOnly;
 }
 
-const getPickUpAddress = (pickUpAddress: string) => {
+export const getPickUpAddress = (pickUpAddress: string) => {
     return pickUpAddress && !pickUpAddress.includes('http') ? `Dirección:* ${pickUpAddress}` : '';
 }
 
@@ -435,5 +439,6 @@ export {
     thereWasAProblemWaitForAssistance2,
     invalidProductQuantity,
     hablarConUnRepMsg,
-    listCategories
+    listCategories,
+    unknownInputDefault
 };

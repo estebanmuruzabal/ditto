@@ -8,6 +8,38 @@ export const GET_SETTINGS = `
   }
 `;
 
+export const UPDATE_USER_WORK_INFO = `
+  mutation UpdateUserWorkInfo(
+    $id: ID!, 
+    $isWorking: Boolean,
+    $startedWorkTime: String,
+    $stoppedWorkTime: String,
+    $ratePerHour: Int,
+    $logDescription: String,
+    $totalWorkingMinutesPerWeek: Int,
+    $totalSalaryToPayWeekly: Int,
+    $advancedSalaryPaid: Int,
+    $taskRelated: String,
+    $role: String
+  ) { updateUserWorkInfo(
+      id: $id, 
+      isWorking: $isWorking,
+      startedWorkTime: $startedWorkTime,
+      stoppedWorkTime: $stoppedWorkTime,
+      ratePerHour: $ratePerHour,
+      logDescription: $logDescription,
+      totalWorkingMinutesPerWeek: $totalWorkingMinutesPerWeek,
+      totalSalaryToPayWeekly: $totalSalaryToPayWeekly,
+      advancedSalaryPaid: $advancedSalaryPaid,
+      taskRelated: $taskRelated,
+      role: $role
+    ) {
+    status
+      message
+    }
+  }
+`;
+
 export const getCustomerQuery = `
     query GetCustomer($phone: String!) {
         getCustomer(phone: $phone) {
@@ -19,6 +51,17 @@ export const getCustomerQuery = `
                 }
                 chatHistory {
                     trigger
+                }
+                role
+                workInfo {
+                    stoppedWorkTime
+                    startedWorkTime
+                    ratePerHour
+                    totalWorkingMinutesPerWeek
+                    totalSalaryToPayWeekly
+                    advancedSalaryPaid
+                    isWorking
+                    taskRelated
                 }
                 shoppingCart {
                     customer_id

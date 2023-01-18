@@ -169,8 +169,11 @@ export const lastTrigger = async (customer: IUser, userMessage: string) => {
     let lastDittoMessageSent: any = { trigger: undefined };
 
     if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
-    //staff checks
-    if (isUserStaff(customer) && lastDittoMessageSent?.trigger === null) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+  
+    //staff checks and return if its the case
+    if (isUserStaff(customer) && !lastDittoMessageSent?.trigger) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+    else if (isUserStaff(customer)) return lastDittoMessageSent?.trigger
+    // end staff checks
 
     // block unblock checks
     if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && !userMessage.includes('menu')) return TriggerSteps.BLOCK_CHAT;
