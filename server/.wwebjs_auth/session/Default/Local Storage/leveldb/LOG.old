@@ -1,3 +1,6 @@
-2023/01/11-15:01:55.180 6f03 Reusing MANIFEST /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
-2023/01/11-15:01:55.180 6f03 Recovering log #3
-2023/01/11-15:01:55.180 6f03 Reusing old log /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb/000003.log 
+2023/01/19-16:33:32.720 6f03 Reusing MANIFEST /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2023/01/19-16:33:32.721 6f03 Recovering log #51
+2023/01/19-16:33:32.722 6f03 Reusing old log /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb/000051.log 
+2023/01/19-16:35:33.774 590f Level-0 table #55: started
+2023/01/19-16:35:33.795 590f Level-0 table #55: 22705 bytes OK
+2023/01/19-16:35:33.850 590f Delete type=0 #51
