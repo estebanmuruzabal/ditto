@@ -435,7 +435,7 @@ export const usersResolvers: IResolvers = {
                 isRelayFourthOn
             }: { id: string, controllerId: number, soilHumidity: number, airHumidity: number, tempeture: number, isRelayOneOn: string, isRelayTwoOn: string, isRelayThirdOn: string, isRelayFourthOn: string },
             {db, req}: { db: Database, req: Request }
-        ): Promise<IPlantReturnType> => {
+        ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
 
             const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
@@ -468,12 +468,16 @@ export const usersResolvers: IResolvers = {
                 {$set: {plants}}
             );
 
-             return {
-                isRelayOneOn,
-                isRelayTwoOn,
-                isRelayThirdOn,
-                isRelayFourthOn
+            return {
+                status: true,
+                message: "Created successfully."
             };
+            //  return {
+            //     isRelayOneOn,
+            //     isRelayTwoOn,
+            //     isRelayThirdOn,
+            //     isRelayFourthOn
+            // };
         },
         addPhoneNumber: async (
             _root: undefined,
