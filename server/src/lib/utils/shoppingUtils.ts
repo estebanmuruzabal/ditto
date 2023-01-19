@@ -1,6 +1,6 @@
 import { deliveryPurchaseWithCashPayment, deliveryPurchaseWithTransferPayment, getAddressLinkText, getDeliveryAddress, getPickUpAddress, getPrelinkText, pickUpPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
 import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles, TriggerStaffSteps, TriggerSteps } from "../types";
-import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE } from "./constant";
+import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, INTRODUCE_QUANTITY_OPT_TEXT, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE } from "./constant";
 const { MessageMedia, List } = require('whatsapp-web.js');
 import { Buttons } from "whatsapp-web.js"
 
@@ -149,7 +149,7 @@ export const getCategoriesButtons = (resData: any, categories: any) => {
         const buttonsBodies: any = [];
         categories.map((category: any, idx: number) => buttonsBodies.push({ body: idx + 1 + ' - ' + category.name })) ;
         TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToButtons(buttonsBodies);
-        console.log('buttonsBodies:',buttonsBodies, buttonsBodies.toString())
+
         resData.replyMessage = getButtons(
             COMPANY_DESCRIPTION_TEXT,
             buttonsBodies,
@@ -197,7 +197,7 @@ const getRowsFrom = (items: any) => items.map((item: any, idx: number) => {
 
 const getDeliveryRowsFrom = (items: any) => items.map((item: any, idx: number) => {
     return {
-        title: idx + 1 + ' - ' + item.name,
+        title: item.name,
         description: item.details,
         id: item.id
     }
@@ -216,7 +216,7 @@ const getConfirmationTextBodiesFrom = () => {
 
 const getButtonTextBodiesFrom = (maxOptNumber: number) => {
     if (maxOptNumber > 3) {
-        return [{ body: '1' }, { body: '2' }, { body: 'Ingresar otra cantidad' }];
+        return [{ body: '1' }, { body: '2' }, { body: INTRODUCE_QUANTITY_OPT_TEXT }];
     } else if (maxOptNumber === 3) {
         return [{ body: '1' }, { body: '2' }, { body: '3' }];
     } else if (maxOptNumber === 2) {
@@ -226,14 +226,27 @@ const getButtonTextBodiesFrom = (maxOptNumber: number) => {
     }
 };
 
-export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string, buttonText: string) => {
+export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string, buttonText: string, shoppingCart: any) => {
     // later on add buttons option if number is bellow 3
+
 
     const menuRows = getProductRowsFrom(availableProducts);
     const listSections = getSectionWith('Seleccione de a 1 opción', menuRows)
-console.log('listSections2:::', listSections.rows)
+
+    if (shoppingCart?.products?.length) {
+        listSections.rows.unshift({
+            title: '0 - Borrar carrito',
+            description: 'Empezar de vuelta la compra si seleccionaste mal algun producto',
+        })
+    }
+    const totalItemsAmount = getTotalAmount(shoppingCart.products);
+
+    const bodyContent = shoppingCart?.products?.length > 0 ?
+        `${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
+*Total a Pagar: $${(totalItemsAmount).toFixed(2)}*` : '';
+
     resData.replyMessage = getListButtons(
-        '.',
+        bodyContent,
         buttonText,
         listSections,
         title,
@@ -271,7 +284,7 @@ export const getInputDeliveryAddress = (resData: any, trigger: TriggerSteps, tit
     return resData;
 };
   
-export const getPaymentButtons = (resData: any, paymentMethods: any, trigger: TriggerSteps, title: string, deliOption: any) => {
+export const getPaymentButtons = (resData: any, paymentMethods: any, trigger: TriggerSteps) => {
 
     // resData.replyMessage = delyOptSelected?.isPickUp ? getDeliveryOrPickupOptSelectedAndGetPaymentMethodText(delyOptSelected, paymentMethodsResponse?.data?.paymentOptions.items, shoppingCart.delivery_address) : getDeliveryAddress();
     // resData.trigger = delyOptSelected?.isPickUp ? TriggerSteps.SELECT_PAYMENT_METHOD : TriggerSteps.DELIVERY_OPT_SELECTED;
@@ -324,7 +337,7 @@ export const getOrderConfirmationButtons = (resData: any, shoppingCart: any, tri
 
 *Su carrito:*
 ${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
-Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
+Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
 *Total a Pagar: $${(total).toFixed(2)}*
 `,
         buttonsBodies,

@@ -28,6 +28,7 @@ export const BANK_TRANSFER_PAYMENT_OPTION = 'bank_transfer';
 
 // representative opt
 export const TALK_TO_A_REPRESENTATIVE_MODE = true;
+export const INTRODUCE_QUANTITY_OPT_TEXT = 'Ingresar otra cantidad';
 
 export const READ_MAIL_CONFIG = {
   imap: {

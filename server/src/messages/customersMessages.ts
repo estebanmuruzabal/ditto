@@ -240,6 +240,9 @@ const invalidNumberInput = (maxInputNumber: string) =>
 `Por favor ingrese un número entre el 1 y el ${maxInputNumber}
 `;
 
+const manualInput = () =>  
+`Que cantidad necesita? Por favor ingrese un número. Ejemplo: "2"`;
+
 const getQuantityOfProduct = (productName: string, quantity: string) =>  
 `Cuántas unidades de 
 
@@ -440,5 +443,6 @@ export {
     invalidProductQuantity,
     hablarConUnRepMsg,
     listCategories,
-    unknownInputDefault
+    unknownInputDefault,
+    manualInput
 };

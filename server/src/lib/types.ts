@@ -125,6 +125,7 @@ export enum TriggerSteps {
     SELECT_PAYMENT_METHOD = 'STEP_10',
     ORDER_CHECK_CONFIRMATION = 'STEP_11',
     // other types
+    ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT = 'opt_can_be_add_product_or_pickup/delivery',
     RESET_CHAT_HISTORY_AND_SHOPPING_CART = 'delete_chat_history',
     UNKNOWN_ERROR_STEP = 'STEP_100',
     BLOCK_CHAT = 'block_chat',
