@@ -458,10 +458,10 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
 
-            if (soilHumidity < 60) {
-                const whatsappMsg = `Pestañeaste! Tu ${plants[index].name} esta necesitando agua!`;
-                await sendMessage(client, userResult?.phones[0]?.number, whatsappMsg, undefined, undefined);
-            }
+            // if (soilHumidity < 60) {
+            //     const whatsappMsg = `Pestañeaste! Tu ${plants[index].name} esta necesitando agua!`;
+            //     await sendMessage(client, userResult?.phones[0]?.number, whatsappMsg, undefined, undefined);
+            // }
                 
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
