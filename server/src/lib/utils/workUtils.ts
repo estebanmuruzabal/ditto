@@ -1,7 +1,7 @@
 import moment from "moment";
 import { updateUserWorkInfoMutation } from "../../api";
 import { IUser, TriggerStaffSteps } from "../types";
-import { getButtons } from "./shoppingUtils";
+import { getButtons } from "./whatsAppUtils";
 
 export const getStuffMainMenuButtons = (resData: any, user: IUser) => {
     
@@ -12,8 +12,8 @@ export const getStuffMainMenuButtons = (resData: any, user: IUser) => {
     const h = user.workInfo?.totalWorkingMinutesPerWeek / 60 | 0;
     const m = user.workInfo?.totalWorkingMinutesPerWeek % 60 | 0;
     const subtotalSalario = Number(user.workInfo?.totalWorkingMinutesPerWeek) / 60 * Number(user.workInfo?.ratePerHour);
-    const pendingTasks = user?.tasks?.filter((task: any) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false) || task.isRepetitived)
-    const inProgressTasks = user?.tasks?.filter((task: any) => (task.startDate.length > 1 && task.finishDate.length === 0));
+    // const pendingTasks = user?.tasks?.filter((task: any) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false) || task.isRepetitived)
+    // const inProgressTasks = user?.tasks?.filter((task: any) => (task.startDate.length > 1 && task.finishDate.length === 0));
     
     resData.replyMessage = getButtons(
         `Usted se encuentra: ${user.workInfo?.isWorking ? '*Chambeando*' : '*Vagando*'}
@@ -44,7 +44,6 @@ export const stopWorking = async (user: any) => {
 
     user.workInfo.totalWorkingMinutesPerWeek += workedInMinutes;
     user.workInfo.totalSalaryToPayWeekly = Number(user.workInfo.totalWorkingMinutesPerWeek) * Number(ratePerMinute) - Number(user.workInfo.advancedSalaryPaid);
-    console.log('user stop work:::', user)
     await updateUserWorkInfoMutation(user, `finished working.`);
     };
 
@@ -64,6 +63,5 @@ export const stopWorking = async (user: any) => {
     user.workInfo.stoppedWorkTime = null;
 
     user.workInfo.ratePerHour = 375;
-    console.log('user start work:::', user)
     await updateUserWorkInfoMutation(user, `started working.`);
   };

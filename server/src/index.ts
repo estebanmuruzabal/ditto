@@ -46,11 +46,12 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     // if (!settingValues?.whatsapp_bot_is_on) return;
 
     const message = body;
-    console.log('recevvinggg: ', message?.toString())
+    console.log('from: ', from?.toString())
+    console.log('text msg: ', message?.toString())
     if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
 
     const number: string = cleanNumber(from)
-    let user, access_token;
+    let user, access_token: any;
     // ditto num
     if (number !== '5493624885763') return;
     // juan numero
@@ -73,16 +74,13 @@ const listenMessage = () => client.on('message', async (msg: any) => {
 
     const userIsRegistered = !!access_token;
     if (userIsRegistered) await saveUserChatHistory(message, number, nextTrigger, access_token)
-    const msgResponse = await findResponseMsg(nextTrigger, user, message, number, access_token);
+    const messages = await findResponseMsg(nextTrigger, user, message, number, access_token);
 
-    if (msgResponse?.length === 2) {
-        const firstMsg = msgResponse[0];
-        const secondMsg = msgResponse[1];
-        await sendMessage(client, from, firstMsg.replyMessage, firstMsg.trigger, access_token);
-        await sendMessage(client, from, secondMsg.replyMessage, secondMsg.trigger, access_token);
-    } else {
-        await sendMessage(client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);
-    }
+    if (!messages?.length) console.log('no messages to send: ', messages);
+    
+    messages.map(async (msj: any) => {
+        await sendMessage(client, from, msj.replyMessage, msj.trigger, access_token);
+    });
     
 // };
 });

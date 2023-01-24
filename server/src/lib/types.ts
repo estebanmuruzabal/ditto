@@ -6,6 +6,7 @@ export interface Plant {
     controllerId: number;
     name?: string;
     soilHumidity: number;
+    soilHumiditySettings: ISoilHumiditySettings 
     airHumidity: number;
     tempeture: number;
     isRelayOneOn: string;
@@ -19,6 +20,15 @@ export interface Phone {
     number: string,
     status?: boolean,
     is_primary?: boolean
+}
+
+export interface ISoilHumiditySettings {
+    minWarning: string;
+    maxWarning: string;
+    manual: string;
+    relayAutomatedOnTime: string;
+    relayIdRelated: string;
+    relayWorking: string;
 }
 
 export interface Logs {
@@ -59,13 +69,6 @@ export interface IListings {
     rating?: number;
 }
 
-export interface IPlant {
-    _id?: ObjectId;
-    name: string;
-    created_at: string;
-    logs: Array<Logs>;
-}
-
 export interface IUser {
     _id?: ObjectId;
     name: string;
@@ -99,38 +102,45 @@ export enum Roles {
     MEMBER = 'MEMBER',
     DELIVERY_BOY = 'DELIVERY_BOY',
     CLIENT = 'CLIENT',
-    STAFF = 'STAFF'
+    STAFF = 'STAFF',
+    GROWER = 'GROWER'
+}
+
+export enum TriggerGrowerSteps {
+    SHOW_ALL_PLANTS = 'SHOW_ALL_PLANTS',
+    PLANT_DETAILS = 'PLANT_DETAILS',
+    CONFIGURATION_CHANGE_TRIGGER = 'CONFIGURATION_CHANGE_TRIGGER'
 }
 
 export enum TriggerStaffSteps {
-    STAFF_ALL_CATEGORIES = 'STEP_1',
-    ALL_CATEGORIES_ANSWER = 'STEP_2',
+    STAFF_ALL_CATEGORIES = 'STAFF_ALL_CATEGORIES',
+    ALL_CATEGORIES_ANSWER = 'ALL_CATEGORIES_ANSWER',
 }
 
 export enum TriggerSteps {
-    INITIAL_UNAUTHENTICATED_USER = 'STEP_0',
-    USER_SHOULD_INPUT_HIS_NAME = 'STEP_0_1',
-    INITIAL_UNAUTHENTICATED_USER_AGAIN = 'STEP_0_2',
-    AUTHENTICATED_USER_ALL_CATEGORIES = 'STEP_0_3',
-    ALL_CATEGORIES = 'STEP_1',
-    SELECT_CATEGORY = 'select_category',
-    GET_PRODUCTS_LIST_STEP = 'STEP_2',
-    GET_PRODUCTS_INFO_STEP = 'STEP_3',
-    ADD_PRODUCT_TO_CART = 'STEP_4',
-    SELECT_QUANTITY_OF_PRODUCT = 'STEP_5',
-    ADD_MORE_PRODUCTS_STEP = 'STEP_6',
-    DELIVERY_OR_PICKUP_OPT_SELECTED = 'STEP_7',
-    PICKUP_OPT_SELECTED = 'STEP_8',
-    DELIVERY_OPT_SELECTED = 'STEP_9',
-    SELECT_PAYMENT_METHOD = 'STEP_10',
-    ORDER_CHECK_CONFIRMATION = 'STEP_11',
+    INITIAL_UNAUTHENTICATED_USER = 'INITIAL_UNAUTHENTICATED_USER',
+    USER_SHOULD_INPUT_HIS_NAME = 'USER_SHOULD_INPUT_HIS_NAME',
+    INITIAL_UNAUTHENTICATED_USER_AGAIN = 'INITIAL_UNAUTHENTICATED_USER_AGAIN',
+    AUTHENTICATED_USER_ALL_CATEGORIES = 'AUTHENTICATED_USER_ALL_CATEGORIES',
+    ALL_CATEGORIES = 'ALL_CATEGORIES',
+    SELECT_CATEGORY = 'SELECT_CATEGORY',
+    GET_PRODUCTS_LIST_STEP = 'GET_PRODUCTS_LIST_STEP',
+    GET_PRODUCTS_INFO_STEP = 'GET_PRODUCTS_INFO_STEP',
+    ADD_PRODUCT_TO_CART = 'ADD_PRODUCT_TO_CART',
+    SELECT_QUANTITY_OF_PRODUCT = 'SELECT_QUANTITY_OF_PRODUCT',
+    ADD_MORE_PRODUCTS_STEP = 'ADD_MORE_PRODUCTS_STEP',
+    DELIVERY_OR_PICKUP_OPT_SELECTED = 'DELIVERY_OR_PICKUP_OPT_SELECTED',
+    PICKUP_OPT_SELECTED = 'PICKUP_OPT_SELECTED',
+    DELIVERY_OPT_SELECTED = 'DELIVERY_OPT_SELECTED',
+    SELECT_PAYMENT_METHOD = 'SELECT_PAYMENT_METHOD',
+    ORDER_CHECK_CONFIRMATION = 'ORDER_CHECK_CONFIRMATION',
     // other types
-    ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT = 'opt_can_be_add_product_or_pickup/delivery',
-    RESET_CHAT_HISTORY_AND_SHOPPING_CART = 'delete_chat_history',
-    UNKNOWN_ERROR_STEP = 'STEP_100',
-    BLOCK_CHAT = 'block_chat',
-    UNBLOCK_CHAT = 'unblock_chat',
-    END_CONVERSATION_AND_RESET_CHAT = 'end_conversation'
+    ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT = 'ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT/delivery',
+    RESET_CHAT_HISTORY_AND_SHOPPING_CART = 'RESET_CHAT_HISTORY_AND_SHOPPING_CART',
+    UNKNOWN_ERROR_STEP = 'UNKNOWN_ERROR_STEP',
+    BLOCK_CHAT = 'BLOCK_CHAT',
+    UNBLOCK_CHAT = 'UNBLOCK_CHAT',
+    END_CONVERSATION_AND_RESET_CHAT = 'END_CONVERSATION_AND_RESET_CHAT'
 
 }
 

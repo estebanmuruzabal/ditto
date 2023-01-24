@@ -53,6 +53,17 @@ export const getCustomerQuery = `
                     trigger
                 }
                 role
+                plants {
+                    controllerId
+                    name
+                    soilHumidity
+                    airHumidity
+                    tempeture
+                    isRelayOneOn
+                    isRelayTwoOn
+                    isRelayThirdOn
+                    isRelayFourthOn
+                }
                 workInfo {
                     stoppedWorkTime
                     startedWorkTime

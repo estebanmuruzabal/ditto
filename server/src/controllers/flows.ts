@@ -1,15 +1,20 @@
-import { getReplyBasedOnTriggerStep, getReplyBasedOnStaffMsg } from '../adapter';
+import { getReplyFromEmployeeBot, getReplyFromGrowerBot, getReplyFromShopBot } from '../adapter';
 import { IUser } from '../lib/types';
-import { isUserStaff } from '../lib/utils/shoppingUtils';
+import { isGrower, isUserStaff } from '../lib/utils/shoppingUtils';
 import { saveExternalFile, checkIsUrl } from './handle';
 const stepsReponse = require('../flow/response.json')
 
 export const findResponseMsg = async (trigger: string, customer: IUser, message: string, number: string, access_token: string) => {
-    const isEmployee = isUserStaff(customer);
+    let data: any;
 
-    const data: any = isEmployee
-        ? getReplyBasedOnStaffMsg(trigger, customer, message, number, access_token)
-        : getReplyBasedOnTriggerStep(trigger, customer, message, number, access_token);
+    if (isGrower(customer)) {
+        data = getReplyFromGrowerBot(trigger, customer, message, number, access_token);
+    } else if (isUserStaff(customer)) {
+        data = getReplyFromEmployeeBot(trigger, customer, message, number, access_token);
+    } else {
+        data = getReplyFromShopBot(trigger, customer, message, number, access_token);
+    }
+
     if(data && data.media){
         const file = checkIsUrl(data.media) ? await saveExternalFile(data.media) : data.media;
         return {...data,...{media:file}}

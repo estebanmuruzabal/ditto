@@ -1,8 +1,7 @@
 import { deliveryPurchaseWithCashPayment, deliveryPurchaseWithTransferPayment, getAddressLinkText, getDeliveryAddress, getPickUpAddress, getPrelinkText, pickUpPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
 import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles, TriggerStaffSteps, TriggerSteps } from "../types";
 import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, INTRODUCE_QUANTITY_OPT_TEXT, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE } from "./constant";
-const { MessageMedia, List } = require('whatsapp-web.js');
-import { Buttons } from "whatsapp-web.js"
+import { getButtons, getListButtons, getSectionWith } from "./whatsAppUtils";
 
 export const isUserInputInvalid = (userInput: number, maxOptions: number) => { 
     return !userInput || userInput < 1 || userInput > maxOptions;
@@ -55,7 +54,6 @@ export const getOrderConfirmationMsgText = (
     user: any = null
 ) => { 
     const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
-    console.log(input.payment_option_type)
     switch (input.payment_option_type) {
         case BANK_TRANSFER_PAYMENT_OPTION:
             if (PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
@@ -73,7 +71,7 @@ export const getOrderConfirmationMsgText = (
             }         
             break;
         default:
-            console.log('no case found in: switch (input.payment_option_type)')
+            console.log('no case found in: switch (input.payment_option_type)::', input.payment_option_type)
             break;
     }
     return 'Error: in getOrderConfirmationMsgText, payment_option_type not cool'                   
@@ -97,8 +95,7 @@ export const getCustomerPrimaryNumber = (customer: IUser) => customer?.phones?.l
 //   );
 
 export const isUserStaff = (customer: IUser) => customer?.role === Roles.STAFF;
-
-
+export const isGrower = (customer: IUser) => customer?.role === Roles.GROWER;
 
 export const getDeliveryOrPickUpDatetime = (detailsText: string) => {
     // if modify this, also modify server utils with these functions logic
@@ -127,24 +124,8 @@ export const addTalkToRepresentativeOptToButtons = (buttons: { body: string;}[])
     return buttons;
 };
 
-export const getListButtons = (bodyDescription: string, listButtonText: string, listSections: any, listTitle: string, footer: any) => {
-    return new List(bodyDescription,
-        listButtonText,
-        [listSections],
-        listTitle,
-        footer);
-};
-
-export const getButtons = (bodyDescription: string, buttonsTexts: any[], buttonTitle: string, footer: any) => {
-    return new Buttons(bodyDescription,
-        buttonsTexts,
-        buttonTitle,
-        footer);
-
-};
 
 export const getCategoriesButtons = (resData: any, categories: any) => {
-    console.log(categories)
     if (categories.length === 1 || categories.length === 2) {
         const buttonsBodies: any = [];
         categories.map((category: any, idx: number) => buttonsBodies.push({ body: idx + 1 + ' - ' + category.name })) ;
@@ -157,7 +138,7 @@ export const getCategoriesButtons = (resData: any, categories: any) => {
             'Seleccione una opción:'
         );
     } else {
-        const menuRows = getRowsFrom(categories);
+        const menuRows = getCategoryRowsFrom(categories);
         const listSections = getSectionWith('Seleccioná una categoría', menuRows)
         TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToList(listSections);
 
@@ -169,7 +150,6 @@ export const getCategoriesButtons = (resData: any, categories: any) => {
         '');
     } 
     resData.trigger = TriggerSteps.SELECT_CATEGORY;
-    console.log('resData:::', resData)
     return resData;
 };
     
@@ -187,7 +167,7 @@ export const getAddQuantityButtons = (resData: any, product_quantity: any) => {
     return resData;
 };
     
-const getRowsFrom = (items: any) => items.map((item: any, idx: number) => {
+const getCategoryRowsFrom = (items: any) => items.map((item: any, idx: number) => {
     return {
         title: idx + 1 + ' - ' + item.name,
         description: item.meta_description,
@@ -261,8 +241,7 @@ export const getDeliveryMethodsButtons = (resData: any, deliveryMethods: any, tr
     
     const menuRows = getDeliveryRowsFrom(deliveryMethods);
         const listSections = getSectionWith('Selecciona envío/pickup', menuRows)
-        // TALK_TO_A_REPRESENTATIVE_MODE && addTalkToRepresentativeOptToList(listSections);
-    console.log('listSections:::', listSections.rows)
+
         resData.replyMessage = getListButtons(
             'Si ya tiene todo lo que necesita, presione el siguiente botón para ver si va a buscar su envío o quiere enviarlo a una dirección:',
             'Seleccionar envío/pickup',
@@ -271,26 +250,19 @@ export const getDeliveryMethodsButtons = (resData: any, deliveryMethods: any, tr
         '');
     
     resData.trigger = trigger;
-    console.log('resData:::', resData)
     return resData;
 };
 
 export const getInputDeliveryAddress = (resData: any, trigger: TriggerSteps, title: string) => {
-    console.log('A')
     resData.replyMessage = getDeliveryAddress();
     resData.trigger = trigger;
 
-    console.log('resData:::', resData)
     return resData;
 };
   
 export const getPaymentButtons = (resData: any, paymentMethods: any, trigger: TriggerSteps) => {
-
-    // resData.replyMessage = delyOptSelected?.isPickUp ? getDeliveryOrPickupOptSelectedAndGetPaymentMethodText(delyOptSelected, paymentMethodsResponse?.data?.paymentOptions.items, shoppingCart.delivery_address) : getDeliveryAddress();
-    // resData.trigger = delyOptSelected?.isPickUp ? TriggerSteps.SELECT_PAYMENT_METHOD : TriggerSteps.DELIVERY_OPT_SELECTED;
-    console.log('0')
     const buttonsBodies = getPaymentRowsFrom(paymentMethods);
-    console.log('buttonsBodies', buttonsBodies)
+
     resData.replyMessage = getButtons(
         'Por favor seleccione su forma de pago:',
         buttonsBodies,
@@ -298,32 +270,9 @@ export const getPaymentButtons = (resData: any, paymentMethods: any, trigger: Tr
         '',
     );
     resData.trigger = trigger;
-    console.log('resData:::', resData)
     return resData;
 };
   
-// const paymentMethodSelectedAndOrderConfirmationMsj = (shoppingCart: any) => {
-//     const ccString = `Recargo por tarjeta: $${(shoppingCart.ccCharge).toFixed(2)}`;
-//     const deliveryFeeString = `Recargo por envío: $${(shoppingCart.deliveryFee).toFixed(2)}`;
-//     const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
-//     return `*Por favor verifique que su orden sea correcta.*
-
-// *Método de pago:* ${shoppingCart.payment_method_name}
-// *Método de envío:* ${shoppingCart.delivery_method_name}
-// *Dirección:* ${shoppingCart.delivery_address}
-
-// *Su carrito:*
-// ${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
-// Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
-// *Total a Pagar: $${(total).toFixed(2)}*
-
-// *Por favor ingresa un número del 1 al 5 para elegir una opción*
-// 1 - Para confirmar tu compra
-// 2 - Para cambiar forma de pago
-// 3 - Para cambiar método de envio
-// 4 - Cambiar productos de tu carrito
-// 5 - Para desistir de tu compra :(
-// `
 export const getOrderConfirmationButtons = (resData: any, shoppingCart: any, trigger: TriggerSteps) => {
     const buttonsBodies = getConfirmationTextBodiesFrom();
 
@@ -345,16 +294,7 @@ Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge >
         '',
     );
     resData.trigger = trigger;
-    console.log('resData:::', resData)
     return resData;
-};
-
-    
-const getSectionWith = (title: string, rows: any) => {
-    return {
-        title,
-        rows,
-    }
 };
 
 const getProductRowsFrom = (items: any) => items.map((item: any, idx: number) => {

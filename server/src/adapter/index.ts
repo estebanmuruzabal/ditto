@@ -1,20 +1,88 @@
-import { getAvailableProducts, signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts } from "../api"
+import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts } from "../api"
 import { cleanNumber } from "../controllers/handle"
-import { IDeliveryMethod, IProduct, IUser, TriggerStaffSteps, TriggerSteps } from "../lib/types"
-import { AVAILABLE_PRODUCTS_OPT, CHECKOUT_OPTION_SELECTED, COMPANY_DESCRIPTION_TEXT, HABLAR_CON_UN_REPRESENTANTE_OPT, INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_QUANTITY_OPT_TEXT, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
-import { getDeliveryPickUpDate, getCustomerPrimaryNumber, containsValidName, getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getListButtons, getButtons, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons } from "../lib/utils/shoppingUtils"
-import { mainMenuStaffUser } from "../messages/staffMessages"
-import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, manualInput, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reListingAvailableProducts, tecnicasDeCultivoInfo, thanksMsg, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired, welcomeTextAndCategoriesOpts } from "../messages/customersMessages"
-import { Buttons } from "whatsapp-web.js"
-import { AddArgumentsAsVariables } from "apollo-server-express"
+import { IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
+import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_QUANTITY_OPT_TEXT, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
+import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons } from "../lib/utils/shoppingUtils"
+import { enterValidAddress, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, manualInput, purchaseErrorMsg, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput } from "../messages/customersMessages"
 import { getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
+import { getGrowerMainMenuButtons, getGrowerSensorList } from "../lib/utils/growerUtils"
 
 const { saveMessageJson } = require('./jsonDb')
 // const { getDataIa } = require('./diaglogflow')
 const  stepsInitial = require('../flow/initial.json')
 const  stepsReponse = require('../flow/response.json')
 
-export const getReplyBasedOnStaffMsg = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
+export const getReplyFromGrowerBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
+    let resData = { replyMessage: '', media: null, trigger: '' }
+    let availableProducts: any;
+    let deliveryOpts: any;
+    let userInputNumber: number;
+    let productSelected: any;
+    let shoppingCart: any;
+    const num = cleanNumber(number);
+
+    console.log('nextTriggerStep received in Switch Grower:', triggerStep)
+    switch (triggerStep) {
+        case TriggerGrowerSteps.SHOW_ALL_PLANTS:
+            if (!user?.plants?.length) {
+                resData.replyMessage = 'No tenes plantas agregadas';
+                resolve(resData); break;
+            }
+
+            let resDataArrayOfPlants: any = [];
+            user?.plants.map((plant: Plant) => {
+                let resDataCopy = Object.assign({}, resData);
+                const resDataReady = getGrowerMainMenuButtons(resDataCopy, user, plant, TriggerGrowerSteps.PLANT_DETAILS, `${plant.name}`, 'Editar configuraciones');
+                resDataArrayOfPlants.push(resDataReady)
+            });
+
+            resolve(resDataArrayOfPlants);
+            break;
+        
+        case TriggerGrowerSteps.PLANT_DETAILS:
+            userInputNumber = Number(userInput.match(/[0-9]+/))
+            resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+    
+            if (!user?.plants[userInputNumber]) {
+                resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
+                resData.replyMessage = invalidNumberInput(user?.plants?.length);
+                resolve([resData]);
+                break;
+            }
+
+            resData = getGrowerSensorList(resData, user, user.plants[userInputNumber], TriggerGrowerSteps.CONFIGURATION_CHANGE_TRIGGER, `${user.plants[userInputNumber].name}`, 'Editar configuraciones');
+            resolve([resData])
+            break;
+        case TriggerGrowerSteps.CONFIGURATION_CHANGE_TRIGGER:
+            userInputNumber = Number(userInput.match(/[0-9]+/))
+            resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+    
+            switch (userInputNumber) {
+                case 1:
+                    // await updatePlantSettings()
+                    break;
+            
+                default:
+                    break;
+            }
+            if (!user?.plants[userInputNumber]) {
+                resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
+                resData.replyMessage = invalidNumberInput(user?.plants?.length);
+                resolve([resData]);
+                break;
+            }
+
+            resData = getGrowerSensorList(resData, user, user.plants[userInputNumber], TriggerGrowerSteps.PLANT_DETAILS, `${user.plants[userInputNumber].name}`, 'Editar configuraciones');
+            resolve([resData])
+            break;
+        default:
+            
+            resolve([resData]);
+            break;
+    }
+})
+
+export const getReplyFromEmployeeBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
     let resData = { replyMessage: '', media: null, trigger: '' }
     let availableProducts: any;
     let deliveryOpts: any;
@@ -28,7 +96,7 @@ export const getReplyBasedOnStaffMsg = async (triggerStep: string, user: IUser |
         case TriggerStaffSteps.STAFF_ALL_CATEGORIES:
             resData = getStuffMainMenuButtons(resData, user);
             
-            resolve(resData);
+            resolve([resData]);
             break;
         
         case TriggerStaffSteps.ALL_CATEGORIES_ANSWER:
@@ -37,22 +105,22 @@ export const getReplyBasedOnStaffMsg = async (triggerStep: string, user: IUser |
             if (user.workInfo.isWorking && userInputNumber === 1) {
                 await stopWorking(user);
                 resData.replyMessage = 'Termino de trabajar! Muchas gracias por su esfuerzo! Descansa y te esperamos mañana!!';
-                resolve(resData)
+                resolve([resData])
             } else if (!user.workInfo.isWorking && userInputNumber === 1) {
                 resData.replyMessage = 'Empezo a trabajar exitosamente! Metale pata muchacho/a!';
                 await startWorking(user);
-                resolve(resData)
+                resolve([resData])
             }
             break;
         default:
             resData = getStuffMainMenuButtons(resData, user);
             
-            resolve(resData);
+            resolve([resData]);
             break;
     }
 })
 
-export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
+export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
 
     let resData: any = { replyMessage: '', media: null, trigger: '' };
     let availableProducts: any;
@@ -88,7 +156,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
             resData = getCategoriesButtons(resData, categories);
-            resolve(resData);
+            resolve([resData]);
             break;
         case TriggerSteps.BLOCK_CHAT:
         // case TriggerSteps.ALL_CATEGORIES:
@@ -102,7 +170,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
 
         //     resData.replyMessage = listCategories(categories);
         //     resData.trigger = TriggerSteps.SELECT_CATEGORY;
-        //     resolve(resData);
+        //     resolve([resData]);
         //     break;
             
         case TriggerSteps.SELECT_CATEGORY:
@@ -123,7 +191,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (isUserInputInvalid(userInputNumber, maxOptions)) {
                 resData.trigger = TriggerSteps.SELECT_CATEGORY;
                 resData.replyMessage = invalidNumberInput(maxOptions);
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
 
@@ -134,15 +202,14 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 resData.replyMessage = hablarConUnRepMsg()
                 resData.trigger = TriggerSteps.BLOCK_CHAT;
                 // do we trigger a msj to admin phone?
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
 
-            console.log('selectedCategory:', selectedCategory)
             if (!selectedCategory) {
                 resData.trigger = TriggerSteps.SELECT_CATEGORY;
                 resData.replyMessage = invalidNumberInput(categories?.length);
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
             shoppingCart.selectedCategorySlug = selectedCategory.slug;
@@ -154,7 +221,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             // resData.replyMessage = listAvailableProducts(availableProducts)
             
             resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_TO_CART, 'Agregar productos a tu pedido', 'Ver lista de productos', shoppingCart);
-            resolve(resData);
+            resolve([resData]);
             break;
 
         case TriggerSteps.ADD_MORE_PRODUCTS_STEP:
@@ -179,7 +246,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                 if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
                 resData = getCategoriesButtons(resData, categories);
-                resolve(resData);
+                resolve([resData]);
                 break;
             } 
             
@@ -187,7 +254,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (isUserInputInvalid(userInputNumber, maxOptions)) {
                 resData.trigger = TriggerSteps.ADD_PRODUCT_TO_CART;
                 resData.replyMessage = invalidNumberInput(maxOptions);
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
 
@@ -195,7 +262,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (!productSelected) {
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
                 resData.replyMessage = invalidNumberInput(availableProducts?.length);
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
 
@@ -211,8 +278,6 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             };
 
             // still fix case when trying to add a product were it was added in cart with all the possible stock available
-            
-            
             const productIndexFound = shoppingCart?.products.findIndex(((prod: any) => prod.product_id === productSelected.id))
 
             if (productIndexFound >= 0) shoppingCart.products.splice(productIndexFound, 1);
@@ -221,7 +286,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
 
             // resData.replyMessage = getQuantityOfProduct(productSelected.name, productSelected.product_quantity)
             resData = getAddQuantityButtons(resData, productSelected.product_quantity)
-            resolve(resData);
+            resolve([resData]);
             break;
 
         case TriggerSteps.SELECT_QUANTITY_OF_PRODUCT:
@@ -229,7 +294,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (userInput.includes(INTRODUCE_QUANTITY_OPT_TEXT)) {
                 resData.replyMessage = manualInput();
                 resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
             userInputNumber = Number(userInput.match(/[0-9]+/))
@@ -250,18 +315,18 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (!productInShoppingCart) {
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
                 resData.replyMessage = invalidNumberInput(availableProducts?.length);
-                resolve(resData);
+                resolve([resData]);
                 break;
             } 
 
             const product = availableProducts.find(((prod: any) => prod.id === productInShoppingCart.product_id))
 
-            if (!product) { resolve(resData); break; }
+            if (!product) { resolve([resData]); break; }
 
             if (isUserInputInvalid(userInputNumber, Number(product.product_quantity))) {
                 resData.replyMessage = invalidProductQuantity(product.product_quantity);
                 resData.trigger = TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
 
@@ -297,7 +362,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (isUserInputInvalid(deliOptIndexFound, deliveryOpts?.length)) {
                 resData.replyMessage = invalidNumberInput(deliveryOpts.length);
                 resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
             
@@ -305,7 +370,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (!delyOptSelected) {
                 resData.replyMessage = unknownDeliPickUpOptInput(deliveryOpts)
                 resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
-                resolve(resData)
+                resolve([resData])
                 break;
             }
             // encontramos que opcion eligio el usuario y setteamos en el shoppingCart con ese delivery method seleccionado
@@ -321,7 +386,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (!paymentMethodsResponse || paymentMethodsResponse?.length < 1) {
                 resData.replyMessage = unknownUserInput();
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
 
@@ -332,7 +397,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             const resData3 = Object.assign({}, resData);
             resData3.replyMessage = 'Método seleccionado con éxito!';
         
-            delyOptSelected?.isPickUp ? resolve([resData3, resData]) : resolve(resData);
+            delyOptSelected?.isPickUp ? resolve([resData3, resData]) : resolve([resData]);
             break;
         // CAMBIAR LUEGO A BUSCAR OPTIONS DE FECHAS DE PICKUP
         // caso en que usuario elije envio a domicilio
@@ -340,7 +405,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (userInput?.length < 10) {
                 resData.replyMessage = enterValidAddress();
                 resData.trigger = TriggerSteps.DELIVERY_OPT_SELECTED;    
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
             
@@ -360,7 +425,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (!paymentMethodsResponse || !deliveryOpts) {
                 resData.replyMessage = unknownUserInput();
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
-                resolve(resData);
+                resolve([resData]);
             }
 
             // const deliveryMethodSelected = deliveryOpts.find((deliOpt: IDeliveryMethod) => deliOpt.name === shoppingCart.delivery_method_name);
@@ -381,7 +446,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (!paymentMethodsResponse?.data?.paymentOptions?.items) {
                 resData.replyMessage = unknownUserInput();
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
-                resolve(resData);
+                resolve([resData]);
             }
             shoppingCart = user?.shoppingCart;
             const paymentMethodsOpts = paymentMethodsResponse?.data?.paymentOptions?.items;
@@ -389,7 +454,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (isUserInputInvalid(userInputNumber, paymentMethodsOpts?.length)) {
                 resData.replyMessage = invalidNumberInput(paymentMethodsOpts.length);
                 resData.trigger = TriggerSteps.SELECT_PAYMENT_METHOD;
-                resolve(resData);
+                resolve([resData]);
                 break;
             }
 
@@ -398,7 +463,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             if (!paymentSelected) {
                 resData.replyMessage = unknownPaymentOptInput(paymentMethodsOpts)
                 resData.trigger = TriggerSteps.SELECT_PAYMENT_METHOD;
-                resolve(resData)
+                resolve([resData])
                 break;
             }
             // encuentra que opcion eligio el usuario y setteamos el shoppingCart con ese metodo
@@ -423,7 +488,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
             await updateUserShoppingCart(shoppingCart);
 
             resData = getOrderConfirmationButtons(resData, shoppingCart, TriggerSteps.ORDER_CHECK_CONFIRMATION);
-            resolve(resData);
+            resolve([resData]);
             break;
         
         case TriggerSteps.ORDER_CHECK_CONFIRMATION:
@@ -436,11 +501,11 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                         resData.replyMessage = getOrderConfirmationMsgText(shoppingCart)
                         resData.trigger = TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
                         await updateUserShoppingCart(shoppingCart);
-                        resolve(resData)
+                        resolve([resData])
                     } else {
                         resData.replyMessage = purchaseErrorMsg()
                         resData.trigger = TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
-                        resolve(resData)
+                        resolve([resData])
                     }
                     break;
                 case 2:
@@ -450,34 +515,34 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
                     if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
                     resData = getCategoriesButtons(resData, categories);
-                    resolve(resData)
+                    resolve([resData])
                     break;
                 case 3: 
                     resData.trigger = TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
                     resData.replyMessage = thanksMsgNoPurchase();
-                    resolve(resData)
+                    resolve([resData])
                     break;
                 default:
                     resData.replyMessage = unknownInputDefault();
                     resData.trigger = TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
-                    resolve(resData)
+                    resolve([resData])
                     break;
             }
             break;
         case TriggerSteps.END_CONVERSATION_AND_RESET_CHAT:
             resData.trigger = TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
             resData.replyMessage = thanksMsgNoPurchase();
-            resolve(resData)
+            resolve([resData])
             break;
         case TriggerSteps.UNKNOWN_ERROR_STEP: 
             resData.replyMessage = thereWasAProblemWaitForAssistance()
             resData.trigger = TriggerSteps.ALL_CATEGORIES;
-            resolve(resData)
+            resolve([resData])
             break;
         default:
             resData.replyMessage = thereWasAProblemWaitForAssistance2()
             resData.trigger = TriggerSteps.ALL_CATEGORIES;
-            resolve(resData)
+            resolve([resData])
             break;
         } 
 })
@@ -490,7 +555,7 @@ export const getReplyBasedOnTriggerStep = async (triggerStep: string, user: IUse
 //         let resData = { replyMessage: '', media: null, trigger: null }
 //         getDataIa(message,(dt: any) => {
 //             resData = { ...resData, ...dt }
-//             resolve(resData)
+//             resolve([resData])
 //         })
 //     }
 // })

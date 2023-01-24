@@ -1,9 +1,9 @@
 // import { saveMessage } from "../adapter";
 import { List } from "whatsapp-web";
 import { saveUserChatHistory, signUpUser } from "../api";
-import { ISetting, IUser, TriggerStaffSteps, TriggerSteps } from "../lib/types";
+import { ISetting, IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
-import { endConversationKeys, getCleanNumber, initialConversationKeys, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
+import { endConversationKeys, getCleanNumber, initialConversationKeys, isGrower, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
 
 const ExcelJS = require('exceljs');
 const fs = require('fs');
@@ -162,28 +162,32 @@ export const sendMessageButton = async (client: any, number = null, text = null,
  */
 export const lastTrigger = async (customer: IUser, userMessage: string) => {
     userMessage = normalizeText(userMessage);
-    
     if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
-    // if (customer?.name === INITIAL_USER_USERNAME) return TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
-
     let lastDittoMessageSent: any = { trigger: undefined };
 
     if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
   
-    //staff checks and return if its the case
+    // START: grower checks and return if its the case
+    if (isGrower(customer) && !lastDittoMessageSent?.trigger) return TriggerGrowerSteps.SHOW_ALL_PLANTS;
+    // else if (isGrower(customer)) return lastDittoMessageSent?.trigger
+    // END: grower checks
+  
+    // START: staff checks and return if its the case
     if (isUserStaff(customer) && !lastDittoMessageSent?.trigger) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
-    else if (isUserStaff(customer)) return lastDittoMessageSent?.trigger
-    // end staff checks
+    // else if (isUserStaff(customer)) return lastDittoMessageSent?.trigger
+    // END: end staff checks
 
-    // block unblock checks
+    // START: blocked unblock chats checks
     if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && !userMessage.includes('menu')) return TriggerSteps.BLOCK_CHAT;
     if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && userMessage.includes('menu')) return TriggerSteps.UNBLOCK_CHAT;
+    // END: blocked chat checks
 
     // if is initial, we reset conversation and we start all over again, non matter what
     if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
     if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
 
-    return lastDittoMessageSent?.trigger || TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+    if (!lastDittoMessageSent?.trigger) throw Error('No lastDittoMessageSent?.trigger setted');
+    return lastDittoMessageSent?.trigger;
     
         
 
