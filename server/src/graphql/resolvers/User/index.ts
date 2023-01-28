@@ -405,17 +405,17 @@ export const usersResolvers: IResolvers = {
                 soilHumidity: 0,
                 airHumidity: 0,
                 tempeture: 0,
-                isRelayOneOn: "false",
-                isRelayTwoOn: "false",
-                isRelayThirdOn: "false",
-                isRelayFourthOn: "false",
+                isRelayOneOn: false,
+                isRelayTwoOn: false,
+                isRelayThirdOn: false,
+                isRelayFourthOn: false,
                 soilHumiditySettings: {
                     minWarning: "",
                     maxWarning: "",
-                    manual: "",
+                    manual: true,
                     relayAutomatedOnTime: "", 
                     relayIdRelated: "",
-                    relayWorking: ""
+                    relayWorking: false
                 }
             };
 
@@ -440,7 +440,7 @@ export const usersResolvers: IResolvers = {
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, controllerId: number, soilHumidity: number, airHumidity: number, tempeture: number, isRelayOneOn: string, isRelayTwoOn: string, isRelayThirdOn: string, isRelayFourthOn: string },
+            }: { id: string, controllerId: number, soilHumidity: number, airHumidity: number, tempeture: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -483,57 +483,57 @@ export const usersResolvers: IResolvers = {
                 isRelayFourthOn
             };
         },
-        // updatePlantSettings: async (
-        //     _root: undefined,
-        //     {   id, 
-        //         controllerId,
-        //         maxWarning,
-        //         minWarning,
-        //         manual,
-        //         relayAutomatedOnTime,
-        //         relayIdRelated,
-        //         relayWorking
-        //     }: { id: string, controllerId: number, maxWarning: string, minWarning: string, manual: string, relayAutomatedOnTime: string, relayIdRelated: string, relayWorking: string },
-        //     {db, req}: { db: Database, req: Request }
-        // ): Promise<ICommonMessageReturnType> => {
-        //     // await authorize(req, db);
+        updatePlantSettings: async (
+            _root: undefined,
+            {   id, 
+                controllerId,
+                maxWarning,
+                minWarning,
+                manual,
+                relayAutomatedOnTime,
+                relayIdRelated,
+                relayWorking
+            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, manual: boolean, relayAutomatedOnTime: string, relayIdRelated: string, relayWorking: boolean },
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
 
-        //     const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
-        //     if (!userResult) {
-        //         throw new Error("User does not exits.");
-        //     }
+            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
 
-        //     const plants = userResult.plants;
-        //     const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
+            const plants = userResult.plants;
+            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
 
-        //     if (index < 0) {
-        //         throw new Error(`Controller id does not exists: ${controllerId})`);
-        //     } else {
-        //         plants[index].soilHumiditySettings.maxWarning = maxWarning;
-        //         plants[index].soilHumiditySettings.minWarning = minWarning;
-        //         plants[index].soilHumiditySettings.manual = manual;
-        //         plants[index].soilHumiditySettings.relayAutomatedOnTime = relayAutomatedOnTime;
-        //         plants[index].soilHumiditySettings.relayIdRelated = relayIdRelated;
-        //         plants[index].soilHumiditySettings.relayWorking = relayWorking;
-        //     }
+            if (index < 0) {
+                throw new Error(`Controller id does not exists: ${controllerId})`);
+            } else {
+                plants[index].soilHumiditySettings.maxWarning = maxWarning;
+                plants[index].soilHumiditySettings.minWarning = minWarning;
+                plants[index].soilHumiditySettings.manual = manual;
+                plants[index].soilHumiditySettings.relayAutomatedOnTime = relayAutomatedOnTime;
+                plants[index].soilHumiditySettings.relayIdRelated = relayIdRelated;
+                plants[index].soilHumiditySettings.relayWorking = relayWorking;
+            }
 
                 
-        //     await db.users.updateOne(
-        //         {_id: new ObjectId(id)},
-        //         {$set: {plants}}
-        //     );
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$set: {plants}}
+            );
 
-        //     return {
-        //         status: true,
-        //         message: "Created successfully."
-        //     };
-        //     //  return {
-        //     //     isRelayOneOn,
-        //     //     isRelayTwoOn,
-        //     //     isRelayThirdOn,
-        //     //     isRelayFourthOn
-        //     // };
-        // },
+            return {
+                status: true,
+                message: "Created successfully."
+            };
+            //  return {
+            //     isRelayOneOn,
+            //     isRelayTwoOn,
+            //     isRelayThirdOn,
+            //     isRelayFourthOn
+            // };
+        },
         addPhoneNumber: async (
             _root: undefined,
             {id, number}: { id: string, number: string },

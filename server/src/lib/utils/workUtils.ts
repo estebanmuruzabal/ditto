@@ -1,7 +1,84 @@
 import moment from "moment";
 import { updateUserWorkInfoMutation } from "../../api";
-import { IUser, TriggerStaffSteps } from "../types";
-import { getButtons } from "./whatsAppUtils";
+import { IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps } from "../types";
+import { getButtons, getListButtons, getSectionWith } from "./whatsAppUtils";
+
+export const getGrowerSensorList = (resData: any, user: IUser, plant: Plant, trigger: TriggerGrowerSteps, title: string, buttonText: string) => {
+    
+//     lectura: (desconectado/20% humedad)
+// sestear minima/maxima (warn whatsapp),
+//         Asociar relay: (“nombre del relay asociado”/ “no hay relay asociado, asocial uno“)
+    
+    
+    const menuRows: any = [{
+            title: 'Configurar alerta maxima',
+            description: 'Recibis un whatsapp cuando sobrepase este limite. Code: 1A',
+        }, {
+            title: 'Configurar alerta minima',
+            description: 'Recibis un whatsapp cuando baje de este limite. Code: 1B',
+        }, {
+            title: 'Asociar relay',
+            description: '. Code: 1C',
+        }, {
+            title: 'Prender relay',
+            description: 'Recibis un whatsapp cuando sobrepase este limite. Code: 1D',
+        }, {
+            title: 'Apagar relay',
+            description: 'Recibis un whatsapp cuando sobrepase este limite. Code: 1E',
+        }];
+
+    const listSections = getSectionWith('Configuracion', menuRows);
+ 
+
+     resData.replyMessage = getListButtons(
+            `Humedad del suelo: ${plant.soilHumidity}
+    Alertas: ${plant.soilHumiditySettings.manual ? 'OFF' : 'ON' }
+    Relay asociado: ${plant.soilHumiditySettings.relayIdRelated || 'Ninguno' }
+    `,
+        'Editar configuracion',
+        listSections,
+        title,
+         '');
+
+    resData.trigger = trigger;
+
+    return resData;
+};
+
+export const getGrowerMainMenuButtons = (resData: any, user: IUser, plant: Plant, trigger: TriggerGrowerSteps, title: string, buttonText: string) => {
+    const buttons: any = [{ body: '1 - Editar configuración' }, { body: '2 - Agregar sensor' }];
+
+    const bodyContent =
+        `Controller ID: ${plant.controllerId}
+Humedad del suelo: ${plant.soilHumidity}
+Humedad del aire: ${plant.airHumidity}
+Temperatura: ${plant.tempeture}
+Relay 1: ${plant.isRelayOneOn}
+Relay 2: ${plant.isRelayTwoOn}
+Relay 3: ${plant.isRelayThirdOn}
+Relay 4: ${plant.isRelayFourthOn}
+        `;
+
+        resData.replyMessage = getButtons(
+        bodyContent,
+        buttons,
+        `Detalles de su ${plant.name}`,
+        ''
+    );
+
+    resData.trigger = trigger;
+
+    return resData;
+};
+
+const getPlantsRowsFrom = (items: any) => items.map((item: any, idx: number) => {
+    return {
+        title: idx + 1 + ' - ' + item.name,
+        description: item.meta_description,
+        id: item.id
+    }
+});
+
 
 export const getStuffMainMenuButtons = (resData: any, user: IUser) => {
     

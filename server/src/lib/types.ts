@@ -9,10 +9,10 @@ export interface Plant {
     soilHumiditySettings: ISoilHumiditySettings 
     airHumidity: number;
     tempeture: number;
-    isRelayOneOn: string;
-    isRelayTwoOn: string;
-    isRelayThirdOn: string;
-    isRelayFourthOn: string;
+    isRelayOneOn: boolean;
+    isRelayTwoOn: boolean;
+    isRelayThirdOn: boolean;
+    isRelayFourthOn: boolean;
 }
 
 export interface Phone {
@@ -25,10 +25,10 @@ export interface Phone {
 export interface ISoilHumiditySettings {
     minWarning: string;
     maxWarning: string;
-    manual: string;
+    manual: boolean;
     relayAutomatedOnTime: string;
     relayIdRelated: string;
-    relayWorking: string;
+    relayWorking: boolean;
 }
 
 export interface Logs {
@@ -109,7 +109,8 @@ export enum Roles {
 export enum TriggerGrowerSteps {
     SHOW_ALL_PLANTS = 'SHOW_ALL_PLANTS',
     PLANT_DETAILS = 'PLANT_DETAILS',
-    CONFIGURATION_CHANGE_TRIGGER = 'CONFIGURATION_CHANGE_TRIGGER'
+    CONFIGURATION_CHANGE_TRIGGER = 'CONFIGURATION_CHANGE_TRIGGER',
+    CHANGE_MIN_HUMIDITY = 'CHANGE_MIN_HUMIDITY'
 }
 
 export enum TriggerStaffSteps {
@@ -345,10 +346,10 @@ export interface ICommonMessageReturnType {
 }
 
 export interface IPlantReturnType {
-    isRelayOneOn: string;
-    isRelayTwoOn: string;
-    isRelayThirdOn: string;
-    isRelayFourthOn: string;
+    isRelayOneOn: boolean;
+    isRelayTwoOn: boolean;
+    isRelayThirdOn: boolean;
+    isRelayFourthOn: boolean;
 }
 
 export interface ISetting {

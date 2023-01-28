@@ -1,11 +1,10 @@
-import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts } from "../api"
+import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updatePlantSettings } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
 import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_QUANTITY_OPT_TEXT, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
 import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons } from "../lib/utils/shoppingUtils"
 import { enterValidAddress, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, manualInput, purchaseErrorMsg, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput } from "../messages/customersMessages"
-import { getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
-import { getGrowerMainMenuButtons, getGrowerSensorList } from "../lib/utils/growerUtils"
+import { getGrowerSensorList, getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
 
 const { saveMessageJson } = require('./jsonDb')
 // const { getDataIa } = require('./diaglogflow')
@@ -32,7 +31,8 @@ export const getReplyFromGrowerBot = async (triggerStep: string, user: IUser | a
             let resDataArrayOfPlants: any = [];
             user?.plants.map((plant: Plant) => {
                 let resDataCopy = Object.assign({}, resData);
-                const resDataReady = getGrowerMainMenuButtons(resDataCopy, user, plant, TriggerGrowerSteps.PLANT_DETAILS, `${plant.name}`, 'Editar configuraciones');
+                // const resDataReady = getGrowerMainMenuButtons(resDataCopy, user, plant, TriggerGrowerSteps.PLANT_DETAILS, `${plant.name}`, 'Editar configuraciones');
+                const resDataReady = getGrowerSensorList(resDataCopy, user, plant, TriggerGrowerSteps.PLANT_DETAILS, `${plant.name}`, 'Acciones');
                 resDataArrayOfPlants.push(resDataReady)
             });
 
@@ -40,39 +40,47 @@ export const getReplyFromGrowerBot = async (triggerStep: string, user: IUser | a
             break;
         
         case TriggerGrowerSteps.PLANT_DETAILS:
-            userInputNumber = Number(userInput.match(/[0-9]+/))
-            resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+            const userInputPlantNumber = userInput[userInput.length];
+            const userInputPlantSettingNumber = userInput[userInput.length - 1];
     
-            if (!user?.plants[userInputNumber]) {
+            if (!user?.plants[userInputPlantNumber]) {
                 resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
                 resData.replyMessage = invalidNumberInput(user?.plants?.length);
                 resolve([resData]);
                 break;
             }
 
-            resData = getGrowerSensorList(resData, user, user.plants[userInputNumber], TriggerGrowerSteps.CONFIGURATION_CHANGE_TRIGGER, `${user.plants[userInputNumber].name}`, 'Editar configuraciones');
-            resolve([resData])
-            break;
-        case TriggerGrowerSteps.CONFIGURATION_CHANGE_TRIGGER:
-            userInputNumber = Number(userInput.match(/[0-9]+/))
-            resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
-    
-            switch (userInputNumber) {
-                case 1:
-                    // await updatePlantSettings()
+            switch (userInputPlantSettingNumber) {
+                case 'A':
+                    resData.trigger = `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_${userInputPlantSettingNumber}`;
+                    resData.replyMessage = 'Ingresar temperatura minima';
+                    resolve([resData]);
+                    break;
                     break;
             
                 default:
                     break;
             }
-            if (!user?.plants[userInputNumber]) {
-                resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
-                resData.replyMessage = invalidNumberInput(user?.plants?.length);
+
+            
+            resolve([resData])
+            break;
+        case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_1`:
+        case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_2`:
+        case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_3`:
+            userInputNumber = Number(userInput.match(/[0-9]+/))
+            const plantSettingNumber = triggerStep[triggerStep.length];
+            const plant = user.plants[plantSettingNumber];
+
+            if (!plant || userInputNumber < 0 || userInputNumber > 100) {
+                resData.trigger = `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_${plantSettingNumber}`;
+                resData.replyMessage = invalidNumberInput('100');
                 resolve([resData]);
                 break;
             }
 
-            resData = getGrowerSensorList(resData, user, user.plants[userInputNumber], TriggerGrowerSteps.PLANT_DETAILS, `${user.plants[userInputNumber].name}`, 'Editar configuraciones');
+            await updatePlantSettings(user, plant, 'minWarning', userInputNumber);
+            resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
             resolve([resData])
             break;
         default:

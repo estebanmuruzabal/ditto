@@ -8,6 +8,24 @@ export const GET_SETTINGS = `
   }
 `;
 
+export const UPDATE_PLANT_SETTINGS = `
+    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $manual: String, $relayAutomatedOnTime: String, $relayIdRelated: String, $relayWorking: String) {
+    updatePlantSettings(
+        id: $id,
+        controllerId: $controllerId,
+        maxWarning: $maxWarning,
+        minWarning: $minWarning,
+        manual: $manual,
+        relayAutomatedOnTime: $relayAutomatedOnTime,
+        relayIdRelated: $relayIdRelated,
+        relayWorking: $relayWorking,
+    ) {
+        message
+        status
+    }
+    }
+`;
+
 export const UPDATE_USER_WORK_INFO = `
   mutation UpdateUserWorkInfo(
     $id: ID!, 
@@ -63,6 +81,14 @@ export const getCustomerQuery = `
                     isRelayTwoOn
                     isRelayThirdOn
                     isRelayFourthOn
+                    soilHumiditySettings {
+                        minWarning
+                        maxWarning
+                        manual
+                        relayAutomatedOnTime
+                        relayIdRelated
+                        relayWorking
+                    }
                 }
                 workInfo {
                     stoppedWorkTime
