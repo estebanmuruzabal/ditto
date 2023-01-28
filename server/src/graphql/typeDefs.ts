@@ -24,8 +24,18 @@ export const typeDefs = gql`
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
+        soilHumiditySettings: SoilHumiditySettings
     }
 
+    type SoilHumiditySettings {
+        minWarning: String
+        maxWarning: String
+        manual: Boolean
+        relayAutomatedOnTime: String
+        relayIdRelated: String
+        relayWorking: Boolean
+    }
+   
     type DeliveryAddress {
         id: String
         title: String
