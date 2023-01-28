@@ -9,7 +9,7 @@ export const GET_SETTINGS = `
 `;
 
 export const UPDATE_PLANT_SETTINGS = `
-    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $manual: String, $relayAutomatedOnTime: String, $relayIdRelated: String, $relayWorking: String) {
+    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $manual: Boolean, $relayAutomatedOnTime: String, $relayIdRelated: String, $relayWorking: Boolean) {
     updatePlantSettings(
         id: $id,
         controllerId: $controllerId,
