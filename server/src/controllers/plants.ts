@@ -16,13 +16,20 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
         const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya la estamos regando con ${amountOfWater}!`;
         if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
-        plant.isRelayOneOn = true;
+        // plant['isRelayOneOn'] = true;
+        const relayName: any = plant.soilHumiditySettings.relayIdRelated;
+        // @ts-ignore
+        plant[relayName] = true;
+        
         plant.soilHumiditySettings.relayWorking = true;
     } else if (plant.soilHumidity >= minHumidity && plant.soilHumiditySettings.relayWorking) {
         const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya terminamos de regar!`;
         if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
-        plant.isRelayOneOn = false;
+        const relayName: any = plant.soilHumiditySettings.relayIdRelated;
+        // @ts-ignore
+        plant[relayName] = false;
+        // plant.isRelayOneOn = false;
         plant.soilHumiditySettings.relayWorking = false;
     }
 
