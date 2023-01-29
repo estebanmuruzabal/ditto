@@ -12,7 +12,6 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
     console.log('plant.soilHumiditySettings:', plant.soilHumiditySettings)
     console.log('minHumidity::', minHumidity)
 
-
     if (plant.soilHumidity < minHumidity && !plant.soilHumiditySettings.relayWorking) {
         const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya la estamos regando con ${amountOfWater}!`;
         if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
@@ -27,6 +26,11 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
         plant.soilHumiditySettings.relayWorking = false;
     }
 
+    return plant;
+};
+
+export const checkAirHumidityAndTempeture = async (plant: Plant, phoneNumber: string) => {
+    // implement checks
     return plant;
 };
                 

@@ -9,7 +9,7 @@ import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
-import { checkSoilWarnings } from '../../../controllers/plants';
+import { checkAirHumidityAndTempeture, checkSoilWarnings } from '../../../controllers/plants';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -465,9 +465,9 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
 
-            console.log('plants1', plants)
             plants[index] = await checkSoilWarnings(plants[index], userResult?.phones[0]?.number);
-            console.log('plants2', plants)
+            plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
+
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}
@@ -478,10 +478,10 @@ export const usersResolvers: IResolvers = {
             //     message: "Created successfully."
             // };
              return {
-                isRelayOneOn: isRelayOneOn ? "ON" : "OF",
-                isRelayTwoOn: isRelayTwoOn ? "ON" : "OF",
-                isRelayThirdOn: isRelayThirdOn ? "ON" : "OF",
-                isRelayFourthOn: isRelayFourthOn ? "ON" : "OF",
+                isRelayOneOn: plants[index].isRelayOneOn ? "ON" : "OF",
+                isRelayTwoOn: plants[index].isRelayTwoOn ? "ON" : "OF",
+                isRelayThirdOn: plants[index].isRelayThirdOn ? "ON" : "OF",
+                isRelayFourthOn: plants[index].isRelayFourthOn ? "ON" : "OF",
             };
         },
         updatePlantSettings: async (
