@@ -7,29 +7,24 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
     // make method to see how much water is used based on time that relay is ON       
     const amountOfWater = plant.soilHumiditySettings?.relayAutomatedOnTime;
     const minHumidity = !isNaN(Number(plant?.soilHumiditySettings?.minWarning)) ? Number(plant?.soilHumiditySettings?.minWarning) : null;
+    const relayIdName: any = plant.soilHumiditySettings.relayIdRelated;
 
-    if (!minHumidity) return plant;
-    console.log('plant.soilHumiditySettings:', plant.soilHumiditySettings)
-    console.log('minHumidity::', minHumidity)
+    // must have minWarning and relayIdRelated variables setted!!!
+    if (!minHumidity || !relayIdName) return plant;
 
     if (plant.soilHumidity < minHumidity && !plant.soilHumiditySettings.relayWorking) {
         const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya la estamos regando con ${amountOfWater}!`;
         if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
-        // plant['isRelayOneOn'] = true;
-        const relayName: any = plant.soilHumiditySettings.relayIdRelated;
         // @ts-ignore
-        plant[relayName] = true;
-        
+        plant[relayIdName] = true;
         plant.soilHumiditySettings.relayWorking = true;
     } else if (plant.soilHumidity >= minHumidity && plant.soilHumiditySettings.relayWorking) {
         const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya terminamos de regar!`;
         if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
-        const relayName: any = plant.soilHumiditySettings.relayIdRelated;
         // @ts-ignore
-        plant[relayName] = false;
-        // plant.isRelayOneOn = false;
+        plant[relayIdName] = false;
         plant.soilHumiditySettings.relayWorking = false;
     }
 

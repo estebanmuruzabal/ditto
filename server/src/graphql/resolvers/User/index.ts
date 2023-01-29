@@ -473,10 +473,6 @@ export const usersResolvers: IResolvers = {
                 {$set: {plants}}
             );
 
-            // return {
-            //     status: true,
-            //     message: "Created successfully."
-            // };
              return {
                 isRelayOneOn: plants[index].isRelayOneOn ? "ON" : "OF",
                 isRelayTwoOn: plants[index].isRelayTwoOn ? "ON" : "OF",
