@@ -424,10 +424,10 @@ export const typeDefs = gql`
     }
 
     type IPlantReturnType {
-        isRelayOneOn: Boolean
-        isRelayTwoOn: Boolean
-        isRelayThirdOn: Boolean
-        isRelayFourthOn: Boolean
+        isRelayOneOn: String
+        isRelayTwoOn: String
+        isRelayThirdOn: String
+        isRelayFourthOn: String
     }
     
     type Setting {
