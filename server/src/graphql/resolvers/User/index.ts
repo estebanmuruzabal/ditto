@@ -465,8 +465,9 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
 
-            plants[index] = checkSoilWarnings(plants[index], userResult?.phones[0]?.number);
-            
+            console.log('plants1', plants)
+            plants[index] = await checkSoilWarnings(plants[index], userResult?.phones[0]?.number);
+            console.log('plants2', plants)
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}
@@ -477,10 +478,10 @@ export const usersResolvers: IResolvers = {
             //     message: "Created successfully."
             // };
              return {
-                isRelayOneOn,
-                isRelayTwoOn,
-                isRelayThirdOn,
-                isRelayFourthOn
+                isRelayOneOn: isRelayOneOn ? "ON" : "OF",
+                isRelayTwoOn: isRelayTwoOn ? "ON" : "OF",
+                isRelayThirdOn: isRelayThirdOn ? "ON" : "OF",
+                isRelayFourthOn: isRelayFourthOn ? "ON" : "OF",
             };
         },
         updatePlantSettings: async (

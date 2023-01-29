@@ -346,10 +346,10 @@ export interface ICommonMessageReturnType {
 }
 
 export interface IPlantReturnType {
-    isRelayOneOn: boolean;
-    isRelayTwoOn: boolean;
-    isRelayThirdOn: boolean;
-    isRelayFourthOn: boolean;
+    isRelayOneOn: string;
+    isRelayTwoOn: string;
+    isRelayThirdOn: string;
+    isRelayFourthOn: string;
 }
 
 export interface ISetting {
