@@ -30,10 +30,13 @@ export const typeDefs = gql`
     type SoilHumiditySettings {
         minWarning: String
         maxWarning: String
-        manual: Boolean
-        relayAutomatedOnTime: String
-        relayIdRelated: String
-        relayWorking: Boolean
+        mode: String
+        relayOneAutomatedOnTime: String
+        relayOneIdRelated: String
+        relayOneWorking: Boolean
+        relayTwoAutomatedOnTime: String
+        relayTwoIdRelated: String
+        relayTwoWorking: Boolean
     }
    
     type DeliveryAddress {
@@ -547,7 +550,7 @@ export const typeDefs = gql`
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
         updatePlant(id: ID!, controllerId: Int!, soilHumidity: Int, airHumidity: Int, tempeture: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
-        updatePlantSettings(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, manual: Boolean, relayAutomatedOnTime: String, relayIdRelated: String, relayWorking: Boolean): DefaultMessageType!
+        updatePlantSettings(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedOnTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedOnTime: String, relayTwoIdRelated: String, relayTwoWorking: Boolean): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

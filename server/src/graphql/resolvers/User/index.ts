@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, ICommonMessageReturnType, IPlantReturnType, IProduct, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
+import {Address, Database, DistanceSensorMode, HumiditySensorMode, ICommonMessageReturnType, IPlantReturnType, IProduct, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize, takeNineOutIfItHasIt} from "../../../lib/utils";
@@ -9,7 +9,7 @@ import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
-import { checkAirHumidityAndTempeture, checkSoilWarnings } from '../../../controllers/plants';
+import { checkAirHumidityAndTempeture, checkSensors, checkSoilWarnings } from '../../../controllers/plants';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -405,17 +405,32 @@ export const usersResolvers: IResolvers = {
                 soilHumidity: 0,
                 airHumidity: 0,
                 tempeture: 0,
+                distance_cm: 0,
                 isRelayOneOn: false,
                 isRelayTwoOn: false,
                 isRelayThirdOn: false,
                 isRelayFourthOn: false,
+                distanceSensorSettings: {
+                    minWarning: "",
+                    maxWarning: "",
+                    mode: DistanceSensorMode.SISTEMA_AGUA_A_TRATAR,
+                    relayOneAutomatedOnTime: "",
+                    relayOneIdRelated: "",
+                    relayOneWorking: false,
+                    relayTwoAutomatedOnTime: "",
+                    relayTwoIdRelated: "",
+                    relayTwoWorking: false
+                },
                 soilHumiditySettings: {
                     minWarning: "",
                     maxWarning: "",
-                    manual: true,
-                    relayAutomatedOnTime: "", 
-                    relayIdRelated: "",
-                    relayWorking: false
+                    mode: HumiditySensorMode.MANUAL,
+                    relayOneAutomatedOnTime: "",
+                    relayOneIdRelated: "",
+                    relayOneWorking: false,
+                    relayTwoAutomatedOnTime: "",
+                    relayTwoIdRelated: "",
+                    relayTwoWorking: false
                 }
             };
 
@@ -426,7 +441,7 @@ export const usersResolvers: IResolvers = {
 
             return {
                 status: true,
-                message: "Created successfully."
+                message: "Created plant successfully."
             };
         },
         updatePlant: async (
@@ -436,11 +451,12 @@ export const usersResolvers: IResolvers = {
                 soilHumidity,
                 airHumidity,
                 tempeture,
+                distance_cm,
                 isRelayOneOn,
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, controllerId: number, soilHumidity: number, airHumidity: number, tempeture: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
+            }: { id: string, controllerId: number, soilHumidity: number, airHumidity: number, tempeture: number, distance_cm: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -459,6 +475,7 @@ export const usersResolvers: IResolvers = {
                 plants[index].soilHumidity = soilHumidity;
                 plants[index].airHumidity = airHumidity;
                 plants[index].tempeture = tempeture;
+                plants[index].distance_cm = distance_cm;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;
@@ -467,7 +484,7 @@ export const usersResolvers: IResolvers = {
 
             plants[index] = await checkSoilWarnings(plants[index], userResult?.phones[0]?.number);
             plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
-
+            plants[index] = await checkSensors(plants[index], userResult?.phones[0]?.number);
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}
@@ -486,11 +503,14 @@ export const usersResolvers: IResolvers = {
                 controllerId,
                 maxWarning,
                 minWarning,
-                manual,
-                relayAutomatedOnTime,
-                relayIdRelated,
-                relayWorking
-            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, manual: boolean, relayAutomatedOnTime: string, relayIdRelated: string, relayWorking: boolean },
+                mode,
+                relayOneAutomatedOnTime,
+                relayOneIdRelated,
+                relayOneWorking,
+                relayTwoAutomatedOnTime,
+                relayTwoIdRelated,
+                relayTwoWorking
+            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedOnTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedOnTime: string, relayTwoIdRelated: string, relayTwoWorking: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -508,10 +528,13 @@ export const usersResolvers: IResolvers = {
             } else {
                 plants[index].soilHumiditySettings.maxWarning = maxWarning;
                 plants[index].soilHumiditySettings.minWarning = minWarning;
-                plants[index].soilHumiditySettings.manual = manual;
-                plants[index].soilHumiditySettings.relayAutomatedOnTime = relayAutomatedOnTime;
-                plants[index].soilHumiditySettings.relayIdRelated = relayIdRelated;
-                plants[index].soilHumiditySettings.relayWorking = relayWorking;
+                plants[index].soilHumiditySettings.mode = mode;
+                plants[index].soilHumiditySettings.relayOneAutomatedOnTime = relayOneAutomatedOnTime;
+                plants[index].soilHumiditySettings.relayOneIdRelated = relayOneIdRelated;
+                plants[index].soilHumiditySettings.relayOneWorking = relayOneWorking;
+                plants[index].soilHumiditySettings.relayTwoAutomatedOnTime = relayTwoAutomatedOnTime;
+                plants[index].soilHumiditySettings.relayTwoIdRelated = relayTwoIdRelated;
+                plants[index].soilHumiditySettings.relayTwoWorking = relayTwoWorking;
             }
 
                 
@@ -522,14 +545,8 @@ export const usersResolvers: IResolvers = {
 
             return {
                 status: true,
-                message: "Created successfully."
+                message: "Updated soil settings successfully."
             };
-            //  return {
-            //     isRelayOneOn,
-            //     isRelayTwoOn,
-            //     isRelayThirdOn,
-            //     isRelayFourthOn
-            // };
         },
         addPhoneNumber: async (
             _root: undefined,

@@ -6,7 +6,9 @@ export interface Plant {
     controllerId: number;
     name?: string;
     soilHumidity: number;
-    soilHumiditySettings: ISoilHumiditySettings 
+    distance_cm: number;
+    soilHumiditySettings: ISoilHumiditySettings;
+    distanceSensorSettings: IDistanceSensorSettings; 
     airHumidity: number;
     tempeture: number;
     isRelayOneOn: boolean;
@@ -22,13 +24,28 @@ export interface Phone {
     is_primary?: boolean
 }
 
+export interface IDistanceSensorSettings {
+    minWarning: string;
+    maxWarning: string;
+    mode: string;
+    relayOneAutomatedOnTime: string;
+    relayOneIdRelated: string;
+    relayOneWorking: boolean;
+    relayTwoAutomatedOnTime: string;
+    relayTwoIdRelated: string;
+    relayTwoWorking: boolean;
+}
+
 export interface ISoilHumiditySettings {
     minWarning: string;
     maxWarning: string;
-    manual: boolean;
-    relayAutomatedOnTime: string;
-    relayIdRelated: string;
-    relayWorking: boolean;
+    mode: string;
+    relayOneAutomatedOnTime: string;
+    relayOneIdRelated: string;
+    relayOneWorking: boolean;
+    relayTwoAutomatedOnTime: string;
+    relayTwoIdRelated: string;
+    relayTwoWorking: boolean;
 }
 
 export interface Logs {
@@ -104,6 +121,17 @@ export enum Roles {
     CLIENT = 'CLIENT',
     STAFF = 'STAFF',
     GROWER = 'GROWER'
+}
+
+export enum HumiditySensorMode {
+    IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
+    SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
+    MANUAL = 'MANUAL',
+    SCHEDULE = 'SCHEDULE'
+}
+
+export enum DistanceSensorMode {
+    SISTEMA_AGUA_A_TRATAR = 'SISTEMA_AGUA_A_TRATAR'
 }
 
 export enum TriggerGrowerSteps {

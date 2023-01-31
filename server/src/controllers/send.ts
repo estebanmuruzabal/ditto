@@ -129,6 +129,7 @@ const list = new List(`/n Por favor, selecciona una opciÃ³n en el siguiente menÃ
     'footer');
             
 export const sendMessage = async (client: any, number: string, text: string, trigger?: TriggerSteps, token?: string) => {
+  if (!number) { console.log('no number error at sendMessage!'); return; }
    setTimeout(async () => {
      const message: any = text
      

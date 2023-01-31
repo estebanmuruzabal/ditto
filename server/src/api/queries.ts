@@ -9,16 +9,19 @@ export const GET_SETTINGS = `
 `;
 
 export const UPDATE_PLANT_SETTINGS = `
-    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $manual: Boolean, $relayAutomatedOnTime: String, $relayIdRelated: String, $relayWorking: Boolean) {
+    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedOnTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedOnTime: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
     updatePlantSettings(
         id: $id,
         controllerId: $controllerId,
         maxWarning: $maxWarning,
         minWarning: $minWarning,
         manual: $manual,
-        relayAutomatedOnTime: $relayAutomatedOnTime,
-        relayIdRelated: $relayIdRelated,
-        relayWorking: $relayWorking,
+        relayOneAutomatedOnTime: $relayOneAutomatedOnTime,
+        relayOneIdRelated: $relayOneIdRelated,
+        relayOneWorking: $relayOneWorking,
+        relayTwoAutomatedOnTime: $relayTwoAutomatedOnTime,
+        relayTwoIdRelated: $relayTwoIdRelated,
+        relayTwoWorking: $relayTwoWorking
     ) {
         message
         status

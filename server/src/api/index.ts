@@ -61,14 +61,6 @@ export const signUpUser = (name: string, phone: string, password: string) => new
 });
 
 export const updatePlantSettings = (user: any, plant: Plant, fieldName: string, fieldValue: any) => new Promise((resolve, reject) => {
-    //   id: $id,
-    //     controllerId: $controllerId,
-    //     maxWarning: $maxWarning,
-    //     minWarning: $minWarning,
-    //     manual: $manual,
-    //     relayAutomatedOnTime: $relayAutomatedOnTime,
-    //     relayIdRelated: $relayIdRelated,
-    //     relayWorking: $relayWorking,
     apolloFetch({
         query: UPDATE_PLANT_SETTINGS,
         variables: {
