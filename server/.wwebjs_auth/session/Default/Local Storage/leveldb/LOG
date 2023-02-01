@@ -1,3 +1,2 @@
-2023/01/28-13:43:34.937 8c03 Reusing MANIFEST /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
-2023/01/28-13:43:34.937 8c03 Recovering log #4
-2023/01/28-13:43:34.938 8c03 Reusing old log /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb/000004.log 
+2023/01/31-16:16:57.488 8803 Creating DB /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb since it was missing.
+2023/01/31-16:16:57.568 8803 Reusing MANIFEST /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001

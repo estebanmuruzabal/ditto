@@ -117,7 +117,7 @@ const YourPlants: React.FunctionComponent<YourPlantsProps> = (props) => {
                       </Text>
                     </ListTitle>
                     <ListDes>
-                      <Text>{plant?.temperatura} </Text>
+                      <Text>{plant?.tempeture} </Text>
                     </ListDes>
                   </ListItem>
 

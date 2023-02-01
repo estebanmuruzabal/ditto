@@ -8,13 +8,27 @@ query GetUser{
     email
     created_at
     role
-    plants{
-      id
-      name
-      temperatura
-      humedad
-      mapeoTierra
-      mapeoLuz
+    plants {
+        controllerId
+        name
+        soilHumidity
+        airHumidity
+        tempeture
+        isRelayOneOn
+        isRelayTwoOn
+        isRelayThirdOn
+        isRelayFourthOn
+        soilHumiditySettings {
+            minWarning
+            maxWarning
+            mode
+            relayOneAutomatedOnTime
+            relayOneIdRelated
+            relayOneWorking
+            relayTwoAutomatedOnTime
+            relayTwoIdRelated
+            relayTwoWorking
+        }
     }
     delivery_address{
       id

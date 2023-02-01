@@ -13,28 +13,28 @@ mutation AddPlant($id: ID!, $name: String!, $controllerId: Int!) {
 }
 `;
 
-export const UPDATE_PLANT = gql`
-mutation UpdatePlant($id: ID!, $controllerId: Int!, $humedad: Int, $temperatura: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
-  updatePlant(
-    id: $id,
-    controllerId: $controllerId,
-    humedad: $humedad,
-    temperatura: $temperatura,
-    mapeoTierra: $mapeoTierra,
-    mapeoLuz: $mapeoLuz
-  ) {
-    message
-    status
-  }
-}
-`;
+// export const UPDATE_PLANT = gql`
+// mutation UpdatePlant($id: ID!, $controllerId: Int!, $humedad: Int, $tempeture: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
+//   updatePlant(
+//     id: $id,
+//     controllerId: $controllerId,
+//     humedad: $humedad,
+//     tempeture: $tempeture,
+//     mapeoTierra: $mapeoTierra,
+//     mapeoLuz: $mapeoLuz
+//   ) {
+//     message
+//     status
+//   }
+// }
+// `;
 
-export const GET_PLANTS = gql`
-mutation GetUserPlants($id: ID!, $name: String!, $humedad: Int, $temperatura: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
-  getUserPlants(
-    id: $id,
-  ) {
-    id
-  }
-}
-`;
+// export const GET_PLANTS = gql`
+// mutation GetUserPlants($id: ID!, $name: String!, $humedad: Int, $tempeture: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
+//   getUserPlants(
+//     id: $id,
+//   ) {
+//     id
+//   }
+// }
+// `;
