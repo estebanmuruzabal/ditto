@@ -15,7 +15,7 @@ export const UPDATE_PLANT_SETTINGS = `
         controllerId: $controllerId,
         maxWarning: $maxWarning,
         minWarning: $minWarning,
-        manual: $manual,
+        mode: $mode,
         relayOneAutomatedOnTime: $relayOneAutomatedOnTime,
         relayOneIdRelated: $relayOneIdRelated,
         relayOneWorking: $relayOneWorking,
@@ -87,10 +87,13 @@ export const getCustomerQuery = `
                     soilHumiditySettings {
                         minWarning
                         maxWarning
-                        manual
-                        relayAutomatedOnTime
-                        relayIdRelated
-                        relayWorking
+                        mode
+                        relayOneAutomatedOnTime
+                        relayOneIdRelated
+                        relayOneWorking
+                        relayTwoAutomatedOnTime
+                        relayTwoIdRelated
+                        relayTwoWorking
                     }
                 }
                 workInfo {

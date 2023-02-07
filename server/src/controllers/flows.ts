@@ -7,13 +7,13 @@ const stepsReponse = require('../flow/response.json')
 export const findResponseMsg = async (trigger: string, customer: IUser, message: string, number: string, access_token: string) => {
     let data: any;
 
-    if (isGrower(customer)) {
-        data = getReplyFromGrowerBot(trigger, customer, message, number, access_token);
-    } else if (isUserStaff(customer)) {
-        data = getReplyFromEmployeeBot(trigger, customer, message, number, access_token);
-    } else {
+    // if (isGrower(customer)) {
+    //     data = getReplyFromGrowerBot(trigger, customer, message, number, access_token);
+    // } else if (isUserStaff(customer)) {
+    //     data = getReplyFromEmployeeBot(trigger, customer, message, number, access_token);
+    // } else {
         data = getReplyFromShopBot(trigger, customer, message, number, access_token);
-    }
+    // }
 
     if(data && data.media){
         const file = checkIsUrl(data.media) ? await saveExternalFile(data.media) : data.media;
