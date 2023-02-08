@@ -164,7 +164,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             categories = harcodedFilterOfUnusedCategories(categories);
             if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
-            resData = getCategoriesButtons(resData, categories);
+            resData = getCategoriesButtons(resData, categories, TriggerSteps.SELECT_CATEGORY);
             resolve([resData]);
             break;
         case TriggerSteps.BLOCK_CHAT:
@@ -252,7 +252,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 categories = harcodedFilterOfUnusedCategories(categories);
                 if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
-                resData = getCategoriesButtons(resData, categories);
+                resData = getCategoriesButtons(resData, categories, TriggerSteps.SELECT_CATEGORY);
                 resolve([resData]);
                 break;
             } 
@@ -521,7 +521,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                     categories = harcodedFilterOfUnusedCategories(categories);
                     if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
-                    resData = getCategoriesButtons(resData, categories);
+                    resData = getCategoriesButtons(resData, categories, TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART);
                     resolve([resData])
                     break;
                 case 3: 
