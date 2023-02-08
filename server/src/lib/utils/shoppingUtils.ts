@@ -125,7 +125,7 @@ export const addTalkToRepresentativeOptToButtons = (buttons: { body: string;}[])
 };
 
 
-export const getCategoriesButtons = (resData: any, categories: any, trigger: any) => {
+export const getCategoriesButtons = (resData: any, categories: any) => {
     if (categories.length === 1 || categories.length === 2) {
         const buttonsBodies: any = [];
         categories.map((category: any, idx: number) => buttonsBodies.push({ body: idx + 1 + ' - ' + category.name })) ;
@@ -149,7 +149,7 @@ export const getCategoriesButtons = (resData: any, categories: any, trigger: any
             'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
         '');
     } 
-    resData.trigger = trigger;
+    resData.trigger = TriggerSteps.SELECT_CATEGORY;
     return resData;
 };
     
