@@ -56,6 +56,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     // if (number !== '5493624885763') return;
     // juan numero
     // if (number !== '5493624309309') return;
+    //   if (number !== '5493624951926') return;
 
     const res: any = await fetchCustomerAndToken(number);
 

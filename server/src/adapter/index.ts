@@ -180,10 +180,9 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
         //     resData.trigger = TriggerSteps.SELECT_CATEGORY;
         //     resolve([resData]);
         //     break;
-            
+        case TriggerSteps.ALL_CATEGORIES:
         case TriggerSteps.SELECT_CATEGORY:
             userInputNumber = Number(userInput.match(/[0-9]+/))
-            console.log(userInputNumber)
             shoppingCart = user?.shoppingCart;
             
             // if it doestn have a shopping cart we create an empty one
@@ -229,6 +228,21 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             // resData.replyMessage = listAvailableProducts(availableProducts)
             
             resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_TO_CART, 'Agregar productos a tu pedido', 'Ver lista de productos', shoppingCart);
+
+
+// deliveryOpts = await getDeliveryMethods();
+
+
+            // deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;            
+            
+            // resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT, 'Su carrito:', 'Agregar más productos', shoppingCart);    
+            // const resData10 = Object.assign({}, resData);
+            // const resData2 = getDeliveryMethodsButtons(resData10, deliveryOpts, TriggerSteps.ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT, 'Finalizar compra');    
+
+                // resolve([resData]);
+            // 
+
+
             resolve([resData]);
             break;
 

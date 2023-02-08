@@ -130,7 +130,7 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User not found");
             }
 
-            if (trigger !== TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART) {
+            if (trigger !== TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART || TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES || TriggerSteps.END_CONVERSATION_AND_RESET_CHAT) {
                 const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
                 chatHistory = userResult.chatHistory?.length > 0 ? userResult.chatHistory : [];
                 chatHistory.push({ message, trigger, datetime })

@@ -209,28 +209,27 @@ const getButtonTextBodiesFrom = (maxOptNumber: number) => {
 export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string, buttonText: string, shoppingCart: any) => {
     // later on add buttons option if number is bellow 3
 
+  
 
     const menuRows = getProductRowsFrom(availableProducts);
     const listSections = getSectionWith('Seleccione de a 1 opción', menuRows)
-
-    if (shoppingCart?.products?.length) {
-        listSections.rows.unshift({
-            title: '0 - Borrar carrito',
-            description: 'Empezar de vuelta la compra si seleccionaste mal algun producto',
-        })
-    }
+    const hasAlreadyProductsInCart = shoppingCart?.products?.length > 0;
+    let bodyContent = '  ';
     const totalItemsAmount = getTotalAmount(shoppingCart.products);
 
-    const bodyContent = shoppingCart?.products?.length > 0 ?
-        `${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
-*Total a Pagar: $${(totalItemsAmount).toFixed(2)}*` : '';
-
-    resData.replyMessage = getListButtons(
+    if (hasAlreadyProductsInCart) {
+        listSections.rows.unshift({ title: '0 - Borrar carrito', description: 'Empezar de vuelta la compra si seleccionaste mal algun producto' })
+        
+        bodyContent = `${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}\n*Total a Pagar: $${(totalItemsAmount).toFixed(2)}*`;
+    }
+    
+      resData.replyMessage = getListButtons(
         bodyContent,
         buttonText,
         listSections,
         title,
-        '');
+    '');
+
     resData.trigger = trigger;
 
     return resData;
@@ -240,14 +239,14 @@ export const getDeliveryMethodsButtons = (resData: any, deliveryMethods: any, tr
 
     
     const menuRows = getDeliveryRowsFrom(deliveryMethods);
-        const listSections = getSectionWith('Selecciona envío/pickup', menuRows)
+    const listSections = getSectionWith('Selecciona envío/pickup', menuRows)
 
-        resData.replyMessage = getListButtons(
-            'Si ya tiene todo lo que necesita, presione el siguiente botón para ver si va a buscar su envío o quiere enviarlo a una dirección:',
-            'Seleccionar envío/pickup',
-            listSections,
-            title,
-        '');
+    resData.replyMessage = getListButtons(
+        'Si ya tiene todo lo que necesita, presione el siguiente botón para ver si va a buscar su envío o quiere enviarlo a una dirección:',
+        'Seleccionar envío/pickup',
+        listSections,
+        title,
+    '');
     
     resData.trigger = trigger;
     return resData;
