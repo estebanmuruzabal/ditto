@@ -144,6 +144,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
     const num = cleanNumber(number);
 
     console.log('nextTriggerStep received in Switch:', triggerStep)
+    // explicar esto
     if (triggerStep === TriggerSteps.ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT) triggerStep = isNaN(Number(userInput[0])) ? TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED : TriggerSteps.ADD_MORE_PRODUCTS_STEP;
     console.log('nextTriggerStep received after in Switch:', triggerStep)
     switch (triggerStep) {
@@ -196,7 +197,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
             // +1 because of the got to pay option
             if (isUserInputInvalid(userInputNumber, maxOptions)) {
-                console.log('userInput, userInputNumber:', userInput, userInputNumber)
                 resData.trigger = TriggerSteps.SELECT_CATEGORY;
                 resData.replyMessage = invalidNumberInput(maxOptions);
                 resolve([resData]);
@@ -225,24 +225,8 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
             availableProducts = availableProducts?.data?.products?.items;
-            
-            // resData.replyMessage = listAvailableProducts(availableProducts)
-            
+                        
             resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_TO_CART, 'Agregar productos a tu pedido', 'Ver lista de productos', shoppingCart);
-
-
-// deliveryOpts = await getDeliveryMethods();
-
-
-            // deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;            
-            
-            // resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT, 'Su carrito:', 'Agregar más productos', shoppingCart);    
-            // const resData10 = Object.assign({}, resData);
-            // const resData2 = getDeliveryMethodsButtons(resData10, deliveryOpts, TriggerSteps.ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT, 'Finalizar compra');    
-
-                // resolve([resData]);
-            // 
-
 
             resolve([resData]);
             break;
@@ -382,7 +366,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             const deliOptIndexFound = deliveryOpts.findIndex(((deliOpt: any) => userInput.includes(deliOpt.name)));
             
             // el usuario selecciona metodo de envio y si es valido, preguntamos direccion, o 
-            if (isUserInputInvalid(deliOptIndexFound, deliveryOpts?.length)) {
+            if (deliOptIndexFound < 0) {
                 resData.replyMessage = invalidNumberInput(deliveryOpts.length);
                 resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
                 resolve([resData]);

@@ -16,8 +16,8 @@ import shortid from "shortid";
 import { sendCompanyConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
 import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
-import { deliveryPurchaseWithTransferPayment, deliveryPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
-import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_EMAIL, CUSTOMER_ADDRESS_DELIVERY_METHOD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD } from '../../../lib/utils/constant';
+import { orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
+import { COMPANY_EMAIL } from '../../../lib/utils/constant';
 import { getOrderConfirmationMsgText, getCleanNumber } from '../../../lib/utils/shoppingUtils';
 const oderTracker: Array<IOrderTracker> = [
     {

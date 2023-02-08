@@ -191,7 +191,7 @@ const getPaymentRowsFrom = (items: any) => items.map((item: any, idx: number) =>
 
 
 const getConfirmationTextBodiesFrom = () => {
-    return [{ body: '1 - Confirmar compra 😎' }, { body: '2 - Empezar todo de vuelta 😭' }, { body: 'Cancelar compra 🤨' }];
+    return [{ body: '1 - Confirmar compra 😎' }, { body: '2 - Empezar todo de vuelta 😭' }, { body: '3 - Cancelar compra 🤨' }];
 };
 
 const getButtonTextBodiesFrom = (maxOptNumber: number) => {
@@ -285,8 +285,8 @@ export const getOrderConfirmationButtons = (resData: any, shoppingCart: any, tri
 
 *Su carrito:*
 ${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
-Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
-*Total a Pagar: $${(total).toFixed(2)}*
+Subtotal productos: $${(shoppingCart.sub_total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
+*Total a Pagar: $${(shoppingCart.total).toFixed(2)}*
 `,
         buttonsBodies,
         '*Por favor verifique que su orden sea correcta.*',
