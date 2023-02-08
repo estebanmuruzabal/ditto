@@ -196,6 +196,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
             // +1 because of the got to pay option
             if (isUserInputInvalid(userInputNumber, maxOptions)) {
+                console.log('userInput, userInputNumber:', userInput, userInputNumber)
                 resData.trigger = TriggerSteps.SELECT_CATEGORY;
                 resData.replyMessage = invalidNumberInput(maxOptions);
                 resolve([resData]);

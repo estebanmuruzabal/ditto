@@ -4,7 +4,7 @@ import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, C
 import { getButtons, getListButtons, getSectionWith } from "./whatsAppUtils";
 
 export const isUserInputInvalid = (userInput: number, maxOptions: number) => { 
-    return !userInput || userInput < 1 || userInput > maxOptions;
+    return userInput < 1 || userInput > maxOptions;
 }
 
 export const getDeliveryPickUpDate = (details: string) => details.split("|")[1]?.trim();
