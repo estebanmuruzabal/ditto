@@ -187,9 +187,9 @@ export const lastTrigger = async (customer: IUser, userMessage: string) => {
     if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
     if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
 
-    if (!lastDittoMessageSent?.trigger) throw Error('No lastDittoMessageSent?.trigger setted');
-    return lastDittoMessageSent?.trigger;
-    
+    if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');
+  return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+}
         
 
     
@@ -211,7 +211,7 @@ export const lastTrigger = async (customer: IUser, userMessage: string) => {
             
     //         resolve(lastStep)
     //     });
-}
+
 
 // /**
 //  * Guardar historial de conversacion
