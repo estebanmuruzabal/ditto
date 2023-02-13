@@ -11,14 +11,26 @@ query GetUser{
     plants {
         controllerId
         name
-        soilHumidity
+        soilHumidity1
+        soilHumidity2
         airHumidity
         tempeture
         isRelayOneOn
         isRelayTwoOn
         isRelayThirdOn
         isRelayFourthOn
-        soilHumiditySettings {
+        soilHumiditySettings1 {
+            minWarning
+            maxWarning
+            mode
+            relayOneAutomatedOnTime
+            relayOneIdRelated
+            relayOneWorking
+            relayTwoAutomatedOnTime
+            relayTwoIdRelated
+            relayTwoWorking
+        }
+        soilHumiditySettings2 {
             minWarning
             maxWarning
             mode
