@@ -6,27 +6,28 @@ import { sendMessage } from "./send";
 export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
     // make method to see how much water is used based on time that relay is ON       
     const amountOfWater = plant.soilHumiditySettings?.relayOneAutomatedOnTime;
-    const minHumidity = !isNaN(Number(plant?.soilHumiditySettings?.minWarning)) ? Number(plant?.soilHumiditySettings?.minWarning) : null;
+    const minHumiditySetted = !isNaN(Number(plant?.soilHumiditySettings?.minWarning)) ? Number(plant?.soilHumiditySettings?.minWarning) : null;
     const relayOneIdRelated: any = plant.soilHumiditySettings.relayOneIdRelated;
     const relayTwoIdRelated: any = plant.soilHumiditySettings.relayTwoIdRelated;
+    const currentSoilHumidity = Number(plant?.soilHumidity);
 
     console.log('Switch of plant.soilHumiditySettings.mode: ', plant.soilHumiditySettings.mode);
     switch (plant.soilHumiditySettings.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
             // must have minWarning and relayIdRelated variables setted!!!
-            if (!minHumidity || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); break; }
+            if (!minHumiditySetted || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); break; }
             
-            if (plant.soilHumidity < minHumidity && !plant.soilHumiditySettings.relayOneWorking) {
-                const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya la estamos regando con ${amountOfWater}!`;
+            if (currentSoilHumidity < minHumiditySetted && !plant.soilHumiditySettings.relayOneWorking) {
+                const whatsappMsg = `Aviso: tu ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya la estamos regando con ${amountOfWater}!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
                 plant.soilHumiditySettings.relayOneWorking = true;
                 break;
-            } else if (plant.soilHumidity >= minHumidity && plant.soilHumiditySettings.relayOneWorking) {
-                const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya terminamos de regar!`;
+            } else if (currentSoilHumidity >= minHumiditySetted && plant.soilHumiditySettings.relayOneWorking) {
+                const whatsappMsg = `Aviso: tu ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya terminamos de regar!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
                 // @ts-ignore
@@ -38,10 +39,10 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
         case HumiditySensorMode.SEEDS_POOL_IRRIGATION:
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
             // must have minWarning and relayIdRelated variables setted!!!
-            if (!minHumidity || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); break; }
+            if (!minHumiditySetted || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); break; }
 
-            if (plant.soilHumidity < minHumidity && !plant.soilHumiditySettings.relayOneWorking) {
-                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya estamos llenando la pileta con ${amountOfWater}!`;
+            if (currentSoilHumidity < minHumiditySetted && !plant.soilHumiditySettings.relayOneWorking) {
+                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos llenando la pileta con ${amountOfWater}!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
                 // we turn the exit watering relay ON
@@ -53,10 +54,10 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
                 plant[relayTwoIdRelated] = false;
                 plant.soilHumiditySettings.relayTwoWorking = false;
                 break;
-            } if (plant.soilHumidity >= minHumidity && plant.soilHumiditySettings.relayOneWorking) {
+            } if (currentSoilHumidity >= minHumiditySetted && plant.soilHumiditySettings.relayOneWorking) {
                 if (!relayTwoIdRelated) { console.log('No relayTwoIdRelated setted: ', plant.soilHumiditySettings); break; }
 
-                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya evacuamos el agua!`;
+                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya evacuamos el agua!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
                 // we turn the watering relay OFF
@@ -111,7 +112,7 @@ export const checkSensors = async (plant: Plant, phoneNumber: string) => {
 
         // if distance is lower or equal than minWarningDistance, and relayMinWorking wasnt ON but relayMaxWorking was ON, then we turn on the off maxWarningRelayIdRelatedName and turn ON minWarningRelayIdRelatedName and relayMinWorking to true
     } else if (plant.distance_cm <= minWarningDistance && !plant.distanceSensorSettings.relayTwoWorking && plant.distanceSensorSettings.relayOneWorking) {
-        // const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya terminamos de regar!`;
+        // const whatsappMsg = `Aviso: tu ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya terminamos de regar!`;
         // if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
         // @ts-ignore
