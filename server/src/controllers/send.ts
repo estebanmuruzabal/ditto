@@ -136,7 +136,7 @@ export const sendMessage = async (client: any, number: string, text: string, tri
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
         if (!number.endsWith('@c.us')) number += '@c.us';
-        client.sendMessage(number, message);
+        // client.sendMessage(number, message);
         console.log(`⚡⚡⚡ Enviando mensaje:`, message);
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )

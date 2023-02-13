@@ -15,8 +15,8 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
             // must have minWarning and relayIdRelated variables setted!!!
-            if (!minHumidity || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); return plant; }
-
+            if (!minHumidity || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); break; }
+            
             if (plant.soilHumidity < minHumidity && !plant.soilHumiditySettings.relayOneWorking) {
                 const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya la estamos regando con ${amountOfWater}!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
@@ -24,6 +24,7 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
                 plant.soilHumiditySettings.relayOneWorking = true;
+                break;
             } else if (plant.soilHumidity >= minHumidity && plant.soilHumiditySettings.relayOneWorking) {
                 const whatsappMsg = `Aviso: tu ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya terminamos de regar!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
@@ -31,12 +32,13 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 plant.soilHumiditySettings.relayOneWorking = false;
+                break;
             }
             break;
         case HumiditySensorMode.SEEDS_POOL_IRRIGATION:
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
             // must have minWarning and relayIdRelated variables setted!!!
-            if (!minHumidity || !relayOneIdRelated) return plant;
+            if (!minHumidity || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); break; }
 
             if (plant.soilHumidity < minHumidity && !plant.soilHumiditySettings.relayOneWorking) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya estamos llenando la pileta con ${amountOfWater}!`;
@@ -50,7 +52,10 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
                 plant.soilHumiditySettings.relayTwoWorking = false;
-            } else if (plant.soilHumidity >= minHumidity && plant.soilHumiditySettings.relayOneWorking) {
+                break;
+            } if (plant.soilHumidity >= minHumidity && plant.soilHumiditySettings.relayOneWorking) {
+                if (!relayTwoIdRelated) { console.log('No relayTwoIdRelated setted: ', plant.soilHumiditySettings); break; }
+
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${plant.soilHumidity}% de humedad, ya evacuamos el agua!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
@@ -62,6 +67,7 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
                 // @ts-ignore
                 plant[relayTwoIdRelated] = true;
                 plant.soilHumiditySettings.relayTwoWorking = true;
+                break;
             }
             
             break;
