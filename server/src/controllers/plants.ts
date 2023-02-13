@@ -10,7 +10,7 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
     const relayOneIdRelated: any = plant.soilHumiditySettings.relayOneIdRelated;
     const relayTwoIdRelated: any = plant.soilHumiditySettings.relayTwoIdRelated;
 
-    
+    console.log('Switch of plant.soilHumiditySettings.mode: ', plant.soilHumiditySettings.mode);
     switch (plant.soilHumiditySettings.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
