@@ -141,7 +141,8 @@ export const sendMessage = async (client: any, number: string, text: string, tri
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )
     }
-    if (token) await saveUserChatHistory('', number, trigger, token)
+    //  if (token) await saveUserChatHistory('', number, trigger, token)
+     await saveUserChatHistory('', number, trigger, token)
     
    },DELAY_TIME)
 }
@@ -188,7 +189,7 @@ export const lastTrigger = async (customer: IUser, userMessage: string) => {
     if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
 
     if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');
-  return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+  return lastDittoMessageSent?.trigger;
 }
         
 
