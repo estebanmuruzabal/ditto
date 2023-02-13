@@ -53,7 +53,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     const number: string = cleanNumber(from)
     let user, access_token: any;
     // ditto num
-    // if (number !== '5493624885763') return;
+    if (number !== '5493624885763') return;
     // juan numero
     // if (number !== '5493624309309') return;
     //   if (number !== '5493624951926') return;

@@ -402,7 +402,8 @@ export const usersResolvers: IResolvers = {
                 id: shortid.generate(),
                 name,
                 controllerId,
-                soilHumidity: 0,
+                soilHumidity1: 0,
+                soilHumidity2: 0,
                 airHumidity: 0,
                 tempeture: 0,
                 distance_cm: 0,
@@ -421,7 +422,18 @@ export const usersResolvers: IResolvers = {
                     relayTwoIdRelated: "",
                     relayTwoWorking: false
                 },
-                soilHumiditySettings: {
+                soilHumiditySettings1: {
+                    minWarning: "",
+                    maxWarning: "",
+                    mode: HumiditySensorMode.MANUAL,
+                    relayOneAutomatedOnTime: "",
+                    relayOneIdRelated: "",
+                    relayOneWorking: false,
+                    relayTwoAutomatedOnTime: "",
+                    relayTwoIdRelated: "",
+                    relayTwoWorking: false
+                },
+                soilHumiditySettings2: {
                     minWarning: "",
                     maxWarning: "",
                     mode: HumiditySensorMode.MANUAL,
@@ -448,15 +460,16 @@ export const usersResolvers: IResolvers = {
             _root: undefined,
             {   id, 
                 controllerId,
-                soilHumidity,
+                soilHumidity1,
                 airHumidity,
                 tempeture,
                 distance_cm,
+                soilHumidity2,
                 isRelayOneOn,
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, controllerId: number, soilHumidity: number, airHumidity: number, tempeture: number, distance_cm: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
+            }: { id: string, controllerId: number, soilHumidity1: number, airHumidity: number, tempeture: number, distance_cm: number, soilHumidity2: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -472,7 +485,8 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
-                plants[index].soilHumidity = soilHumidity;
+                plants[index].soilHumidity1 = soilHumidity1;
+                plants[index].soilHumidity2 = soilHumidity2;
                 plants[index].airHumidity = airHumidity;
                 plants[index].tempeture = tempeture;
                 plants[index].distance_cm = distance_cm;
@@ -482,7 +496,8 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
 
-            plants[index] = await checkSoilWarnings(plants[index], userResult?.phones[0]?.number);
+            plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings1, userResult?.phones[0]?.number, Number(plants[index].soilHumidity1));
+            plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings2, userResult?.phones[0]?.number, Number(plants[index].soilHumidity2));
             plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
             plants[index] = await checkSensors(plants[index], userResult?.phones[0]?.number);
             await db.users.updateOne(

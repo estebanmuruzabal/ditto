@@ -5,9 +5,11 @@ export interface Plant {
     id?: string;
     controllerId: number;
     name?: string;
-    soilHumidity: number;
+    soilHumidity1: number;
+    soilHumidity2: number;
     distance_cm: number;
-    soilHumiditySettings: ISoilHumiditySettings;
+    soilHumiditySettings1: ISoilHumiditySettings;
+    soilHumiditySettings2: ISoilHumiditySettings;
     distanceSensorSettings: IDistanceSensorSettings; 
     airHumidity: number;
     tempeture: number;

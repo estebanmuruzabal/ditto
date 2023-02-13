@@ -17,14 +17,16 @@ export const typeDefs = gql`
         id: String!
         controllerId: Int!
         name: String!
-        soilHumidity: Int
+        soilHumidity1: Int
+        soilHumidity2: Int
         airHumidity: Int
         tempeture: Int
         isRelayOneOn: Boolean
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
-        soilHumiditySettings: SoilHumiditySettings
+        soilHumiditySettings1: SoilHumiditySettings
+        soilHumiditySettings2: SoilHumiditySettings
     }
 
     type SoilHumiditySettings {
@@ -549,7 +551,7 @@ export const typeDefs = gql`
         updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
-        updatePlant(id: ID!, controllerId: Int!, soilHumidity: Int, airHumidity: Int, tempeture: Int, distance_cm: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
+        updatePlant(id: ID!, controllerId: Int!, soilHumidity1: Int, airHumidity: Int, tempeture: Int, distance_cm: Int, soilHumidity2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updatePlantSettings(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedOnTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedOnTime: String, relayTwoIdRelated: String, relayTwoWorking: Boolean): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
