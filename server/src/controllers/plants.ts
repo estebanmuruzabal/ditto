@@ -16,6 +16,8 @@ export const checkSoilWarnings = async (plant: Plant, phoneNumber: string) => {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
             // must have minWarning and relayIdRelated variables setted!!!
+            // if (relayOneIdRelated !== 'isRaleyOneOn')
+                
             if (!minHumiditySetted || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.soilHumiditySettings); break; }
             
             if (currentSoilHumidity < minHumiditySetted && !plant.soilHumiditySettings.relayOneWorking) {
