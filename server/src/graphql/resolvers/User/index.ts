@@ -124,17 +124,21 @@ export const usersResolvers: IResolvers = {
             // await authorize(req, db);
             const phoneFormatted = takeNineOutIfItHasIt(number)
             const userResult = await db.users.findOne({"phones.number": phoneFormatted});
-            let chatHistory: any = [];
+            
+
+            if (!userResult) throw new Error("User not found");
+
+            const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            let chatHistory = userResult.chatHistory?.length > 0 ? userResult.chatHistory : [];
             let shoppingCart: any = undefined;
-            if (!userResult) {
-                throw new Error("User not found");
-            }
-//  || TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES ||
-            if (trigger !== TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART && trigger !== TriggerSteps.END_CONVERSATION_AND_RESET_CHAT) {
-                const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
-                chatHistory = userResult.chatHistory?.length > 0 ? userResult.chatHistory : [];
-                chatHistory.push({ message, trigger, datetime })
-                shoppingCart = userResult?.shoppingCart;
+
+            chatHistory.push({ message, trigger, datetime })
+            shoppingCart = userResult?.shoppingCart;
+
+            if (trigger === TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART || trigger === TriggerSteps.END_CONVERSATION_AND_RESET_CHAT) {
+                shoppingCart = null;
+                const latestMsg = chatHistory[chatHistory.length - 1];
+                chatHistory = [latestMsg];
             }
 
             await db.users.updateOne(

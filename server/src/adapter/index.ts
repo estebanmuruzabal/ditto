@@ -152,6 +152,8 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
         case TriggerSteps.INITIAL_UNAUTHENTICATED_USER:
         case TriggerSteps.UNBLOCK_CHAT:
         case TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES:
+        case TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART:
+        case TriggerSteps.END_CONVERSATION_AND_RESET_CHAT:
             let registeredSuccessfully;
 
             if (triggerStep === TriggerSteps.INITIAL_UNAUTHENTICATED_USER) {
@@ -541,15 +543,14 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             resData.replyMessage = thanksMsgNoPurchase();
             resolve([resData])
             break;
-        case TriggerSteps.UNKNOWN_ERROR_STEP: 
-            resData.replyMessage = thereWasAProblemWaitForAssistance()
-            resData.trigger = TriggerSteps.ALL_CATEGORIES;
-            resolve([resData])
-            break;
         default:
-            resData.replyMessage = thereWasAProblemWaitForAssistance2()
-            resData.trigger = TriggerSteps.ALL_CATEGORIES;
-            resolve([resData])
+            categoriesRes = await getCategories();
+            categories = categoriesRes?.data?.categories?.items;
+            categories = harcodedFilterOfUnusedCategories(categories);
+            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+
+            resData = getCategoriesButtons(resData, categories);
+            resolve([resData]);
             break;
         } 
 })
@@ -604,74 +605,3 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
     // }
 // })
 
-const productRows = (products: IProduct[]) => products.map((product: any) => {
-    return {
-        title: product.name,
-        description: product.description || '',
-        id: product.id
-    }
-});
-
-const productSections = {
-  title: 'Selecciona un producto',
-    rows: [
-    {
-        title: 'Test 4',
-        description: 'This is a smaller text field, a description',
-        id: 'test-4',
-    },
-    {
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    }
-  ],
-};
