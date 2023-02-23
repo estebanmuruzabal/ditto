@@ -132,8 +132,12 @@ const userSignedUp = (customerName: string) =>
 `;
 
 const enterValidName = () =>  
-`Respuesta inválida.
-Para comenzar necesitaría que me escribas  tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
+`Falta poco! Necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
+solamente eso (Por ejemplo: Sofia Martinez)
+`;
+
+const reEnterValidName = () =>  
+`Nombre invalido, necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
 solamente eso (Por ejemplo: Sofia Martinez)
 `;
 
@@ -444,5 +448,6 @@ export {
     hablarConUnRepMsg,
     listCategories,
     unknownInputDefault,
-    manualInput
+    manualInput,
+    reEnterValidName
 };

@@ -126,6 +126,8 @@ export const getCustomerQuery = `
                     delivery_method_name
                     payment_method_name
                     selectedCategorySlug
+                    ccCharge
+                    deliveryFee
                     payment_option_type
                     delivery_date
                     delivery_address
@@ -186,7 +188,7 @@ export const updateUserNameAndEmailQuery = `
     mutation UpdateUser(
         $id: ID!, 
         $name: String!,
-        $email: String!,
+        $email: String,
     ) { updateUserNameAndEmail(
         id: $id, 
         name: $name,

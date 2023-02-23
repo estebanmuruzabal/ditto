@@ -4,7 +4,7 @@ export const UPDATE_USER = gql`
   mutation UpdateUser(
     $id: ID!, 
     $name: String!,
-    $email: String!,
+    $email: String,
   ) { updateUserNameAndEmail(
       id: $id, 
       name: $name,

@@ -78,6 +78,8 @@ export const typeDefs = gql`
         payment_method_name: String
         payment_option_type: String
         delivery_method_name: String
+        ccCharge: Int
+        deliveryFee: Int
         sub_total: Int
         total: Int
         coupon_code: String
@@ -363,6 +365,8 @@ export const typeDefs = gql`
         payment_option_type: String
         delivery_address: String
         delivery_date: String
+        ccCharge: Float
+        deliveryFee: Float
         selectedCategorySlug: String
         delivery_method_name: String
         sub_total: Float
@@ -548,7 +552,7 @@ export const typeDefs = gql`
         createOrder(input: OrderInput): Order!
         updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
-        updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
+        updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
         updatePlant(id: ID!, controllerId: Int!, soilHumidity1: Int, airHumidity: Int, tempeture: Int, distance_cm: Int, soilHumidity2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!

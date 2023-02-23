@@ -1,6 +1,6 @@
 import { deliveryPurchaseWithCashPayment, deliveryPurchaseWithTransferPayment, getAddressLinkText, getDeliveryAddress, getPickUpAddress, getPrelinkText, pickUpPurchaseWithCashPayment, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
 import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles, TriggerStaffSteps, TriggerSteps } from "../types";
-import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, INTRODUCE_QUANTITY_OPT_TEXT, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE } from "./constant";
+import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE } from "./constant";
 import { getButtons, getListButtons, getSectionWith } from "./whatsAppUtils";
 
 export const isUserInputInvalid = (userInput: number, maxOptions: number) => { 
@@ -167,6 +167,21 @@ export const getAddQuantityButtons = (resData: any, product_quantity: any) => {
     return resData;
 };
     
+export const confirmNameOrNewNameButtons = (resData: any, username: string) => {
+    const menuRows = [{ body: KEEP_USER_NAME_KEY_WORD }, { body: INTRODUCE_NEW_NAME_KEY_WORDS }];
+            
+    resData.replyMessage = getButtons(
+        `¿Quiere usar este nombre para su pedido?
+*${username}*`,
+        menuRows,
+        'Nombre del comprador',
+        ''
+    );
+
+    resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
+    return resData;
+};
+
 const getCategoryRowsFrom = (items: any) => items.map((item: any, idx: number) => {
     return {
         title: idx + 1 + ' - ' + item.name,
@@ -207,10 +222,6 @@ const getButtonTextBodiesFrom = (maxOptNumber: number) => {
 };
 
 export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string, buttonText: string, shoppingCart: any) => {
-    // later on add buttons option if number is bellow 3
-
-  
-
     const menuRows = getProductRowsFrom(availableProducts);
     const listSections = getSectionWith('Seleccione de a 1 opción', menuRows)
     const hasAlreadyProductsInCart = shoppingCart?.products?.length > 0;
@@ -236,8 +247,6 @@ export const getProductsList = (resData: any, availableProducts: any, trigger: T
 };
 
 export const getDeliveryMethodsButtons = (resData: any, deliveryMethods: any, trigger: TriggerSteps, title: string) => {
-
-    
     const menuRows = getDeliveryRowsFrom(deliveryMethods);
     const listSections = getSectionWith('Selecciona envío/pickup', menuRows)
 
@@ -272,14 +281,15 @@ export const getPaymentButtons = (resData: any, paymentMethods: any, trigger: Tr
     return resData;
 };
   
-export const getOrderConfirmationButtons = (resData: any, shoppingCart: any, trigger: TriggerSteps) => {
+export const getOrderConfirmationButtons = (resData: any, shoppingCart: any, trigger: TriggerSteps, userName: string) => {
     const buttonsBodies = getConfirmationTextBodiesFrom();
 
     const ccString = `Recargo por tarjeta: $${(shoppingCart.ccCharge).toFixed(2)}`;
     const deliveryFeeString = `Recargo por envío: $${(shoppingCart.deliveryFee).toFixed(2)}`;
     const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
     resData.replyMessage = getButtons(
-        `*Método de pago:* ${shoppingCart.payment_method_name}
+        `*Comprador:* ${userName}
+*Método de pago:* ${shoppingCart.payment_method_name}
 *Método de envío:* ${shoppingCart.delivery_method_name}
 *Dirección:* ${shoppingCart.delivery_address}
 

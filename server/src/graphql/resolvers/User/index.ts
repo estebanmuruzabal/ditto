@@ -314,17 +314,24 @@ export const usersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             await authorize(req, db);
-
+            
+            const re = /\S+@\S+\.\S+/;
             const userResult = await db.users.findOne({_id: new ObjectId(id)});
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
 
-            await db.users.updateOne(
-                {_id: new ObjectId(id)},
-                {$set: {name: name, email: email}}
-            );
-
+            if (re.test(email)) {
+               await db.users.updateOne(
+                    {_id: new ObjectId(id)},
+                    {$set: {name: name, email: email}}
+                );
+            } else {
+                await db.users.updateOne(
+                    {_id: new ObjectId(id)},
+                    {$set: {name: name}}
+                );
+            }
             return {
                 status: true,
                 message: "Updated successfully."
@@ -359,6 +366,8 @@ export const usersResolvers: IResolvers = {
                 payment_option_id: input.payment_option_id,
                 delivery_method_id: input.delivery_method_id,
                 delivery_method_name: input.delivery_method_name,
+                ccCharge: input.ccCharge,
+                deliveryFee: input.deliveryFee,
                 selectedCategorySlug: input.selectedCategorySlug,
                 payment_option_type: input.payment_option_type,
                 payment_method_name: input.payment_method_name,

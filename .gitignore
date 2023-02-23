@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+.wwebjs_auth
 
 # dependencies
 /node_modules

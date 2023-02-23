@@ -15,6 +15,8 @@ export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
 export const COMPANY_DESCRIPTION_TEXT = 'Ditto Farm es un proyecto frutihorticola a solo 8km de Rcia. Chaco producimos frutas, verduras y fertilizantes orgánicos con tecnicas de agricultura sustentable y cosechados en el dia!';
 export const COMPANY_EMAIL_PASSWORD = 'glbequknuqtduxxc';
 export const INITIAL_USER_USERNAME = 'nonamed';
+export const INTRODUCE_NEW_NAME_KEY_WORDS = 'No, cambiar nombre';
+export const KEEP_USER_NAME_KEY_WORD = 'Si';
 export const INITIAL_USER_PASSWORD = 'Initial_ditt0_pa$$word';
 export const CURRENCY = '$';
 // delivery_methods

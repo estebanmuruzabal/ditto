@@ -23,6 +23,8 @@ export interface IOrderInput {
     total: number;
     coupon_code?: string;
     discount_amount?: number;
+    ccCharge?: number;
+    deliveryFee?: number;
     products: Array<IOrderProductInput>;
     payment_id?:  string;
 }

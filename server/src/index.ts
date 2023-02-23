@@ -46,8 +46,8 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     // if (!settingValues?.whatsapp_bot_is_on) return;
 
     const message = body;
-    console.log('from: ', from?.toString())
-    console.log('text msg: ', message?.toString())
+    console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
+
     if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
 
     const number: string = cleanNumber(from)

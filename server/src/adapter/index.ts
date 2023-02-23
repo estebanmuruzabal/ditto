@@ -1,9 +1,9 @@
 import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updatePlantSettings } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
-import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_QUANTITY_OPT_TEXT, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
-import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons } from "../lib/utils/shoppingUtils"
-import { enterValidAddress, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, manualInput, purchaseErrorMsg, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput } from "../messages/customersMessages"
+import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
+import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText } from "../lib/utils/shoppingUtils"
+import { enterValidAddress, enterValidName, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, manualInput, purchaseErrorMsg, reEnterValidName, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput } from "../messages/customersMessages"
 import { getGrowerSensorList, getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
 
 const { saveMessageJson } = require('./jsonDb')
@@ -130,23 +130,16 @@ export const getReplyFromEmployeeBot = async (triggerStep: string, user: IUser |
 
 export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
 
-    let resData: any = { replyMessage: '', media: null, trigger: '' };
-    let availableProducts: any;
-    let deliveryOpts: any;
+    let resData: any = { replyMessage: '', media: null, trigger: '' }, availableProducts: any, deliveryOpts: any, productSelected: any, shoppingCart: any, paymentMethodsResponse: any, categories: any, maxOptions: any, productInShoppingCart: any, categoriesRes: any;
     let userInputNumber: number;
-    let productSelected: any;
-    let shoppingCart: any;
-    let paymentMethodsResponse: any;
-    let categories: any;
-    let maxOptions: any;
-    let productInShoppingCart: any;
-    let categoriesRes: any;
-    const num = cleanNumber(number);
 
-    console.log('nextTriggerStep received in Switch:', triggerStep)
-    // explicar esto
+    console.log('nextTriggerStep in Switch BEFORE checks:', triggerStep)
+    // aca si el usuario selecciona la opcion que no tiene un numero al principio del label (productos) es porque sigue agregando productos, de lo contrario es porque selecciono el delivery selection 
     if (triggerStep === TriggerSteps.ADD_PRODUCT_OR_DELIVERY_PICKUP_OPT) triggerStep = isNaN(Number(userInput[0])) ? TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED : TriggerSteps.ADD_MORE_PRODUCTS_STEP;
-    console.log('nextTriggerStep received after in Switch:', triggerStep)
+    // // aca esta cambiando el nombre o confirma que el nombre esta bien
+    // if (triggerStep === TriggerSteps.USER_SHOULD_INPUT_HIS_NAME) triggerStep = normalizeText(userInput).includes('si') ? TriggerSteps.USER_SHOULD_INPUT_HIS_NAME : TriggerSteps.INTODUCE_NEW_USER_NAME;
+
+    console.log('nextTriggerStep in Switch AFTER checks:', triggerStep)
     switch (triggerStep) {
 
         case TriggerSteps.INITIAL_UNAUTHENTICATED_USER:
@@ -157,7 +150,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             let registeredSuccessfully;
 
             if (triggerStep === TriggerSteps.INITIAL_UNAUTHENTICATED_USER) {
-                const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
+                const res: any = await signUpUser(INITIAL_USER_USERNAME, cleanNumber(number), INITIAL_USER_PASSWORD);
                 registeredSuccessfully = res?.data?.signUp?.status;
             }
             
@@ -170,19 +163,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             resolve([resData]);
             break;
         case TriggerSteps.BLOCK_CHAT:
-        // case TriggerSteps.ALL_CATEGORIES:
-        //     // el usuario esta autenticado y respondio al menu inicial
-        //     userInputNumber = Number(userInput.match(/[0-9]+/))
-        //     console.log(userInputNumber)
-        //     categoriesRes = await getCategories();
-        //     categories = categoriesRes?.data?.categories?.items;
-        //     categories = harcodedFilterOfUnusedCategories(categories);
-        //     if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
-
-        //     resData.replyMessage = listCategories(categories);
-        //     resData.trigger = TriggerSteps.SELECT_CATEGORY;
-        //     resolve([resData]);
-        //     break;
         case TriggerSteps.ALL_CATEGORIES:
         case TriggerSteps.SELECT_CATEGORY:
             userInputNumber = Number(userInput.match(/[0-9]+/))
@@ -404,7 +384,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 : getInputDeliveryAddress(resData, TriggerSteps.DELIVERY_OPT_SELECTED, 'Delivery seleccionado');
 
             const resData3 = Object.assign({}, resData);
-            resData3.replyMessage = 'Método seleccionado con éxito!';
+            resData3.replyMessage = '*Método seleccionado con éxito!*';
         
             delyOptSelected?.isPickUp ? resolve([resData3, resData]) : resolve([resData]);
             break;
@@ -443,7 +423,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             resData = getPaymentButtons(resData, paymentMethodsResponse, TriggerSteps.SELECT_PAYMENT_METHOD)
 
             const resData4 = Object.assign({}, resData);
-            resData4.replyMessage = 'Método seleccionado con éxito!';
+            resData4.replyMessage = '*Método seleccionado con éxito!*';
         
             resolve([resData4, resData]);
             break;
@@ -495,11 +475,49 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             shoppingCart.deliveryFee = deliveryFee;
             shoppingCart.total = totalItemsAmount + ccCharge + deliveryFee;
             await updateUserShoppingCart(shoppingCart);
+            
+            if (user?.name === INITIAL_USER_USERNAME || user?.name?.length < 3 || !user?.name) {
+                resData.replyMessage = enterValidName();
+                resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
+                resolve([resData])
+                break;    
+            }
 
-            resData = getOrderConfirmationButtons(resData, shoppingCart, TriggerSteps.ORDER_CHECK_CONFIRMATION);
-            resolve([resData]);
+            resData = confirmNameOrNewNameButtons(resData, user.name);
+            resolve([resData])
             break;
-        
+            
+        case TriggerSteps.INTODUCE_NEW_USER_NAME:
+            resData.replyMessage = enterValidName()
+            resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
+            resolve([resData])
+            break;    
+
+        case TriggerSteps.USER_SHOULD_INPUT_HIS_NAME:
+            const userName = userInput;
+            shoppingCart = user?.shoppingCart;
+
+            switch (userInput) {
+                case INTRODUCE_NEW_NAME_KEY_WORDS:
+                    resData.replyMessage = enterValidName();
+                    resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
+                    break;
+                case KEEP_USER_NAME_KEY_WORD:
+                    resData = getOrderConfirmationButtons(resData, shoppingCart, TriggerSteps.ORDER_CHECK_CONFIRMATION, user?.name);
+                    break;
+                default:
+                    if (userInput?.length < 4) {
+                        resData.replyMessage = reEnterValidName();
+                        resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
+                        break;
+                    }
+                    const res: any = await updateUserNameAndEmail(user.id, userName, user.email, access_token);
+                    if (!res?.data?.updateUserNameAndEmail?.status) console.log('coulnt updateUserNameAndEmail ', res);
+                    resData = getOrderConfirmationButtons(resData, shoppingCart, TriggerSteps.ORDER_CHECK_CONFIRMATION, userInput);
+                    break;
+            }
+            resolve([resData])
+            break;
         case TriggerSteps.ORDER_CHECK_CONFIRMATION:
             userInputNumber = Number(userInput.match(/[0-9]+/))
             shoppingCart = user?.shoppingCart;

@@ -239,6 +239,8 @@ export const updateUserShoppingCart = (input: IOrderInput) => new Promise((resol
                 selectedCategorySlug: input.selectedCategorySlug,
                 payment_option_type: input.payment_option_type,
                 payment_method_name: input.payment_method_name,
+                ccCharge: input.ccCharge,
+                deliveryFee: input.deliveryFee,
                 delivery_date: input.delivery_date,
                 delivery_method_name: input.delivery_method_name,
                 delivery_address: input.delivery_address,
