@@ -16,29 +16,30 @@ const char* ssid = "ditto";
 const char* password = "guemes765";
 const char* userId = "630d325b4872db758bb808b9";
 const char* serverName = "http://54.232.137.175/api";
-//const char* serverName = "http://localhost:7000/api";
+//const char* serverName = "http://0.0.0.0/api";
 
 // variables of the plant
 int tempeture = 0;
-int soilHumidity = 0;
+int soilHumidity1 = 0;
+int soilHumidity2 = 0;
 int airHumidity = 0;
-bool isRelayOneOn = false; // 
+bool isRelayOneOn = false; 
 bool isRelayTwoOn = false;
 bool isRelayThirdOn = false;
 bool isRelayFourthOn = false;
 float duration_us, distance_cm;
  
 // pin sensors
-const int sensor_pin_for_soil_humidity = A0; // este es el 3
+const int sensor_pin_for_soil_humidity1 = A0; // este es el 3
+const int sensor_pin_for_soil_humidity2 = 35;  //P35
 const int sensor_pin_for_relay_1 = A3; // este es el 4
 const int relayOnePin = 26; //P26
 const int relayTwoPin = 25; // P25
 const int relayThreePin = 33; //P33
 const int relayFourPin = 32;  //P32
-const int distanceSensorOneTriggerPin = 27;  //P32
-const int distanceSensorOneEchoPin  = 14;  //P32
-//const int distanceSensorTwoTriggerPin = 35;  //P32
-//const int distanceSensorTwoEchoPin  = 34;  //P32
+
+const int distanceSensorOneTriggerPin = 27;  
+const int distanceSensorOneEchoPin  = 14;  
 
 void handleRaleyActions() {
     if (isRelayOneOn) { digitalWrite(relayOnePin, LOW);Serial.println("raley one ON"); } else { digitalWrite(relayOnePin, HIGH);Serial.println("raley one OFF"); };
@@ -73,41 +74,48 @@ void updateServerAndRelaysState() {
     stringstream strs2;
     stringstream strs3;
     stringstream strs4;
-    strs1 << soilHumidity;
+    stringstream strs5;
+    strs1 << soilHumidity1;
     strs2 << airHumidity;
     strs3 << tempeture;
     strs4 << distance;
+    strs5 << soilHumidity2;
     string temp_str1 = strs1.str();
     string temp_str2 = strs2.str();
     string temp_str3 = strs3.str();
     string temp_str4 = strs4.str();
+    string temp_str5 = strs5.str();
     
-    const char* addSoilHumidity = (char*) temp_str1.c_str();
+    const char* addSoilHumidity1 = (char*) temp_str1.c_str();
     const char* addAirHumidity = (char*) temp_str2.c_str();
     const char* addTempeture = (char*) temp_str3.c_str();
     const char* addDistance = (char*) temp_str4.c_str();
+    const char* addSoilHumidity2 = (char*) temp_str5.c_str();
     // end converting
 
     // now we put everything together
     char queryString[950];
-    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"630d325b4872db758bb808b9\", \"controllerId\": 20, \"soilHumidity\": ";
+    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"630d325b4872db758bb808b9\", \"controllerId\": 20, \"soilHumidity1\": ";
     const char *secon = ", \"airHumidity\": ";
     const char *third = ", \"tempeture\": ";
     const char *thirdAndAHalf = ", \"distance_cm\": ";
+    const char *thirdAndThirdHalf = ", \"soilHumidity2\": ";
     const char *fourth = isRelayOneOn ? ", \"isRelayOneOn\": true" : ", \"isRelayOneOn\": false";
     const char *fifth = isRelayTwoOn ? ", \"isRelayTwoOn\": true" : ", \"isRelayTwoOn\": false";
     const char *sixth = isRelayThirdOn ? ", \"isRelayThirdOn\": true" : ", \"isRelayThirdOn\": false";
     const char *seventh = isRelayFourthOn ? ", \"isRelayFourthOn\": true" : ", \"isRelayFourthOn\": false";
-    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $controllerId: Int!, $soilHumidity: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, controllerId: $controllerId, soilHumidity: $soilHumidity, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
+    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $controllerId: Int!, $soilHumidity1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soilHumidity2: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, controllerId: $controllerId, soilHumidity1: $soilHumidity1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soilHumidity2: $soilHumidity2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
     
     strcpy(queryString,first);
-    strcat(queryString,addSoilHumidity);
+    strcat(queryString,addSoilHumidity1);
     strcat(queryString,secon);
     strcat(queryString,addAirHumidity);
     strcat(queryString,third);
     strcat(queryString,addTempeture);
     strcat(queryString,thirdAndAHalf);
     strcat(queryString,addDistance);
+    strcat(queryString,thirdAndThirdHalf);
+    strcat(queryString,addSoilHumidity2);
     strcat(queryString,fourth);
     strcat(queryString,fifth);
     strcat(queryString,sixth);
@@ -149,11 +157,18 @@ void updateServerAndRelaysState() {
 }
 
 
-void readSoilHumidity() {
-    int rawHumidity = analogRead(sensor_pin_for_soil_humidity);
-    soilHumidity = ( 100 - ( (rawHumidity/4095.00) * 100 ) );
-    Serial.print("SoilHumidity = ");
-    Serial.print(soilHumidity);  /* Print Temperature on the serial window */
+void readSoilHumidity1() {
+    int rawHumidity = analogRead(sensor_pin_for_soil_humidity1);
+    soilHumidity1 = ( 100 - ( (rawHumidity/4095.00) * 100 ) );
+    Serial.print("SoilHumidity 1 = ");
+    Serial.print(soilHumidity1);  /* Print Temperature on the serial window */
+    Serial.println("%");
+}
+
+void readSoilHumidity2() {
+    soilHumidity2 = analogRead(sensor_pin_for_soil_humidity2);
+    Serial.print("SoilHumidity 2 = ");
+    Serial.print(soilHumidity2);  /* Print Temperature on the serial window */
     Serial.println("%");
 }
 
@@ -237,15 +252,31 @@ void loop() {
     //Check WiFi connection status, if no conection, we do NOTHING
     if(WiFi.status() != WL_CONNECTED) return;
 
-    readSoilHumidity();
+    readSoilHumidity1();
+    readSoilHumidity2();
     readTempeture();
     readAirHumidity();
     readDistanceSensorOne();
 
-    updateServerAndRelaysState();
-
-    handleRaleyActions();
-
     // we update every 30 secs just for now
     delay(5000);
+    isRelayOneOn = true;
+    isRelayTwoOn = true;
+    handleRaleyActions();
+    delay(5000);
+    isRelayOneOn = false;
+    isRelayTwoOn = false;
+    handleRaleyActions();
+    delay(5000);
+    isRelayThirdOn = true;
+    isRelayFourthOn = true;
+    handleRaleyActions();
+    updateServerAndRelaysState();
+
+delay(5000);
+    isRelayThirdOn = false;
+    isRelayFourthOn = false;
+    handleRaleyActions();
+    updateServerAndRelaysState();
+
 }
