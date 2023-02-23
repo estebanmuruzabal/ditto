@@ -176,6 +176,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [submitResult, setSubmitResult] = useState({
     contact_number: '',
     payment_option_id: '',
+    payment_option_type: '',
     delivery_method_id: '',
     coupon_code: '',
     delivery_address: null,
@@ -457,6 +458,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     const {
       contact_number,
       payment_option_id,
+      payment_option_type,
       delivery_method_id,
       delivery_address,
       coupon_code,
@@ -497,7 +499,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   total,
                   coupon_code,
                   discount_amount,
-                  products
+                  products,
+                  payment_option_type,
+                  isWhatsappPurchase: false,
               }
             }
         });
@@ -522,7 +526,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
         }
       } catch (error) {
         console.log(error)
-        if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
+        if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.', error)) {
           console.log(error)
           setLoading(false);
           startAllOver();
@@ -743,7 +747,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 onClick={(item: any) => {
                    setSubmitResult({
                     ...submitResult,
-                    payment_option_id: item.id,
+                     payment_option_id: item.id,
+                    payment_option_type: item.type,
                     products: cartProduct
                   })
                   return null
