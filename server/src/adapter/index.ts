@@ -3,7 +3,7 @@ import { cleanNumber } from "../controllers/handle"
 import { IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
 import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
 import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText } from "../lib/utils/shoppingUtils"
-import { enterValidAddress, enterValidName, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, manualInput, purchaseErrorMsg, reEnterValidName, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput } from "../messages/customersMessages"
+import { enterValidAddress, enterValidName, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, purchaseErrorMsg, reEnterValidName, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput } from "../messages/customersMessages"
 import { getGrowerSensorList, getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
 
 const { saveMessageJson } = require('./jsonDb')
@@ -147,17 +147,23 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
         case TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES:
         case TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART:
         case TriggerSteps.END_CONVERSATION_AND_RESET_CHAT:
-            let registeredSuccessfully;
-
             if (triggerStep === TriggerSteps.INITIAL_UNAUTHENTICATED_USER) {
                 const res: any = await signUpUser(INITIAL_USER_USERNAME, cleanNumber(number), INITIAL_USER_PASSWORD);
-                registeredSuccessfully = res?.data?.signUp?.status;
+                // we should do something if this sign up does not happen
+                const registeredSuccessfully = res?.data?.signUp?.status;
             }
             
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
             categories = harcodedFilterOfUnusedCategories(categories);
-            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+            
+            if (categories?.length <= 0 || !!!categories) {
+                resData.replyMessage = noAvailableCategories();
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
 
             resData = getCategoriesButtons(resData, categories);
             resolve([resData]);
@@ -174,7 +180,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
             categories = harcodedFilterOfUnusedCategories(categories);
-
+            
             maxOptions = categories?.length + 1;
 
             // +1 because of the got to pay option
@@ -207,7 +213,14 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
             availableProducts = availableProducts?.data?.products?.items;
-                        
+            if (availableProducts?.length <= 0 || !!!availableProducts) {
+                resData.replyMessage = noAvailableProducts()
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
+
             resData = getProductsList(resData, availableProducts, TriggerSteps.ADD_PRODUCT_TO_CART, 'Agregar productos a tu pedido', 'Ver lista de productos', shoppingCart);
 
             resolve([resData]);
@@ -220,7 +233,13 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
             availableProducts = availableProducts?.data?.products?.items;
-            if (availableProducts?.length <= 0 || !!!availableProducts) throw new Error('Error 1: no available products');
+            if (availableProducts?.length <= 0 || !!!availableProducts) {
+                resData.replyMessage = noAvailableProducts()
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
 
             maxOptions = shoppingCart?.products?.length > 0 ? availableProducts?.length + 1 : availableProducts?.length;
 
@@ -232,7 +251,14 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 categoriesRes = await getCategories();
                 categories = categoriesRes?.data?.categories?.items;
                 categories = harcodedFilterOfUnusedCategories(categories);
-                if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+
+                if (categories?.length <= 0 || !!!categories) {
+                    resData.replyMessage = noAvailableCategories();
+                    resData.trigger = TriggerSteps.BLOCK_CHAT;
+                    // do we trigger a msj to admin phone?
+                    resolve([resData]);
+                    break;
+                }
 
                 resData = getCategoriesButtons(resData, categories);
                 resolve([resData]);
@@ -289,15 +315,27 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             userInputNumber = Number(userInput.match(/[0-9]+/))
             shoppingCart = user?.shoppingCart;
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
-            deliveryOpts = await getDeliveryMethods();
-
             availableProducts = availableProducts?.data?.products?.items;
-            deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;            
+            if (availableProducts?.length <= 0 || !!!availableProducts) {
+                resData.replyMessage = noAvailableProducts()
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
             
-            if (deliveryOpts?.length <= 0 || !!!deliveryOpts) { throw new Error('Error1: No delivery methods set'); };
+            deliveryOpts = await getDeliveryMethods();
+            deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;            
+            if (deliveryOpts?.length <= 0 || !!!deliveryOpts) {
+                resData.replyMessage = noAvailableDeliveryMethods()
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
+            
 
             const prodSelectedIndex = shoppingCart.products.length - 1;
-            if (availableProducts?.length <= 0 || !!!availableProducts) throw new Error('Error 3: no available products');
 
             productInShoppingCart = shoppingCart?.products?.length > 0 ? shoppingCart.products[prodSelectedIndex] : null; 
 
@@ -339,10 +377,18 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             break;
 
         case TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED:
-            deliveryOpts = await getDeliveryMethods();
             shoppingCart = user?.shoppingCart;
-            if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !!!deliveryOpts?.data?.deliveryMethods?.items) { throw new Error('Error1: No delivery methods set'); };
+            deliveryOpts = await getDeliveryMethods();
             deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;
+            
+            if (deliveryOpts?.length <= 0 || !!!deliveryOpts) {
+                resData.replyMessage = noAvailableDeliveryMethods()
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
+            
 
             // userInputNumber = Number(userInput.match(/[0-9]+/))
             const deliOptIndexFound = deliveryOpts.findIndex(((deliOpt: any) => userInput.includes(deliOpt.name)));
@@ -408,17 +454,12 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             // now we ask for the payment method
             paymentMethodsResponse = await getPaymentMethods();
             paymentMethodsResponse = paymentMethodsResponse?.data?.paymentOptions?.items;
-            // deliveryOpts = await getDeliveryMethods();
-            // deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;
 
             if (!paymentMethodsResponse || !deliveryOpts) {
                 resData.replyMessage = unknownUserInput();
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
                 resolve([resData]);
             }
-
-            // const deliveryMethodSelected = deliveryOpts.find((deliOpt: IDeliveryMethod) => deliOpt.name === shoppingCart.delivery_method_name);
-            // resData.replyMessage = getDeliveryOrPickupOptSelectedAndGetPaymentMethodText(deliveryMethodSelected, paymentMethodsResponse, shoppingCart.delivery_address);
 
             resData = getPaymentButtons(resData, paymentMethodsResponse, TriggerSteps.SELECT_PAYMENT_METHOD)
 
@@ -456,10 +497,18 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 break;
             }
             // encuentra que opcion eligio el usuario y setteamos el shoppingCart con ese metodo
-            deliveryOpts = await getDeliveryMethods();                
-            const deliveryMethodSelected2 = deliveryOpts?.data?.deliveryMethods?.items?.find((deliOpt: any) => deliOpt.id === shoppingCart.delivery_method_id)
+            deliveryOpts = await getDeliveryMethods();    
+            deliveryOpts = deliveryOpts?.data?.deliveryMethods?.items;
 
-            if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !deliveryMethodSelected2) { throw new Error('No delivery methods set or deliveryMethodSelected2'); };
+            if (deliveryOpts?.length <= 0 || !!!deliveryOpts) {
+                resData.replyMessage = noAvailableDeliveryMethods()
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
+            const deliveryMethodSelected2 = deliveryOpts?.find((deliOpt: any) => deliOpt.id === shoppingCart.delivery_method_id)
+
             shoppingCart.payment_method_name = paymentSelected.name;
             shoppingCart.payment_option_type = paymentSelected.type;
             shoppingCart.payment_option_id = paymentSelected.id;
@@ -539,7 +588,14 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                     categoriesRes = await getCategories();
                     categories = categoriesRes?.data?.categories?.items;
                     categories = harcodedFilterOfUnusedCategories(categories);
-                    if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+            
+                    if (categories?.length <= 0 || !!!categories) {
+                        resData.replyMessage = noAvailableCategories();
+                        resData.trigger = TriggerSteps.BLOCK_CHAT;
+                        // do we trigger a msj to admin phone?
+                        resolve([resData]);
+                        break;
+                    }
                     
                     resData = getCategoriesButtons(resData, categories);
                     resolve([resData])
@@ -565,7 +621,14 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
             categories = harcodedFilterOfUnusedCategories(categories);
-            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+            
+            if (categories?.length <= 0 || !!!categories) {
+                resData.replyMessage = noAvailableCategories();
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
+                // do we trigger a msj to admin phone?
+                resolve([resData]);
+                break;
+            }
 
             resData = getCategoriesButtons(resData, categories);
             resolve([resData]);

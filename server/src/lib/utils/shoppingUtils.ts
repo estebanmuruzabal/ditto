@@ -222,7 +222,8 @@ const getButtonTextBodiesFrom = (maxOptNumber: number) => {
 };
 
 export const getProductsList = (resData: any, availableProducts: any, trigger: TriggerSteps, title: string, buttonText: string, shoppingCart: any) => {
-    const menuRows = getProductRowsFrom(availableProducts);
+    const menuRows = availableProducts?.length > 0 ? getProductRowsFrom(availableProducts) : [{ title: 'No hay productos disponibles por el momento', description: '', id: '00' }];
+    console.log('menuRows:', menuRows);
     const listSections = getSectionWith('Seleccione de a 1 opción', menuRows)
     const hasAlreadyProductsInCart = shoppingCart?.products?.length > 0;
     let bodyContent = '  ';

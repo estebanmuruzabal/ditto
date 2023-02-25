@@ -232,6 +232,15 @@ Por favor escribí un número entre el 1 y el 2 para elegir una opción
 const hablarConUnRepMsg = () =>  
 `Por favor aguarde y un representante se va a comunicar con usted.`;
 
+const noAvailableProducts = () =>  
+`Disculpe las molestias, por el momento no hay productos disponibles. Por favor, intente nuevamente más tarde!`;
+
+const noAvailableDeliveryMethods = () =>  
+`Disculpe las molestias, por el momento no hay métodos de envíos disponible. Por favor, intente nuevamente más tarde!`;
+
+const noAvailableCategories = () =>  
+`Disculpe las molestias, por el momento no hay Categorias disponibles. Por favor, intente nuevamente más tarde!`;
+
 const enterValidAddress = () =>  
 `Por favor ingrese una dirección válida. Ejemplo: Belgrano 432, piso 3A`;
 
@@ -449,5 +458,8 @@ export {
     listCategories,
     unknownInputDefault,
     manualInput,
-    reEnterValidName
+    reEnterValidName,
+    noAvailableProducts,
+    noAvailableDeliveryMethods,
+    noAvailableCategories
 };
