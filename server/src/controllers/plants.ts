@@ -9,16 +9,16 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
     const relayOneIdRelated: any = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
     const timeToIrrigateInMins = Number(soilHumiditySetting?.relayTwoAutomatedOnTime);
-    
+
     console.log('Switch of soilHumiditySetting.mode: ', soilHumiditySetting.mode);
     switch (soilHumiditySetting.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
             // must have minWarning and relayIdRelated variables setted!!!
             // if (relayOneIdRelated !== 'isRaleyOneOn')
-                
+
             if (!minHumiditySetted || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: ', soilHumiditySetting); break; }
-            
+
             if (currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking) {
                 const whatsappMsg = `Aviso: tu ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya la estamos regando con ${timeToIrrigateInMins}!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
@@ -87,8 +87,8 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
 
                 // we turn the exit watering relay ON
                 // @ts-ignore
-                plant[relayTwoIdRelated] = true;
-                soilHumiditySetting.relayTwoWorking = true;
+                plant[relayTwoIdRelated] = false;
+                soilHumiditySetting.relayTwoWorking = false;
                 break;
             }
             
