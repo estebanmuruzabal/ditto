@@ -1,15 +1,15 @@
 import { playintegrity } from "googleapis/build/src/apis/playintegrity";
+import moment from "moment";
 import { client } from "..";
 import { HumiditySensorMode, ISoilHumiditySettings, Plant } from "../lib/types";
 import { sendMessage } from "./send";
 
 export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoilHumiditySettings, phoneNumber: string, currentSoilHumidity: number) => {
-    // make method to see how much water is used based on time that relay is ON       
-    const amountOfWater = soilHumiditySetting?.relayOneAutomatedOnTime;
     const minHumiditySetted = !isNaN(Number(soilHumiditySetting?.minWarning)) ? Number(soilHumiditySetting?.minWarning) : null;
     const relayOneIdRelated: any = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
-
+    const timeToIrrigateInMins = Number(soilHumiditySetting?.relayTwoAutomatedOnTime);
+    
     console.log('Switch of soilHumiditySetting.mode: ', soilHumiditySetting.mode);
     switch (soilHumiditySetting.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -20,7 +20,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             if (!minHumiditySetted || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: ', soilHumiditySetting); break; }
             
             if (currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking) {
-                const whatsappMsg = `Aviso: tu ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya la estamos regando con ${amountOfWater}!`;
+                const whatsappMsg = `Aviso: tu ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya la estamos regando con ${timeToIrrigateInMins}!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
                 // @ts-ignore
@@ -41,9 +41,15 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
             // must have minWarning and relayIdRelated variables setted!!!
             if (!minHumiditySetted || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', soilHumiditySetting); break; }
+            const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
+
+            const irrigationStartedOn = soilHumiditySetting?.relayOneAutomatedOnTime;
+            
+            const currentIrrigationMins = currentTime?.diff(irrigationStartedOn, 'minutes');
+            const isIrrigationTimeComplete = currentIrrigationMins >= timeToIrrigateInMins;
 
             if (currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking) {
-                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos llenando la pileta con ${amountOfWater}!`;
+                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos llenando la pileta con ${timeToIrrigateInMins} minutos de auga!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
                 // we turn the exit watering relay ON
@@ -58,13 +64,27 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             } if (currentSoilHumidity >= minHumiditySetted && soilHumiditySetting.relayOneWorking) {
                 if (!relayTwoIdRelated) { console.log('No relayTwoIdRelated setted: ', soilHumiditySetting); break; }
 
-                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya evacuamos el agua!`;
+                const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos evacuamos el agua!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
                 // we turn the watering relay OFF
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 soilHumiditySetting.relayOneWorking = false;
+                // we turn the exit watering relay ON
+                // @ts-ignore
+                plant[relayTwoIdRelated] = true;
+                soilHumiditySetting.relayTwoWorking = true;
+
+                if (!isNaN(timeToIrrigateInMins) && !irrigationStartedOn) {
+                    soilHumiditySetting.relayOneAutomatedOnTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                }
+
+                break;
+            } else if (isIrrigationTimeComplete) {
+                const whatsappMsg = `Aviso: tu semillero: ${plant.name} tiene ${currentSoilHumidity}% de humedad, y ya se termino de evacuar el agua!`;
+                if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
+
                 // we turn the exit watering relay ON
                 // @ts-ignore
                 plant[relayTwoIdRelated] = true;
