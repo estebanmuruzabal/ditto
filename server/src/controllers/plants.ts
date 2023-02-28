@@ -80,7 +80,7 @@ console.log('3')
                 plant[relayTwoIdRelated] = true;
                 soilHumiditySetting.relayTwoWorking = true;
 
-                if (!isNaN(timeToIrrigateInMins) && !irrigationStartedOn) {
+                if (!isNaN(timeToIrrigateInMins) && irrigationStartedOn?.length > 1) {
                     soilHumiditySetting.relayOneAutomatedOnTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
                 }
 
@@ -94,6 +94,7 @@ console.log('3')
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
                 soilHumiditySetting.relayTwoWorking = false;
+                soilHumiditySetting.relayOneAutomatedOnTime = '';
                 break;
             }
             
