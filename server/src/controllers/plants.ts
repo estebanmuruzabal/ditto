@@ -47,11 +47,15 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             
             const currentIrrigationMins = currentTime?.diff(irrigationStartedOn, 'minutes');
             const isIrrigationTimeComplete = currentIrrigationMins >= timeToIrrigateInMins;
-
+            console.log('irrigationStartedOn', irrigationStartedOn)
+            console.log('currentIrrigationMins', currentIrrigationMins)
+            console.log('currentTime', currentTime)
+            console.log('timeToIrrigateInMins', timeToIrrigateInMins)
+            console.log('1')
             if (currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos llenando la pileta con ${timeToIrrigateInMins} minutos de auga!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
-
+console.log('2')
                 // we turn the exit watering relay ON
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
@@ -66,7 +70,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
 
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos evacuamos el agua!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
-
+console.log('3')
                 // we turn the watering relay OFF
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
@@ -85,6 +89,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} tiene ${currentSoilHumidity}% de humedad, y ya se termino de evacuar el agua!`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
+                console.log('4')
                 // we turn the exit watering relay ON
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
