@@ -9,17 +9,19 @@ export const GET_SETTINGS = `
 `;
 
 export const UPDATE_PLANT_SETTINGS = `
-    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedOnTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedOnTime: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
+    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String; relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
     updatePlantSettings(
         id: $id,
         controllerId: $controllerId,
         maxWarning: $maxWarning,
         minWarning: $minWarning,
         mode: $mode,
-        relayOneAutomatedOnTime: $relayOneAutomatedOnTime,
+        relayOneAutomatedTimeToRun: $relayOneAutomatedTimeToRun,
+        relayOneAutomatedStartedTime: $relayOneAutomatedStartedTime,
+        relayTwoAutomatedStartedTime: $relayTwoAutomatedStartedTime,
         relayOneIdRelated: $relayOneIdRelated,
         relayOneWorking: $relayOneWorking,
-        relayTwoAutomatedOnTime: $relayTwoAutomatedOnTime,
+        relayTwoAutomatedTimeToRun: $relayTwoAutomatedTimeToRun,
         relayTwoIdRelated: $relayTwoIdRelated,
         relayTwoWorking: $relayTwoWorking
     ) {
@@ -89,10 +91,12 @@ export const getCustomerQuery = `
                         minWarning
                         maxWarning
                         mode
-                        relayOneAutomatedOnTime
+                        relayOneAutomatedTimeToRun
+                        relayOneAutomatedStartedTime
+                        relayTwoAutomatedStartedTime
                         relayOneIdRelated
                         relayOneWorking
-                        relayTwoAutomatedOnTime
+                        relayTwoAutomatedTimeToRun
                         relayTwoIdRelated
                         relayTwoWorking
                     }
@@ -100,10 +104,12 @@ export const getCustomerQuery = `
                         minWarning
                         maxWarning
                         mode
-                        relayOneAutomatedOnTime
+                        relayOneAutomatedTimeToRun
+                        relayOneAutomatedStartedTime
+                        relayTwoAutomatedStartedTime
                         relayOneIdRelated
                         relayOneWorking
-                        relayTwoAutomatedOnTime
+                        relayTwoAutomatedTimeToRun
                         relayTwoIdRelated
                         relayTwoWorking
                     }

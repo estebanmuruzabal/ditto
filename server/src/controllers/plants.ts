@@ -41,15 +41,15 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
             // must have minWarning and relayIdRelated variables setted!!!
 
-            // relayTwoAutomatedOnTime SHOULD CONTAIN THE MINUTES TIME
-            const timeToIrrigateInMins = Number(soilHumiditySetting?.relayTwoAutomatedOnTime);
+            // relayTwoAutomatedTimeToRun SHOULD CONTAIN THE MINUTES TIME
+            const timeToIrrigateInMins = Number(soilHumiditySetting?.relayTwoAutomatedTimeToRun);
 
             if (!minHumiditySetted || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', soilHumiditySetting); break; }
-            if (timeToIrrigateInMins <=0) { console.log('relayTwoAutomatedOnTime SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', soilHumiditySetting); break; }
+            if (timeToIrrigateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', soilHumiditySetting); break; }
 
             const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
             
-            const irrigationStartedOn = soilHumiditySetting?.relayOneAutomatedOnTime;
+            const irrigationStartedOn = soilHumiditySetting?.relayOneAutomatedTimeToRun;
             const currentIrrigationMins = currentTime?.diff(irrigationStartedOn, 'minutes');
             const isIrrigationTimeComplete = currentIrrigationMins >= timeToIrrigateInMins;
 
@@ -85,18 +85,18 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting.relayTwoWorking = true;
 
                 // we set the start time of the relay
-                soilHumiditySetting.relayOneAutomatedOnTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                soilHumiditySetting.relayOneAutomatedTimeToRun = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
 
                 break;
             } else if (isIrrigationTimeComplete) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} mantiene ${currentSoilHumidity}% de humedad, y ya se termino de evacuar el agua en ${timeToIrrigateInMins} minutos.`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
-                // we turn the exit watering relay OFF, and reset relayOneAutomatedOnTime (that has the start time of the relay)
+                // we turn the exit watering relay OFF, and reset relayOneAutomatedTimeToRun (that has the start time of the relay)
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
                 soilHumiditySetting.relayTwoWorking = false;
-                soilHumiditySetting.relayOneAutomatedOnTime = '';
+                soilHumiditySetting.relayOneAutomatedTimeToRun = '';
                 break;
             }
             
@@ -121,7 +121,7 @@ export const checkAirHumidityAndTempeture = async (plant: Plant, phoneNumber: st
 
 export const checkSensors = async (plant: Plant, phoneNumber: string) => {
     // make method to see how much water is used based on time that relay is ON       
-    const amountOfWater = plant.distanceSensorSettings?.relayOneAutomatedOnTime;
+    const amountOfWater = plant.distanceSensorSettings?.relayOneAutomatedTimeToRun;
     const minWarningDistance: any = !isNaN(Number(plant?.distanceSensorSettings?.minWarning)) ? Number(plant?.distanceSensorSettings.minWarning) : null;
     const maxWarningDistance: any = !isNaN(Number(plant?.distanceSensorSettings?.maxWarning)) ? Number(plant?.distanceSensorSettings.maxWarning) : null;
     const relayOneIdRelatedName: any = plant.distanceSensorSettings.relayOneIdRelated;

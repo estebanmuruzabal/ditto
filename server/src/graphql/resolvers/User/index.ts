@@ -428,10 +428,12 @@ export const usersResolvers: IResolvers = {
                     minWarning: "",
                     maxWarning: "",
                     mode: DistanceSensorMode.SISTEMA_AGUA_A_TRATAR,
-                    relayOneAutomatedOnTime: "",
+                    relayOneAutomatedTimeToRun: "",
+                    relayOneAutomatedStartedTime: "",
+                    relayTwoAutomatedStartedTime: "",
                     relayOneIdRelated: "",
                     relayOneWorking: false,
-                    relayTwoAutomatedOnTime: "",
+                    relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
                     relayTwoWorking: false
                 },
@@ -439,10 +441,12 @@ export const usersResolvers: IResolvers = {
                     minWarning: "",
                     maxWarning: "",
                     mode: HumiditySensorMode.MANUAL,
-                    relayOneAutomatedOnTime: "",
+                    relayOneAutomatedTimeToRun: "",
+                    relayOneAutomatedStartedTime: "",
+                    relayTwoAutomatedStartedTime: "",
                     relayOneIdRelated: "",
                     relayOneWorking: false,
-                    relayTwoAutomatedOnTime: "",
+                    relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
                     relayTwoWorking: false
                 },
@@ -450,10 +454,12 @@ export const usersResolvers: IResolvers = {
                     minWarning: "",
                     maxWarning: "",
                     mode: HumiditySensorMode.MANUAL,
-                    relayOneAutomatedOnTime: "",
+                    relayOneAutomatedTimeToRun: "",
+                    relayOneAutomatedStartedTime: "",
+                    relayTwoAutomatedStartedTime: "",
                     relayOneIdRelated: "",
                     relayOneWorking: false,
-                    relayTwoAutomatedOnTime: "",
+                    relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
                     relayTwoWorking: false
                 }
@@ -532,13 +538,15 @@ export const usersResolvers: IResolvers = {
                 maxWarning,
                 minWarning,
                 mode,
-                relayOneAutomatedOnTime,
+                relayOneAutomatedTimeToRun,
+                relayOneAutomatedStartedTime,
+                relayTwoAutomatedStartedTime,
                 relayOneIdRelated,
                 relayOneWorking,
-                relayTwoAutomatedOnTime,
+                relayTwoAutomatedTimeToRun,
                 relayTwoIdRelated,
                 relayTwoWorking
-            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedOnTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedOnTime: string, relayTwoIdRelated: string, relayTwoWorking: boolean },
+            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -557,10 +565,12 @@ export const usersResolvers: IResolvers = {
                 plants[index].soilHumiditySettings.maxWarning = maxWarning;
                 plants[index].soilHumiditySettings.minWarning = minWarning;
                 plants[index].soilHumiditySettings.mode = mode;
-                plants[index].soilHumiditySettings.relayOneAutomatedOnTime = relayOneAutomatedOnTime;
+                plants[index].soilHumiditySettings.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
+                plants[index].soilHumiditySettings.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
+                plants[index].soilHumiditySettings.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
                 plants[index].soilHumiditySettings.relayOneIdRelated = relayOneIdRelated;
                 plants[index].soilHumiditySettings.relayOneWorking = relayOneWorking;
-                plants[index].soilHumiditySettings.relayTwoAutomatedOnTime = relayTwoAutomatedOnTime;
+                plants[index].soilHumiditySettings.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
                 plants[index].soilHumiditySettings.relayTwoIdRelated = relayTwoIdRelated;
                 plants[index].soilHumiditySettings.relayTwoWorking = relayTwoWorking;
             }

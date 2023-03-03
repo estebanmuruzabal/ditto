@@ -30,10 +30,10 @@ export interface IDistanceSensorSettings {
     minWarning: string;
     maxWarning: string;
     mode: string;
-    relayOneAutomatedOnTime: string;
+    relayOneAutomatedTimeToRun: string;
     relayOneIdRelated: string;
     relayOneWorking: boolean;
-    relayTwoAutomatedOnTime: string;
+    relayTwoAutomatedTimeToRun: string;
     relayTwoIdRelated: string;
     relayTwoWorking: boolean;
 }
@@ -42,10 +42,12 @@ export interface ISoilHumiditySettings {
     minWarning: string;
     maxWarning: string;
     mode: string;
-    relayOneAutomatedOnTime: string;
+    relayOneAutomatedTimeToRun: string;
+    relayOneAutomatedStartedTime: string;
+    relayTwoAutomatedStartedTime: string;
     relayOneIdRelated: string;
     relayOneWorking: boolean;
-    relayTwoAutomatedOnTime: string;
+    relayTwoAutomatedTimeToRun: string;
     relayTwoIdRelated: string;
     relayTwoWorking: boolean;
 }
