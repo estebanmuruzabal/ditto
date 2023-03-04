@@ -44,32 +44,48 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             // relayTwoAutomatedTimeToRun SHOULD CONTAIN THE MINUTES TIME
             const timeToIrrigateInMins = Number(soilHumiditySetting?.relayTwoAutomatedTimeToRun);
 
-            if (!minHumiditySetted || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', soilHumiditySetting); break; }
+            if (!minHumiditySetted || !relayOneIdRelated || !maxHumiditySetted)  { console.log('No relayOneIdRelated, or no minWarning setted: ', soilHumiditySetting); break; }
             if (timeToIrrigateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', soilHumiditySetting); break; }
 
             const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
-            
+
             const irrigationStartedOn = soilHumiditySetting?.relayOneAutomatedTimeToRun;
             const currentIrrigationMins = currentTime?.diff(irrigationStartedOn, 'minutes');
-            const isIrrigationTimeComplete = currentIrrigationMins >= timeToIrrigateInMins;
 
             console.log('currentIrrigationMins', currentIrrigationMins)
             console.log('timeToIrrigateInMins', timeToIrrigateInMins)
 
-            if (currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking) {
+            const irrigationShouldStart = currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking;
+            const irrigationComplete = currentTime?.diff(moment(soilHumiditySetting.relayOneAutomatedStartedTime), 'minutes') >= Number(soilHumiditySetting.relayOneAutomatedTimeToRun);
+            const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !soilHumiditySetting.relayOneWorking;
+            const evacuationComplete = currentIrrigationMins >= timeToIrrigateInMins;
+
+            if (irrigationShouldStart) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos llenando la pileta con agua.`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
-                // we turn the exit watering relay ON
+                // we turn the filling in watering relay ON
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
                 soilHumiditySetting.relayOneWorking = true;
-                // we turn the watering relay OFF
+
+                soilHumiditySetting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+
+                // we turn evacuation watering relay OFF just in case
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
                 soilHumiditySetting.relayTwoWorking = false;
                 break;
-            } if (currentSoilHumidity >= minHumiditySetted && soilHumiditySetting.relayOneWorking) {
+            } else if (irrigationComplete) {
+                // we just turn off the filling in watter system
+                const whatsappMsg = `Aviso: tu semillero: ${plant.name} acaba de llenar la pileta con ${Number(soilHumiditySetting.relayOneAutomatedTimeToRun) * 2} litros agua.`;
+                if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
+
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                soilHumiditySetting.relayOneWorking = false;
+                break;
+            } else if (evacuationShouldStart) {
                 if (!relayTwoIdRelated) { console.log('No relayTwoIdRelated setted: ', soilHumiditySetting); break; }
 
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos evacuamos el agua.`;
@@ -88,7 +104,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting.relayOneAutomatedTimeToRun = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
 
                 break;
-            } else if (isIrrigationTimeComplete) {
+            } else if (evacuationComplete) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} mantiene ${currentSoilHumidity}% de humedad, y ya se termino de evacuar el agua en ${timeToIrrigateInMins} minutos.`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 

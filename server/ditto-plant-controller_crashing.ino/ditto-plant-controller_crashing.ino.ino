@@ -12,11 +12,13 @@
 long ultrason_duration;
 
 using namespace std;
-const char* ssid = "ditto";
+const char* ssid = "dittofarm";
 const char* password = "guemes765";
 const char* userId = "630d325b4872db758bb808b9";
 const char* serverName = "http://54.232.137.175/api";
 //const char* serverName = "http://0.0.0.0/api";
+const int dry = 3705;
+const int wet = 1357;
 
 // variables of the plant
 int tempeture = 0;
@@ -30,9 +32,9 @@ bool isRelayFourthOn = false;
 float duration_us, distance_cm;
  
 // pin sensors
-const int sensor_pin_for_soil_humidity1 = A0; // este es el 3
-const int sensor_pin_for_soil_humidity2 = 35;  //P35
-const int sensor_pin_for_relay_1 = A3; // este es el 4
+#define sensor_pin_for_soil_humidity1 36
+#define sensor_pin_for_soil_humidity2 39
+
 const int relayOnePin = 26; //P26
 const int relayTwoPin = 25; // P25
 const int relayThreePin = 33; //P33
@@ -140,7 +142,6 @@ void updateServerAndRelaysState() {
     Serial.print("payload");
     Serial.println(payload);
 
-
     if (payload.substring(40, 42) == "ON") { isRelayOneOn = true;} else { isRelayOneOn = false; };
     if (payload.substring(60, 62) == "ON") { isRelayTwoOn = true;} else { isRelayTwoOn = false; };
     if (payload.substring(82, 84) == "ON") { isRelayThirdOn = true; } else { isRelayThirdOn = false; };
@@ -159,14 +160,15 @@ void updateServerAndRelaysState() {
 
 void readSoilHumidity1() {
     int rawHumidity = analogRead(sensor_pin_for_soil_humidity1);
-    soilHumidity1 = ( 100 - ( (rawHumidity/4095.00) * 100 ) );
+    soilHumidity1 = map(rawHumidity, wet, dry, 100, 0);
     Serial.print("SoilHumidity 1 = ");
     Serial.print(soilHumidity1);  /* Print Temperature on the serial window */
     Serial.println("%");
 }
 
 void readSoilHumidity2() {
-    soilHumidity2 = analogRead(sensor_pin_for_soil_humidity2);
+    int rawHumidity2 = analogRead(sensor_pin_for_soil_humidity2);
+    soilHumidity2 = map(rawHumidity2, wet, dry, 100, 0);
     Serial.print("SoilHumidity 2 = ");
     Serial.print(soilHumidity2);  /* Print Temperature on the serial window */
     Serial.println("%");
@@ -254,29 +256,14 @@ void loop() {
 
     readSoilHumidity1();
     readSoilHumidity2();
-    readTempeture();
-    readAirHumidity();
-    readDistanceSensorOne();
+//    readTempeture();
+//    readAirHumidity();
+//    readDistanceSensorOne();
+//
+    updateServerAndRelaysState();
+    handleRaleyActions();
 
     // we update every 30 secs just for now
     delay(5000);
-    isRelayOneOn = true;
-    isRelayTwoOn = true;
-    handleRaleyActions();
-    delay(5000);
-    isRelayOneOn = false;
-    isRelayTwoOn = false;
-    handleRaleyActions();
-    delay(5000);
-    isRelayThirdOn = true;
-    isRelayFourthOn = true;
-    handleRaleyActions();
-    updateServerAndRelaysState();
-
-delay(5000);
-    isRelayThirdOn = false;
-    isRelayFourthOn = false;
-    handleRaleyActions();
-    updateServerAndRelaysState();
 
 }
