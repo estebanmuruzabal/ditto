@@ -52,10 +52,13 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
 
             
             const startedIrrigationTime = moment(soilHumiditySetting.relayOneAutomatedStartedTime);
-            const currentIrrigationMins = currentTime?.diff(timeToIrrigateInMins, 'minutes');
-            const currentEvacuationMins = currentTime?.diff(timeToEvacuateInMins, 'minutes');
+            const startedEvacuationTime = moment(soilHumiditySetting.relayOneAutomatedStartedTime);
+            const currentIrrigationMins = currentTime?.diff(startedIrrigationTime, 'minutes');
+            const currentEvacuationMins = currentTime?.diff(startedEvacuationTime, 'minutes');
 
             console.log('timeToIrrigateInMins', timeToIrrigateInMins)
+            console.log('startedEvacuationTime', startedEvacuationTime)
+            
             console.log('timeToEvacuateInMins', timeToEvacuateInMins)
             console.log('startedIrrigationTime', startedIrrigationTime)
             console.log('currentIrrigationMins', currentIrrigationMins)
