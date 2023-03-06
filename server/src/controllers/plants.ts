@@ -65,12 +65,13 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             const inProgress = currentTime?.diff(startedIrrigationTime, 'minutes') >= 0 && currentTime?.diff(startedIrrigationTime, 'minutes') < timeToIrrigateInMins;
             const irrigationComplete = currentTime?.diff(startedIrrigationTime, 'minutes') >= timeToIrrigateInMins && soilHumiditySetting.relayOneWorking;
             const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !soilHumiditySetting.relayTwoWorking;
-            const evacuationComplete = currentTime?.diff(currentEvacuationMins, 'minutes') >= currentIrrigationMins && !!soilHumiditySetting.relayOneAutomatedStartedTime.length && !!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
+            const evacuationComplete = currentTime?.diff(currentEvacuationMins, 'minutes') >= currentIrrigationMins && !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
 
-            
+
             console.log('irrigationShouldStart', irrigationShouldStart)
+            console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
             console.log('inProgress', inProgress)
-            console.log('currentTime?.diff(startedIrrigationTime::', currentTime?.diff(startedIrrigationTime, 'minutes'))
+            console.log('currentTime?.diff(currentEvacuationMins, ::', currentTime?.diff(currentEvacuationMins, 'minutes'))
             console.log('irrigationComplete', irrigationComplete)
             console.log('evacuationShouldStart', evacuationShouldStart)
             console.log('evacuationComplete', evacuationComplete)
@@ -113,7 +114,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting.relayTwoWorking = true;
 
                 // we set the start time of the relay
-                soilHumiditySetting.relayOneAutomatedTimeToRun = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                soilHumiditySetting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
 
                 break;
             } else if (evacuationComplete) {
