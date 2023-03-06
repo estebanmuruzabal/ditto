@@ -64,12 +64,13 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             console.log('currentIrrigationMins', currentIrrigationMins)
 
 
-            const irrigationShouldStart = currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking;
-            const inProgress = currentTime?.diff(startedIrrigationTime, 'minutes') >= 0;
+            const irrigationShouldStart = currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking && !!soilHumiditySetting.relayOneAutomatedStartedTime.length;
+            const inProgress = currentTime?.diff(startedIrrigationTime, 'minutes') >= 0 && currentTime?.diff(startedIrrigationTime, 'minutes') < timeToIrrigateInMins;
             const irrigationComplete = currentTime?.diff(startedIrrigationTime, 'minutes') >= timeToIrrigateInMins;
             const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !soilHumiditySetting.relayOneWorking;
-            const evacuationComplete = currentIrrigationMins >= timeToEvacuateInMins;
+            const evacuationComplete = currentIrrigationMins >= timeToEvacuateInMins && !!soilHumiditySetting.relayOneAutomatedStartedTime.length && !!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
 
+            
             console.log('irrigationShouldStart', irrigationShouldStart)
             console.log('inProgress', inProgress)
             console.log('currentTime?.diff(startedIrrigationTime::', currentTime?.diff(startedIrrigationTime, 'minutes'))
