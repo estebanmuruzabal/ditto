@@ -62,16 +62,16 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             console.log('soilHumiditySetting.relayOneWorking', soilHumiditySetting.relayOneWorking)
 
             const irrigationShouldStart = currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking && !!!soilHumiditySetting.relayOneAutomatedStartedTime.length;
-            const inProgress = currentTime?.diff(startedIrrigationTime, 'minutes') >= 0 && currentTime?.diff(startedIrrigationTime, 'minutes') < timeToIrrigateInMins;
-            const irrigationComplete = currentTime?.diff(startedIrrigationTime, 'minutes') >= timeToIrrigateInMins && soilHumiditySetting.relayOneWorking;
+            const inProgress = currentIrrigationMins >= 0 && currentTime?.diff(startedIrrigationTime, 'minutes') < timeToIrrigateInMins;
+            const irrigationComplete = currentIrrigationMins >= timeToIrrigateInMins && soilHumiditySetting.relayOneWorking;
             const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !soilHumiditySetting.relayTwoWorking;
-            const evacuationComplete = currentTime?.diff(currentEvacuationMins, 'minutes') >= currentIrrigationMins && !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
+            const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
 
 
-            console.log('irrigationShouldStart', irrigationShouldStart)
+            console.log('timeToEvacuateInMins', timeToEvacuateInMins)
             console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
             console.log('inProgress', inProgress)
-            console.log('currentTime?.diff(currentEvacuationMins, ::', currentTime?.diff(currentEvacuationMins, 'minutes'))
+            console.log('currentEvacuationMins:', currentEvacuationMins)
             console.log('irrigationComplete', irrigationComplete)
             console.log('evacuationShouldStart', evacuationShouldStart)
             console.log('evacuationComplete', evacuationComplete)
@@ -125,7 +125,8 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
                 soilHumiditySetting.relayTwoWorking = false;
-                soilHumiditySetting.relayOneAutomatedTimeToRun = '';
+                soilHumiditySetting.relayOneAutomatedStartedTime = '';
+                soilHumiditySetting.relayTwoAutomatedStartedTime = '';
                 break;
             }
             
