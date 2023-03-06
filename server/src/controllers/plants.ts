@@ -55,12 +55,6 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             const currentIrrigationMins = currentTime?.diff(startedIrrigationTime, 'minutes');
             const currentEvacuationMins = currentTime?.diff(startedEvacuationTime, 'minutes');
 
-            console.log('startedEvacuationTime', startedEvacuationTime)
-
-            console.log('startedIrrigationTime', startedIrrigationTime)
-            console.log('currentIrrigationMins', currentIrrigationMins)
-            console.log('soilHumiditySetting.relayOneWorking', soilHumiditySetting.relayOneWorking)
-
             const irrigationShouldStart = currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking && !!!soilHumiditySetting.relayOneAutomatedStartedTime.length;
             const inProgress = currentIrrigationMins >= 0 && currentTime?.diff(startedIrrigationTime, 'minutes') < timeToIrrigateInMins;
             const irrigationComplete = currentIrrigationMins >= timeToIrrigateInMins && soilHumiditySetting.relayOneWorking;
@@ -68,13 +62,11 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
 
 
+            console.log('evacuationComplete', evacuationComplete)
+            console.log('currentEvacuationMins', currentEvacuationMins)
             console.log('timeToEvacuateInMins', timeToEvacuateInMins)
             console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
-            console.log('inProgress', inProgress)
-            console.log('currentEvacuationMins:', currentEvacuationMins)
-            console.log('irrigationComplete', irrigationComplete)
-            console.log('evacuationShouldStart', evacuationShouldStart)
-            console.log('evacuationComplete', evacuationComplete)
+            console.log('soilHumiditySetting.relayTwoAutomatedStartedTime.length', soilHumiditySetting.relayTwoAutomatedStartedTime.length)
             if (inProgress) return plant;
 
             if (irrigationShouldStart) {
