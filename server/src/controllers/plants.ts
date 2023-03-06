@@ -56,18 +56,18 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             const currentEvacuationMins = currentTime?.diff(startedEvacuationTime, 'minutes');
 
             const irrigationShouldStart = currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking && !!!soilHumiditySetting.relayOneAutomatedStartedTime.length;
-            const inProgress = currentIrrigationMins >= 0 && currentTime?.diff(startedIrrigationTime, 'minutes') < timeToIrrigateInMins;
+            const irrigationInProgress = currentIrrigationMins >= 0 && currentIrrigationMins < timeToIrrigateInMins;
             const irrigationComplete = currentIrrigationMins >= timeToIrrigateInMins && soilHumiditySetting.relayOneWorking;
-            const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !soilHumiditySetting.relayTwoWorking;
-            const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
+            const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !soilHumiditySetting.relayTwoWorking && !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
+            const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
 
 
             console.log('evacuationComplete', evacuationComplete)
             console.log('currentEvacuationMins', currentEvacuationMins)
             console.log('timeToEvacuateInMins', timeToEvacuateInMins)
-            console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
+            console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
             console.log('soilHumiditySetting.relayTwoAutomatedStartedTime.length', soilHumiditySetting.relayTwoAutomatedStartedTime.length)
-            if (inProgress) return plant;
+            if (irrigationInProgress) return plant;
 
             if (irrigationShouldStart) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos llenando la pileta con agua.`;
