@@ -10,7 +10,6 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
     const relayOneIdRelated: any = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
     
-    console.log('Switch of soilHumiditySetting.mode: ', soilHumiditySetting.mode);
     switch (soilHumiditySetting.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
@@ -56,10 +55,8 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             const currentIrrigationMins = currentTime?.diff(startedIrrigationTime, 'minutes');
             const currentEvacuationMins = currentTime?.diff(startedEvacuationTime, 'minutes');
 
-            console.log('timeToIrrigateInMins', timeToIrrigateInMins)
             console.log('startedEvacuationTime', startedEvacuationTime)
 
-            console.log('timeToEvacuateInMins', timeToEvacuateInMins)
             console.log('startedIrrigationTime', startedIrrigationTime)
             console.log('currentIrrigationMins', currentIrrigationMins)
             console.log('soilHumiditySetting.relayOneWorking', soilHumiditySetting.relayOneWorking)
@@ -67,8 +64,8 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             const irrigationShouldStart = currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking && !!!soilHumiditySetting.relayOneAutomatedStartedTime.length;
             const inProgress = currentTime?.diff(startedIrrigationTime, 'minutes') >= 0 && currentTime?.diff(startedIrrigationTime, 'minutes') < timeToIrrigateInMins;
             const irrigationComplete = currentTime?.diff(startedIrrigationTime, 'minutes') >= timeToIrrigateInMins && soilHumiditySetting.relayOneWorking;
-            const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !!soilHumiditySetting.relayOneWorking;
-            const evacuationComplete = currentIrrigationMins >= timeToEvacuateInMins && !!soilHumiditySetting.relayOneAutomatedStartedTime.length && !!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
+            const evacuationShouldStart = currentSoilHumidity >= maxHumiditySetted && !soilHumiditySetting.relayTwoWorking;
+            const evacuationComplete = currentTime?.diff(currentEvacuationMins, 'minutes') >= currentIrrigationMins && !!soilHumiditySetting.relayOneAutomatedStartedTime.length && !!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
 
             
             console.log('irrigationShouldStart', irrigationShouldStart)
@@ -110,10 +107,6 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos evacuamos el agua.`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
 
-                // we turn the watering relay OFF
-                // @ts-ignore
-                plant[relayOneIdRelated] = false;
-                soilHumiditySetting.relayOneWorking = false;
                 // we turn the exit watering relay ON
                 // @ts-ignore
                 plant[relayTwoIdRelated] = true;
