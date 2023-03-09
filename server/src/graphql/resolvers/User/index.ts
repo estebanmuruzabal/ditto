@@ -515,6 +515,14 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
 
+            console.log('Humedad sensor 1', plants[index].soilHumidity1 = soilHumidity1)
+            console.log(`Relay 1: ${plants[index].isRelayOneOn ? 'ON' : 'OFF'})`)
+            console.log(`Relay 2: ${plants[index].isRelayTwoOn ? 'ON' : 'OFF'})`)
+            console.log(`Relay 3: ${plants[index].isRelayThirdOn ? 'ON' : 'OFF'})`)
+            console.log(`Relay 4: ${plants[index].isRelayFourthOn ? 'ON' : 'OFF'})`)
+            
+            
+
             plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings1, userResult?.phones[0]?.number, Number(plants[index].soilHumidity1));
             plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings2, userResult?.phones[0]?.number, Number(plants[index].soilHumidity2));
             plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
