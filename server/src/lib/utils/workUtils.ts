@@ -31,9 +31,16 @@ export const getGrowerSensorList = (resData: any, user: IUser, plant: Plant, tri
  
 
      resData.replyMessage = getListButtons(
-            `Humedad del suelo: ${plant.soilHumidity1}
-    Alertas: ${plant.soilHumiditySettings1.mode ? 'OFF' : 'ON' }
-    Relay asociado: ${plant.soilHumiditySettings1.relayOneIdRelated || 'Ninguno' }
+         `Humedad del suelo: ${plant.soilHumidity1}
+          Relay 1 is: ${plant.isRelayOneOn ? 'ON' : 'OFF'}
+Modo: ${plant.soilHumiditySettings1.mode || 'Ninguno'}
+Relay asociado: ${plant.soilHumiditySettings1.relayOneIdRelated || 'Ninguno' }
+RelayOneWorking : ${plant.soilHumiditySettings1.relayOneWorking ? 'ON' : 'OFF' }
+Relay One Automated Started Time: ${plant.soilHumiditySettings1.relayOneAutomatedStartedTime || 'Undefined'}
+Relay Two Automated Started Time: ${plant.soilHumiditySettings1.relayTwoAutomatedStartedTime || 'Undefined'}
+Relay One Automated Time To Run: ${plant.soilHumiditySettings1.relayOneAutomatedTimeToRun || 'Undefined'}
+Relay Two Automated Time To Run: ${plant.soilHumiditySettings1.relayTwoAutomatedTimeToRun || 'Undefined'}
+
     `,
         'Editar configuracion',
         listSections,
