@@ -31,18 +31,26 @@ export const getGrowerSensorList = (resData: any, user: IUser, plant: Plant, tri
  
 
      resData.replyMessage = getListButtons(
-         `Humedad del suelo: ${plant.soilHumidity1}
+         `Humedad sensor 1: ${plant.soilHumidity1}
+Humedad sensor 2: ${plant.soilHumidity2}
 Relay 1 is: ${plant.isRelayOneOn ? 'ON' : 'OFF'}
 Relay 2 is: ${plant.isRelayTwoOn ? 'ON' : 'OFF'}
 Relay 3 is: ${plant.isRelayThirdOn ? 'ON' : 'OFF'}
 Relay 4 is: ${plant.isRelayFourthOn ? 'ON' : 'OFF'}
-Modo: ${plant.soilHumiditySettings1.mode || 'Ninguno'}
-Relay asociado: ${plant.soilHumiditySettings1.relayOneIdRelated || 'Ninguno' }
-RelayOneWorking : ${plant.soilHumiditySettings1.relayOneWorking ? 'ON' : 'OFF' }
+
+Sensor 1 configs:
+
 Relay One Automated Started Time: ${plant.soilHumiditySettings1.relayOneAutomatedStartedTime || 'Undefined'}
 Relay Two Automated Started Time: ${plant.soilHumiditySettings1.relayTwoAutomatedStartedTime || 'Undefined'}
 Relay One Automated Time To Run: ${plant.soilHumiditySettings1.relayOneAutomatedTimeToRun || 'Undefined'}
 Relay Two Automated Time To Run: ${plant.soilHumiditySettings1.relayTwoAutomatedTimeToRun || 'Undefined'}
+
+Sensor 2 configs:
+
+Relay One Automated Started Time: ${plant.soilHumiditySettings2.relayOneAutomatedStartedTime || 'Undefined'}
+Relay Two Automated Started Time: ${plant.soilHumiditySettings2.relayTwoAutomatedStartedTime || 'Undefined'}
+Relay One Automated Time To Run: ${plant.soilHumiditySettings2.relayOneAutomatedTimeToRun || 'Undefined'}
+Relay Two Automated Time To Run: ${plant.soilHumiditySettings2.relayTwoAutomatedTimeToRun || 'Undefined'}
     `,
         'Editar configuracion',
         listSections,
@@ -53,6 +61,10 @@ Relay Two Automated Time To Run: ${plant.soilHumiditySettings1.relayTwoAutomated
 
     return resData;
 };
+
+// Modo: ${plant.soilHumiditySettings1.mode || 'Ninguno'}
+// Relay asociado: ${plant.soilHumiditySettings1.relayOneIdRelated || 'Ninguno' }
+// RelayOneWorking: ${ plant.soilHumiditySettings1.relayOneWorking ? 'ON' : 'OFF' }
 
 export const getGrowerMainMenuButtons = (resData: any, user: IUser, plant: Plant, trigger: TriggerGrowerSteps, title: string, buttonText: string) => {
     const buttons: any = [{ body: '1 - Editar configuración' }, { body: '2 - Agregar sensor' }];

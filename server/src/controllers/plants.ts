@@ -62,8 +62,8 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!soilHumiditySetting.relayTwoAutomatedStartedTime.length;
 
 
-            // console.log('evacuationComplete', evacuationComplete)
-            // console.log('currentEvacuationMins', currentEvacuationMins)
+            console.log('irrigationComplete', irrigationComplete)
+            console.log('currentEvacuationMins', currentEvacuationMins)
             // console.log('soilHumiditySetting.relayOneAutomatedStartedTime', soilHumiditySetting.relayOneAutomatedStartedTime)
             // console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
             // console.log('soilHumiditySetting.relayTwoAutomatedStartedTime.length', soilHumiditySetting.relayTwoAutomatedStartedTime.length)
