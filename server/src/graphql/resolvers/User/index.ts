@@ -515,8 +515,8 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
 
-            console.log('Humedad sensor 1', plants[index].soilHumidity1 = soilHumidity1)
-            console.log('Humedad sensor 2', plants[index].soilHumidity2 = soilHumidity2)
+            console.log('Humedad sensor 1', plants[index].soilHumidity1)
+            console.log('Humedad sensor 2', plants[index].soilHumidity2)
             console.log(`Relays: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
             plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings1, userResult?.phones[0]?.number, Number(plants[index].soilHumidity1));
