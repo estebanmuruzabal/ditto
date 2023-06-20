@@ -56,7 +56,7 @@
     "react-phone-input-2": "^2.13.9",
     "react-reveal": "^1.2.2",
     "react-scroll": "^1.7.16",
-    "react-select": "^3.1.0",
+    "react-select": "^5.7.3",
     "react-spring": "^8.0.27",
     "react-stickynode": "^3.0.3",
     "react-styled-flexboxgrid": "^3.2.1",
@@ -90,5 +90,5 @@
     "imagemin-svgo": "^8.0.0",
     "typescript": "^3.9.5"
   },
-  "proxy": "http://54.232.137.175/api"
+  "proxy": "http://localhost:7000/api"
 }

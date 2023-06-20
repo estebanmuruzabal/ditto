@@ -3,6 +3,8 @@ import { ProfileContext } from './profile.context';
 
 type Action =
   | { type: 'HANDLE_ON_INPUT_CHANGE'; payload: any }
+  | { type: 'HANDLE_HUMIDITY_1_SETTINGS_CHANGE'; payload: any }
+  | { type: 'HANDLE_HUMIDITY_2_SETTINGS_CHANGE'; payload: any }
   | { type: 'HANDLE_PASSWORD_CLEAR'; payload: any }
   | { type: 'ADD_CONTACT'; payload: any }
   | { type: 'UPDATE_CONTACT'; payload: any }
@@ -21,6 +23,15 @@ function reducer(state: any, action: Action): any {
     case 'HANDLE_ON_INPUT_CHANGE':
       return { ...state, [action.payload.field]: action.payload.value };
     
+    case 'HANDLE_HUMIDITY_1_SETTINGS_CHANGE':
+      state.plants[0].soilHumiditySettings1[action.payload.field] = action.payload.value;
+
+      return { ...state};
+    
+    case 'HANDLE_HUMIDITY_2_SETTINGS_CHANGE':
+      state.plants[0].soilHumiditySettings2[action.payload.field] = action.payload.value;
+    
+      return { ...state};
     case 'ADD_CONTACT':
       const newContact = {
         ...action.payload.values,

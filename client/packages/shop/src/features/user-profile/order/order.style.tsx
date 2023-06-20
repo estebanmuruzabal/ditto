@@ -29,7 +29,7 @@ const OrderBox = styled.div`
 
 const OrderListWrapper = styled.div`
   // width: 330px;
-  height: auto;
+  height: 200px;
   display: flex;
   flex-direction: column;
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};

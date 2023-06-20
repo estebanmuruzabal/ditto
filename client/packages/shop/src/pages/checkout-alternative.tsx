@@ -23,7 +23,7 @@ const CheckoutPage: NextPage<Props> = ({ deviceType }) => {
   }
   if (error) return <ErrorMessage message={error.message} />;
   const token = 'true';
-
+  console.log('data.me', data.me)
   return (
     <>
       <SEO

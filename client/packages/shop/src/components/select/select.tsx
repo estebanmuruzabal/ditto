@@ -10,6 +10,7 @@ type SelectProps = {
   value?: any;
   labelPosition?: 'top' | 'bottom' | 'left' | 'right';
   props?: any;
+  options: any[];
 };
 
 const Select: React.FC<SelectProps> = ({

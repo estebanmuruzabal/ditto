@@ -13,3 +13,12 @@ export const BANK_TRANSFER_PAYMENT_OPTION = 'bank_transfer';
 export const BANK_TRANSFER_ALIAS = 'dittofarm';
 export const BANK_TRANSFER_CBU = '0000003100030458924685';
 export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
+
+
+export enum HumiditySensorMode {
+    IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
+    SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
+    MANUAL = 'MANUAL',
+    SCHEDULE = 'SCHEDULE',
+    NONE = 'NONE'
+}
