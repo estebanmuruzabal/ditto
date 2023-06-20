@@ -1,10 +1,10 @@
-import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updatePlantSettings } from "../api"
+import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
 import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
 import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText } from "../lib/utils/shoppingUtils"
 import { enterValidAddress, enterValidName, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, purchaseErrorMsg, reEnterValidName, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput } from "../messages/customersMessages"
-import { getGrowerSensorList, getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
+import { getGrowerSensorList, getSensorsMenuList, getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
 
 const { saveMessageJson } = require('./jsonDb')
 // const { getDataIa } = require('./diaglogflow')
@@ -29,60 +29,55 @@ export const getReplyFromGrowerBot = async (triggerStep: string, user: IUser | a
             }
 
             let resDataArrayOfPlants: any = [];
-            user?.plants.map((plant: Plant) => {
-                let resDataCopy = Object.assign({}, resData);
-                // const resDataReady = getGrowerMainMenuButtons(resDataCopy, user, plant, TriggerGrowerSteps.PLANT_DETAILS, `${plant.name}`, 'Editar configuraciones');
-                const resDataReady = getGrowerSensorList(resDataCopy, user, plant, TriggerGrowerSteps.PLANT_DETAILS, `${plant.name}`, 'Acciones');
-                resDataArrayOfPlants.push(resDataReady)
-            });
-
-            resolve(resDataArrayOfPlants);
+            resData.replyMessage = getSensorsMenuList(resData, user, user?.plants[0], TriggerGrowerSteps.CHANGE_MIN_HUMIDITY, 'title1', 'buttonText1');
+            resolve([resData]);
             break;
         
-        case TriggerGrowerSteps.PLANT_DETAILS:
-            const userInputPlantNumber = userInput[userInput.length];
-            const userInputPlantSettingNumber = userInput[userInput.length - 1];
+        // case TriggerGrowerSteps.PLANT_DETAILS:
+        //     const userInputPlantNumber = userInput[userInput.length];
+        //     const userInputPlantSettingNumber = userInput[userInput.length - 1];
     
-            if (!user?.plants[userInputPlantNumber]) {
-                resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
-                resData.replyMessage = invalidNumberInput(user?.plants?.length);
-                resolve([resData]);
-                break;
-            }
+        //     if (!user?.plants[userInputPlantNumber]) {
+        //         resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
+        //         resData.replyMessage = invalidNumberInput(user?.plants?.length);
+        //         resolve([resData]);
+        //         break;
+        //     }
 
-            switch (userInputPlantSettingNumber) {
-                case 'A':
-                    resData.trigger = `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_${userInputPlantSettingNumber}`;
-                    resData.replyMessage = 'Ingresar temperatura minima';
-                    resolve([resData]);
-                    break;
-                    break;
-            
-                default:
-                    break;
-            }
+        //     switch (userInputPlantSettingNumber) {
+        //         case 'A':
+        //             resData.trigger = `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_${userInputPlantSettingNumber}`;
+        //             resData.replyMessage = 'Ingresar temperatura minima';
+        //             resolve([resData]);
+        //             break;
+        //         case 'B':
+        //             resData.trigger = `${TriggerGrowerSteps.CHANGE_MAX_HUMIDITY}_${userInputPlantSettingNumber}`;
+        //             resData.replyMessage = 'Ingresar temperatura máxima';
+        //             resolve([resData]);
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        //     resolve([resData])
+        //     break;
+        // case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_1`:
+        // case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_2`:
+        // case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_3`:
+        //     userInputNumber = Number(userInput.match(/[0-9]+/))
+        //     const plantSettingNumber = triggerStep[triggerStep.length];
+        //     const plant = user.plants[plantSettingNumber];
 
-            
-            resolve([resData])
-            break;
-        case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_1`:
-        case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_2`:
-        case `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_3`:
-            userInputNumber = Number(userInput.match(/[0-9]+/))
-            const plantSettingNumber = triggerStep[triggerStep.length];
-            const plant = user.plants[plantSettingNumber];
+        //     if (!plant || userInputNumber < 0 || userInputNumber > 100) {
+        //         resData.trigger = `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_${plantSettingNumber}`;
+        //         resData.replyMessage = invalidNumberInput('100');
+        //         resolve([resData]);
+        //         break;
+        //     }
 
-            if (!plant || userInputNumber < 0 || userInputNumber > 100) {
-                resData.trigger = `${TriggerGrowerSteps.CHANGE_MIN_HUMIDITY}_${plantSettingNumber}`;
-                resData.replyMessage = invalidNumberInput('100');
-                resolve([resData]);
-                break;
-            }
-
-            await updatePlantSettings(user, plant, 'minWarning', userInputNumber);
-            resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
-            resolve([resData])
-            break;
+        //     await updatePlantSettings(user, plant, 'minWarning', userInputNumber);
+        //     resData.trigger = TriggerGrowerSteps.SHOW_ALL_PLANTS;
+        //     resolve([resData])
+        //     break;
         default:
             
             resolve([resData]);

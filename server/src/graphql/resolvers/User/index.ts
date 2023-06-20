@@ -435,7 +435,8 @@ export const usersResolvers: IResolvers = {
                     relayOneWorking: false,
                     relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
-                    relayTwoWorking: false
+                    relayTwoWorking: false,
+                    logs: []
                 },
                 soilHumiditySettings1: {
                     minWarning: "",
@@ -448,7 +449,8 @@ export const usersResolvers: IResolvers = {
                     relayOneWorking: false,
                     relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
-                    relayTwoWorking: false
+                    relayTwoWorking: false,
+                    logs: []
                 },
                 soilHumiditySettings2: {
                     minWarning: "",
@@ -461,7 +463,8 @@ export const usersResolvers: IResolvers = {
                     relayOneWorking: false,
                     relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
-                    relayTwoWorking: false
+                    relayTwoWorking: false,
+                    logs: []
                 }
             };
 
@@ -535,7 +538,7 @@ export const usersResolvers: IResolvers = {
                 isRelayFourthOn: plants[index].isRelayFourthOn ? "ON" : "OF",
             };
         },
-        updatePlantSettings: async (
+        updateSoilHumiditySettings1: async (
             _root: undefined,
             {   id, 
                 controllerId,
@@ -566,17 +569,17 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
-                plants[index].soilHumiditySettings.maxWarning = maxWarning;
-                plants[index].soilHumiditySettings.minWarning = minWarning;
-                plants[index].soilHumiditySettings.mode = mode;
-                plants[index].soilHumiditySettings.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
-                plants[index].soilHumiditySettings.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
-                plants[index].soilHumiditySettings.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
-                plants[index].soilHumiditySettings.relayOneIdRelated = relayOneIdRelated;
-                plants[index].soilHumiditySettings.relayOneWorking = relayOneWorking;
-                plants[index].soilHumiditySettings.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
-                plants[index].soilHumiditySettings.relayTwoIdRelated = relayTwoIdRelated;
-                plants[index].soilHumiditySettings.relayTwoWorking = relayTwoWorking;
+                plants[index].soilHumiditySettings1.maxWarning = maxWarning;
+                plants[index].soilHumiditySettings1.minWarning = minWarning;
+                plants[index].soilHumiditySettings1.mode = mode;
+                plants[index].soilHumiditySettings1.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
+                plants[index].soilHumiditySettings1.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
+                plants[index].soilHumiditySettings1.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
+                plants[index].soilHumiditySettings1.relayOneIdRelated = relayOneIdRelated;
+                plants[index].soilHumiditySettings1.relayOneWorking = relayOneWorking;
+                plants[index].soilHumiditySettings1.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
+                plants[index].soilHumiditySettings1.relayTwoIdRelated = relayTwoIdRelated;
+                plants[index].soilHumiditySettings1.relayTwoWorking = relayTwoWorking;
             }
 
                 
@@ -587,7 +590,62 @@ export const usersResolvers: IResolvers = {
 
             return {
                 status: true,
-                message: "Updated soil settings successfully."
+                message: "Updated soil humidity settings 1 successfully."
+            };
+        },
+        updateSoilHumiditySettings2: async (
+            _root: undefined,
+            {   id, 
+                controllerId,
+                maxWarning,
+                minWarning,
+                mode,
+                relayOneAutomatedTimeToRun,
+                relayOneAutomatedStartedTime,
+                relayTwoAutomatedStartedTime,
+                relayOneIdRelated,
+                relayOneWorking,
+                relayTwoAutomatedTimeToRun,
+                relayTwoIdRelated,
+                relayTwoWorking
+            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean },
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+
+            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
+
+            const plants = userResult.plants;
+            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
+
+            if (index < 0) {
+                throw new Error(`Controller id does not exists: ${controllerId})`);
+            } else {
+                plants[index].soilHumiditySettings2.maxWarning = maxWarning;
+                plants[index].soilHumiditySettings2.minWarning = minWarning;
+                plants[index].soilHumiditySettings2.mode = mode;
+                plants[index].soilHumiditySettings2.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
+                plants[index].soilHumiditySettings2.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
+                plants[index].soilHumiditySettings2.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
+                plants[index].soilHumiditySettings2.relayOneIdRelated = relayOneIdRelated;
+                plants[index].soilHumiditySettings2.relayOneWorking = relayOneWorking;
+                plants[index].soilHumiditySettings2.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
+                plants[index].soilHumiditySettings2.relayTwoIdRelated = relayTwoIdRelated;
+                plants[index].soilHumiditySettings2.relayTwoWorking = relayTwoWorking;
+            }
+
+                
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$set: {plants}}
+            );
+
+            return {
+                status: true,
+                message: "Updated soil humidity settings 2 successfully."
             };
         },
         addPhoneNumber: async (

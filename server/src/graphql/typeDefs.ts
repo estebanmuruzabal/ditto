@@ -33,12 +33,12 @@ export const typeDefs = gql`
         minWarning: String
         maxWarning: String
         mode: String
-        relayOneAutomatedTimeToRun: String
+        relayOneAutomatedOnTime: String
         relayOneAutomatedStartedTime: String
         relayTwoAutomatedStartedTime: String
+        relayTwoAutomatedOnTime: String
         relayOneIdRelated: String
         relayOneWorking: Boolean
-        relayTwoAutomatedTimeToRun: String
         relayTwoIdRelated: String
         relayTwoWorking: Boolean
     }
@@ -558,7 +558,8 @@ export const typeDefs = gql`
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
         updatePlant(id: ID!, controllerId: Int!, soilHumidity1: Int, airHumidity: Int, tempeture: Int, distance_cm: Int, soilHumidity2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
-        updatePlantSettings(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean): DefaultMessageType!
+        updateSoilHumiditySettings1(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean): DefaultMessageType!
+        updateSoilHumiditySettings2(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

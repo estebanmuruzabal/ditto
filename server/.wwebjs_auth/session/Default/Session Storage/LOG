@@ -1,2 +1,3 @@
-2023/01/31-16:16:58.310 8803 Creating DB /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Session Storage since it was missing.
-2023/01/31-16:16:58.405 8803 Reusing MANIFEST /Users/estebanmuruzabal/work/Mahdi-Fashion/server/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000001
+2023/06/16-11:04:48.873 2903 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000001
+2023/06/16-11:04:48.874 2903 Recovering log #3
+2023/06/16-11:04:48.875 2903 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Session Storage/000003.log 

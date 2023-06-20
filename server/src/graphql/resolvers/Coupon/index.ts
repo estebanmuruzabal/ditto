@@ -70,7 +70,7 @@ export const couponsResolvers: IResolvers = {
 
                 return { valid: validity };
 
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.message)
                 throw error
             }

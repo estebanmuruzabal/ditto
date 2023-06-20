@@ -12,12 +12,12 @@ const fs = require('fs');
 const DELAY_TIME = 170; //ms
 // import { fstat, fstatSync } from 'fs';
 import { cleanNumber, isValidNumber } from './controllers/handle';
-import { lastTrigger, sendMedia, sendMessage, sendMessageButton } from './controllers/send';
+import { lastClientTrigger, lastGrowerTrigger, lastStaffTrigger, sendMedia, sendMessage, sendMessageButton } from './controllers/send';
 import { findResponseMsg } from './controllers/flows';
 import { fetchCustomerAndToken, getSettings, saveUserChatHistory } from './api';
 import { TriggerSteps } from './lib/types';
 import { INITIAL_USER_USERNAME } from './lib/utils/constant';
-import { normalizeText } from './lib/utils/shoppingUtils';
+import { isGrower, isUserStaff, normalizeText } from './lib/utils/shoppingUtils';
 import { readInboxContent } from './lib/utils/number-verification-otp';
 const { Client, LocalAuth, List, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
@@ -34,18 +34,17 @@ export let client: any =  new Client({
  * Escuchamos cuando entre un mensaje
  */
 
-
-
 // const listenMessage = async (msg: any) => {
 const listenMessage = () => client.on('message', async (msg: any) => {
     const { from, body, hasMedia } = msg;
     let settingResponse: any = await getSettings();
+    let nextTrigger: TriggerSteps;
+    const message = body;
     // settingResponse = settingResponse?.data?.getSiteSetting?.value;
 
     // const settingValues = JSON.parse(settingResponse);
     // if (!settingValues?.whatsapp_bot_is_on) return;
 
-    const message = body;
     console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
 
     if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
@@ -57,7 +56,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     // if (number !== '5493624276159') return;
     // juan numero
     // if (number !== '5493624309309') return;
-    //   if (number !== '5493624951926') return;
+      if (number !== '5493624951926') return;
 
     const res: any = await fetchCustomerAndToken(number);
 
@@ -68,13 +67,17 @@ const listenMessage = () => client.on('message', async (msg: any) => {
 
     // nextTrigger means that we use the latest nextTrigger saved in user history chat, that was setted by us, 
     // depending on what client's latest answer.
-    // @ts-ignore
-    const nextTrigger: TriggerSteps = await lastTrigger(user, message);
+    
+    if (isGrower(user)) nextTrigger = await lastGrowerTrigger(user, message);
+    if (isUserStaff(user)) nextTrigger = await lastStaffTrigger(user, message);
+    else nextTrigger = await lastClientTrigger(user, message);
+
     const isChatBlocked = nextTrigger === TriggerSteps.BLOCK_CHAT;
 
     if (isChatBlocked && !normalizeText(message).includes('menu')) return;
 
     const userIsRegistered = !!access_token;
+
     if (userIsRegistered) await saveUserChatHistory(message, number, nextTrigger, access_token)
     const messages = await findResponseMsg(nextTrigger, user, message, number, access_token);
 
@@ -143,7 +146,7 @@ const withOutSession = () => {
 const mount = async (app: Application) => {
     // client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
 
-    client = withOutSession();
+    // client = withOutSession();
 
     const hostname = 'localhost';
     // const hostname = '0.0.0.0';

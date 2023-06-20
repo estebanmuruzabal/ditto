@@ -50,6 +50,14 @@ export interface ISoilHumiditySettings {
     relayTwoAutomatedTimeToRun: string;
     relayTwoIdRelated: string;
     relayTwoWorking: boolean;
+    logs: Array<HumidityLogs>;
+}
+
+export interface HumidityLogs {
+    humidity: number;
+    timestamp: string;
+    startedWatering?: string;
+    finishedWatering?: string;
 }
 
 export interface Logs {
@@ -142,7 +150,8 @@ export enum TriggerGrowerSteps {
     SHOW_ALL_PLANTS = 'SHOW_ALL_PLANTS',
     PLANT_DETAILS = 'PLANT_DETAILS',
     CONFIGURATION_CHANGE_TRIGGER = 'CONFIGURATION_CHANGE_TRIGGER',
-    CHANGE_MIN_HUMIDITY = 'CHANGE_MIN_HUMIDITY'
+    CHANGE_MIN_HUMIDITY = 'CHANGE_MIN_HUMIDITY',
+    CHANGE_MAX_HUMIDITY = 'CHANGE_MAX_HUMIDITY'
 }
 
 export enum TriggerStaffSteps {

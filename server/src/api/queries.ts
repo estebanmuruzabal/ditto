@@ -8,9 +8,33 @@ export const GET_SETTINGS = `
   }
 `;
 
-export const UPDATE_PLANT_SETTINGS = `
-    mutation UpdatePlantSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String; relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
-    updatePlantSettings(
+
+export const UPDATE_HUMIDITY_SETTINGS_1 = `
+    mutation UpdateSoilHumiditySettings1($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
+      updateSoilHumiditySettings1(
+        id: $id,
+        controllerId: $controllerId,
+        maxWarning: $maxWarning,
+        minWarning: $minWarning,
+        mode: $mode,
+        relayOneAutomatedTimeToRun: $relayOneAutomatedTimeToRun,
+        relayOneAutomatedStartedTime: $relayOneAutomatedStartedTime,
+        relayTwoAutomatedStartedTime: $relayTwoAutomatedStartedTime,
+        relayOneIdRelated: $relayOneIdRelated,
+        relayOneWorking: $relayOneWorking,
+        relayTwoAutomatedTimeToRun: $relayTwoAutomatedTimeToRun,
+        relayTwoIdRelated: $relayTwoIdRelated,
+        relayTwoWorking: $relayTwoWorking
+    ) {
+        message
+        status
+    }
+    }
+`;
+
+export const UPDATE_HUMIDITY_SETTINGS_2 = `
+    mutation UpdateSoilHumiditySettings2($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
+      updateSoilHumiditySettings2(
         id: $id,
         controllerId: $controllerId,
         maxWarning: $maxWarning,

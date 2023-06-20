@@ -1,14 +1,16 @@
 // import { saveMessage } from "../adapter";
-import { List } from "whatsapp-web";
+// import { List } from "whatsapp-web.js";
+// import { List } from 'whatsapp-web';
+const { MessageMedia, List } = require('whatsapp-web.js');
 import { saveUserChatHistory, signUpUser } from "../api";
 import { ISetting, IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
 import { endConversationKeys, getCleanNumber, initialConversationKeys, isGrower, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
+const { Message, ClientInfo, Buttons } = require('whatsapp-web.js/src/structures');
 
 const ExcelJS = require('exceljs');
 const fs = require('fs');
 
-const { MessageMedia, Buttons } = require('whatsapp-web.js');
 const { cleanNumber } = require('./handle')
 const DELAY_TIME = 170; //ms
 const DIR_MEDIA = `${__dirname}/../mediaSend`;
@@ -74,50 +76,6 @@ const productSections = {
       title: 'Test 4',
       description: 'This is a smaller text field, a description',
       id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
-    },{
-      title: 'Test 4',
-      description: 'This is a smaller text field, a description',
-      id: 'test-4',
     }
   ],
 };
@@ -128,6 +86,7 @@ const list = new List(`/n Por favor, selecciona una opción en el siguiente men�
     'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
     'footer');
             
+    let button = new Buttons('Button body', [{ body: 'Aceptar' }, { body: 'rechazar' }], 'title', 'footer');
 export const sendMessage = async (client: any, number: string, text: string, trigger?: TriggerSteps, token?: string) => {
   if (!number) { console.log('no number error at sendMessage!'); return; }
    setTimeout(async () => {
@@ -136,8 +95,8 @@ export const sendMessage = async (client: any, number: string, text: string, tri
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
         if (!number.endsWith('@c.us')) number += '@c.us';
-        client.sendMessage(number, message);
-        console.log(`⚡⚡⚡ Enviando mensaje:`, message);
+        client.sendMessage(number, button);
+        console.log(`⚡⚡⚡ Enviando mensaje:`, button);
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )
     }
@@ -162,33 +121,50 @@ export const sendMessageButton = async (client: any, number = null, text = null,
 /**
  * Opte
  */
-export const lastTrigger = async (customer: IUser, userMessage: string) => {
+export const lastGrowerTrigger = async (customer: IUser, userMessage: string) => {
     userMessage = normalizeText(userMessage);
     if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
     let lastDittoMessageSent: any = { trigger: undefined };
 
     if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
   
-    // START: grower checks and return if its the case
-    if (isGrower(customer) && !lastDittoMessageSent?.trigger) return TriggerGrowerSteps.SHOW_ALL_PLANTS;
-    // else if (isGrower(customer)) return lastDittoMessageSent?.trigger
-    // END: grower checks
-  
-    // START: staff checks and return if its the case
-    if (isUserStaff(customer) && !lastDittoMessageSent?.trigger) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
-    // else if (isUserStaff(customer)) return lastDittoMessageSent?.trigger
-    // END: end staff checks
-
-    // START: blocked unblock chats checks
-    if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && !userMessage.includes('menu')) return TriggerSteps.BLOCK_CHAT;
-    if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && userMessage.includes('menu')) return TriggerSteps.UNBLOCK_CHAT;
-    // END: blocked chat checks
-
-    // if is initial, we reset conversation and we start all over again, non matter what
-    if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
-    if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
+    if (!lastDittoMessageSent?.trigger) return TriggerGrowerSteps.SHOW_ALL_PLANTS;
 
     if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');
+    
+    return lastDittoMessageSent?.trigger;
+}
+
+export const lastClientTrigger = async (customer: IUser, userMessage: string) => {
+  userMessage = normalizeText(userMessage);
+  if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+  let lastDittoMessageSent: any = { trigger: undefined };
+
+  if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
+
+  // START: blocked unblock chats checks
+  if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && !userMessage.includes('menu')) return TriggerSteps.BLOCK_CHAT;
+  if (lastDittoMessageSent?.trigger === TriggerSteps.BLOCK_CHAT && userMessage.includes('menu')) return TriggerSteps.UNBLOCK_CHAT;
+  // END: blocked chat checks
+
+  // if is initial, we reset conversation and we start all over again, non matter what
+  if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+  if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
+
+  if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');
+  
+  return lastDittoMessageSent?.trigger;
+}
+
+export const lastStaffTrigger = async (customer: IUser, userMessage: string) => {
+  userMessage = normalizeText(userMessage);
+  if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+  let lastDittoMessageSent: any = { trigger: undefined };
+
+  if (!lastDittoMessageSent?.trigger) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+  
+  if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');
+  
   return lastDittoMessageSent?.trigger;
 }
         

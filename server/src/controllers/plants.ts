@@ -9,7 +9,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
     const maxHumiditySetted = !isNaN(Number(soilHumiditySetting?.maxWarning)) ? Number(soilHumiditySetting?.maxWarning) : null;
     const relayOneIdRelated: any = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
-    
+
     switch (soilHumiditySetting.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
@@ -21,6 +21,11 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             if (currentSoilHumidity < minHumiditySetted && !soilHumiditySetting.relayOneWorking) {
                 const whatsappMsg = `Aviso: tu planta: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos regando!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                });
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
@@ -29,12 +34,21 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             } else if (currentSoilHumidity >= maxHumiditySetted && soilHumiditySetting.relayOneWorking) {
                 const whatsappMsg = `Aviso: tu planta: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya terminamos de regar!`;
                 await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                });
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 soilHumiditySetting.relayOneWorking = false;
                 break;
             }
+            soilHumiditySetting?.logs.push({
+                humidity: currentSoilHumidity,
+                timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+            });
             break;
         case HumiditySensorMode.SEEDS_POOL_IRRIGATION:
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
@@ -67,7 +81,13 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             // console.log('soilHumiditySetting.relayOneAutomatedStartedTime', soilHumiditySetting.relayOneAutomatedStartedTime)
             // console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
             // console.log('soilHumiditySetting.relayTwoAutomatedStartedTime.length', soilHumiditySetting.relayTwoAutomatedStartedTime.length)
-            if (irrigationInProgress) return plant;
+            if (irrigationInProgress) {
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                });
+                return plant;
+            }
 
             if (irrigationShouldStart) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} llego a ${currentSoilHumidity}% de humedad, ya estamos llenando la pileta con agua.`;
@@ -79,7 +99,11 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting.relayOneWorking = true;
 
                 soilHumiditySetting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
-
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                });
                 // we turn evacuation watering relay OFF just in case
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
@@ -89,6 +113,12 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 // we just turn off the filling in watter system
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} acaba de llenar la pileta con ${Number(soilHumiditySetting.relayOneAutomatedTimeToRun) * 2} litros agua.`;
                 if (phoneNumber) await sendMessage(client, phoneNumber, whatsappMsg, undefined, undefined);
+
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                });
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
@@ -108,6 +138,10 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 // we set the start time of the relay
                 soilHumiditySetting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
 
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                });
                 break;
             } else if (evacuationComplete) {
                 const whatsappMsg = `Aviso: tu semillero: ${plant.name} mantiene ${currentSoilHumidity}% de humedad, y ya se termino de evacuar el agua en ${timeToIrrigateInMins} minutos.`;
@@ -119,9 +153,17 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting.relayTwoWorking = false;
                 soilHumiditySetting.relayOneAutomatedStartedTime = '';
                 soilHumiditySetting.relayTwoAutomatedStartedTime = '';
+                
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                });
                 break;
             }
-            
+            soilHumiditySetting?.logs.push({
+                humidity: currentSoilHumidity,
+                timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+            });
             break;
         case HumiditySensorMode.MANUAL:
             // console.log('HumiditySensorMode.MANUAL entered')

@@ -7,7 +7,7 @@ import {IProductInput, IProductsArgs, IUpdateProductInputArgs} from "./types";
 import {slugify} from "../../../lib/utils/slugify";
 import {search} from "../../../lib/utils/search";
 import {storeImage} from "../../../lib/utils/image-store";
-import { Product } from 'whatsapp-web';
+import { Product } from 'whatsapp-web.js';
 
 export const productsResolvers: IResolvers = {
     Query: {
