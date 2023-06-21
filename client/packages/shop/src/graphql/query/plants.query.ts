@@ -14,9 +14,11 @@ mutation AddPlant($id: ID!, $name: String!, $controllerId: Int!) {
 `;
 
 export const UPDATE_HUMIDITY_SETTINGS_1 = gql`
-    mutation UpdateSoilHumiditySettings1($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
+    mutation UpdateSoilHumiditySettings1($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean, $name: String, $sendWhatsappWarnings: Boolean) {
       updateSoilHumiditySettings1(
         id: $id,
+        name: $name,
+        sendWhatsappWarnings: $sendWhatsappWarnings,
         controllerId: $controllerId,
         maxWarning: $maxWarning,
         minWarning: $minWarning,
@@ -37,9 +39,11 @@ export const UPDATE_HUMIDITY_SETTINGS_1 = gql`
 `;
 
 export const UPDATE_HUMIDITY_SETTINGS_2 = gql`
-    mutation UpdateSoilHumiditySettings2($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
+    mutation UpdateSoilHumiditySettings2($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean, $name: String, $sendWhatsappWarnings: Boolean) {
       updateSoilHumiditySettings2(
         id: $id,
+        name: $name,
+        sendWhatsappWarnings: $sendWhatsappWarnings,
         controllerId: $controllerId,
         maxWarning: $maxWarning,
         minWarning: $minWarning,

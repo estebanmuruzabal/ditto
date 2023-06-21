@@ -1,0 +1,1 @@
+{"ast":null,"code":"import gql from 'graphql-tag';\nexport const GET_SETTING = gql`\n  query GetSetting {\n    getSiteSetting(key: \"site-settings\") {\n      id\n      key\n      value\n    }\n  }\n`;","map":null,"metadata":{},"sourceType":"module"}

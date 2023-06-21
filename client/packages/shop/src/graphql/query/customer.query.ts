@@ -20,24 +20,32 @@ query GetUser{
         isRelayThirdOn
         isRelayFourthOn
         soilHumiditySettings1 {
+            name
+            sendWhatsappWarnings
             minWarning
             maxWarning
             mode
-            relayOneAutomatedOnTime
+            relayOneAutomatedStartedTime
+            relayOneAutomatedTimeToRun
+            relayTwoAutomatedStartedTime
+            relayTwoAutomatedTimeToRun
             relayOneIdRelated
             relayOneWorking
-            relayTwoAutomatedOnTime
             relayTwoIdRelated
             relayTwoWorking
         }
         soilHumiditySettings2 {
+            name
+            sendWhatsappWarnings
             minWarning
             maxWarning
             mode
-            relayOneAutomatedOnTime
+            relayOneAutomatedStartedTime
+            relayOneAutomatedTimeToRun
+            relayTwoAutomatedStartedTime
+            relayTwoAutomatedTimeToRun
             relayOneIdRelated
             relayOneWorking
-            relayTwoAutomatedOnTime
             relayTwoIdRelated
             relayTwoWorking
         }

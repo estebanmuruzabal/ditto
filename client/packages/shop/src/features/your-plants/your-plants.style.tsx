@@ -69,9 +69,68 @@ export const ButtonText = styled.span`
 } */
 `;
 
-export const OrderListWrapper = styled.div`
+export const PlantsPageWrapper = styled.div`
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: ${themeGet('colors.white', '#ffffff')};
+  padding: 70px 0px 0px;
+
+  // @media only screen and (max-width: 990px) {
+  //   padding: 100px 0 60px;
+  // }
+
+  @media only screen and (min-width: 991px) and (max-width: 1280px) {
+    padding: 130px 15px 60px;
+  }
+`;
+
+export const SidebarSection = styled.div`
+  width: 300px;
+  flex-shrink: 0;
+  margin-right: 30px;
+
+  @media only screen and (max-width: 1199px) {
+    display: none;
+  }
+`;
+
+export const ContentBox = styled.div`
+  width: calc(100% - 330px);
+  height: auto;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 60px 50px 20px;
+  border: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
+
+  @media only screen and (max-width: 1199px) {
+    width: 100%;
+    border: 0;
+    padding: 0px;
+  }
+`;
+
+export const PlantsWrapper = styled.div`
+  width: 100%;
+  padding-left: 5px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  @media only screen and (max-width: 1199px) {
+    margin-right: 20px;
+  }
+`;
+
+export const PlantsListWrapper = styled.div`
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
-  // width: 330px;
+  width: 100%;
+  padding: 10px;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -80,24 +139,25 @@ export const OrderListWrapper = styled.div`
   overflow: hidden;
 
   @media only screen and (max-width: 1199px) {
-    width: 310px;
     margin-right: 20px;
   }
 `;
 
-export const OrderReceivedContainer = styled.div`
+export const PlantsPageContainer = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   padding: 60px;
   border-radius: ${themeGet('radii.base', '6px')};
   overflow: hidden;
   position: relative;
-  width: calc(100% - 30px);
+  // width: calc(100% - 30px);
+  margin: 3px 0px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
-  @media (min-width: 991px) {
-    width: 870px;
-  }
+  // @media (min-width: 991px) {
+  //   width: 870px;
+  // }
   @media (max-width: 990px) {
     padding: 50px 45px;
   }
@@ -262,24 +322,26 @@ export const InfoBlock = styled.div`
 
 export const ListItem = styled.div`
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   align-items: center;
   &:last-child {
-    margin-bottom: 0;
+    margin-bottom: 20;
   }
-  @media (max-width: 767px) {
-    flex-direction: column;
-  }
+  // @media (max-width: 767px) {
+    justify-content: space-between;
+    max-width: 400px;
+  // }
 `;
 
 export const ListTitle = styled.div`
-  flex-basis: 210px;
-  max-width: 210px;
+  flex-basis: 140px;
+  min-width: 210px;
   flex-shrink: 0;
   position: relative;
+  padding
   // @media (max-width: 767px) {
-  //   flex-basis: 105px;
-  //   max-width: 105px;
+  //   flex-basis: 140px;
+  //   max-width: 160px;
   // }
   &:after {
     // content: ':';
@@ -292,9 +354,9 @@ export const ListTitle = styled.div`
 
 export const ListDes = styled.div`
   // padding-left: 90px;
-  @media (max-width: 767px) {
-    padding-left: 20px;
-  }
+  // @media (max-width: 767px) {
+  //   padding-left: 20px;
+  // }
 `;
 
 export default OrderReceivedWrapper;

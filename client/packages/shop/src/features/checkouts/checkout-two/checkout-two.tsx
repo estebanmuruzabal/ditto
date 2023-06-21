@@ -526,7 +526,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
         }
       } catch (error) {
         console.log(error)
-        if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.', error)) {
+        if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
           console.log(error)
           setLoading(false);
           startAllOver();
