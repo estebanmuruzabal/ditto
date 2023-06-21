@@ -18,7 +18,7 @@ exports.paymentOptionsResolvers = {
     Query: {
         paymentOptions: (_root, { limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let data = yield db.payment_options.find({}).sort({ _id: -1 }).toArray();
-            data = search_1.search(data, ['name', 'details'], searchText);
+            data = (0, search_1.search)(data, ['name', 'details'], searchText);
             const hasMore = data.length > offset + limit;
             return {
                 items: limit == 0 ? data : data.slice(offset, offset + limit),
@@ -29,7 +29,7 @@ exports.paymentOptionsResolvers = {
     },
     Mutation: {
         createPaymentOption: (_root, { name, type, image, image_data, details }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             image_data = JSON.parse(image_data);
             let imagePath = '';
             const existsData = yield db.payment_options.findOne({ name: name });
@@ -37,7 +37,7 @@ exports.paymentOptionsResolvers = {
                 throw new Error("Resource already exits.");
             }
             if (image_data) {
-                imagePath = image_store_1.storeImage(image, image_data.name);
+                imagePath = (0, image_store_1.storeImage)(image, image_data.name);
             }
             const insertData = {
                 _id: new mongodb_1.ObjectId(),
@@ -51,19 +51,19 @@ exports.paymentOptionsResolvers = {
             return insertResult.ops[0];
         }),
         updatePaymentOption: (_root, { id, name, type, image, image_data, details }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const existsData = yield db.payment_options.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!existsData) {
                 throw new Error("Resource not found.");
             }
             image_data = JSON.parse(image_data);
             let imagePath = '';
-            if (image_data) {
-                imagePath = image_store_1.storeImage(image, image_data.name);
-            }
-            else {
-                imagePath = image;
-            }
+            // disabling new photo update so that the frontend doesnt have to do the inverse process of creating the image_data property
+            // if (image_data) {
+            //     imagePath = storeImage(image, image_data.name);
+            // } else {
+            imagePath = image;
+            // }
             const updateData = {
                 name: name,
                 type: type,
@@ -77,7 +77,7 @@ exports.paymentOptionsResolvers = {
             return yield db.payment_options.findOne({ _id: new mongodb_1.ObjectId(id) });
         }),
         deletePaymentOption: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.payment_options.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });

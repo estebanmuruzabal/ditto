@@ -14,21 +14,24 @@ const mongodb_1 = require("mongodb");
 // env settings
 require("dotenv").config();
 let url;
-const dbName = "dittodb";
+const dbName = process.env.DB_NAME;
 const dbUserName = process.env.DB_USER;
 // @ts-ignore
 const dbPassword = process.env.DB_USER_PASSWORD;
 console.log(process.env.APP_ENV);
 if (process.env.APP_ENV == 'production') {
-    url = `mongodb+srv://estebanmuruzabal:Dallas765@cluster0.cmdfgmr.mongodb.net/test`;
+    url = `mongodb+srv://estebanmuruzabal:Dallas765@cluster0.cmdfgmr.mongodb.net/?retryWrites=true&w=majority`;
+    // url = `mongodb+srv://${dbUserName}:${dbPassword}@${process.env.DB_CLUSTER}/${dbName}`;
 }
-else if (process.env.APP_ENV == 'server') {
-    url = `mongodb://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
+else if (process.env.APP_ENV == 'development') {
+    url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}/${dbName}`;
+    // url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
 }
 else if (process.env.APP_ENV == 'local') {
+    // url = `mongodb+srv://${dbUserName}:${encodeURIComponent(dbPassword)}@${process.env.DB_CLUSTER}:27017/?authMechanism=DEFAULT&authSource=admin&ssl=false`;
     url = process.env.DB_URL;
 }
-exports.connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
+const connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("[mongodb]: Starting db init on", url);
     const client = yield mongodb_1.MongoClient.connect(url, {
         useNewUrlParser: true,
@@ -48,6 +51,8 @@ exports.connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
         settings: db.collection('settings'),
         coupons: db.collection('coupons'),
         home_cards: db.collection('home_cards'),
+        chats: db.collection('chats'),
     };
     return allCollections;
 });
+exports.connectDatabase = connectDatabase;

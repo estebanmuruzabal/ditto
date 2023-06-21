@@ -34,20 +34,20 @@ exports.settingsResolvers = {
     },
     Mutation: {
         updateSiteSetting: (_root, { key, value }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const siteSetting = yield db.settings.findOne({ key: key });
             const settingValues = JSON.parse(value);
             if (!siteSetting) {
                 let imagePath = '';
                 let faviconPath = '';
                 if (settingValues.image_data) {
-                    imagePath = image_store_1.storeImage(settingValues.image, settingValues.image_data.name);
+                    imagePath = (0, image_store_1.storeImage)(settingValues.image, settingValues.image_data.name);
                 }
                 else {
                     imagePath = null;
                 }
                 if (settingValues.favicon_data) {
-                    faviconPath = image_store_1.storeImage(settingValues.favicon, settingValues.favicon_data.name);
+                    faviconPath = (0, image_store_1.storeImage)(settingValues.favicon, settingValues.favicon_data.name);
                 }
                 else {
                     faviconPath = null;
@@ -61,6 +61,7 @@ exports.settingsResolvers = {
                         site_title: settingValues.site_title,
                         site_keyword: settingValues.site_keyword,
                         site_description: settingValues.site_description,
+                        whatsapp_bot_is_on: false,
                     }
                 };
                 const insertResult = yield db.settings.insertOne(settingData);
@@ -72,14 +73,14 @@ exports.settingsResolvers = {
             }
             let imagePath = '';
             if (settingValues.image_data) {
-                imagePath = image_store_1.storeImage(settingValues.image, settingValues.image_data.name);
+                imagePath = (0, image_store_1.storeImage)(settingValues.image, settingValues.image_data.name);
             }
             else {
                 imagePath = settingValues.image;
             }
             let faviconPath = '';
             if (settingValues.favicon_data) {
-                faviconPath = image_store_1.storeImage(settingValues.favicon, settingValues.favicon_data.name);
+                faviconPath = (0, image_store_1.storeImage)(settingValues.favicon, settingValues.favicon_data.name);
             }
             else {
                 faviconPath = settingValues.favicon;
@@ -92,6 +93,7 @@ exports.settingsResolvers = {
                     site_title: settingValues.site_title,
                     site_keyword: settingValues.site_keyword,
                     site_description: settingValues.site_description,
+                    whatsapp_bot_is_on: settingValues.whatsapp_bot_is_on,
                 }
             };
             yield db.settings.updateOne({ _id: siteSetting._id }, { $set: settingData });

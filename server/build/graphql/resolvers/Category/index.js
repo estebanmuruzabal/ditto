@@ -24,7 +24,7 @@ exports.categoriesResolvers = {
                     return category.type_id === type;
                 });
             }
-            categories = search_1.search(categories, ['name', 'slug'], searchText);
+            categories = (0, search_1.search)(categories, ['name', 'slug'], searchText);
             const hasMore = categories.length > offset + limit;
             return {
                 items: limit == 0 ? categories : categories.slice(offset, offset + limit),
@@ -42,7 +42,7 @@ exports.categoriesResolvers = {
                     return category.type_id === typeResult._id.toString();
                 });
             }
-            categories = search_1.search(categories, ['name', 'slug'], searchText);
+            categories = (0, search_1.search)(categories, ['name', 'slug'], searchText);
             const hasMore = categories.length > offset + limit;
             return {
                 items: limit == 0 ? categories : categories.slice(offset, offset + limit),
@@ -53,14 +53,14 @@ exports.categoriesResolvers = {
     },
     Mutation: {
         createCategory: (_root, { input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             let bannerImagePath = '';
-            const existsData = yield db.categories.findOne({ slug: slugify_1.slugify(input.name) });
+            const existsData = yield db.categories.findOne({ slug: (0, slugify_1.slugify)(input.name) });
             if (existsData) {
                 throw new Error("Resource already exits.");
             }
             if (input.banner_data) {
-                bannerImagePath = image_store_1.storeImage(input.banner, input.banner_data.name);
+                bannerImagePath = (0, image_store_1.storeImage)(input.banner, input.banner_data.name);
             }
             else {
                 bannerImagePath = 'images/grocery-default-image.png';
@@ -70,7 +70,7 @@ exports.categoriesResolvers = {
                 type_id: input.type_id,
                 parent_id: input.parent_id ? input.parent_id : null,
                 name: input.name,
-                slug: slugify_1.slugify(input.name),
+                slug: (0, slugify_1.slugify)(input.name),
                 banner: bannerImagePath,
                 icon: input.icon,
                 meta_title: input.meta_title,
@@ -82,14 +82,14 @@ exports.categoriesResolvers = {
             return insertResult.ops[0];
         }),
         updateCategory: (_root, { id, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             let bannerImagePath = '';
             const existsData = yield db.categories.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!existsData) {
                 throw new Error("Resource not found.");
             }
             if (input.banner_data) {
-                bannerImagePath = image_store_1.storeImage(input.banner, input.banner_data.name);
+                bannerImagePath = (0, image_store_1.storeImage)(input.banner, input.banner_data.name);
             }
             else {
                 bannerImagePath = input.banner;
@@ -98,7 +98,7 @@ exports.categoriesResolvers = {
                 type_id: input.type_id,
                 parent_id: input.parent_id ? input.parent_id : null,
                 name: input.name,
-                slug: slugify_1.slugify(input.name),
+                slug: (0, slugify_1.slugify)(input.name),
                 banner: bannerImagePath,
                 icon: input.icon,
                 meta_title: input.meta_title,
@@ -112,7 +112,7 @@ exports.categoriesResolvers = {
             return yield db.categories.findOne({ _id: new mongodb_1.ObjectId(id) });
         }),
         deleteCategory: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.categories.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });

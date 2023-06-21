@@ -34,7 +34,7 @@ exports.couponsResolvers = {
         coupons: (_root, { limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let coupons = yield db.coupons.find({}).sort({ _id: -1 }).toArray();
             coupons = coupons.map(coupon => (Object.assign(Object.assign({}, coupon), { valid: (checkCouponDateNotExpired(coupon) && checkCouponRunningStatus(coupon)) })));
-            coupons = search_1.search(coupons, ['title', 'code'], searchText);
+            coupons = (0, search_1.search)(coupons, ['title', 'code'], searchText);
             const hasMore = coupons.length > offset + limit;
             return {
                 items: limit == 0 ? coupons : coupons.slice(offset, offset + limit),
@@ -58,7 +58,7 @@ exports.couponsResolvers = {
     },
     Mutation: {
         createCoupon: (_root, { input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const existsData = yield db.coupons.findOne({ code: input.code });
             if (existsData) {
                 throw new Error("This Code already exits.");
@@ -98,7 +98,7 @@ exports.couponsResolvers = {
             return yield db.coupons.findOne({ _id: new mongodb_1.ObjectId(id) });
         }),
         deleteCoupon: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.coupons.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });

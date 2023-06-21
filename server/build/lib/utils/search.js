@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.search = void 0;
 const fuse_js_1 = __importDefault(require("fuse.js"));
-exports.search = (dataToSearch, basedOnOptionsKey, searchByValue = '') => {
+const search = (dataToSearch, basedOnOptionsKey, searchByValue = '') => {
     if (searchByValue.trim()) {
         let fuse = new fuse_js_1.default(dataToSearch, {
             shouldSort: true,
@@ -21,3 +21,4 @@ exports.search = (dataToSearch, basedOnOptionsKey, searchByValue = '') => {
     }
     return dataToSearch;
 };
+exports.search = search;

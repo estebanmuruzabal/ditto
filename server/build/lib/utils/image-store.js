@@ -8,8 +8,8 @@ const fs_1 = require("fs");
 const shortid_1 = __importDefault(require("shortid"));
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Readable = require('stream').Readable;
-exports.storeImage = (imageBase64Value, filename) => {
-    fs_1.mkdir("images", { recursive: true }, (err) => {
+const storeImage = (imageBase64Value, filename) => {
+    (0, fs_1.mkdir)("images", { recursive: true }, (err) => {
         if (err)
             throw err;
     });
@@ -23,6 +23,7 @@ exports.storeImage = (imageBase64Value, filename) => {
     const readable = new Readable();
     readable.push(imgBuffer);
     readable.push(null);
-    readable.pipe(fs_1.createWriteStream(path));
+    readable.pipe((0, fs_1.createWriteStream)(path));
     return path;
 };
+exports.storeImage = storeImage;

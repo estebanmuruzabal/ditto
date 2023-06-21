@@ -17,7 +17,7 @@ exports.deliveryMethodsResolvers = {
     Query: {
         deliveryMethods: (_root, { limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let data = yield db.delivery_methods.find({}).sort({ _id: -1 }).toArray();
-            data = search_1.search(data, ['name', 'details'], searchText);
+            data = (0, search_1.search)(data, ['name', 'details'], searchText);
             const hasMore = data.length > offset + limit;
             return {
                 items: limit == 0 ? data : data.slice(offset, offset + limit),
@@ -28,7 +28,7 @@ exports.deliveryMethodsResolvers = {
     },
     Mutation: {
         createDeliveryMethod: (_root, { name, details, isPickUp, pickUpAddress }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const existsData = yield db.delivery_methods.findOne({ name: name });
             if (existsData) {
                 throw new Error("Resource already exits.");
@@ -45,7 +45,7 @@ exports.deliveryMethodsResolvers = {
             return insertResult.ops[0];
         }),
         updateDeliveryMethod: (_root, { id, name, details, isPickUp, pickUpAddress }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const existsData = yield db.delivery_methods.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!existsData) {
                 throw new Error("Resource not found.");
@@ -63,7 +63,7 @@ exports.deliveryMethodsResolvers = {
             return yield db.delivery_methods.findOne({ _id: new mongodb_1.ObjectId(id) });
         }),
         deleteDeliveryMethod: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.delivery_methods.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });

@@ -19,7 +19,7 @@ exports.typesResolvers = {
     Query: {
         types: (_root, { limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let types = yield db.types.find({}).sort({ _id: -1 }).toArray();
-            types = search_1.search(types, ['name', 'slug'], searchText);
+            types = (0, search_1.search)(types, ['name', 'slug'], searchText);
             const hasMore = types.length > offset + limit;
             return {
                 items: limit == 0 ? types : types.slice(offset, offset + limit),
@@ -30,14 +30,14 @@ exports.typesResolvers = {
     },
     Mutation: {
         createType: (_root, { input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             let imagePath = '';
-            const typeResult = yield db.types.findOne({ slug: slugify_1.slugify(input.name) });
+            const typeResult = yield db.types.findOne({ slug: (0, slugify_1.slugify)(input.name) });
             if (typeResult) {
                 throw new Error("Type already exits.");
             }
             if (input.image_data) {
-                imagePath = image_store_1.storeImage(input.image, input.image_data.name);
+                imagePath = (0, image_store_1.storeImage)(input.image, input.image_data.name);
             }
             else {
                 imagePath = 'images/grocery-default-image.png';
@@ -45,7 +45,7 @@ exports.typesResolvers = {
             const typeData = {
                 _id: new mongodb_1.ObjectId(),
                 name: input.name,
-                slug: slugify_1.slugify(input.name),
+                slug: (0, slugify_1.slugify)(input.name),
                 image: imagePath,
                 icon: input.icon,
                 home_title: input.home_title,
@@ -56,21 +56,20 @@ exports.typesResolvers = {
                 created_at: new Date().toUTCString(),
             };
             const insertResult = yield db.types.insertOne(typeData);
-            console.log(insertResult);
             return insertResult.ops[0];
         }),
         updateType: (_root, { id, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             let imagePath = '';
             if (input.image_data) {
-                imagePath = image_store_1.storeImage(input.image, input.image_data.name);
+                imagePath = (0, image_store_1.storeImage)(input.image, input.image_data.name);
             }
             else {
                 imagePath = input.image;
             }
             const typeData = {
                 name: input.name,
-                slug: slugify_1.slugify(input.name),
+                slug: (0, slugify_1.slugify)(input.name),
                 image: imagePath,
                 icon: input.icon,
                 home_title: input.home_title,
@@ -86,7 +85,7 @@ exports.typesResolvers = {
             return yield db.types.findOne({ _id: new mongodb_1.ObjectId(id) });
         }),
         deleteType: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.types.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.typeDefs = void 0;
 const apollo_server_express_1 = require("apollo-server-express");
-exports.typeDefs = apollo_server_express_1.gql `    
+exports.typeDefs = (0, apollo_server_express_1.gql) `
     input File {
         name: String!
         size: Int!
@@ -14,6 +14,39 @@ exports.typeDefs = apollo_server_express_1.gql `
         status: Boolean
         is_primary: Boolean
     }
+
+    type Plant {
+        id: String!
+        controllerId: Int!
+        name: String!
+        soilHumidity1: Int
+        soilHumidity2: Int
+        airHumidity: Int
+        tempeture: Int
+        isRelayOneOn: Boolean
+        isRelayTwoOn: Boolean
+        isRelayThirdOn: Boolean
+        isRelayFourthOn: Boolean
+        soilHumiditySettings1: SoilHumiditySettings
+        soilHumiditySettings2: SoilHumiditySettings
+    }
+
+    type SoilHumiditySettings {
+        name: String
+        sendWhatsappWarnings: Boolean
+        minWarning: String
+        maxWarning: String
+        mode: String
+        relayOneAutomatedTimeToRun: String
+        relayTwoAutomatedTimeToRun: String
+        relayOneAutomatedStartedTime: String
+        relayTwoAutomatedStartedTime: String
+        relayOneIdRelated: String
+        relayOneWorking: Boolean
+        relayTwoIdRelated: String
+        relayTwoWorking: Boolean
+    }
+   
     type DeliveryAddress {
         id: String
         title: String
@@ -39,6 +72,35 @@ exports.typeDefs = apollo_server_express_1.gql `
         timestamp: String
     }
 
+
+    type ShoppingCart {
+        delivery_date: String
+        customer_id: String
+        contact_number: String
+        payment_option_id: String
+        delivery_method_id: String
+        selectedCategorySlug: String
+        delivery_address: String
+        payment_method_name: String
+        payment_option_type: String
+        delivery_method_name: String
+        ccCharge: Int
+        deliveryFee: Int
+        sub_total: Int
+        total: Int
+        coupon_code: String
+        discount_amount: Int
+        products: [ProductInputOrder!]!
+        payment_id: String
+    }
+
+    type Chat {
+        id: ID
+        message: String
+        trigger: String
+        datetime: String
+    }
+
     type User {
         id: ID!
         name: String
@@ -48,9 +110,14 @@ exports.typeDefs = apollo_server_express_1.gql `
         role: String
         created_at: String
         workInfo: WorkInfo
+        shoppingCart: ShoppingCart
+        chatHistory: [Chat]
         tasks: [Task]
         logs: [Logs]
+        plants: [Plant]
     }
+
+
 
     type Task {
         taskId: String
@@ -256,6 +323,17 @@ exports.typeDefs = apollo_server_express_1.gql `
         hasMore: Boolean
     }
 
+    type ProductInputOrder {
+        product_id: String!
+        name: String
+        image: String
+        quantity: Int!
+        recicledQuantity: Int!
+        unit: String
+        price: Float!
+        sale_price: Float
+    }
+
     # Orders
     input OrderProductInput {
         product_id: String!
@@ -272,8 +350,31 @@ exports.typeDefs = apollo_server_express_1.gql `
         contact_number: String!
         payment_option_id: String!
         delivery_method_id: String!
+        payment_option_type: String!
+        isWhatsappPurchase: Boolean!
         delivery_address: String!
         delivery_date: String
+        sub_total: Float
+        total: Float
+        coupon_code: String
+        discount_amount: Float
+        products: [OrderProductInput!]!
+        payment_id:  String
+    }
+    
+    input OrderInputNotRequires {
+        customer_id: String
+        contact_number: String
+        payment_option_id: String
+        delivery_method_id: String
+        payment_method_name: String
+        payment_option_type: String
+        delivery_address: String
+        delivery_date: String
+        ccCharge: Float
+        deliveryFee: Float
+        selectedCategorySlug: String
+        delivery_method_name: String
         sub_total: Float
         total: Float
         coupon_code: String
@@ -294,6 +395,7 @@ exports.typeDefs = apollo_server_express_1.gql `
         name: String
         image: String
         quantity: Int!
+        recicledQuantity: Int
         unit: String
         price: Float
         sale_price: Float
@@ -306,15 +408,18 @@ exports.typeDefs = apollo_server_express_1.gql `
       contact_number: String!
       payment_option_id: String
       datetime: String
-      delivery_method: DeliveryMethod
+      delivery_method_id: String
       delivery_address: String!
       delivery_date: String
       sub_total: Float
       total: Float
       coupon_code: String
       discount_amount: Float
-      payment_id:  String
+      payment_id: String
       payment_method: String!
+      customer_name: String
+      delivery_method_name: String
+      delivery_pickup_date: String
       payment_status: String!
       status: String!
       order_tracking: [OrderTracker]
@@ -331,6 +436,13 @@ exports.typeDefs = apollo_server_express_1.gql `
     type DefaultMessageType {
         message: String!
         status: Boolean!
+    }
+
+    type IPlantReturnType {
+        isRelayOneOn: String
+        isRelayTwoOn: String
+        isRelayThirdOn: String
+        isRelayFourthOn: String
     }
     
     type Setting {
@@ -392,31 +504,34 @@ exports.typeDefs = apollo_server_express_1.gql `
     }
     
     type Query {
-        users: [User!]!
+        getUsers: [User!]!
         types(limit: Int = 12, offset: Int = 0, searchText: String): MainTypePaginationType!
         categories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
         shopCategories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
-        products(type: String, category: String, limit: Int = 12, offset: Int = 0, searchText: String): ProductPaginationType!
+        products(type: String, category: String, limit: Int = 12, offset: Int = 0, searchText: String, filterUnstockProducts: Boolean): ProductPaginationType!
+        getAvailableProducts: [Product!]!
+        getUserShoppingCart: Order
         getProduct(slug: String!): Product!
         deliveryMethods(limit: Int = 12, offset: Int = 0, searchText: String): DeliveryMethodPaginationType!
         paymentOptions(limit: Int = 12, offset: Int = 0, searchText: String): PaymentOptionPaginationType!
         orders(status: String, limit: Int = 12, offset: Int = 0, searchText: String): OrderPaginationType!
+        allOrders: [Order!]!
         getUserOrders: [Order!]!
         getSetting(key: String!): Setting!
         getSiteSetting(key: String!): Setting!
         getUser: User!
+        getCustomer(phone: String!): UserAuthPayload!
         coupons(limit: Int = 12, offset: Int = 0, searchText: String): CouponPaginationType!
         validateCoupon(code: String!): CouponValid!
         userAuthCheck: DefaultMessageType!
         homeCards(limit: Int = 12, offset: Int = 0, searchText: String): HomeCardPaginationType!
         getHomeCards(type: String!): [HomeCard]!
         getStaffs: [User!]!
-        
     }
     
     type Mutation {
         login(phone: String!, password: String!): UserAuthPayload!
-        signUp(phone: String!, password: String!): DefaultMessageType!
+        signUp(phone: String!, password: String!, name: String!): DefaultMessageType!
         staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!
         updateUserWorkInfo(id: ID!, isWorking: Boolean, startedWorkTime: String, stoppedWorkTime: String, ratePerHour: Int, logDescription: String, totalWorkingMinutesPerWeek: Int, totalSalaryToPayWeekly: Int, advancedSalaryPaid: Int, taskRelated: String, role: String): DefaultMessageType!
         updateUserLogs(id: ID!, logs: String): Logs
@@ -441,9 +556,14 @@ exports.typeDefs = apollo_server_express_1.gql `
         updatePaymentOption(id: ID!, name: String!, type: String!, image: String!, image_data: String, details: String): PaymentOption!
         deletePaymentOption(id: ID!): DefaultMessageType!
         createOrder(input: OrderInput): Order!
+        updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
-        updateUserNameAndEmail(id: ID!, name: String!, email: String!): DefaultMessageType!
+        updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
+        addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
+        updatePlant(id: ID!, controllerId: Int!, soilHumidity1: Int, airHumidity: Int, tempeture: Int, distance_cm: Int, soilHumidity2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
+        updateSoilHumiditySettings1(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
+        updateSoilHumiditySettings2(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!
@@ -453,6 +573,7 @@ exports.typeDefs = apollo_server_express_1.gql `
         deleteDeliveryAddress(id: ID!, addressId: String!): DefaultMessageType!
         changePassword(id: ID!, old_password: String!, new_password: String!, confirm_password: String!): DefaultMessageType!
         updateOrderStatus(id: ID!, orderingPosition: Int!): Order!
+        updateUserChat(message: String!, number: String!, trigger: String): DefaultMessageType!
         createCoupon(input: CouponInput): Coupon!
         updateCoupon(id: ID!, input: CouponInput): Coupon!
         deleteCoupon(id: ID!): DefaultMessageType!

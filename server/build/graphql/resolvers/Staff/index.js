@@ -19,19 +19,8 @@ const User_1 = require("../User");
 const shortid_1 = __importDefault(require("shortid"));
 exports.staffMethodsResolvers = {
     Query: {
-        getStaffs: (_root, _args, { db, req }
-        // ): Promise<any> => {
-        //     await authorize(req, db);
-        //     const workersAndAdmins = await db.users.find((user: IUser) => {
-        //         if (user) {
-        //             return user;
-        //         }
-        //     });
-        //     // return await db.users.find({}).toArray()
-        //     return workersAndAdmins;
-        // },
-        ) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+        getStaffs: (_root, _args, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            yield (0, utils_1.authorize)(req, db);
             return yield db.users.find({}).toArray();
         }),
     },
@@ -47,12 +36,12 @@ exports.staffMethodsResolvers = {
             if (password.length < 6) {
                 throw new Error("Incorrect length");
             }
-            const otp = User_1.generateOTPCode();
+            const otp = (0, User_1.generateOTPCode)();
             const user = {
                 _id: new mongodb_1.ObjectId(),
                 name: "",
                 email: "",
-                password: yield User_1.hashPassword(password),
+                password: yield (0, User_1.hashPassword)(password),
                 phones: [{ id: shortid_1.default.generate(), number: phone, status: false, is_primary: true }],
                 otp: otp,
                 role: role,
@@ -68,6 +57,8 @@ exports.staffMethodsResolvers = {
                     taskRelated: ""
                 },
                 tasks: [],
+                chatHistory: [],
+                plants: [],
                 logs: []
             };
             yield db.users.insertOne(user);
@@ -83,10 +74,10 @@ exports.staffMethodsResolvers = {
             };
         }),
         updateUserWorkInfo: (_root, { id, isWorking, startedWorkTime, stoppedWorkTime, ratePerHour, logDescription, totalWorkingMinutesPerWeek, totalSalaryToPayWeekly, advancedSalaryPaid, taskRelated, role }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
             const logs = userResult.logs || [];
             logs.push({
@@ -110,10 +101,10 @@ exports.staffMethodsResolvers = {
             };
         }),
         updateUserLogs: (_root, { id, logs }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { logs: logs } });
             return {
@@ -122,15 +113,14 @@ exports.staffMethodsResolvers = {
             };
         }),
         deleteUserTask: (_root, { id, taskId }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
             const { tasks } = userResult;
             const taskIndex = (tasks === null || tasks === void 0 ? void 0 : tasks.findIndex(task => task.taskId === taskId)) || 0;
             tasks.splice(taskIndex, 1);
-            console.log(tasks);
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { tasks: tasks } });
             return {
                 status: true,
@@ -138,13 +128,12 @@ exports.staffMethodsResolvers = {
             };
         }),
         updateUserTasks: (_root, { id, taskId, description, startDate, finishDate, plannedDate, isRepetitived, completationTimes, workedHours, isDone }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             // console.log(taskId, description ,startDate ,finishDate ,plannedDate, isRepetitived, completationTimes, workedHours, isDone)
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
-                throw new Error("User dose not exits.");
+                throw new Error("User does not exits.");
             }
-            // console.log(userResult)
             const { tasks } = userResult;
             const taskIndex = (tasks === null || tasks === void 0 ? void 0 : tasks.findIndex(task => task.taskId === taskId)) || 0;
             const task = {
@@ -164,7 +153,6 @@ exports.staffMethodsResolvers = {
             else {
                 tasks.push(task);
             }
-            console.log(tasks);
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { tasks: tasks } });
             return {
                 status: true,
@@ -172,7 +160,7 @@ exports.staffMethodsResolvers = {
             };
         }),
         deleteStaff: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.users.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });

@@ -16,4 +16,5 @@ const Orders_1 = require("./Orders");
 const Setting_1 = require("./Setting");
 const Coupon_1 = require("./Coupon");
 const HomeCard_1 = require("./HomeCard");
-exports.resolvers = lodash_merge_1.default(User_1.usersResolvers, Type_1.typesResolvers, Category_1.categoriesResolvers, Product_1.productsResolvers, DeliveryMethod_1.deliveryMethodsResolvers, PaymentOption_1.paymentOptionsResolvers, Orders_1.ordersResolvers, Setting_1.settingsResolvers, Coupon_1.couponsResolvers, HomeCard_1.homeCardsResolvers, Staff_1.staffMethodsResolvers);
+// import {plantsResolvers} from "./Plants";
+exports.resolvers = (0, lodash_merge_1.default)(User_1.usersResolvers, Type_1.typesResolvers, Category_1.categoriesResolvers, Product_1.productsResolvers, DeliveryMethod_1.deliveryMethodsResolvers, PaymentOption_1.paymentOptionsResolvers, Orders_1.ordersResolvers, Setting_1.settingsResolvers, Coupon_1.couponsResolvers, HomeCard_1.homeCardsResolvers, Staff_1.staffMethodsResolvers);

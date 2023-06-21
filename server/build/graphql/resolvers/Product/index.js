@@ -16,7 +16,7 @@ const search_1 = require("../../../lib/utils/search");
 const image_store_1 = require("../../../lib/utils/image-store");
 exports.productsResolvers = {
     Query: {
-        products: (_root, { type, category, limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        products: (_root, { type, category, limit, offset, searchText, filterUnstockProducts }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let products = yield db.products.find({}).sort({ is_featured: -1 }).toArray();
             if (category) {
                 products = products.filter((product) => product.categories.find((category_item) => category_item.slug === category));
@@ -24,13 +24,22 @@ exports.productsResolvers = {
             if (type) {
                 products = products.filter((product) => product.type.slug === type);
             }
-            products = search_1.search(products, ['name', 'slug'], searchText);
+            products = products.filter((product) => product.is_online === true);
+            if (filterUnstockProducts)
+                products = products.filter((product) => product.product_quantity > 0);
+            products = (0, search_1.search)(products, ['name', 'slug'], searchText);
             const hasMore = products.length > offset + limit;
             return {
                 items: limit == 0 ? products : products.slice(offset, offset + limit),
                 totalCount: products.length,
                 hasMore,
             };
+        }),
+        // unsused @delete bellow method
+        getAvailableProducts: (_root, { type, category, limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            let products = yield db.products.find({}).toArray();
+            products = products.filter((product) => product.product_quantity > 0);
+            return products;
         }),
         getProduct: (_root, { slug }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             const product = yield db.products.findOne({ slug: slug });
@@ -42,7 +51,7 @@ exports.productsResolvers = {
     },
     Mutation: {
         createProduct: (_root, { input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const imagesPath = [];
             const imagesData = JSON.parse(input.images_data);
             const existsData = yield db.products.findOne({ slug: input.slug });
@@ -51,7 +60,7 @@ exports.productsResolvers = {
             }
             if (imagesData.length) {
                 for (let i = 0; i < input.images.length; i++) {
-                    imagesPath.push(image_store_1.storeImage(input.images[i], imagesData[i].name));
+                    imagesPath.push((0, image_store_1.storeImage)(input.images[i], imagesData[i].name));
                 }
             }
             else {
@@ -82,7 +91,7 @@ exports.productsResolvers = {
             return insertResult.ops[0];
         }),
         updateProduct: (_root, { id, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             let imagesPath = [];
             const imagesData = input.images_data ? JSON.parse(input.images_data) : [];
             const existsData = yield db.products.findOne({ _id: new mongodb_1.ObjectId(id) });
@@ -91,7 +100,7 @@ exports.productsResolvers = {
             }
             if (imagesData.length) {
                 for (let i = 0; i < input.images.length; i++) {
-                    imagesPath.push(image_store_1.storeImage(input.images[i], imagesData[i].name));
+                    imagesPath.push((0, image_store_1.storeImage)(input.images[i], imagesData[i].name));
                 }
             }
             else {
@@ -123,7 +132,7 @@ exports.productsResolvers = {
             return yield db.products.findOne({ _id: new mongodb_1.ObjectId(id) });
         }),
         deleteProduct: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.products.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });

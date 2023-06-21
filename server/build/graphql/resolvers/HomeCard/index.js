@@ -18,7 +18,7 @@ exports.homeCardsResolvers = {
     Query: {
         homeCards: (_root, { limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let data = yield db.home_cards.find({}).sort({ _id: -1 }).toArray();
-            data = search_1.search(data, ['name', 'url'], searchText);
+            data = (0, search_1.search)(data, ['name', 'url'], searchText);
             const hasMore = data.length > offset + limit;
             return {
                 items: limit == 0 ? data : data.slice(offset, offset + limit),
@@ -36,9 +36,9 @@ exports.homeCardsResolvers = {
     },
     Mutation: {
         createHomeCard: (_root, { name, url, image, image_data, status, types }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             let imagePath = '';
-            imagePath = image_store_1.storeImage(image, image_data.name);
+            imagePath = (0, image_store_1.storeImage)(image, image_data.name);
             const data = {
                 _id: new mongodb_1.ObjectId(),
                 name: name,
@@ -52,10 +52,10 @@ exports.homeCardsResolvers = {
             return insertResult.ops[0];
         }),
         updateHomeCard: (_root, { id, name, url, image, image_data, status, types }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             let imagePath = '';
             if (image_data) {
-                imagePath = image_store_1.storeImage(image, image_data.name);
+                imagePath = (0, image_store_1.storeImage)(image, image_data.name);
             }
             else {
                 imagePath = image;
@@ -74,7 +74,7 @@ exports.homeCardsResolvers = {
             return yield db.home_cards.findOne({ _id: new mongodb_1.ObjectId(id) });
         }),
         deleteHomeCard: (__root, { id }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            yield utils_1.authorize(req, db);
+            yield (0, utils_1.authorize)(req, db);
             const deleteResult = yield db.home_cards.findOneAndDelete({
                 _id: new mongodb_1.ObjectId(id)
             });
