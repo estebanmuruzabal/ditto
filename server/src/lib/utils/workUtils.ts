@@ -65,7 +65,7 @@ export const getSensorsMenuList = (resData: any, user: IUser, plant: Plant, trig
          ------
          Cambiar modo: SEMILLERO.
          Modo actual: MANUAL. CODE 2L
-         A DEMANDA
+         AUTOMATICO
          SCHEDULE
          ON_DEMAND
 Relay 1 is: ${plant.isRelayOneOn ? 'ON' : 'OFF'}

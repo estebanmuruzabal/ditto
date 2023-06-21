@@ -552,8 +552,10 @@ export const usersResolvers: IResolvers = {
                 relayOneWorking,
                 relayTwoAutomatedTimeToRun,
                 relayTwoIdRelated,
-                relayTwoWorking
-            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean },
+                relayTwoWorking,
+                name,
+                sendWhatsappWarnings
+            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean, name: string, sendWhatsappWarnings: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -569,6 +571,8 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
+                plants[index].soilHumiditySettings1.name = name;
+                plants[index].soilHumiditySettings1.sendWhatsappWarnings = sendWhatsappWarnings;
                 plants[index].soilHumiditySettings1.maxWarning = maxWarning;
                 plants[index].soilHumiditySettings1.minWarning = minWarning;
                 plants[index].soilHumiditySettings1.mode = mode;
@@ -607,8 +611,10 @@ export const usersResolvers: IResolvers = {
                 relayOneWorking,
                 relayTwoAutomatedTimeToRun,
                 relayTwoIdRelated,
-                relayTwoWorking
-            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean },
+                relayTwoWorking,
+                name,
+                sendWhatsappWarnings
+            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean, name: string, sendWhatsappWarnings: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -624,6 +630,8 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
+                plants[index].soilHumiditySettings2.name = name;
+                plants[index].soilHumiditySettings2.sendWhatsappWarnings = sendWhatsappWarnings;
                 plants[index].soilHumiditySettings2.maxWarning = maxWarning;
                 plants[index].soilHumiditySettings2.minWarning = minWarning;
                 plants[index].soilHumiditySettings2.mode = mode;
