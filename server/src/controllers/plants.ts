@@ -10,6 +10,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
     const relayOneIdRelated: any = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
 
+    console.log('soilHumiditySetting being process:', soilHumiditySetting);
     switch (soilHumiditySetting.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
@@ -166,7 +167,11 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             });
             break;
         case HumiditySensorMode.MANUAL:
-            // console.log('HumiditySensorMode.MANUAL entered')
+            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', soilHumiditySetting); break; }
+            
+            if (soilHumiditySetting.relayTwoWorking) {
+
+            }
             break;
         case HumiditySensorMode.SCHEDULE:
             // console.log('HumiditySensorMode.SCHEDULE entered')
