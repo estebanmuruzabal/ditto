@@ -169,9 +169,9 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
         case HumiditySensorMode.MANUAL:
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', soilHumiditySetting); break; }
             
-            if (soilHumiditySetting.relayTwoWorking) {
+            // @ts-ignore
+            plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;
 
-            }
             break;
         case HumiditySensorMode.SCHEDULE:
             // console.log('HumiditySensorMode.SCHEDULE entered')
