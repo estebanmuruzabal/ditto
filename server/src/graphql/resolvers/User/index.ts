@@ -520,11 +520,13 @@ export const usersResolvers: IResolvers = {
 
             console.log('Humedad sensor 1', plants[index].soilHumidity1)
             console.log('Humedad sensor 2', plants[index].soilHumidity2)
-            console.log(`Relays: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
+            console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
             plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings1, userResult?.phones[0]?.number, Number(plants[index].soilHumidity1));
             plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings2, userResult?.phones[0]?.number, Number(plants[index].soilHumidity2));
             plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
+            
+            console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             plants[index] = await checkSensors(plants[index], userResult?.phones[0]?.number);
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
