@@ -363,8 +363,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
               <ListTitle>
                 <Text bold>
                   <FormattedMessage
-                    id='asociateRelayOneId'
-                    defaultMessage='asociateRelayOneId'
+                    id='asociateRelayId'
+                    defaultMessage='asociateRelayId'
                   />
                 </Text>
               </ListTitle>
@@ -438,7 +438,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
 
   const renderSoilSensor2 = (plant: any, i: any) => {
     const selectedMode = modeOptions.find((option) => option.value === plant?.soilHumiditySettings2?.mode);
-    const selectedManualState = manualModeOptions.find((option) => option.value === plant?.soilHumiditySettings2?.relayTwoWorking);
+    const selectedManualState = manualModeOptions.find((option) => option.value === plant?.soilHumiditySettings2?.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === plant?.soilHumiditySettings2?.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === plant?.soilHumiditySettings2?.relayTwoIdRelated);
     return (
@@ -627,7 +627,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
               </ListTitle>
               <ListDes>
                 <Select 
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayTwoWorking', e.value)}
+                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayOneWorking', e.value)}
                   value={selectedManualState}
                   options={manualModeOptions}
                   styles={selectStyle}
@@ -639,8 +639,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
               <ListTitle>
                 <Text bold>
                   <FormattedMessage
-                    id='asociateRelayOneId'
-                    defaultMessage='asociateRelayOneId'
+                    id='asociateRelayId'
+                    defaultMessage='asociateRelayId'
                   />
                 </Text>
               </ListTitle>
