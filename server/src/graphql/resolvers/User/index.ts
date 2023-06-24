@@ -518,7 +518,7 @@ export const usersResolvers: IResolvers = {
             }
 
             const plants = userResult.plants;
-            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
+            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == contrId));
 
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
