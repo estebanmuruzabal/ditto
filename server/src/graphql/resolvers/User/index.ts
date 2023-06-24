@@ -496,18 +496,18 @@ export const usersResolvers: IResolvers = {
         updatePlant: async (
             _root: undefined,
             {   id, 
-                controllerId,
-                soilHumidity1,
-                airHumidity,
-                tempeture,
-                distance_cm,
-                soilHumidity2,
+                contrId,
+                hum1,
+                airHum,
+                temp,
+                dist,
+                hum2,
                 light,
                 isRelayOneOn,
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, controllerId: number, soilHumidity1: number, airHumidity: number, tempeture: number, distance_cm: number, soilHumidity2: number, light: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
+            }: { id: string, contrId: number, hum1: number, airHum: number, temp: number, dist: number, hum2: number, light: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -521,13 +521,13 @@ export const usersResolvers: IResolvers = {
             const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
 
             if (index < 0) {
-                throw new Error(`Controller id does not exists: ${controllerId})`);
+                throw new Error(`Controller id does not exists: ${contrId})`);
             } else {
-                plants[index].soilHumidity1 = soilHumidity1;
-                plants[index].soilHumidity2 = soilHumidity2;
-                plants[index].airHumidity = airHumidity;
-                plants[index].tempeture = tempeture;
-                plants[index].distance_cm = distance_cm;
+                plants[index].soilHumidity1 = hum1;
+                plants[index].soilHumidity2 = hum2;
+                plants[index].airHumidity = airHum;
+                plants[index].tempeture = temp;
+                plants[index].distance_cm = dist;
                 plants[index].light = light;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
