@@ -9,7 +9,7 @@ import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
-import { checkAirHumidityAndTempeture, checkSensors, checkSoilWarnings } from '../../../controllers/plants';
+import { checkAirHumidityAndTempeture, checkLightSensor, checkSensors, checkSoilWarnings } from '../../../controllers/plants';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -420,6 +420,7 @@ export const usersResolvers: IResolvers = {
                 airHumidity: 0,
                 tempeture: 0,
                 distance_cm: 0,
+                light: 0,
                 isRelayOneOn: false,
                 isRelayTwoOn: false,
                 isRelayThirdOn: false,
@@ -464,6 +465,20 @@ export const usersResolvers: IResolvers = {
                     relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
                     relayTwoWorking: false,
+                    logs: [],
+                },
+                lightSettings: {
+                    minWarning: "",
+                    maxWarning: "",
+                    mode: HumiditySensorMode.MANUAL,
+                    relayOneAutomatedTimeToRun: "",
+                    relayOneAutomatedStartedTime: "",
+                    relayTwoAutomatedStartedTime: "",
+                    relayOneIdRelated: "",
+                    relayOneWorking: false,
+                    relayTwoAutomatedTimeToRun: "",
+                    relayTwoIdRelated: "",
+                    relayTwoWorking: false,
                     logs: []
                 }
             };
@@ -487,11 +502,12 @@ export const usersResolvers: IResolvers = {
                 tempeture,
                 distance_cm,
                 soilHumidity2,
+                light,
                 isRelayOneOn,
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, controllerId: number, soilHumidity1: number, airHumidity: number, tempeture: number, distance_cm: number, soilHumidity2: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
+            }: { id: string, controllerId: number, soilHumidity1: number, airHumidity: number, tempeture: number, distance_cm: number, soilHumidity2: number, light: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -512,6 +528,7 @@ export const usersResolvers: IResolvers = {
                 plants[index].airHumidity = airHumidity;
                 plants[index].tempeture = tempeture;
                 plants[index].distance_cm = distance_cm;
+                plants[index].light = light;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;
@@ -524,10 +541,11 @@ export const usersResolvers: IResolvers = {
 
             plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings1, userResult?.phones[0]?.number, Number(plants[index].soilHumidity1));
             plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings2, userResult?.phones[0]?.number, Number(plants[index].soilHumidity2));
-            plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
+            // plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
+            plants[index] = await checkLightSensor(plants[index], plants[index].lightSettings, userResult?.phones[0]?.number, Number(plants[index].light));
             
             console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
-            plants[index] = await checkSensors(plants[index], userResult?.phones[0]?.number);
+            // plants[index] = await checkSensors(plants[index], userResult?.phones[0]?.number);
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}

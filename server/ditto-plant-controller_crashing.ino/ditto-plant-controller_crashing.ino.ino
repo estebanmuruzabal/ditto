@@ -25,6 +25,7 @@ int tempeture = 0;
 int soilHumidity1 = 0;
 int soilHumidity2 = 0;
 int airHumidity = 0;
+int light = 0;
 bool isRelayOneOn = false; 
 bool isRelayTwoOn = false;
 bool isRelayThirdOn = false;
@@ -77,22 +78,26 @@ void updateServerAndRelaysState() {
     stringstream strs3;
     stringstream strs4;
     stringstream strs5;
+    stringstream strs6;
     strs1 << soilHumidity1;
     strs2 << airHumidity;
     strs3 << tempeture;
     strs4 << distance;
     strs5 << soilHumidity2;
+    strs6 << light;
     string temp_str1 = strs1.str();
     string temp_str2 = strs2.str();
     string temp_str3 = strs3.str();
     string temp_str4 = strs4.str();
     string temp_str5 = strs5.str();
+    string temp_str6 = strs6.str();
     
     const char* addSoilHumidity1 = (char*) temp_str1.c_str();
     const char* addAirHumidity = (char*) temp_str2.c_str();
     const char* addTempeture = (char*) temp_str3.c_str();
     const char* addDistance = (char*) temp_str4.c_str();
     const char* addSoilHumidity2 = (char*) temp_str5.c_str();
+    const char* addLight = (char*) temp_str6.c_str();
     // end converting
 
     // now we put everything together
@@ -102,11 +107,12 @@ void updateServerAndRelaysState() {
     const char *third = ", \"tempeture\": ";
     const char *thirdAndAHalf = ", \"distance_cm\": ";
     const char *thirdAndThirdHalf = ", \"soilHumidity2\": ";
+    const char *thirdAndThirdHalfOfHalf = ", \"light\": ";
     const char *fourth = isRelayOneOn ? ", \"isRelayOneOn\": true" : ", \"isRelayOneOn\": false";
     const char *fifth = isRelayTwoOn ? ", \"isRelayTwoOn\": true" : ", \"isRelayTwoOn\": false";
     const char *sixth = isRelayThirdOn ? ", \"isRelayThirdOn\": true" : ", \"isRelayThirdOn\": false";
     const char *seventh = isRelayFourthOn ? ", \"isRelayFourthOn\": true" : ", \"isRelayFourthOn\": false";
-    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $controllerId: Int!, $soilHumidity1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soilHumidity2: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, controllerId: $controllerId, soilHumidity1: $soilHumidity1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soilHumidity2: $soilHumidity2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
+    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $controllerId: Int!, $soilHumidity1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soilHumidity2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, controllerId: $controllerId, soilHumidity1: $soilHumidity1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soilHumidity2: $soilHumidity2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
     
     strcpy(queryString,first);
     strcat(queryString,addSoilHumidity1);
@@ -118,6 +124,8 @@ void updateServerAndRelaysState() {
     strcat(queryString,addDistance);
     strcat(queryString,thirdAndThirdHalf);
     strcat(queryString,addSoilHumidity2);
+    strcat(queryString,thirdAndThirdHalfOfHalf);
+    strcat(queryString,addLight);
     strcat(queryString,fourth);
     strcat(queryString,fifth);
     strcat(queryString,sixth);
@@ -142,6 +150,7 @@ void updateServerAndRelaysState() {
     Serial.print("payload");
     Serial.println(payload);
 
+// change this again as positions will change
     if (payload.substring(40, 42) == "ON") { isRelayOneOn = true;} else { isRelayOneOn = false; };
     if (payload.substring(60, 62) == "ON") { isRelayTwoOn = true;} else { isRelayTwoOn = false; };
     if (payload.substring(82, 84) == "ON") { isRelayThirdOn = true; } else { isRelayThirdOn = false; };
@@ -164,6 +173,10 @@ void readSoilHumidity1() {
     Serial.print("SoilHumidity 1 = ");
     Serial.print(soilHumidity1);  /* Print Temperature on the serial window */
     Serial.println("%");
+}
+
+void readLight() {
+   
 }
 
 void readSoilHumidity2() {
@@ -256,6 +269,7 @@ void loop() {
 
     readSoilHumidity1();
     readSoilHumidity2();
+    // readLight();
 //    readTempeture();
 //    readAirHumidity();
 //    readDistanceSensorOne();

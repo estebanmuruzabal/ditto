@@ -105,6 +105,7 @@ exports.getCustomerQuery = `
                     soilHumidity2
                     airHumidity
                     tempeture
+                    light
                     isRelayOneOn
                     isRelayTwoOn
                     isRelayThirdOn
@@ -123,6 +124,19 @@ exports.getCustomerQuery = `
                         relayTwoWorking
                     }
                     soilHumiditySettings2 {
+                        minWarning
+                        maxWarning
+                        mode
+                        relayOneAutomatedTimeToRun
+                        relayOneAutomatedStartedTime
+                        relayTwoAutomatedStartedTime
+                        relayOneIdRelated
+                        relayOneWorking
+                        relayTwoAutomatedTimeToRun
+                        relayTwoIdRelated
+                        relayTwoWorking
+                    }
+                    lightSettings {
                         minWarning
                         maxWarning
                         mode
