@@ -159,6 +159,12 @@ export enum HumiditySensorMode {
     SCHEDULE = 'SCHEDULE'
 }
 
+export enum LightSensorMode {
+    SEMI_AUTOMATED = 'SEMI_AUTOMATED',
+    MANUAL = 'MANUAL',
+    SCHEDULE = 'SCHEDULE'
+}
+
 export enum DistanceSensorMode {
     SISTEMA_AGUA_A_TRATAR = 'SISTEMA_AGUA_A_TRATAR'
 }

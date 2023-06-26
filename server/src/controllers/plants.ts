@@ -177,7 +177,38 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             // console.log('HumiditySensorMode.SCHEDULE entered')
             break;
         default:
+            // const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+            // const lightSchedule = {
+            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]],
+            //     startTime: '00:00',
+            //     endTime: '23:59',
+            //     enabled: true,
+            //     smartLight: false
+            // }
+
+            // const b = {
+            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]]
+            // }
+            // const onTimes = [a, b]
+
             console.log('defaulted entered')
+
+            //set notification schedule
+            // [mon] tue wed thu ...
+            // 00:00 --- 07:15
+            // 15:15 ----- 23:59
+            // Add time Schedule (button)
+
+            // (when pressing the button you see this pop up)
+            // Add time Schedule
+            //start time: 00:00
+            //end time: 23:59
+
+            // repeat: (touch and you can see all days of the week to select/deselect) press ok, and original view is seeing the selected days
+
+
+            // also the smart option for when is no light and there should be light
             break;
     }
     return plant;

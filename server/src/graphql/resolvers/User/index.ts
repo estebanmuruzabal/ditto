@@ -437,7 +437,7 @@ export const usersResolvers: IResolvers = {
                     relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
                     relayTwoWorking: false,
-                    logs: []
+                    logs: [],
                 },
                 soilHumiditySettings1: {
                     minWarning: "",
@@ -451,7 +451,8 @@ export const usersResolvers: IResolvers = {
                     relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
                     relayTwoWorking: false,
-                    logs: []
+                    logs: [],
+                    scheduledOnTimes: []
                 },
                 soilHumiditySettings2: {
                     minWarning: "",
@@ -466,6 +467,7 @@ export const usersResolvers: IResolvers = {
                     relayTwoIdRelated: "",
                     relayTwoWorking: false,
                     logs: [],
+                    scheduledOnTimes: []
                 },
                 lightSettings: {
                     minWarning: "",
@@ -479,7 +481,8 @@ export const usersResolvers: IResolvers = {
                     relayTwoAutomatedTimeToRun: "",
                     relayTwoIdRelated: "",
                     relayTwoWorking: false,
-                    logs: []
+                    logs: [],
+                    scheduledOnTimes: []
                 }
             };
 
@@ -617,7 +620,7 @@ export const usersResolvers: IResolvers = {
                 message: "Updated soil humidity settings 1 successfully."
             };
         },
-        updateSoilHumiditySettings2: async (
+        updateLightSettings: async (
             _root: undefined,
             {   id, 
                 controllerId,
@@ -650,22 +653,21 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
-                plants[index].soilHumiditySettings2.name = name;
-                plants[index].soilHumiditySettings2.sendWhatsappWarnings = sendWhatsappWarnings;
-                plants[index].soilHumiditySettings2.maxWarning = maxWarning;
-                plants[index].soilHumiditySettings2.minWarning = minWarning;
-                plants[index].soilHumiditySettings2.mode = mode;
-                plants[index].soilHumiditySettings2.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
-                plants[index].soilHumiditySettings2.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
-                plants[index].soilHumiditySettings2.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
-                plants[index].soilHumiditySettings2.relayOneIdRelated = relayOneIdRelated;
-                plants[index].soilHumiditySettings2.relayOneWorking = relayOneWorking;
-                plants[index].soilHumiditySettings2.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
-                plants[index].soilHumiditySettings2.relayTwoIdRelated = relayTwoIdRelated;
-                plants[index].soilHumiditySettings2.relayTwoWorking = relayTwoWorking;
+                plants[index].lightSettings.name = name;
+                plants[index].lightSettings.sendWhatsappWarnings = sendWhatsappWarnings;
+                plants[index].lightSettings.maxWarning = maxWarning;
+                plants[index].lightSettings.minWarning = minWarning;
+                plants[index].lightSettings.mode = mode;
+                plants[index].lightSettings.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
+                plants[index].lightSettings.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
+                plants[index].lightSettings.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
+                plants[index].lightSettings.relayOneIdRelated = relayOneIdRelated;
+                plants[index].lightSettings.relayOneWorking = relayOneWorking;
+                plants[index].lightSettings.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
+                plants[index].lightSettings.relayTwoIdRelated = relayTwoIdRelated;
+                plants[index].lightSettings.relayTwoWorking = relayTwoWorking;
             }
 
-                
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}

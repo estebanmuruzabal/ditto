@@ -21,12 +21,14 @@ export const typeDefs = gql`
         soilHumidity2: Int
         airHumidity: Int
         tempeture: Int
+        light: Int
+        soilHumiditySettings1: SoilHumiditySettings
+        soilHumiditySettings2: SoilHumiditySettings
+        lightSettings: SoilHumiditySettings
         isRelayOneOn: Boolean
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
-        soilHumiditySettings1: SoilHumiditySettings
-        soilHumiditySettings2: SoilHumiditySettings
     }
 
     type SoilHumiditySettings {
@@ -43,8 +45,18 @@ export const typeDefs = gql`
         relayOneWorking: Boolean
         relayTwoIdRelated: String
         relayTwoWorking: Boolean
+        logs: [Logs]
+        scheduledOnTimes: [ScheduledOnTimes]
     }
    
+    type ScheduledOnTimes {
+        daysToRepeat: [String]
+        startTime: String
+        endTime: String
+        enabled: Boolean
+        smartLight: Boolean
+    }
+    
     type DeliveryAddress {
         id: String
         title: String
@@ -559,9 +571,10 @@ export const typeDefs = gql`
         updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
-        updatePlant(id: ID!, controllerId: Int!, soilHumidity1: Int, airHumidity: Int, tempeture: Int, distance_cm: Int, soilHumidity2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
+        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSoilHumiditySettings1(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
         updateSoilHumiditySettings2(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
+        updateLightSettings(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!
