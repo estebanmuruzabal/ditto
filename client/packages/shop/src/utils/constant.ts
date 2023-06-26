@@ -23,3 +23,20 @@ export enum HumiditySensorMode {
     SCHEDULE = 'SCHEDULE',
     NONE = 'NONE'
 }
+
+export enum LightSensorModes {
+    MANUAL = 'MANUAL',
+    SCHEDULE = 'SCHEDULE',
+    SMART_SCHEDULE = 'SMART_SCHEDULE',
+    NONE = 'NONE'
+}
+
+export enum WeekDays {
+    MONDAY = 'MONDAY',
+    TUESDAY = 'TUESDAY',
+    WEDNESDAY = 'WEDNESDAY',
+    THURSDAY = 'THURSDAY',
+    FRIDAY = 'FRIDAY',
+    SATURDAY = 'SATURDAY',
+    SUNDAY = 'SUNDAY'
+}

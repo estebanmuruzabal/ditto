@@ -143,6 +143,28 @@ export const PlantsListWrapper = styled.div`
   }
 `;
 
+export const PlantsSensorContainer = styled.div`
+  background-color: ${themeGet('colors.white', '#ffffff')};
+  border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
+  border-radius: ${themeGet('radii.base', '6px')};
+  overflow: hidden;
+  position: relative;
+  // width: calc(100% - 30px);
+  margin: 5px 0px;
+  padding: 10px 5px;
+  width: 360px;  
+  
+  // @media (min-width: 991px) {
+  //   width: 870px;
+  // }
+  // @media (max-width: 990px) {
+  //   padding: 50px 45px;
+  // }
+  // @media (max-width: 767px) {
+  //   padding: 10px 5px;
+  // }
+`;
+
 export const PlantsPageContainer = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
@@ -152,9 +174,9 @@ export const PlantsPageContainer = styled.div`
   position: relative;
   // width: calc(100% - 30px);
   margin: 3px 0px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  width: fit-content;
+  // margin-left: auto;
+  // margin-right: auto;
   // @media (min-width: 991px) {
   //   width: 870px;
   // }
@@ -162,7 +184,7 @@ export const PlantsPageContainer = styled.div`
     padding: 50px 45px;
   }
   @media (max-width: 767px) {
-    padding: 50px 25px;
+    padding: 10px 5px;
   }
 
   .home-btn {
@@ -249,6 +271,7 @@ export const Row = styled(Rows)`
 export const OrderDetails = styled.div`
   margin-bottom: 60px;
   @media (max-width: 767px) {
+    margin-top: 50px;
     margin-bottom: 50px;
   }
 `;
@@ -329,16 +352,15 @@ export const ListItem = styled.div`
   }
   // @media (max-width: 767px) {
     justify-content: space-between;
-    max-width: 400px;
+    max-width: 300px;
   // }
 `;
 
 export const ListTitle = styled.div`
   flex-basis: 140px;
-  min-width: 210px;
+  width: 197px;
   flex-shrink: 0;
   position: relative;
-  padding
   // @media (max-width: 767px) {
   //   flex-basis: 140px;
   //   max-width: 160px;
@@ -357,6 +379,26 @@ export const ListDes = styled.div`
   // @media (max-width: 767px) {
   //   padding-left: 20px;
   // }
+`;
+
+export const WeekContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+
+`;
+
+export const DayContainer = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 3px;
+  width: 50px;
+  height: 30px;
+  border: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
+  border-radius: 5px;
+  fontFamily: $theme.typography.primaryFontFamily,
+  color: $theme.colors.red400,
+  cursor: pointer;
 `;
 
 export default OrderReceivedWrapper;

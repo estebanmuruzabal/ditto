@@ -13,6 +13,7 @@ query GetUser{
         name
         soilHumidity1
         soilHumidity2
+        light
         airHumidity
         tempeture
         isRelayOneOn
@@ -49,6 +50,21 @@ query GetUser{
             relayTwoIdRelated
             relayTwoWorking
         }
+        lightSettings {
+          name
+          sendWhatsappWarnings
+          minWarning
+          maxWarning
+          mode
+          relayOneAutomatedStartedTime
+          relayOneAutomatedTimeToRun
+          relayTwoAutomatedStartedTime
+          relayTwoAutomatedTimeToRun
+          relayOneIdRelated
+          relayOneWorking
+          relayTwoIdRelated
+          relayTwoWorking
+      }
     }
     delivery_address{
       id
