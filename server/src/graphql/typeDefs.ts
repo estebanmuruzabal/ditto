@@ -638,7 +638,7 @@ export const typeDefs = gql`
         updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
-        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
+        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSoilHumiditySettings1(id: ID!, controllerId: Int!, input: InputHumiditySettings): DefaultMessageType!
         updateSoilHumiditySettings2(id: ID!, controllerId: Int!, input: InputHumiditySettings): DefaultMessageType!
         updateLightSettings(id: ID!, controllerId: Int!, input: InputLightSettings): DefaultMessageType!
