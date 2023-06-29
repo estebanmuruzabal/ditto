@@ -1,15 +1,11 @@
 import React,  { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router'
-import { Col } from 'react-styled-flexboxgrid';
-import moment from 'moment';
+import { openModal } from '@redq/reuse-modal';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { GET_ORDERS } from 'graphql/query/order.query';
 import { CURRENCY, HumiditySensorMode, LightSensorModes, WeekDays } from 'utils/constant';
 import ErrorMessage from 'components/error-message/error-message';
-import { Modal } from '@redq/reuse-modal';
-import { Label } from 'components/forms/label';
-  
+import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
+
 import OrderReceivedWrapper, {
   PlantsPageContainer,
   OrderInfo,
@@ -29,19 +25,25 @@ import OrderReceivedWrapper, {
   PlantsWrapper,
   WeekContainer,
   DayContainer,
-  PlantsSensorContainer
+  PlantsSensorContainer,
+  ScheduleTime,
+  ActionButton,
+  CardButtons,
+  TextSpaced
 } from './your-plants.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GET_LOGGED_IN_USER } from 'graphql/query/customer.query';
 import { PlantsListWrapper } from 'features/your-plants/your-plants.style';
 import ErrorMessageTwo from 'components/error-message/error-message-two';
 import { Button } from 'components/button/button';
-import { ADD_PLANT, UPDATE_HUMIDITY_SETTINGS_1, UPDATE_HUMIDITY_SETTINGS_2, UPDATE_LIGHT_SETTINGS } from 'graphql/query/plants.query';
+import { ADD_PLANT, UPDATE_HUMIDITY_1_SETTINGS, UPDATE_HUMIDITY_2_SETTINGS, UPDATE_LIGHT_SETTINGS } from 'graphql/query/plants.query';
 import Select from 'react-select';
 import { Input } from 'components/forms/input';
 import { ProfileContext } from 'contexts/profile/profile.context';
 import { SuccessMsg } from 'features/user-profile/settings/settings.style';
 import Switch from 'components/switch/switch';
+import { PencilIcon } from 'assets/icons/PencilIcon';
+import { CloseIcon } from 'assets/icons/CloseIcon';
   
 
 type YourPlantsProps = {
@@ -65,8 +67,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [daySelected, setDay] = useState('');
   const [addPlant] = useMutation(ADD_PLANT);
-  const [updateSoilHumiditySettings1] = useMutation(UPDATE_HUMIDITY_SETTINGS_1);
-  const [updateSoilHumiditySettings2] = useMutation(UPDATE_HUMIDITY_SETTINGS_2);
+  const [updateSoilHumiditySettings1] = useMutation(UPDATE_HUMIDITY_1_SETTINGS);
+  const [updateSoilHumiditySettings2] = useMutation(UPDATE_HUMIDITY_2_SETTINGS);
   const [updateLightSettings] = useMutation(UPDATE_LIGHT_SETTINGS);
   const { plants } = state;
 
@@ -134,50 +136,75 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     }, 8000)
   };
 
-//   const lightSchedule = {
-//     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]],
-//     startTime: '00:00',
-//     endTime: '23:59',
-//     enabled: true,
-//     smartLight: false
-// }
+  const onDeleteSchedule = (plant: any, settingName: any, position: number) => {
+
+    delete plant[settingName][position];
+    
+    updateLightSettings({
+      variables: {
+        id: data?.getUser?.id,
+        controllerId: plant.controllerId,
+        input: plant[settingName]
+      },
+    });
+
+    setUserinfoMsg('Update user info successfully');
+    setTimeout(function () {
+      setUserinfoMsg('');
+    }, 8000)
+  };
     
   const handleSettings1SaveClick = (plant: any, fieldName: string, fieldValue: string | boolean) => {
-    console.log(plant, fieldName, fieldValue);
     updateSoilHumiditySettings1({
       variables: {
         id: data?.getUser?.id,
-        [fieldName]: fieldValue,
         controllerId: plant.controllerId,
-        ...plant.soilHumiditySettings1
-      },
+        input: { [fieldName]: fieldValue, ...plant.soilHumiditySettings1 }
+      }
     });
   };
 
   const handleSettings2SaveClick = (plant: any, fieldName: string, fieldValue: string | boolean) => {
-    console.log(plant, fieldName, fieldValue);
     updateSoilHumiditySettings2({
       variables: {
         id: data?.getUser?.id,
-        [fieldName]: fieldValue,
         controllerId: plant.controllerId,
-        ...plant.soilHumiditySettings2
-      },
+        input: { [fieldName]: fieldValue, ...plant.soilHumiditySettings2 }
+      }
     });
   };
 
   const handleLightSettingSaveClick = (plant: any, fieldName: string, fieldValue: string | boolean) => {
-    console.log(plant, fieldName, fieldValue);
     updateLightSettings({
       variables: {
         id: data?.getUser?.id,
-        [fieldName]: fieldValue,
         controllerId: plant.controllerId,
-        ...plant.lightSettings
+        input: { [fieldName]: fieldValue, ...plant.lightSettings }
       },
     });
   };
 
+  // Add or edit modal
+  const handleModal = (
+    modalComponent: any,
+    modalProps = {},
+    className: string = 'add-time-schedule-modal'
+  ) => {
+    openModal({
+      show: true,
+      config: {
+        width: 360,
+        height: 'auto',
+        enableResizing: false,
+        disableDragging: true,
+        className: className,
+      },
+      closeOnClickOutside: true,
+      component: modalComponent,
+      componentProps: { item: modalProps },
+    });
+  };
+  
   const humidityModeOptions = [
     { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
     { value: HumiditySensorMode.MANUAL, label: 'Manual' },
@@ -238,6 +265,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
               onChange={(e: any) => handleHumiditySettings1Change(plant, 'name', e.target.value)}
               backgroundColor='#F7F7F7'
               width='197px'
+              height='34.5px'
               // intlInputLabelId="profileEmailField"
             />
           </ListDes>
@@ -319,7 +347,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings1Change(plant, 'maxWarning', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
-                  // intlInputLabelId="profileEmailField"
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
@@ -341,7 +369,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings1Change(plant, 'minWarning', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
-                  // intlInputLabelId="profileNameField"
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
@@ -388,6 +416,69 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           </>
         )}
 
+
+        { setting.mode === HumiditySensorMode.SCHEDULE && (
+          <>
+            <WeekContainer>
+            {Object.keys(WeekDays).map((day, i: number) => {
+               return (
+                  <DayContainer
+                    key={i + '-day--humidity-1container'}
+                    style={{ backgroundColor: daySelected === day ? '#E6E6E6' : 'transparent' }}
+                    onClick={() => setDay(day)}
+                  >
+                    {day.substring(0,3)}
+                  </DayContainer>
+                )
+              })
+            }
+            </WeekContainer>
+
+            { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+              return (
+                <WeekContainer>
+                  { schedule.daysToRepeat.includes(daySelected) ? (
+                    <ScheduleTime>
+                      <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
+                      <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
+                      <CardButtons className='button-wrapper'>
+                        <ActionButton onClick={() => handleModal( AddTimeSchedule, { name: 'add-humidity-1-schedule', plant, id: data?.getUser?.id } )} className='edit-btn'>
+                          <PencilIcon />
+                        </ActionButton>
+
+                        <ActionButton onClick={() => onDeleteSchedule(plant, 'soilHumiditySettings1', i)} className='delete-btn'>
+                          <CloseIcon />
+                        </ActionButton>
+                      </CardButtons>
+                    </ScheduleTime>
+                  ) : <ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>}
+                </WeekContainer>
+              )
+            }
+            )}
+            <Button
+              size='small'
+              variant='outlined'
+              type='button'
+              className='add-button'
+              onClick={() => handleModal(
+                  AddTimeSchedule, 
+                  {
+                      name: 'add-humidity-1-schedule',
+                      plant,
+                      id: data?.getUser?.id
+                  }
+                )
+              }
+            >
+              <FormattedMessage
+                id='addTimeScheduleId'
+                defaultMessage='addTimeScheduleId' 
+              />
+            </Button>
+          </>
+        )}
+        
         { plant?.soilHumiditySettings1?.mode === HumiditySensorMode.MANUAL && (
           <>
             <ListItem>
@@ -451,7 +542,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayOneAutomatedTimeToRun', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
-                  // intlInputLabelId="profileEmailField"
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
@@ -473,6 +564,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayTwoAutomatedTimeToRun', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
@@ -513,6 +605,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
               onChange={(e: any) => handleHumiditySettings2Change(plant, 'name', e.target.value)}
               backgroundColor='#F7F7F7'
               width='197px'
+              height='34.5px'
             />
           </ListDes>
         </ListItem>
@@ -602,6 +695,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings2Change(plant, 'maxWarning', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
@@ -623,6 +717,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings2Change(plant, 'minWarning', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
@@ -732,6 +827,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayOneAutomatedTimeToRun', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
@@ -753,12 +849,76 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                   onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayTwoAutomatedTimeToRun', e.target.value)}
                   backgroundColor='#F7F7F7'
                   width='197px'
+                  height='34.5px'
                 />
               </ListDes>
             </ListItem>
           </>
         )}
         
+        { setting.mode === HumiditySensorMode.SCHEDULE && (
+          <>
+            <WeekContainer>
+            {Object.keys(WeekDays).map((day, i: number) => {
+               return (
+                  <DayContainer
+                    key={i + '-day--humidity-2container'}
+                    style={{ backgroundColor: daySelected === day ? '#E6E6E6' : 'transparent' }}
+                    onClick={() => setDay(day)}
+                  >
+                    {day.substring(0,3)}
+                  </DayContainer>
+                )
+              })
+            }
+            </WeekContainer>
+
+            {/* { !setting?.scheduledOnTimes?.length && (<ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>) } */}
+            { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+              return (
+                <WeekContainer>
+                  { schedule.daysToRepeat.includes(daySelected) ? (
+                    <ScheduleTime>
+                      <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
+                      <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
+                      <CardButtons className='button-wrapper'>
+                        <ActionButton onClick={() => handleModal( AddTimeSchedule, { name: 'add-humidity-2-schedule', plant, id: data?.getUser?.id } )} className='edit-btn'>
+                          <PencilIcon />
+                        </ActionButton>
+
+                        <ActionButton onClick={() => onDeleteSchedule(plant, 'soilHumiditySettings2', i)} className='delete-btn'>
+                          <CloseIcon />
+                        </ActionButton>
+                      </CardButtons>
+                    </ScheduleTime>
+                  ) : <ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>}
+                </WeekContainer>
+              )
+            }
+            )}
+
+            <Button
+              size='small'
+              variant='outlined'
+              type='button'
+              className='add-button'
+              onClick={() => handleModal(
+                  AddTimeSchedule, 
+                  {
+                      name: 'add-humidity-2-schedule',
+                      plant,
+                      id: data?.getUser?.id
+                  }
+                )
+              }
+            >
+              <FormattedMessage
+                id='addTimeScheduleId'
+                defaultMessage='addTimeScheduleId' 
+              />
+            </Button>
+          </>
+        )}
         
         { plant?.soilHumiditySettings2?.mode === HumiditySensorMode.NONE && (
           <Text>Necesitas seleccionar un modo</Text>
@@ -849,26 +1009,28 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           </ListDes>
         </ListItem>
 
-        <ListItem>
-          <ListTitle>
-            <Text bold>
-              <FormattedMessage
-                id={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
-                defaultMessage={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
+        { (setting?.mode === LightSensorModes.MANUAL || setting?.mode === LightSensorModes.SCHEDULE || setting?.mode === LightSensorModes.SMART_SCHEDULE) && (
+          <ListItem>
+            <ListTitle>
+              <Text bold>
+                <FormattedMessage
+                  id={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
+                  defaultMessage={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
+                />
+              </Text>
+            </ListTitle>
+            <ListDes>
+              <Select 
+                onChange={(e: any) => handleLightSettingChange(plant, 'relayOneIdRelated', e.value)}
+                value={relayOneSelected}
+                options={fourRelaysOptions}
+                styles={selectStyle}
+                menuPosition={'fixed'}
               />
-            </Text>
-          </ListTitle>
-          <ListDes>
-            <Select 
-              onChange={(e: any) => handleLightSettingChange(plant, 'relayOneIdRelated', e.value)}
-              value={relayOneSelected}
-              options={fourRelaysOptions}
-              styles={selectStyle}
-              menuPosition={'fixed'}
-            />
-          </ListDes>
-        </ListItem>
-
+            </ListDes>
+          </ListItem>
+        )}
+        
         { setting.mode === LightSensorModes.MANUAL && (
           <>
             <ListItem>
@@ -893,12 +1055,13 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           </>
         )}
 
-        { setting.mode === LightSensorModes.SCHEDULE && (
+        { (setting.mode === LightSensorModes.SCHEDULE || setting.mode === LightSensorModes.SMART_SCHEDULE) && (
           <>
             <WeekContainer>
-            {Object.keys(WeekDays).map((day) => {
+            {Object.keys(WeekDays).map((day, i: number) => {
                return (
                   <DayContainer
+                    key={i + '-day-container'}
                     style={{ backgroundColor: daySelected === day ? '#E6E6E6' : 'transparent' }}
                     onClick={() => setDay(day)}
                   >
@@ -908,6 +1071,49 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
               })
             }
             </WeekContainer>
+
+            { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+              return (
+                <WeekContainer>
+                  { schedule.daysToRepeat.includes(daySelected) ? (
+                    <ScheduleTime>
+                      <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
+                      <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
+                      <CardButtons className='button-wrapper'>
+                        <ActionButton onClick={() => handleModal( AddTimeSchedule, { name: 'add-light-schedule', plant, id: data?.getUser?.id } )} className='edit-btn'>
+                          <PencilIcon />
+                        </ActionButton>
+
+                        <ActionButton onClick={() => onDeleteSchedule(plant, 'lightSettings', i)} className='delete-btn'>
+                          <CloseIcon />
+                        </ActionButton>
+                      </CardButtons>
+                    </ScheduleTime>
+                  ) : <ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>}
+                </WeekContainer>
+              )
+            }
+            )}
+            <Button
+              size='small'
+              variant='outlined'
+              type='button'
+              className='add-button'
+              onClick={() => handleModal(
+                  AddTimeSchedule, 
+                  {
+                      name: 'add-light-schedule',
+                      plant,
+                      id: data?.getUser?.id
+                  }
+                )
+              }
+            >
+              <FormattedMessage
+                id='addTimeScheduleId'
+                defaultMessage='addTimeScheduleId' 
+              />
+            </Button>
           </>
         )}
 
@@ -917,19 +1123,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     )
   }
 
-  const selectStyle = {
-    control: styles => ({ ...styles, width: '197px' }),
-    // option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    //   // const color = chroma(data.color);
-    //   return {
-    //     ...styles,
-    //     backgroundColor: isDisabled ? 'red' : blue,
-    //     color: '#FFF',
-    //     cursor: isDisabled ? 'not-allowed' : 'default',
-    //     ...
-    //   };
-    // }
-  };
+  const selectStyle = { control: styles => ({ ...styles, width: '197px' }) };
 
   return (
     <PlantPageWrapper>
@@ -969,6 +1163,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                           // onChange={(e: any) => handleHumiditySettings1Change(plant, 'name', e.target.value)}
                           backgroundColor='#F7F7F7'
                           width='197px'
+                          height='34.5px'
                         />
                       </ListDes>
                     </ListItem>
@@ -1036,7 +1231,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           </ListTitle>
           <ListDes>
             <Input
-              type='text'
+              type='number'
               name='controllerId'
               value={controllerId}
               onChange={(e) => setControllerID(e.target.value)}

@@ -34,6 +34,17 @@ query GetUser{
             relayOneWorking
             relayTwoIdRelated
             relayTwoWorking
+            logs {
+              logDescription
+              timestamp
+            }
+            scheduledOnTimes {
+              daysToRepeat
+              startTime
+              endTime
+              enabled
+              smartLight
+            } 
         }
         soilHumiditySettings2 {
             name
@@ -49,6 +60,17 @@ query GetUser{
             relayOneWorking
             relayTwoIdRelated
             relayTwoWorking
+            logs {
+              logDescription
+              timestamp
+            }
+            scheduledOnTimes {
+              daysToRepeat
+              startTime
+              endTime
+              enabled
+              smartLight
+            }
         }
         lightSettings {
           name
@@ -64,6 +86,17 @@ query GetUser{
           relayOneWorking
           relayTwoIdRelated
           relayTwoWorking
+          logs {
+            logDescription
+            timestamp
+          }
+          scheduledOnTimes {
+            daysToRepeat
+            startTime
+            endTime
+            enabled
+            smartLight
+          }
       }
     }
     delivery_address{

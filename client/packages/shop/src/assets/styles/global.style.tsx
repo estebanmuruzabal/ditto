@@ -246,12 +246,25 @@ export const GlobalStyle = createGlobalStyle(({ theme }) =>
       backgroundColor: 'rgba(0,0,0,.5)',
     },
 
-    '.add-address-modal,.add-contact-modal': {
+    '.add-address-modal,.add-contact-modal,.add-time-schedule-modal': {
       boxShadow: '0 10px 40px rgba(0,0,0,0.16)',
       borderRadius: '3px !important',
       '.innerRndComponent': {
         width: '100%',
         padding: '30px',
+        height: 'auto',
+        backgroundColor: '#f7f8f9',
+        border: 0,
+        boxSizing: 'border-box',
+      },
+    },
+
+    '.add-time-schedule-modal': {
+      boxShadow: '0 10px 40px rgba(0,0,0,0.16)',
+      borderRadius: '3px !important',
+      '.innerRndComponent': {
+        width: '100%',
+        padding: '10px',
         height: 'auto',
         backgroundColor: '#f7f8f9',
         border: 0,

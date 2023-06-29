@@ -86,6 +86,8 @@
 
 import { useMemo } from 'react';
 import {ApolloClient, ApolloLink, HttpLink, InMemoryCache} from 'apollo-boost';
+const omitDeep = require("omit-deep-lodash");
+
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_API_ENDPOINT, // Server URL (must be absolute)
   credentials: 'same-origin', // Additional fetch() options like `credentials`
@@ -108,7 +110,14 @@ const authLink = new ApolloLink((operation, forward) => {
   });
 
   // Call the next link in the middleware chain.
-  return forward(operation);
+  // return forward(operation);
+  if (operation.variables) {
+
+    operation.variables = omitDeep(operation.variables,'__typename')
+  }
+  return forward(operation).map((data) => {
+    return data;
+  });
 });
 
 let apolloClient;

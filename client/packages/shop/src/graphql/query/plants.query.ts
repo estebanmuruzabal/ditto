@@ -13,78 +13,30 @@ mutation AddPlant($id: ID!, $name: String!, $controllerId: Int!) {
 }
 `;
 
-export const UPDATE_HUMIDITY_SETTINGS_1 = gql`
-    mutation UpdateSoilHumiditySettings1($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean, $name: String, $sendWhatsappWarnings: Boolean) {
-      updateSoilHumiditySettings1(
-        id: $id,
-        name: $name,
-        sendWhatsappWarnings: $sendWhatsappWarnings,
-        controllerId: $controllerId,
-        maxWarning: $maxWarning,
-        minWarning: $minWarning,
-        mode: $mode,
-        relayOneAutomatedTimeToRun: $relayOneAutomatedTimeToRun,
-        relayOneAutomatedStartedTime: $relayOneAutomatedStartedTime,
-        relayTwoAutomatedStartedTime: $relayTwoAutomatedStartedTime,
-        relayOneIdRelated: $relayOneIdRelated,
-        relayOneWorking: $relayOneWorking,
-        relayTwoAutomatedTimeToRun: $relayTwoAutomatedTimeToRun,
-        relayTwoIdRelated: $relayTwoIdRelated,
-        relayTwoWorking: $relayTwoWorking
-    ) {
-        message
-        status
-    }
-    }
-`;
-
-export const UPDATE_HUMIDITY_SETTINGS_2 = gql`
-    mutation UpdateSoilHumiditySettings2($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean, $name: String, $sendWhatsappWarnings: Boolean) {
-      updateSoilHumiditySettings2(
-        id: $id,
-        name: $name,
-        sendWhatsappWarnings: $sendWhatsappWarnings,
-        controllerId: $controllerId,
-        maxWarning: $maxWarning,
-        minWarning: $minWarning,
-        mode: $mode,
-        relayOneAutomatedTimeToRun: $relayOneAutomatedTimeToRun,
-        relayOneAutomatedStartedTime: $relayOneAutomatedStartedTime,
-        relayTwoAutomatedStartedTime: $relayTwoAutomatedStartedTime,
-        relayOneIdRelated: $relayOneIdRelated,
-        relayOneWorking: $relayOneWorking,
-        relayTwoAutomatedTimeToRun: $relayTwoAutomatedTimeToRun,
-        relayTwoIdRelated: $relayTwoIdRelated,
-        relayTwoWorking: $relayTwoWorking
-    ) {
-        message
-        status
-    }
-    }
-`;
-
 export const UPDATE_LIGHT_SETTINGS = gql`
-    mutation UpdateLightSettings($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean, $name: String, $sendWhatsappWarnings: Boolean) {
-      updateLightSettings(
-        id: $id,
-        name: $name,
-        sendWhatsappWarnings: $sendWhatsappWarnings,
-        controllerId: $controllerId,
-        maxWarning: $maxWarning,
-        minWarning: $minWarning,
-        mode: $mode,
-        relayOneAutomatedTimeToRun: $relayOneAutomatedTimeToRun,
-        relayOneAutomatedStartedTime: $relayOneAutomatedStartedTime,
-        relayTwoAutomatedStartedTime: $relayTwoAutomatedStartedTime,
-        relayOneIdRelated: $relayOneIdRelated,
-        relayOneWorking: $relayOneWorking,
-        relayTwoAutomatedTimeToRun: $relayTwoAutomatedTimeToRun,
-        relayTwoIdRelated: $relayTwoIdRelated,
-        relayTwoWorking: $relayTwoWorking
-    ) {
+    mutation UpdateLightSettings($id: ID!, $controllerId: Int!, $input: InputLightSettings!) {
+      updateLightSettings(id: $id, controllerId: $controllerId, input: $input) {
         message
         status
+      }
     }
+`;
+
+export const UPDATE_HUMIDITY_1_SETTINGS = gql`
+    mutation UpdateSoilHumiditySettings1($id: ID!, $controllerId: Int!, $input: InputHumiditySettings!) {
+      updateSoilHumiditySettings1(id: $id, controllerId: $controllerId, input: $input) {
+        message
+        status
+      }
+    }
+`;
+
+export const UPDATE_HUMIDITY_2_SETTINGS = gql`
+    mutation UpdateSoilHumiditySettings2($id: ID!, $controllerId: Int!, $input: InputHumiditySettings!) {
+      updateSoilHumiditySettings2(id: $id, controllerId: $controllerId, input: $input) {
+        message
+        status
+      }
     }
 `;
 

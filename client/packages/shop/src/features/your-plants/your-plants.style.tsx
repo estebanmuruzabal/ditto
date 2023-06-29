@@ -36,7 +36,6 @@ export const InputUpper = styled.input<any>(
     borderRadius: 'base',
     backgroundColor: 'white',
     color: 'text.bold',
-    height: '48px',
     transition: 'all 0.25s ease',
     // mb: 3,
     '&:focus': {
@@ -144,7 +143,7 @@ export const PlantsListWrapper = styled.div`
 `;
 
 export const PlantsSensorContainer = styled.div`
-  background-color: ${themeGet('colors.white', '#ffffff')};
+  background-color: #d8cbcb;
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   border-radius: ${themeGet('radii.base', '6px')};
   overflow: hidden;
@@ -291,6 +290,15 @@ export const BlockTitle = styled.h2`
   }
 `;
 
+
+export const CardButtons = styled.span`
+
+  display: flex;
+  width: 330px;
+  align-items: center;
+  transition: 0.2s ease-in-out;
+`;
+
 export const Text = styled.p<TextProps>`
   font-family: ${themeGet('fonts.body', 'Lato')};
   font-size: ${themeGet('fontSizes.base', '15')}px;
@@ -302,6 +310,23 @@ export const Text = styled.p<TextProps>`
   line-height: 1.2;
   display: block;
   margin: 0;
+
+  &:last-child {
+    color: ${themeGet('colors.text.medium', '#424561')};
+  }
+`;
+
+export const TextSpaced = styled.p<TextProps>`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.base', '15')}px;
+  color: ${themeGet('colors.text.bold', '#0D1136')};
+  font-weight: ${(props) =>
+    props.bold
+      ? themeGet('fontWeights.bold', '700')
+      : themeGet('fontWeights.regular', '400')};
+  line-height: 1.2;
+  display: block;
+  margin-right: 10px;
 
   &:last-child {
     color: ${themeGet('colors.text.medium', '#424561')};
@@ -384,7 +409,43 @@ export const ListDes = styled.div`
 export const WeekContainer = styled.div`
   display: flex;
   flex-direction: row;
+`;
 
+export const ScheduleTime = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 10px 10px;
+  margin: 10px 10px;
+  border: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
+`;
+
+export const ActionButton = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 5px;
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  color: ${themeGet('colors.white', '#ffffff')};
+
+  &.edit-btn {
+    background-color: ${themeGet('colors.primary.regular', '#009E7F')};
+  }
+  &.delete-btn {
+    background-color: ${themeGet('colors.secondary.regular', '#ff5b60')};
+  }
+
+  svg {
+    display: block;
+    width: 8px;
+    height: auto;
+  }
 `;
 
 export const DayContainer = styled.button`

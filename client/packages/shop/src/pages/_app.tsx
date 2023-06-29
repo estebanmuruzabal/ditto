@@ -19,6 +19,9 @@ import '@redq/reuse-modal/lib/index.css';
 import { GlobalStyle } from 'assets/styles/global.style';
 import 'react-phone-input-2/lib/material.css'
 
+import 'react-time-picker/dist/TimePicker.css';
+// import 'react-clock/dist/Clock.css';
+
 // Language translation messages
 import { messages } from 'site-settings/site-translation/messages';
 import 'typeface-lato';
