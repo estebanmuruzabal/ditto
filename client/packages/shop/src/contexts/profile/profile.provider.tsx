@@ -5,6 +5,7 @@ type Action =
   | { type: 'HANDLE_ON_INPUT_CHANGE'; payload: any }
   | { type: 'HANDLE_HUMIDITY_1_SETTINGS_CHANGE'; payload: any }
   | { type: 'HANDLE_HUMIDITY_2_SETTINGS_CHANGE'; payload: any }
+  | { type: 'HANDLE_ADD_PLANT'; payload: any }
   | { type: 'HANDLE_LIGHT_SETTINGS_CHANGE'; payload: any }
   | { type: 'HANDLE_PASSWORD_CLEAR'; payload: any }
   | { type: 'ADD_CONTACT'; payload: any }
@@ -33,7 +34,12 @@ function reducer(state: any, action: Action): any {
       state.plants[0].soilHumiditySettings2[action.payload.field] = action.payload.value;
     
       return { ...state};
-
+    
+    case 'HANDLE_ADD_PLANT':
+      state.plants[0].soilHumiditySettings2[action.payload.field] = action.payload.value;
+    
+      return { ...state};
+  
     case 'HANDLE_LIGHT_SETTINGS_CHANGE':
         state.plants[0].lightSettings[action.payload.field] = action.payload.value;
       

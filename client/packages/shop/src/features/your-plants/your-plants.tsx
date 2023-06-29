@@ -59,7 +59,9 @@ type YourPlantsProps = {
 
 const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
   const { state, dispatch } = useContext(ProfileContext);
-  const { data, error, loading } = useQuery(GET_LOGGED_IN_USER);
+  const { data, error, loading, refetch: userRefetch } = useQuery(GET_LOGGED_IN_USER, {
+    pollInterval: 5000,
+  });
   // const router = useRouter();
   // const intl = useIntl();
   const [name, setPlantName] = useState('');
@@ -120,6 +122,12 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
         controllerId: Number(controllerId)
       },
     });
+
+    setUserinfoMsg('Update user info successfully');
+    userRefetch();
+    setTimeout(function () {
+      setUserinfoMsg('');
+    }, 8000)
   };
 
   const handleLightSettingChange = (plant: any, field: string, value: string | boolean) => {

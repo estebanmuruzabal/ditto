@@ -13,7 +13,7 @@ import Loader from 'components/loader/loader';
 
 import TimePicker from 'react-time-picker'
 import { WeekDays } from 'utils/constant';
-import Checkbox from 'components/checkbox/checkbox';
+import Checkbox from '../../components/checkbox/checkbox';
 import { UPDATE_HUMIDITY_1_SETTINGS, UPDATE_HUMIDITY_2_SETTINGS, UPDATE_LIGHT_SETTINGS } from 'graphql/query/plants.query';
 
 
