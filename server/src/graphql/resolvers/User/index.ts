@@ -10,6 +10,7 @@ import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
 import { checkAirHumidityAndTempeture, checkLightSensor, checkSensors, checkSoilWarnings } from '../../../controllers/plants';
+import { ISettingsInputArgs } from './types';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -428,7 +429,7 @@ export const usersResolvers: IResolvers = {
                 distanceSensorSettings: {
                     minWarning: "",
                     maxWarning: "",
-                    mode: DistanceSensorMode.SISTEMA_AGUA_A_TRATAR,
+                    mode: DistanceSensorMode.NONE,
                     relayOneAutomatedTimeToRun: "",
                     relayOneAutomatedStartedTime: "",
                     relayTwoAutomatedStartedTime: "",
@@ -442,7 +443,7 @@ export const usersResolvers: IResolvers = {
                 soilHumiditySettings1: {
                     minWarning: "",
                     maxWarning: "",
-                    mode: HumiditySensorMode.MANUAL,
+                    mode: HumiditySensorMode.NONE,
                     relayOneAutomatedTimeToRun: "",
                     relayOneAutomatedStartedTime: "",
                     relayTwoAutomatedStartedTime: "",
@@ -457,7 +458,7 @@ export const usersResolvers: IResolvers = {
                 soilHumiditySettings2: {
                     minWarning: "",
                     maxWarning: "",
-                    mode: HumiditySensorMode.MANUAL,
+                    mode: DistanceSensorMode.NONE,
                     relayOneAutomatedTimeToRun: "",
                     relayOneAutomatedStartedTime: "",
                     relayTwoAutomatedStartedTime: "",
@@ -472,7 +473,7 @@ export const usersResolvers: IResolvers = {
                 lightSettings: {
                     minWarning: "",
                     maxWarning: "",
-                    mode: HumiditySensorMode.MANUAL,
+                    mode: DistanceSensorMode.NONE,
                     relayOneAutomatedTimeToRun: "",
                     relayOneAutomatedStartedTime: "",
                     relayTwoAutomatedStartedTime: "",
@@ -563,22 +564,7 @@ export const usersResolvers: IResolvers = {
         },
         updateSoilHumiditySettings1: async (
             _root: undefined,
-            {   id, 
-                controllerId,
-                maxWarning,
-                minWarning,
-                mode,
-                relayOneAutomatedTimeToRun,
-                relayOneAutomatedStartedTime,
-                relayTwoAutomatedStartedTime,
-                relayOneIdRelated,
-                relayOneWorking,
-                relayTwoAutomatedTimeToRun,
-                relayTwoIdRelated,
-                relayTwoWorking,
-                name,
-                sendWhatsappWarnings
-            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean, name: string, sendWhatsappWarnings: boolean },
+            {id, controllerId, input}: ISettingsInputArgs,
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -594,19 +580,67 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
-                plants[index].soilHumiditySettings1.name = name;
-                plants[index].soilHumiditySettings1.sendWhatsappWarnings = sendWhatsappWarnings;
-                plants[index].soilHumiditySettings1.maxWarning = maxWarning;
-                plants[index].soilHumiditySettings1.minWarning = minWarning;
-                plants[index].soilHumiditySettings1.mode = mode;
-                plants[index].soilHumiditySettings1.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
-                plants[index].soilHumiditySettings1.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
-                plants[index].soilHumiditySettings1.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
-                plants[index].soilHumiditySettings1.relayOneIdRelated = relayOneIdRelated;
-                plants[index].soilHumiditySettings1.relayOneWorking = relayOneWorking;
-                plants[index].soilHumiditySettings1.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
-                plants[index].soilHumiditySettings1.relayTwoIdRelated = relayTwoIdRelated;
-                plants[index].soilHumiditySettings1.relayTwoWorking = relayTwoWorking;
+                plants[index].soilHumiditySettings1.name = input.name;
+                plants[index].soilHumiditySettings1.sendWhatsappWarnings = input.sendWhatsappWarnings;
+                plants[index].soilHumiditySettings1.maxWarning = input.maxWarning;
+                plants[index].soilHumiditySettings1.minWarning = input.minWarning;
+                plants[index].soilHumiditySettings1.mode = input.mode;
+                plants[index].soilHumiditySettings1.relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
+                plants[index].soilHumiditySettings1.relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
+                plants[index].soilHumiditySettings1.relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
+                plants[index].soilHumiditySettings1.relayOneIdRelated = input.relayOneIdRelated;
+                plants[index].soilHumiditySettings1.relayOneWorking = input.relayOneWorking;
+                plants[index].soilHumiditySettings1.relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
+                plants[index].soilHumiditySettings1.relayTwoIdRelated = input.relayTwoIdRelated;
+                plants[index].soilHumiditySettings1.relayTwoWorking = input.relayTwoWorking;
+                plants[index].soilHumiditySettings1.logs = input.logs;
+                plants[index].soilHumiditySettings1.scheduledOnTimes = input.scheduledOnTimes;
+            }
+
+                
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$set: {plants}}
+            );
+
+            return {
+                status: true,
+                message: "Updated soil humidity settings 1 successfully."
+            };
+        },
+        updateSoilHumiditySettings2: async (
+            _root: undefined,
+            {id, controllerId, input}: ISettingsInputArgs,
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+
+            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
+
+            const plants = userResult.plants;
+            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
+
+            if (index < 0) {
+                throw new Error(`Controller id does not exists: ${controllerId})`);
+            } else {
+                plants[index].soilHumiditySettings1.name = input.name;
+                plants[index].soilHumiditySettings1.sendWhatsappWarnings = input.sendWhatsappWarnings;
+                plants[index].soilHumiditySettings1.maxWarning = input.maxWarning;
+                plants[index].soilHumiditySettings1.minWarning = input.minWarning;
+                plants[index].soilHumiditySettings1.mode = input.mode;
+                plants[index].soilHumiditySettings1.relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
+                plants[index].soilHumiditySettings1.relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
+                plants[index].soilHumiditySettings1.relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
+                plants[index].soilHumiditySettings1.relayOneIdRelated = input.relayOneIdRelated;
+                plants[index].soilHumiditySettings1.relayOneWorking = input.relayOneWorking;
+                plants[index].soilHumiditySettings1.relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
+                plants[index].soilHumiditySettings1.relayTwoIdRelated = input.relayTwoIdRelated;
+                plants[index].soilHumiditySettings1.relayTwoWorking = input.relayTwoWorking;
+                plants[index].soilHumiditySettings1.logs = input.logs;
+                plants[index].soilHumiditySettings1.scheduledOnTimes = input.scheduledOnTimes;
             }
 
                 
@@ -622,22 +656,7 @@ export const usersResolvers: IResolvers = {
         },
         updateLightSettings: async (
             _root: undefined,
-            {   id, 
-                controllerId,
-                maxWarning,
-                minWarning,
-                mode,
-                relayOneAutomatedTimeToRun,
-                relayOneAutomatedStartedTime,
-                relayTwoAutomatedStartedTime,
-                relayOneIdRelated,
-                relayOneWorking,
-                relayTwoAutomatedTimeToRun,
-                relayTwoIdRelated,
-                relayTwoWorking,
-                name,
-                sendWhatsappWarnings
-            }: { id: string, controllerId: number, maxWarning: string, minWarning: string, mode: string, relayOneAutomatedTimeToRun: string, relayOneAutomatedStartedTime: string, relayTwoAutomatedStartedTime: string, relayOneIdRelated: string, relayOneWorking: boolean, relayTwoAutomatedTimeToRun: string, relayTwoIdRelated: string, relayTwoWorking: boolean, name: string, sendWhatsappWarnings: boolean },
+            {id, controllerId, input}: ISettingsInputArgs,
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -653,19 +672,21 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
-                plants[index].lightSettings.name = name;
-                plants[index].lightSettings.sendWhatsappWarnings = sendWhatsappWarnings;
-                plants[index].lightSettings.maxWarning = maxWarning;
-                plants[index].lightSettings.minWarning = minWarning;
-                plants[index].lightSettings.mode = mode;
-                plants[index].lightSettings.relayOneAutomatedTimeToRun = relayOneAutomatedTimeToRun;
-                plants[index].lightSettings.relayTwoAutomatedStartedTime = relayTwoAutomatedStartedTime;
-                plants[index].lightSettings.relayOneAutomatedStartedTime = relayOneAutomatedStartedTime;
-                plants[index].lightSettings.relayOneIdRelated = relayOneIdRelated;
-                plants[index].lightSettings.relayOneWorking = relayOneWorking;
-                plants[index].lightSettings.relayTwoAutomatedTimeToRun = relayTwoAutomatedTimeToRun;
-                plants[index].lightSettings.relayTwoIdRelated = relayTwoIdRelated;
-                plants[index].lightSettings.relayTwoWorking = relayTwoWorking;
+                plants[index].lightSettings.name = input.name;
+                plants[index].lightSettings.sendWhatsappWarnings = input.sendWhatsappWarnings;
+                plants[index].lightSettings.maxWarning = input.maxWarning;
+                plants[index].lightSettings.minWarning = input.minWarning;
+                plants[index].lightSettings.mode = input.mode;
+                plants[index].lightSettings.relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
+                plants[index].lightSettings.relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
+                plants[index].lightSettings.relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
+                plants[index].lightSettings.relayOneIdRelated = input.relayOneIdRelated;
+                plants[index].lightSettings.relayOneWorking = input.relayOneWorking;
+                plants[index].lightSettings.relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
+                plants[index].lightSettings.relayTwoIdRelated = input.relayTwoIdRelated;
+                plants[index].lightSettings.relayTwoWorking = input.relayTwoWorking;
+                plants[index].lightSettings.logs = input.logs;
+                plants[index].lightSettings.scheduledOnTimes = input.scheduledOnTimes;
             }
 
             await db.users.updateOne(

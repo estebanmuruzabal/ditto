@@ -156,17 +156,20 @@ export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
     MANUAL = 'MANUAL',
-    SCHEDULE = 'SCHEDULE'
+    SCHEDULE = 'SCHEDULE',
+    NONE = 'NONE'
 }
 
 export enum LightSensorMode {
     SEMI_AUTOMATED = 'SEMI_AUTOMATED',
     MANUAL = 'MANUAL',
-    SCHEDULE = 'SCHEDULE'
+    SCHEDULE = 'SCHEDULE',
+    NONE = 'NONE'
 }
 
 export enum DistanceSensorMode {
-    SISTEMA_AGUA_A_TRATAR = 'SISTEMA_AGUA_A_TRATAR'
+    SISTEMA_AGUA_A_TRATAR = 'SISTEMA_AGUA_A_TRATAR',
+    NONE = 'NONE'
 }
 
 export enum TriggerGrowerSteps {
