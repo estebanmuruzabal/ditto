@@ -1,5 +1,6 @@
 import {Collection, ObjectId} from 'mongodb';
 import { IOrderInput, IOrderInputArgs } from '../graphql/resolvers/Orders/types';
+import { IScheduleInput } from '../graphql/resolvers/User/types';
 
 export interface Plant {
     id?: string;
@@ -53,6 +54,7 @@ export interface ISoilHumiditySettings {
     relayTwoIdRelated: string;
     relayTwoWorking: boolean;
     logs: Array<HumidityLogs>;
+    scheduledOnTimes: Array<IScheduleInput>;
 }
 
 export interface ILightSettings {
@@ -67,7 +69,8 @@ export interface ILightSettings {
     relayTwoAutomatedTimeToRun: string;
     relayTwoIdRelated: string;
     relayTwoWorking: boolean;
-    logs: Array<HumidityLogs>;
+    logs: Array<Logs>;
+    scheduledOnTimes: Array<IScheduleInput>;
 }
 
 export interface HumidityLogs {
@@ -154,6 +157,7 @@ export enum Roles {
 
 export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
+    IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND = 'IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
     MANUAL = 'MANUAL',
     SCHEDULE = 'SCHEDULE',
@@ -161,9 +165,9 @@ export enum HumiditySensorMode {
 }
 
 export enum LightSensorMode {
-    SEMI_AUTOMATED = 'SEMI_AUTOMATED',
     MANUAL = 'MANUAL',
     SCHEDULE = 'SCHEDULE',
+    SMART_SCHEDULE = 'SMART_SCHEDULE',
     NONE = 'NONE'
 }
 
