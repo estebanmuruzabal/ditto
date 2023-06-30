@@ -57,6 +57,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     // juan numero
     // if (number !== '5493624309309') return;
       if (number !== '5493624951926') return;
+    //   if (number !== '5493624651317') return;
 
     const res: any = await fetchCustomerAndToken(number);
 
@@ -79,13 +80,17 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     const userIsRegistered = !!access_token;
 
     if (userIsRegistered) await saveUserChatHistory(message, number, nextTrigger, access_token)
-    const messages = await findResponseMsg(nextTrigger, user, message, number, access_token);
+    // const messages = await findResponseMsg(nextTrigger, user, message, number, access_token);
+    const msgResponse = await findResponseMsg(nextTrigger, user, message, number, access_token);
 
-    if (!messages?.length) console.log('no messages to send: ', messages);
+
+    // if (!messages?.length) console.log('no messages to send: ', messages);
     
-    messages.map(async (msj: any) => {
-        await sendMessage(client, from, msj.replyMessage, msj.trigger, access_token);
-    });
+    await sendMessage(client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);
+
+    // messages.map(async (msj: any) => {
+    //     await sendMessage(client, from, msj.replyMessage, msj.trigger, access_token);
+    // });
     
 // };
 });
@@ -146,7 +151,7 @@ const withOutSession = () => {
 const mount = async (app: Application) => {
     // client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
 
-    // client = withOutSession();
+    client = withOutSession();
 
     const hostname = 'localhost';
     // const hostname = '0.0.0.0';

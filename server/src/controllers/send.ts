@@ -1,16 +1,14 @@
 // import { saveMessage } from "../adapter";
-// import { List } from "whatsapp-web.js";
-// import { List } from 'whatsapp-web';
-const { MessageMedia, List } = require('whatsapp-web.js');
+import { List } from "whatsapp-web.js";
 import { saveUserChatHistory, signUpUser } from "../api";
 import { ISetting, IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
 import { endConversationKeys, getCleanNumber, initialConversationKeys, isGrower, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
-const { Message, ClientInfo, Buttons } = require('whatsapp-web.js/src/structures');
 
 const ExcelJS = require('exceljs');
 const fs = require('fs');
 
+const { MessageMedia, Buttons } = require('whatsapp-web.js');
 const { cleanNumber } = require('./handle')
 const DELAY_TIME = 170; //ms
 const DIR_MEDIA = `${__dirname}/../mediaSend`;
@@ -86,7 +84,6 @@ const list = new List(`/n Por favor, selecciona una opción en el siguiente men�
     'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
     'footer');
             
-    let button = new Buttons('Button body', [{ body: 'Aceptar' }, { body: 'rechazar' }], 'title', 'footer');
 export const sendMessage = async (client: any, number: string, text: string, trigger?: TriggerSteps, token?: string) => {
   if (!number) { console.log('no number error at sendMessage!'); return; }
    setTimeout(async () => {
@@ -95,8 +92,8 @@ export const sendMessage = async (client: any, number: string, text: string, tri
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
         if (!number.endsWith('@c.us')) number += '@c.us';
-        client.sendMessage(number, button);
-        console.log(`⚡⚡⚡ Enviando mensaje:`, button);
+        client.sendMessage(number, message);
+        console.log(`⚡⚡⚡ Enviando mensaje:`, message);
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )
     }
