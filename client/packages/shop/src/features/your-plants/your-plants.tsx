@@ -993,7 +993,26 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
             </Text>
           </ListTitle>
           <ListDes style={{ marginLeft: '10px' }}>
-            <Text>{plant?.light} %</Text>
+            <Text>{plant?.light} % {plant?.light < 40 ? '🌙' : '☀️'}</Text>
+          </ListDes>
+        </ListItem>
+
+        <ListItem style={{ justifyContent: 'flex-start' }}>
+          <ListTitle>
+            <Text bold>
+              <FormattedMessage
+                id="manualModeStateId"
+                defaultMessage="manualModeStateId"
+              />
+            </Text>
+          </ListTitle>
+          <ListDes style={{ marginLeft: '10px' }}>
+            <Text> 
+              <FormattedMessage
+                id={setting.relayOneWorking ? 'manualModeStateOnId' : 'manualModeStateOffId'}
+                defaultMessage='noDefaultOnOffMsg'
+              />
+            </Text>
           </ListDes>
         </ListItem>
 
