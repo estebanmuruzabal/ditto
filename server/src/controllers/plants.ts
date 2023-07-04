@@ -171,6 +171,28 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', soilHumiditySetting); break; }
             
             // @ts-ignore
+            const willStartWatering = !plant[relayOneIdRelated] && soilHumiditySetting.relayOneWorking!;
+            // @ts-ignore
+            const willStopWatering = plant[relayOneIdRelated] && soilHumiditySetting.relayOneWorking;
+            if (willStartWatering) {
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                });
+            } else if (willStopWatering) {
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                });
+            } else {
+                soilHumiditySetting?.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                });
+            }
+            // @ts-ignore
             plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;
 
             break;
@@ -241,7 +263,8 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISoilHumidit
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
- // @ts-ignore
+                    
+                    // @ts-ignore
                     if (currentTime.isBetween(startTime, endTime)) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
