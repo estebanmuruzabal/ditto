@@ -274,5 +274,19 @@
       "file": "static/chunks/0.js",
       "publicPath": "static/chunks/0.js"
     }
+  ],
+  "react-apexcharts": [
+    {
+      "id": "./node_modules/apexcharts/dist/apexcharts.common.js",
+      "name": "./node_modules/apexcharts/dist/apexcharts.common.js",
+      "file": "static/chunks/3.js",
+      "publicPath": "static/chunks/3.js"
+    },
+    {
+      "id": "./node_modules/react-apexcharts/dist/react-apexcharts.min.js",
+      "name": "./node_modules/react-apexcharts/dist/react-apexcharts.min.js",
+      "file": "static/chunks/3.js",
+      "publicPath": "static/chunks/3.js"
+    }
   ]
 }

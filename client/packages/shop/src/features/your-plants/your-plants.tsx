@@ -44,6 +44,7 @@ import { SuccessMsg } from 'features/user-profile/settings/settings.style';
 import Switch from 'components/switch/switch';
 import { PencilIcon } from 'assets/icons/PencilIcon';
 import { CloseIcon } from 'assets/icons/CloseIcon';
+import HumidityLogsGraph from './humidity-logs-graph/humidity-logs-graph';
   
 
 type YourPlantsProps = {
@@ -424,7 +425,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           </>
         )}
 
-
         { setting.mode === HumiditySensorMode.SCHEDULE && (
           <>
             <WeekContainer>
@@ -580,8 +580,13 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           </>
         )}
         
+        { setting?.logs.length > 0 && (
+          <HumidityLogsGraph
+            data={setting.logs}
+          />
+        )}
         
-        { plant?.soilHumiditySettings1?.mode === HumiditySensorMode.NONE && (
+        { setting?.mode === HumiditySensorMode.NONE && (
           <Text>Necesitas seleccionar un modo</Text>
         )}
         </PlantsSensorContainer>
@@ -609,7 +614,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
             <Input
               type='text'
               name='name'
-              value={plant?.soilHumiditySettings2.name}
+              value={plant?.soilHumiditySettings2.name || ''}
               onChange={(e: any) => handleHumiditySettings2Change(plant, 'name', e.target.value)}
               backgroundColor='#F7F7F7'
               width='197px'
@@ -886,7 +891,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
               return (
                 <WeekContainer>
                   { schedule.daysToRepeat.includes(daySelected) ? (
-                    <ScheduleTime>
+                    <ScheduleTime key={i + '-day--schedule-on-time'}>
                       <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
                       <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
                       <CardButtons className='button-wrapper'>
@@ -980,7 +985,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    console.log('light setting:::', setting);
     return (
       <PlantsSensorContainer>
         <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -1101,7 +1105,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
 
             { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
               return (
-                <WeekContainer>
+                <WeekContainer key={i + '-days-to-repeat-2'}>
                   { schedule.daysToRepeat.includes(daySelected) ? (
                     <ScheduleTime>
                       <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
@@ -1186,8 +1190,10 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                         <Input
                           type='text'
                           name='name'
-                          value={plant?.name}
-                          // onChange={(e: any) => handleHumiditySettings1Change(plant, 'name', e.target.value)}
+                          disabled={true}
+                          value={plant?.name || ''}
+                          // we have to change the onChange because the is no one for the controller name actualy
+                          onChange={(e: any) => handleHumiditySettings1Change(plant, 'name', e.target.value)}
                           backgroundColor='#F7F7F7'
                           width='197px'
                           height='34.5px'

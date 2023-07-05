@@ -35,8 +35,10 @@ query GetUser{
             relayTwoIdRelated
             relayTwoWorking
             logs {
-              logDescription
               timestamp
+              humidity
+              startedWatering
+              finishedWatering
             }
             scheduledOnTimes {
               daysToRepeat
@@ -61,8 +63,10 @@ query GetUser{
             relayTwoIdRelated
             relayTwoWorking
             logs {
-              logDescription
               timestamp
+              humidity
+              startedWatering
+              finishedWatering
             }
             scheduledOnTimes {
               daysToRepeat

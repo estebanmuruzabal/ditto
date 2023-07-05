@@ -10,6 +10,9 @@ module.exports = {
     // You can, for example, get the latest git commit hash here
     return '1.0.0'
   },
+  plugins: [
+    { src: '~/src/plugins/charts', ssr: false }
+  ],
 }
 
 module.exports = withPlugins([withOptimizedImages], nextConfig);

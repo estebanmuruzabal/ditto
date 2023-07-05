@@ -20,11 +20,7 @@
     "/_polyfills": [
       "static/runtime/polyfills.js"
     ],
-    "/checkout": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/profile": [
+    "/your-plants": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]
