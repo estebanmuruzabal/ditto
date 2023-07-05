@@ -76,25 +76,25 @@ export interface ILightSettings {
 export interface HumidityLogs {
     humidity: number;
     timestamp: string;
-    startedWatering?: string;
-    finishedWatering?: string;
+    startedWatering?: boolean;
+    finishedWatering?: boolean;
 }
 
 export interface Logs {
-    logDescription: string,
-    timestamp: string
+    logDescription: string;
+    timestamp: string;
 }
 
 export interface Task {
-    taskId: string,
-    description: string,
-    startDate: string,
-    finishDate: string,
-    plannedDate: string,
-    isRepetitived: boolean,
-    completationTimes: string,
-    workedHours: string,
-    isDone: boolean
+    taskId: string;
+    description: string;
+    startDate: string;
+    finishDate: string;
+    plannedDate: string;
+    isRepetitived: boolean;
+    completationTimes: string;
+    workedHours: string;
+    isDone: boolean;
 }
 
 export interface Address {

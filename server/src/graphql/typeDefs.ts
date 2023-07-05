@@ -45,7 +45,7 @@ export const typeDefs = gql`
         relayOneWorking: Boolean
         relayTwoIdRelated: String
         relayTwoWorking: Boolean
-        logs: [Logs]
+        logs: [IHumidityLogs]
         scheduledOnTimes: [ScheduledOnTimes]
     }
 
@@ -95,14 +95,23 @@ export const typeDefs = gql`
         taskRelated: String
     }
 
+    type IHumidityLogs {
+        timestamp: String
+        humidity: Int
+        startedWatering: Boolean
+        finishedWatering: Boolean
+    }
+
     type Logs {
         logDescription: String
         timestamp: String
     }
 
     input InputLogs {
-        logDescription: String
         timestamp: String
+        humidity: Int
+        startedWatering: Boolean
+        finishedWatering: Boolean
     }
 
     input InputHumiditySettings {

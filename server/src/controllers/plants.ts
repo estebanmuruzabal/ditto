@@ -26,7 +26,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting?.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: true,
                 });
 
                 // @ts-ignore
@@ -39,7 +39,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting?.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: true,
                 });
 
                 // @ts-ignore
@@ -104,7 +104,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting?.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: true,
                 });
                 // we turn evacuation watering relay OFF just in case
                 // @ts-ignore
@@ -119,7 +119,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting?.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: true,
                 });
 
                 // @ts-ignore
@@ -178,13 +178,13 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting?.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                    startedWatering: true
                 });
             } else if (willStopWatering) {
                 soilHumiditySetting?.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                    finishedWatering: true
                 });
             } else {
                 soilHumiditySetting?.logs.push({
