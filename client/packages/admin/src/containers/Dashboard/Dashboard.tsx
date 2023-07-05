@@ -239,7 +239,8 @@ const Dashboard = () => {
   //   });
   //   console.log(salesTotalAmounts.reverse())
   // }
-
+  console.log('salesTotalAmounts:', salesTotalAmounts)
+  console.log('salesDates:', salesDates)
   return (
     <Grid fluid={true}>
       <Row>
