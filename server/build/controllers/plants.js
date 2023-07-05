@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkSensors = exports.checkAirHumidityAndTempeture = exports.checkSoilWarnings = void 0;
+exports.checkSensors = exports.checkAirHumidityAndTempeture = exports.checkLightSensor = exports.checkSoilWarnings = void 0;
 const moment_1 = __importDefault(require("moment"));
 const __1 = require("..");
 const types_1 = require("../lib/types");
@@ -22,6 +22,7 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
     const maxHumiditySetted = !isNaN(Number(soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.maxWarning)) ? Number(soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.maxWarning) : null;
     const relayOneIdRelated = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated = soilHumiditySetting.relayTwoIdRelated;
+    console.log('soilHumiditySetting being process:', soilHumiditySetting);
     switch (soilHumiditySetting.mode) {
         case types_1.HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
@@ -37,7 +38,7 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
                 soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: true,
                 });
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
@@ -50,7 +51,7 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
                 soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: true,
                 });
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
@@ -110,7 +111,7 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
                 soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    startedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: true,
                 });
                 // we turn evacuation watering relay OFF just in case
                 // @ts-ignore
@@ -126,7 +127,7 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
                 soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.logs.push({
                     humidity: currentSoilHumidity,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                    finishedWatering: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: true,
                 });
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
@@ -175,10 +176,107 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
             });
             break;
         case types_1.HumiditySensorMode.MANUAL:
-            // console.log('HumiditySensorMode.MANUAL entered')
+            if (!relayOneIdRelated) {
+                console.log('No relayOneIdRelated in manual mode. [please set one] ', soilHumiditySetting);
+                break;
+            }
+            // @ts-ignore
+            const willStartWatering = !plant[relayOneIdRelated] && soilHumiditySetting.relayOneWorking;
+            // @ts-ignore
+            const willStopWatering = plant[relayOneIdRelated] && soilHumiditySetting.relayOneWorking;
+            if (willStartWatering) {
+                soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    startedWatering: true
+                });
+            }
+            else if (willStopWatering) {
+                soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    finishedWatering: true
+                });
+            }
+            else {
+                soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.logs.push({
+                    humidity: currentSoilHumidity,
+                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                });
+            }
+            // @ts-ignore
+            plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;
             break;
         case types_1.HumiditySensorMode.SCHEDULE:
             // console.log('HumiditySensorMode.SCHEDULE entered')
+            break;
+        default:
+            // const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+            // const lightSchedule = {
+            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]],
+            //     startTime: '00:00',
+            //     endTime: '23:59',
+            //     enabled: true,
+            //     smartLight: false
+            // }
+            // const b = {
+            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]]
+            // }
+            // const onTimes = [a, b]
+            console.log('defaulted entered');
+            //set notification schedule
+            // [mon] tue wed thu ...
+            // 00:00 --- 07:15
+            // 15:15 ----- 23:59
+            // Add time Schedule (button)
+            // (when pressing the button you see this pop up)
+            // Add time Schedule
+            //start time: 00:00
+            //end time: 23:59
+            // repeat: (touch and you can see all days of the week to select/deselect) press ok, and original view is seeing the selected days
+            // also the smart option for when is no light and there should be light
+            break;
+    }
+    return plant;
+});
+exports.checkSoilWarnings = checkSoilWarnings;
+const checkLightSensor = (plant, lightSettings, phoneNumber, light) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    console.log('lightSettings:', lightSettings);
+    console.log('light:', light);
+    // const minHumiditySetted = !isNaN(Number(soilHumiditySetting?.minWarning)) ? Number(soilHumiditySetting?.minWarning) : null;
+    // const maxHumiditySetted = !isNaN(Number(soilHumiditySetting?.maxWarning)) ? Number(soilHumiditySetting?.maxWarning) : null;
+    const relayOneIdRelated = lightSettings.relayOneIdRelated;
+    // const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
+    // console.log('soilHumiditySetting being process:', soilHumiditySetting);
+    switch (lightSettings.mode) {
+        case types_1.HumiditySensorMode.MANUAL:
+            if (!relayOneIdRelated) {
+                console.log('No relayOneIdRelated in manual mode. [please set one] ', lightSettings);
+                break;
+            }
+            // @ts-ignore
+            plant[relayOneIdRelated] = lightSettings.relayOneWorking;
+            break;
+        case types_1.LightSensorMode.SCHEDULE:
+        case types_1.LightSensorMode.SMART_SCHEDULE:
+            moment_1.default.locale('es');
+            const today = (0, moment_1.default)(new Date(), 'MM/D/YYYY').day();
+            const currentTime = (0, moment_1.default)(new Date()).format('hh:mm:ss');
+            {
+                (_a = lightSettings === null || lightSettings === void 0 ? void 0 : lightSettings.scheduledOnTimes) === null || _a === void 0 ? void 0 : _a.map((schedule, i) => {
+                    if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
+                        const startTime = (0, moment_1.default)(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                        const endTime = (0, moment_1.default)(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                        const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                        // @ts-ignore
+                        if (currentTime.isBetween(startTime, endTime)) {
+                            // @ts-ignore
+                            plant[relayOneIdRelated] = schedule.smartLight ? false : true;
+                        }
+                    }
+                });
+            }
             break;
         default:
             console.log('defaulted entered');
@@ -186,18 +284,18 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
     }
     return plant;
 });
-exports.checkSoilWarnings = checkSoilWarnings;
+exports.checkLightSensor = checkLightSensor;
 const checkAirHumidityAndTempeture = (plant, phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
     // implement checks
     return plant;
 });
 exports.checkAirHumidityAndTempeture = checkAirHumidityAndTempeture;
 const checkSensors = (plant, phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _b, _c, _d;
     // make method to see how much water is used based on time that relay is ON       
-    const amountOfWater = (_a = plant.distanceSensorSettings) === null || _a === void 0 ? void 0 : _a.relayOneAutomatedTimeToRun;
-    const minWarningDistance = !isNaN(Number((_b = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _b === void 0 ? void 0 : _b.minWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.minWarning) : null;
-    const maxWarningDistance = !isNaN(Number((_c = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _c === void 0 ? void 0 : _c.maxWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.maxWarning) : null;
+    const amountOfWater = (_b = plant.distanceSensorSettings) === null || _b === void 0 ? void 0 : _b.relayOneAutomatedTimeToRun;
+    const minWarningDistance = !isNaN(Number((_c = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _c === void 0 ? void 0 : _c.minWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.minWarning) : null;
+    const maxWarningDistance = !isNaN(Number((_d = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _d === void 0 ? void 0 : _d.maxWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.maxWarning) : null;
     const relayOneIdRelatedName = plant.distanceSensorSettings.relayOneIdRelated;
     const relayTwoIdRelatedName = plant.distanceSensorSettings.relayTwoIdRelated;
     // if distance is equal or grater than maxWarningDistance, and relayMaxWorking is not ON, meaning is not alreado working, we turn on maxWarningRelayIdRelatedName

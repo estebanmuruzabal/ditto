@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TriggerSteps = exports.TriggerStaffSteps = exports.TriggerGrowerSteps = exports.DistanceSensorMode = exports.HumiditySensorMode = exports.Roles = void 0;
+exports.TriggerSteps = exports.TriggerStaffSteps = exports.TriggerGrowerSteps = exports.DistanceSensorMode = exports.LightSensorMode = exports.HumiditySensorMode = exports.Roles = void 0;
 var Roles;
 (function (Roles) {
     Roles["ADMIN"] = "ADMIN";
@@ -14,13 +14,23 @@ var Roles;
 var HumiditySensorMode;
 (function (HumiditySensorMode) {
     HumiditySensorMode["IRRIGATE_ON_DEMAND"] = "IRRIGATE_ON_DEMAND";
+    HumiditySensorMode["IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND"] = "IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND";
     HumiditySensorMode["SEEDS_POOL_IRRIGATION"] = "SEEDS_POOL_IRRIGATION";
     HumiditySensorMode["MANUAL"] = "MANUAL";
     HumiditySensorMode["SCHEDULE"] = "SCHEDULE";
+    HumiditySensorMode["NONE"] = "NONE";
 })(HumiditySensorMode || (exports.HumiditySensorMode = HumiditySensorMode = {}));
+var LightSensorMode;
+(function (LightSensorMode) {
+    LightSensorMode["MANUAL"] = "MANUAL";
+    LightSensorMode["SCHEDULE"] = "SCHEDULE";
+    LightSensorMode["SMART_SCHEDULE"] = "SMART_SCHEDULE";
+    LightSensorMode["NONE"] = "NONE";
+})(LightSensorMode || (exports.LightSensorMode = LightSensorMode = {}));
 var DistanceSensorMode;
 (function (DistanceSensorMode) {
     DistanceSensorMode["SISTEMA_AGUA_A_TRATAR"] = "SISTEMA_AGUA_A_TRATAR";
+    DistanceSensorMode["NONE"] = "NONE";
 })(DistanceSensorMode || (exports.DistanceSensorMode = DistanceSensorMode = {}));
 var TriggerGrowerSteps;
 (function (TriggerGrowerSteps) {

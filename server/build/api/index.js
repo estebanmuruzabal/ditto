@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAddressToUser = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateUserNameAndEmail = exports.updateUserWorkInfoMutation = exports.updateSoilHumiditySettings2 = exports.updateSoilHumiditySettings1 = exports.signUpUser = exports.fetchCustomerAndToken = exports.getSettings = void 0;
+exports.addAddressToUser = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateUserNameAndEmail = exports.updateUserWorkInfoMutation = exports.signUpUser = exports.fetchCustomerAndToken = exports.getSettings = void 0;
 const handle_1 = require("../controllers/handle");
 const queries_1 = require("./queries");
 const { createApolloFetch } = require('apollo-fetch');
-const uri = 'http:/52.67.194.237/api';
+const uri = 'http://52.67.194.237/api';
 // const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 const getSettings = () => new Promise((resolve, reject) => {
@@ -63,32 +63,38 @@ const signUpUser = (name, phone, password) => new Promise((resolve, reject) => {
     });
 });
 exports.signUpUser = signUpUser;
-const updateSoilHumiditySettings1 = (user, plant, fieldName, fieldValue) => new Promise((resolve, reject) => {
-    apolloFetch({
-        query: queries_1.UPDATE_HUMIDITY_SETTINGS_1,
-        variables: Object.assign({ id: user.id, [fieldName]: fieldValue }, plant)
-    }).then((res) => {
-        console.log('[updateSoilHumiditySettings1]:', res);
-        resolve(res);
-    }).catch((err) => {
-        console.log('[updateSoilHumiditySettings1 error]:', err);
-        resolve(err);
-    });
-});
-exports.updateSoilHumiditySettings1 = updateSoilHumiditySettings1;
-const updateSoilHumiditySettings2 = (user, plant, fieldName, fieldValue) => new Promise((resolve, reject) => {
-    apolloFetch({
-        query: queries_1.UPDATE_HUMIDITY_SETTINGS_2,
-        variables: Object.assign({ id: user.id, [fieldName]: fieldValue }, plant)
-    }).then((res) => {
-        console.log('[updateSoilHumiditySettings2]:', res);
-        resolve(res);
-    }).catch((err) => {
-        console.log('[updateSoilHumiditySettings2 error]:', err);
-        resolve(err);
-    });
-});
-exports.updateSoilHumiditySettings2 = updateSoilHumiditySettings2;
+// export const updateSoilHumiditySettings1 = (user: any, plant: Plant, fieldName: string, fieldValue: any) => new Promise((resolve, reject) => {
+//     apolloFetch({
+//         query: UPDATE_HUMIDITY_SETTINGS_1,
+//         variables: {
+//             id: user.id,
+//             [fieldName]: fieldValue,
+//             ...plant
+//         }
+//     }).then((res: ICategory[]) => {
+//         console.log('[updateSoilHumiditySettings1]:', res);
+//         resolve(res);
+//     }).catch((err: any) => {
+//         console.log('[updateSoilHumiditySettings1 error]:', err);
+//         resolve(err);
+//     });
+// });
+// export const updateSoilHumiditySettings2 = (user: any, plant: Plant, fieldName: string, fieldValue: any) => new Promise((resolve, reject) => {
+//     apolloFetch({
+//         query: UPDATE_HUMIDITY_SETTINGS_2,
+//         variables: {
+//             id: user.id,
+//             [fieldName]: fieldValue,
+//             ...plant
+//         }
+//     }).then((res: ICategory[]) => {
+//         console.log('[updateSoilHumiditySettings2]:', res);
+//         resolve(res);
+//     }).catch((err: any) => {
+//         console.log('[updateSoilHumiditySettings2 error]:', err);
+//         resolve(err);
+//     });
+// });
 const updateUserWorkInfoMutation = (user, logDescription) => new Promise((resolve, reject) => {
     console.log(user, logDescription);
     apolloFetch({

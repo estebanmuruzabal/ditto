@@ -35,7 +35,7 @@ const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json';
 exports.client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: { headless: true }
+    puppeteer: { headless: false }
 });
 // let sessionData: any;
 /**
@@ -64,6 +64,7 @@ const listenMessage = () => exports.client.on('message', (msg) => __awaiter(void
     // if (number !== '5493624309309') return;
     if (number !== '5493624951926')
         return;
+    //   if (number !== '5493624651317') return;
     const res = yield (0, api_1.fetchCustomerAndToken)(number);
     if (!!(((_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.getCustomer.user) && ((_b = res === null || res === void 0 ? void 0 : res.data) === null || _b === void 0 ? void 0 : _b.getCustomer.access_token))) {
         user = res.data.getCustomer.user;
@@ -83,12 +84,13 @@ const listenMessage = () => exports.client.on('message', (msg) => __awaiter(void
     const userIsRegistered = !!access_token;
     if (userIsRegistered)
         yield (0, api_1.saveUserChatHistory)(message, number, nextTrigger, access_token);
-    const messages = yield (0, flows_1.findResponseMsg)(nextTrigger, user, message, number, access_token);
-    if (!(messages === null || messages === void 0 ? void 0 : messages.length))
-        console.log('no messages to send: ', messages);
-    messages.map((msj) => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, send_1.sendMessage)(exports.client, from, msj.replyMessage, msj.trigger, access_token);
-    }));
+    // const messages = await findResponseMsg(nextTrigger, user, message, number, access_token);
+    const msgResponse = yield (0, flows_1.findResponseMsg)(nextTrigger, user, message, number, access_token);
+    // if (!messages?.length) console.log('no messages to send: ', messages);
+    yield (0, send_1.sendMessage)(exports.client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);
+    // messages.map(async (msj: any) => {
+    //     await sendMessage(client, from, msj.replyMessage, msj.trigger, access_token);
+    // });
     // };
 }));
 const withOutSession = () => {
@@ -133,7 +135,7 @@ const withOutSession = () => {
 // }
 const mount = (app) => __awaiter(void 0, void 0, void 0, function* () {
     // client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
-    // client = withOutSession();
+    exports.client = withOutSession();
     const hostname = 'localhost';
     // const hostname = '0.0.0.0';
     // mongodb connection

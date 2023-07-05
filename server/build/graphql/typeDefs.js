@@ -20,33 +20,17 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         controllerId: Int!
         name: String!
         soilHumidity1: Int
-        light: Int
         soilHumidity2: Int
         airHumidity: Int
         tempeture: Int
+        light: Int
+        soilHumiditySettings1: SoilHumiditySettings
+        soilHumiditySettings2: SoilHumiditySettings
+        lightSettings: LightSettings
         isRelayOneOn: Boolean
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
-        soilHumiditySettings1: SoilHumiditySettings
-        soilHumiditySettings2: SoilHumiditySettings
-        lightSettings: LightSettings
-    }
-
-    type LightSettings {
-        name: String
-        sendWhatsappWarnings: Boolean
-        minWarning: String
-        maxWarning: String
-        mode: String
-        relayOneAutomatedTimeToRun: String
-        relayTwoAutomatedTimeToRun: String
-        relayOneAutomatedStartedTime: String
-        relayTwoAutomatedStartedTime: String
-        relayOneIdRelated: String
-        relayOneWorking: Boolean
-        relayTwoIdRelated: String
-        relayTwoWorking: Boolean
     }
 
     type SoilHumiditySettings {
@@ -63,8 +47,36 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         relayOneWorking: Boolean
         relayTwoIdRelated: String
         relayTwoWorking: Boolean
+        logs: [IHumidityLogs]
+        scheduledOnTimes: [ScheduledOnTimes]
+    }
+
+    type LightSettings {
+        name: String
+        sendWhatsappWarnings: Boolean
+        minWarning: String
+        maxWarning: String
+        mode: String
+        relayOneAutomatedTimeToRun: String
+        relayTwoAutomatedTimeToRun: String
+        relayOneAutomatedStartedTime: String
+        relayTwoAutomatedStartedTime: String
+        relayOneIdRelated: String
+        relayOneWorking: Boolean
+        relayTwoIdRelated: String
+        relayTwoWorking: Boolean
+        logs: [Logs]
+        scheduledOnTimes: [ScheduledOnTimes]
     }
    
+    type ScheduledOnTimes {
+        daysToRepeat: [String]
+        startTime: String
+        endTime: String
+        enabled: Boolean
+        smartLight: Boolean
+    }
+    
     type DeliveryAddress {
         id: String
         title: String
@@ -85,11 +97,60 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         taskRelated: String
     }
 
+    type IHumidityLogs {
+        timestamp: String
+        humidity: Int
+        startedWatering: Boolean
+        finishedWatering: Boolean
+    }
+
     type Logs {
         logDescription: String
         timestamp: String
     }
 
+    input InputLogs {
+        timestamp: String
+        humidity: Int
+        startedWatering: Boolean
+        finishedWatering: Boolean
+    }
+
+    input InputHumiditySettings {
+        name: String
+        sendWhatsappWarnings: Boolean
+        minWarning: String
+        maxWarning: String
+        mode: String
+        relayOneAutomatedTimeToRun: String
+        relayTwoAutomatedTimeToRun: String
+        relayOneAutomatedStartedTime: String
+        relayTwoAutomatedStartedTime: String
+        relayOneIdRelated: String
+        relayOneWorking: Boolean
+        relayTwoIdRelated: String
+        relayTwoWorking: Boolean
+        logs: [InputLogs]
+        scheduledOnTimes: [ScheduleInput]   
+    }
+
+    input InputLightSettings {
+        name: String
+        sendWhatsappWarnings: Boolean
+        minWarning: String
+        maxWarning: String
+        mode: String
+        relayOneAutomatedTimeToRun: String
+        relayTwoAutomatedTimeToRun: String
+        relayOneAutomatedStartedTime: String
+        relayTwoAutomatedStartedTime: String
+        relayOneIdRelated: String
+        relayOneWorking: Boolean
+        relayTwoIdRelated: String
+        relayTwoWorking: Boolean
+        logs: [InputLogs]
+        scheduledOnTimes: [ScheduleInput]   
+    }
 
     type ShoppingCart {
         delivery_date: String
@@ -231,6 +292,15 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         name: String
         slug: String
     }
+
+    input ScheduleInput {
+        daysToRepeat: [String]
+        startTime: String
+        endTime: String
+        enabled: Boolean
+        smartLight: Boolean
+    }
+
     input ProductInput {
         type: ProductTypeInput!
         categories: String!
@@ -580,9 +650,9 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
-        updateSoilHumiditySettings1(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
-        updateSoilHumiditySettings2(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
-        updateLightSettings(id: ID!, controllerId: Int!, maxWarning: String, minWarning: String, mode: String, relayOneAutomatedTimeToRun: String, relayOneAutomatedStartedTime: String, relayTwoAutomatedStartedTime: String, relayOneIdRelated: String, relayOneWorking: Boolean, relayTwoAutomatedTimeToRun: String, relayTwoIdRelated: String, relayTwoWorking: Boolean, name: String, sendWhatsappWarnings: Boolean): DefaultMessageType!
+        updateSoilHumiditySettings1(id: ID!, controllerId: Int!, input: InputHumiditySettings): DefaultMessageType!
+        updateSoilHumiditySettings2(id: ID!, controllerId: Int!, input: InputHumiditySettings): DefaultMessageType!
+        updateLightSettings(id: ID!, controllerId: Int!, input: InputLightSettings): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

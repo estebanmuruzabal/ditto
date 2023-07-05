@@ -11,15 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lastStaffTrigger = exports.lastClientTrigger = exports.lastGrowerTrigger = exports.sendMessageButton = exports.sendMessage = exports.sendMediaVoiceNote = exports.sendMedia = void 0;
 // import { saveMessage } from "../adapter";
-// import { List } from "whatsapp-web.js";
-// import { List } from 'whatsapp-web';
-const { MessageMedia, List } = require('whatsapp-web.js');
+const whatsapp_web_js_1 = require("whatsapp-web.js");
 const api_1 = require("../api");
 const types_1 = require("../lib/types");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
-const { Message, ClientInfo, Buttons } = require('whatsapp-web.js/src/structures');
 const ExcelJS = require('exceljs');
 const fs = require('fs');
+const { MessageMedia, Buttons } = require('whatsapp-web.js');
 const { cleanNumber } = require('./handle');
 const DELAY_TIME = 170; //ms
 const DIR_MEDIA = `${__dirname}/../mediaSend`;
@@ -88,8 +86,7 @@ const productSections = {
         }
     ],
 };
-const list = new List(`/n Por favor, selecciona una opción en el siguiente menú:`, 'Ver menu', [productSections], 'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.', 'footer');
-let button = new Buttons('Button body', [{ body: 'Aceptar' }, { body: 'rechazar' }], 'title', 'footer');
+const list = new whatsapp_web_js_1.List(`/n Por favor, selecciona una opción en el siguiente menú:`, 'Ver menu', [productSections], 'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.', 'footer');
 const sendMessage = (client, number, text, trigger, token) => __awaiter(void 0, void 0, void 0, function* () {
     if (!number) {
         console.log('no number error at sendMessage!');
@@ -102,8 +99,8 @@ const sendMessage = (client, number, text, trigger, token) => __awaiter(void 0, 
                 number = '549' + number.substring(2, number.length);
             if (!number.endsWith('@c.us'))
                 number += '@c.us';
-            client.sendMessage(number, button);
-            console.log(`⚡⚡⚡ Enviando mensaje:`, button);
+            client.sendMessage(number, message);
+            console.log(`⚡⚡⚡ Enviando mensaje:`, message);
         }
         catch (error) {
             console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error);

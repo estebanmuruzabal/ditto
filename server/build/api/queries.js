@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ADD_ADDRESS = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameAndEmailQuery = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.UPDATE_HUMIDITY_SETTINGS_2 = exports.UPDATE_HUMIDITY_SETTINGS_1 = exports.GET_SETTINGS = void 0;
+exports.ADD_ADDRESS = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameAndEmailQuery = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.GET_SETTINGS = void 0;
 exports.GET_SETTINGS = `
   query GetSetting {
     getSiteSetting(key: "site-settings") {
@@ -9,50 +9,6 @@ exports.GET_SETTINGS = `
       value
     }
   }
-`;
-exports.UPDATE_HUMIDITY_SETTINGS_1 = `
-    mutation UpdateSoilHumiditySettings1($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
-      updateSoilHumiditySettings1(
-        id: $id,
-        controllerId: $controllerId,
-        maxWarning: $maxWarning,
-        minWarning: $minWarning,
-        mode: $mode,
-        relayOneAutomatedTimeToRun: $relayOneAutomatedTimeToRun,
-        relayOneAutomatedStartedTime: $relayOneAutomatedStartedTime,
-        relayTwoAutomatedStartedTime: $relayTwoAutomatedStartedTime,
-        relayOneIdRelated: $relayOneIdRelated,
-        relayOneWorking: $relayOneWorking,
-        relayTwoAutomatedTimeToRun: $relayTwoAutomatedTimeToRun,
-        relayTwoIdRelated: $relayTwoIdRelated,
-        relayTwoWorking: $relayTwoWorking
-    ) {
-        message
-        status
-    }
-    }
-`;
-exports.UPDATE_HUMIDITY_SETTINGS_2 = `
-    mutation UpdateSoilHumiditySettings2($id: ID!, $controllerId: Int!,  $maxWarning: String, $minWarning: String, $mode: String, $relayOneAutomatedTimeToRun: String, $relayOneAutomatedStartedTime: String, $relayTwoAutomatedStartedTime: String, $relayOneIdRelated: String, $relayOneWorking: Boolean, $relayTwoAutomatedTimeToRun: String, $relayTwoIdRelated: String, $relayTwoWorking: Boolean) {
-      updateSoilHumiditySettings2(
-        id: $id,
-        controllerId: $controllerId,
-        maxWarning: $maxWarning,
-        minWarning: $minWarning,
-        mode: $mode,
-        relayOneAutomatedTimeToRun: $relayOneAutomatedTimeToRun,
-        relayOneAutomatedStartedTime: $relayOneAutomatedStartedTime,
-        relayTwoAutomatedStartedTime: $relayTwoAutomatedStartedTime,
-        relayOneIdRelated: $relayOneIdRelated,
-        relayOneWorking: $relayOneWorking,
-        relayTwoAutomatedTimeToRun: $relayTwoAutomatedTimeToRun,
-        relayTwoIdRelated: $relayTwoIdRelated,
-        relayTwoWorking: $relayTwoWorking
-    ) {
-        message
-        status
-    }
-    }
 `;
 exports.UPDATE_USER_WORK_INFO = `
   mutation UpdateUserWorkInfo(
