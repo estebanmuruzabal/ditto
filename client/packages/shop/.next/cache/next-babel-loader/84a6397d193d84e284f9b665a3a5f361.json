@@ -1,0 +1,1 @@
+{"ast":null,"code":"import styled from 'styled-components';\nimport { compose, space, color, layout } from 'styled-system';\nexport var Box = styled.div.withConfig({\n  displayName: \"box__Box\",\n  componentId: \"sc-1nzavnx-0\"\n})({\n  boxSizing: 'border-box',\n  minWidth: 0,\n  margin: 0\n}, compose(space, color, layout));","map":null,"metadata":{},"sourceType":"module"}
