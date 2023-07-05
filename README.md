@@ -16,6 +16,9 @@ here are all the tabs and language settings: client/packages/shop/src/site-setti
 <!-- "ecoDescription": "EcoCompra: pagás ${packageDiscount} menos si tenés envases/bolsas de este art. para devolvernos.", -->
 # To do:
 
+- Agregar graficos logs
+- agregar checks para que te diga si ya tiene asignado el id de un relay a otro setting (que no te deje, al menos que quieras hacer un overwrite).
+
 - poner mejores datos en los cards de las tasks (start, end time).
 - better ui in task listing edit staff modal
 
