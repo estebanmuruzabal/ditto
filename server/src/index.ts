@@ -25,7 +25,7 @@ const SESSION_FILE_PATH = './session.json'
 
 export let client: any =  new Client({
         authStrategy: new LocalAuth(),
-        puppeteer: { headless: true }
+        puppeteer: { headless: true, args: ["--no-sandbox"] }
 });
 
 // let sessionData: any;
