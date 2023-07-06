@@ -15,6 +15,7 @@ export interface ISettingsInput {
     logs?: Array<ILogsInput>;
     scheduledOnTimes?: Array<IScheduleInput>;
     sendWhatsappWarnings: boolean;
+    settingName: string;
 }
 
 export interface ISettingsInputArgs {

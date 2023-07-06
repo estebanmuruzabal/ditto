@@ -114,7 +114,7 @@ export const typeDefs = gql`
         finishedWatering: Boolean
     }
 
-    input InputHumiditySettings {
+    input InputSettings {
         name: String
         sendWhatsappWarnings: Boolean
         minWarning: String
@@ -129,25 +129,8 @@ export const typeDefs = gql`
         relayTwoIdRelated: String
         relayTwoWorking: Boolean
         logs: [InputLogs]
-        scheduledOnTimes: [ScheduleInput]   
-    }
-
-    input InputLightSettings {
-        name: String
-        sendWhatsappWarnings: Boolean
-        minWarning: String
-        maxWarning: String
-        mode: String
-        relayOneAutomatedTimeToRun: String
-        relayTwoAutomatedTimeToRun: String
-        relayOneAutomatedStartedTime: String
-        relayTwoAutomatedStartedTime: String
-        relayOneIdRelated: String
-        relayOneWorking: Boolean
-        relayTwoIdRelated: String
-        relayTwoWorking: Boolean
-        logs: [InputLogs]
-        scheduledOnTimes: [ScheduleInput]   
+        scheduledOnTimes: [ScheduleInput]  
+        settingName: String 
     }
 
     type ShoppingCart {
@@ -648,9 +631,7 @@ export const typeDefs = gql`
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
-        updateSoilHumiditySettings1(id: ID!, controllerId: Int!, input: InputHumiditySettings): DefaultMessageType!
-        updateSoilHumiditySettings2(id: ID!, controllerId: Int!, input: InputHumiditySettings): DefaultMessageType!
-        updateLightSettings(id: ID!, controllerId: Int!, input: InputLightSettings): DefaultMessageType!
+        updateSetting(id: ID!, controllerId: Int!, input: InputSettings): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

@@ -1,4 +1,6 @@
-import { getReplyFromEmployeeBot, getReplyFromGrowerBot, getReplyFromShopBot } from '../adapter';
+import { getReplyFromGrowerBot } from '../adapter/growerBot';
+import { getReplyFromShopBot } from '../adapter/shopBot';
+import { getReplyFromStaffBot } from '../adapter/staffBot';
 import { IUser } from '../lib/types';
 import { isGrower, isUserStaff } from '../lib/utils/shoppingUtils';
 import { saveExternalFile, checkIsUrl } from './handle';
@@ -10,7 +12,7 @@ export const findResponseMsg = async (trigger: string, customer: IUser, message:
     if (isGrower(customer)) {
         data = getReplyFromGrowerBot(trigger, customer, message, number, access_token);
     } else if (isUserStaff(customer)) {
-        data = getReplyFromEmployeeBot(trigger, customer, message, number, access_token);
+        data = getReplyFromStaffBot(trigger, customer, message, number, access_token);
     } else {
         data = getReplyFromShopBot(trigger, customer, message, number, access_token);
     }

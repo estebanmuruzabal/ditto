@@ -197,41 +197,23 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
 
             break;
         case HumiditySensorMode.SCHEDULE:
-            // console.log('HumiditySensorMode.SCHEDULE entered')
+            moment.locale('es');
+            const today = moment(new Date(), 'MM/D/YYYY').day();
+            const currentTime1 = moment(new Date()).format('hh:mm:ss');
+
+            soilHumiditySetting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
+                    const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = currentTime1.isBetween(startTime, endTime);
+                }
+            })
             break;
         default:
-            // const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
-            // const lightSchedule = {
-            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]],
-            //     startTime: '00:00',
-            //     endTime: '23:59',
-            //     enabled: true,
-            //     smartLight: false
-            // }
-
-            // const b = {
-            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]]
-            // }
-            // const onTimes = [a, b]
-
-            console.log('defaulted entered')
-
-            //set notification schedule
-            // [mon] tue wed thu ...
-            // 00:00 --- 07:15
-            // 15:15 ----- 23:59
-            // Add time Schedule (button)
-
-            // (when pressing the button you see this pop up)
-            // Add time Schedule
-            //start time: 00:00
-            //end time: 23:59
-
-            // repeat: (touch and you can see all days of the week to select/deselect) press ok, and original view is seeing the selected days
-
-
-            // also the smart option for when is no light and there should be light
+            console.log('defaulted!!! papa')
             break;
     }
     return plant;
@@ -258,11 +240,11 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISoilHumidit
             const today = moment(new Date(), 'MM/D/YYYY').day();
             const currentTime = moment(new Date()).format('hh:mm:ss');
 
-            {  lightSettings?.scheduledOnTimes?.map((schedule: any, i: number) => {
+            lightSettings?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     
                     // @ts-ignore
                     if (currentTime.isBetween(startTime, endTime)) {
@@ -270,8 +252,8 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISoilHumidit
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
                     }
                 }
-              })
-            }
+            })
+
             break;
         default:
             console.log('defaulted entered')

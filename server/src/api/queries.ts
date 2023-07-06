@@ -181,6 +181,41 @@ export const signUpQuery = `
 }
 `;
 
+
+export const UPDATE_PRODUCT = `
+  mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+    updateProduct(id: $id, input: $input) {
+      id
+      type {
+        id
+        slug
+        name
+      }
+      categories {
+        id
+        slug
+        name
+      }
+      name
+      slug
+      description
+      images
+      packagePrice
+      unit
+      price
+      sale_price
+      discount_in_percent
+      product_quantity
+      is_featured
+      is_online
+      meta_title
+      meta_keyword
+      meta_description
+    }
+  }
+`;
+
+
 export const updateUserNameAndEmailQuery = `
     mutation UpdateUser(
         $id: ID!, 

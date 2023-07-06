@@ -1,12 +1,12 @@
 import { cleanNumber } from "../controllers/handle";
 import { IOrderInput } from "../graphql/resolvers/Orders/types";
 import { ICategory, IPaymentOption, IProduct, IUser, Plant } from "../lib/types";
-import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO } from "./queries";
+import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO, UPDATE_PRODUCT } from "./queries";
 
 const { createApolloFetch } = require('apollo-fetch');
 
 
-const uri = 'http://52.67.194.237/api';
+const uri = 'http://18.231.193.109/api';
 // const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 
@@ -140,6 +140,26 @@ export const updateUserNameAndEmail = (id: string, name: string, email: string, 
         resolve(err);
     });
 });
+
+export const updateProductStock = (product: IProduct) => new Promise((resolve, reject) => {
+    // @ts-ignore
+        // apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
+    
+        apolloFetch({
+            query: UPDATE_PRODUCT,
+            variables: { id: product._id, input: product },
+        }).then((res: any) => {
+            if (res?.data?.updateProduct?.status === true) {
+                console.log('updateProduct. Updated product quantity successguly.', name);
+            } else {
+                console.log('updateProduct response:', res);
+            }
+            resolve(res);
+        }).catch((err: any) => {
+            console.log('updateProduct error:', err);
+            resolve(err);
+        });
+    });
 
 export const saveUserChatHistory = (message: string, number: string, trigger?: string, token?: string) => new Promise((resolve, reject) => {
     // @ts-ignore
