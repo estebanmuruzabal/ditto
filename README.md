@@ -14,14 +14,29 @@
 
 here are all the tabs and language settings: client/packages/shop/src/site-settings/site-navigation.ts
 <!-- "ecoDescription": "EcoCompra: pagás ${packageDiscount} menos si tenés envases/bolsas de este art. para devolvernos.", -->
-# To do:
+# To do SHOP:
 
-- Agregar graficos logs
-- agregar checks para que te diga si ya tiene asignado el id de un relay a otro setting (que no te deje, al menos que quieras hacer un overwrite).
+
 
 - poner mejores datos en los cards de las tasks (start, end time).
 - better ui in task listing edit staff modal
 
+# To do VENTAS:
+- chequear flujo compras web.
+ - chechear flujo compra whatsapp
+ - hacer flujo juan para actualizar huevos y stock de frutillas por ej. (lunes y miercoles) (para hacer ventas martes y jueves) (check)
+ - chequear automatizacion de pickup de stock y publicacion en IG.
+ - automatizar aviso a DITTO_SELLER de lista de pedidos y flujo de contacto con el cliente (marcarlos como entregados e identificar pedidos que juan le lleva, con cuando llega el cliente)
+ - chequear a juan que le falta para ahcer para hcer mermelada (envases, azucar, olla y elementos de limpieza)
+ - Ver listado con precios mayorista de frutas/verduras.
+
+# To do arduino:
+- probar lighting (schedule, manual, etc)
+- probar humidity (schedule, manual, etc)
+- agregar checks para que te diga si ya tiene asignado el id de un relay a otro setting (que no te deje, al menos que quieras hacer un overwrite).
+- agregar relay 3 y 4 en las opciones a asignar
+- Agregar graficos logs a humidity2
+- Agregar graficos logs a lighting
 
 # Improvements: 
 - add delete user func in staffmembers.tsx
