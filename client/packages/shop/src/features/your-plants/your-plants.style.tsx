@@ -142,8 +142,9 @@ export const PlantsListWrapper = styled.div`
   }
 `;
 
-export const PlantsSensorContainer = styled.div`
+export const PlantsSensorContainer = styled.button`
   background-color: #d8cbcb;
+  cursor: pointer;
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
   border-radius: ${themeGet('radii.base', '6px')};
   overflow: hidden;

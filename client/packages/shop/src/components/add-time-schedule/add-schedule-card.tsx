@@ -12,9 +12,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import Loader from 'components/loader/loader';
 
 import TimePicker from 'react-time-picker'
-import { WeekDays } from 'utils/constant';
+import { SettingsNames, WeekDays } from 'utils/constant';
 import Checkbox from '../../components/checkbox/checkbox';
-import { UPDATE_HUMIDITY_1_SETTINGS, UPDATE_HUMIDITY_2_SETTINGS, UPDATE_LIGHT_SETTINGS } from 'graphql/query/plants.query';
+import { UPDATE_SETTING } from 'graphql/query/plants.query';
 
 
 // Shape of form values
@@ -75,11 +75,26 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
   const [startTime, startTimeChange] = useState('00:00');
   const [endTime, endTimeChange] = useState('23:59');
   const [daysSelected,setDaysSelected] = useState([]);
-  const [updateLightSettings] = useMutation(UPDATE_LIGHT_SETTINGS);
-  const [updateHumiditySettings1] = useMutation(UPDATE_HUMIDITY_1_SETTINGS);
-  const [updateHumiditySettings2] = useMutation(UPDATE_HUMIDITY_2_SETTINGS);
+  const [updateSetting] = useMutation(UPDATE_SETTING);
   
   const intl = useIntl();
+
+  const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingName: SettingsNames) => {
+
+    dispatch({ type: settingName, payload: { plant, value, field } });
+
+    dispatchSettingSave(plant, field, value, settingName);
+  };
+
+  const dispatchSettingSave = (plant: any, fieldName: string, fieldValue: string | boolean, settingName: SettingsNames) => {
+    updateSetting({
+      variables: {
+        id: item.data?.getUser?.id,
+        controllerId: plant.controllerId,
+        input: { [fieldName]: fieldValue, ...plant[settingName], settingName: settingName }
+      },
+    });
+  };
 
   const handleSubmit = async () => {
     const newSchedule = {
@@ -92,57 +107,28 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
 
     setLoading(true);
     // if (isValid) {
-      switch (item.name) {
-        case 'add-light-schedule':
-          item.plant.lightSettings.scheduledOnTimes = item.plant.lightSettings.scheduledOnTimes ? item.plant.lightSettings.scheduledOnTimes : [];
-          item.plant.lightSettings.scheduledOnTimes.push(newSchedule)
+      switch (item.settingName) {
+        // si veo que no hay diferencias, sacamos el switch!!
+        case SettingsNames.LIGHT_SETTING:
+          item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
+          item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
           
-          dispatch({
-            type: 'HANDLE_LIGHT_SETTINGS_CHANGE',
-            payload: { plant: item.plant, value: item.plant.lightSettings.scheduledOnTimes, field: 'scheduledOnTimes' },
-          });
-         
-          return await updateLightSettings({
-            variables: {
-              id: item?.id,
-              controllerId: item.plant.controllerId,
-              input: item.plant.lightSettings
-            },
-          });
-        case 'add-humidity-1-schedule':
-          item.plant.soilHumiditySettings1.scheduledOnTimes = item.plant.soilHumiditySettings1.scheduledOnTimes ? item.plant.soilHumiditySettings1.scheduledOnTimes : [];
-          item.plant.soilHumiditySettings1.scheduledOnTimes.push(newSchedule)
+          handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
+          break;
+        case SettingsNames.SOIL_HUMIDITY_SETTING_1:
+          item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
+          item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
           
-          dispatch({
-            type: 'HANDLE_HUMIDITY_1_SETTINGS_CHANGE',
-            payload: { plant: item.plant, value: item.plant.soilHumiditySettings1.scheduledOnTimes, field: 'scheduledOnTimes' },
-          });
+          handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
+          break;
+        case SettingsNames.SOIL_HUMIDITY_SETTING_2:
+          item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
+          item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
           
-          return await updateHumiditySettings1({
-            variables: {
-              id: item?.id,
-              controllerId: item.plant.controllerId,
-              input: item.plant.soilHumiditySettings1
-            },
-          });
-
-        case 'add-humidity-2-schedule':
-          item.plant.soilHumiditySettings2.scheduledOnTimes = item.plant.soilHumiditySettings2.scheduledOnTimes ? item.plant.soilHumiditySettings2.scheduledOnTimes : [];
-          item.plant.soilHumiditySettings2.scheduledOnTimes.push(newSchedule)
-          
-          dispatch({
-            type: 'HANDLE_HUMIDITY_2_SETTINGS_CHANGE',
-            payload: { plant: item.plant, value: item.plant.soilHumiditySettings2.scheduledOnTimes, field: 'scheduledOnTimes' },
-          });
-         
-          return await updateHumiditySettings2({
-            variables: {
-              id: item?.id,
-              controllerId: item.plant.controllerId,
-              input: item.plant.soilHumiditySettings2
-            },
-          });
+          handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
+          break;
         default:
+          console.log('defaulted aca!!')
           break;
       }
       
@@ -161,42 +147,10 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     setDaysSelected(newDaysSelectedArray);
   };
 
-    // const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
-    // const lightSchedule = {
-    //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]],
-    //     startTime: '00:00',
-    //     endTime: '23:59',
-    //     enabled: true,
-    //     smartLight: false
-    // }
-
-    // const b = {
-    //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]]
-    // }
-    // const onTimes = [a, b]
-
-
-    //set notification schedule
-    // [mon] tue wed thu ...
-    // 00:00 --- 07:15
-    // 15:15 ----- 23:59
-    // Add time Schedule (button)
-
-    // (when pressing the button you see this pop up)
-    // Add time Schedule
-    //start time: 00:00
-    //end time: 23:59
-
-    // repeat: (touch and you can see all days of the week to select/deselect) press ok, and original view is seeing the selected days
-
-
-    // also the smart option for when is no light and there should be light
   return (
-    // <Form style={{ height: '100px' }}>
     <Form>
       <PlantsSensorContainer>
-      <Heading>{<Heading>{intl.formatMessage({ id: 'addTimeScheduleId', defaultMessage: 'addTimeScheduleId' })}</Heading>}</Heading>
+        <Heading>{<Heading>{intl.formatMessage({ id: 'addTimeScheduleId', defaultMessage: 'addTimeScheduleId' })}</Heading>}</Heading>
       
         <ListItem>
           <ListTitle>

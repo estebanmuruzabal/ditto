@@ -2,49 +2,31 @@ import React,  { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { openModal } from '@redq/reuse-modal';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { CURRENCY, HumiditySensorMode, LightSensorModes, WeekDays } from 'utils/constant';
+import { RelaysIds, SettingsNames } from 'utils/constant';
 import ErrorMessage from 'components/error-message/error-message';
-import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 
-import OrderReceivedWrapper, {
+import {
   PlantsPageContainer,
-  OrderInfo,
   OrderDetails,
-  TotalAmount,
   BlockTitle,
   Text,
-  InfoBlockWrapper,
-  InfoBlock,
   ListItem,
   ListTitle,
   ListDes,
   ButtonText,
-  Row,
-  InputUpper,
   PlantPageWrapper,
   PlantsWrapper,
-  WeekContainer,
-  DayContainer,
-  PlantsSensorContainer,
-  ScheduleTime,
-  ActionButton,
-  CardButtons,
-  TextSpaced
+  PlantsSensorContainer
 } from './your-plants.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GET_LOGGED_IN_USER } from 'graphql/query/customer.query';
-import { PlantsListWrapper } from 'features/your-plants/your-plants.style';
-import ErrorMessageTwo from 'components/error-message/error-message-two';
 import { Button } from 'components/button/button';
-import { ADD_PLANT, UPDATE_HUMIDITY_1_SETTINGS, UPDATE_HUMIDITY_2_SETTINGS, UPDATE_LIGHT_SETTINGS } from 'graphql/query/plants.query';
-import Select from 'react-select';
+import { ADD_PLANT, UPDATE_SETTING } from 'graphql/query/plants.query';
 import { Input } from 'components/forms/input';
 import { ProfileContext } from 'contexts/profile/profile.context';
 import { SuccessMsg } from 'features/user-profile/settings/settings.style';
-import Switch from 'components/switch/switch';
-import { PencilIcon } from 'assets/icons/PencilIcon';
-import { CloseIcon } from 'assets/icons/CloseIcon';
-import HumidityLogsGraph from './humidity-logs-graph/humidity-logs-graph';
+import SoilHumiditySensor from './sensors/SoilHumiditySensor';
+import LightSensor from './sensors/LightSensor';
   
 
 type YourPlantsProps = {
@@ -64,15 +46,14 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     pollInterval: 5000,
   });
   // const router = useRouter();
-  // const intl = useIntl();
+  const intl = useIntl();
   const [name, setPlantName] = useState('');
+  const [openTab, setOpenTab] = useState('');
   const [controllerId, setControllerID] = useState('');
   const [userinfoMsg, setUserinfoMsg] = useState('');
-  const [daySelected, setDay] = useState('');
   const [addPlant] = useMutation(ADD_PLANT);
-  const [updateSoilHumiditySettings1] = useMutation(UPDATE_HUMIDITY_1_SETTINGS);
-  const [updateSoilHumiditySettings2] = useMutation(UPDATE_HUMIDITY_2_SETTINGS);
-  const [updateLightSettings] = useMutation(UPDATE_LIGHT_SETTINGS);
+  
+  const [updateSetting] = useMutation(UPDATE_SETTING);
   const { plants } = state;
 
   if (loading) {
@@ -85,29 +66,32 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     );
   };
 
-  const handleHumiditySettings1Change = (plant: any, field: string, value: string | boolean) => {
-    dispatch({
-      type: 'HANDLE_HUMIDITY_1_SETTINGS_CHANGE',
-      payload: { plant, value, field },
-    });
+  const isRelayIdAlreadyAssigend = (plant: any, field: string) => {
+    if (field !== 'relayOneIdRelated' && field !== 'relayTwoIdRelated' && field !== 'relayThreeIdRelated' && field !== 'relayFourIdRelated') return false;
 
-    setTimeout(function () {
-      handleSettings1SaveClick(plant, field, value);
-    }, 1000)
+    {Object.keys(SettingsNames).map((settingName, i: number) => {
+      const relaysIds = [RelaysIds.RELAY_ONE, RelaysIds.RELAY_TWO, RelaysIds.RELAY_THIRD, RelaysIds.RELAY_FOURTH];
+      const relayAlreadyAssigned = relaysIds.includes(plant[settingName][field]);
 
-    setUserinfoMsg('Update user info successfully');
-    setTimeout(function () {
-      setUserinfoMsg('');
-    }, 8000)
+      if (relayAlreadyAssigned) {
+        setUserinfoMsg(`${intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' })} ${plant[settingName]}`);
+        setTimeout(function () {
+          setUserinfoMsg('');
+        }, 8000)
+        return true;
+      }
+     })
+   }
+   return false;
   };
+  
 
-  const handleHumiditySettings2Change = (plant: any, field: string, value: string | boolean) => {
-    dispatch({
-      type: 'HANDLE_HUMIDITY_2_SETTINGS_CHANGE',
-      payload: { plant, value, field },
-    });
+  const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingName: SettingsNames) => {
+    if (isRelayIdAlreadyAssigend(plant, field)) return;
 
-    handleSettings2SaveClick(plant, field, value);
+    dispatch({ type: settingName, payload: { plant, value, field } });
+
+    dispatchSettingSave(plant, field, value, settingName);
 
     setUserinfoMsg('Update user info successfully');
     setTimeout(function () {
@@ -131,29 +115,14 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     }, 8000)
   };
 
-  const handleLightSettingChange = (plant: any, field: string, value: string | boolean) => {
-    dispatch({
-      type: 'HANDLE_LIGHT_SETTINGS_CHANGE',
-      payload: { plant, value, field },
-    });
-
-    handleLightSettingSaveClick(plant, field, value);
-
-    setUserinfoMsg('Update user info successfully');
-    setTimeout(function () {
-      setUserinfoMsg('');
-    }, 8000)
-  };
-
-  const onDeleteSchedule = (plant: any, settingName: any, position: number) => {
-
+  const onDeleteSchedule = (plant: any, settingName: SettingsNames, position: number) => {
     delete plant[settingName][position];
     
-    updateLightSettings({
+    updateSetting({
       variables: {
         id: data?.getUser?.id,
         controllerId: plant.controllerId,
-        input: plant[settingName]
+        input: { ...plant[settingName], settingName: settingName }
       },
     });
 
@@ -163,32 +132,12 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     }, 8000)
   };
     
-  const handleSettings1SaveClick = (plant: any, fieldName: string, fieldValue: string | boolean) => {
-    updateSoilHumiditySettings1({
+  const dispatchSettingSave = (plant: any, fieldName: string, fieldValue: string | boolean, settingName: SettingsNames) => {
+    updateSetting({
       variables: {
         id: data?.getUser?.id,
         controllerId: plant.controllerId,
-        input: { [fieldName]: fieldValue, ...plant.soilHumiditySettings1 }
-      }
-    });
-  };
-
-  const handleSettings2SaveClick = (plant: any, fieldName: string, fieldValue: string | boolean) => {
-    updateSoilHumiditySettings2({
-      variables: {
-        id: data?.getUser?.id,
-        controllerId: plant.controllerId,
-        input: { [fieldName]: fieldValue, ...plant.soilHumiditySettings2 }
-      }
-    });
-  };
-
-  const handleLightSettingSaveClick = (plant: any, fieldName: string, fieldValue: string | boolean) => {
-    updateLightSettings({
-      variables: {
-        id: data?.getUser?.id,
-        controllerId: plant.controllerId,
-        input: { [fieldName]: fieldValue, ...plant.lightSettings }
+        input: { [fieldName]: fieldValue, ...plant[settingName], settingName: settingName }
       },
     });
   };
@@ -213,732 +162,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
       componentProps: { item: modalProps },
     });
   };
-  
-  const humidityModeOptions = [
-    { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
-    { value: HumiditySensorMode.MANUAL, label: 'Manual' },
-    { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND, label: 'Semi-automático' },
-    { value: HumiditySensorMode.IRRIGATE_ON_DEMAND, label: 'Automático' },
-    { value: HumiditySensorMode.SCHEDULE, label: 'Calendario de riego' },
-    { value: HumiditySensorMode.NONE, label: 'Ninguno' }
-  ];
-
-  const lightModeOptions = [
-    { value: LightSensorModes.MANUAL, label: 'Manual' },
-    { value: LightSensorModes.NONE, label: 'Ninguno' },
-    { value: LightSensorModes.SCHEDULE, label: 'Calendario' },
-    { value: LightSensorModes.SMART_SCHEDULE, label: 'Calendario inteligente' }
-  ];
-
-  const manualModeOptions = [
-    { value: true, label: 'Prendido' },
-    { value: false, label: 'Apagado' }
-  ];
-
-  const fourRelaysOptions = [
-    { value: 'isRelayOneOn', label: 'Enchufe 1' },
-    { value: 'isRelayTwoOn', label: 'Enchufe 2' },
-    { value: 'isRelayThirdOn', label: 'Enchufe 3' },
-    { value: 'isRelayFourthOn', label: 'Enchufe 4' }
-  ];
-
-  const eightRelaysOptions = [
-    { value: 'isRelayOneOn', label: 'Enchufe 1' },
-    { value: 'isRelayTwoOn', label: 'Enchufe 2' },
-    { value: 'isRelayThirdOn', label: 'Enchufe 3' },
-    { value: 'isRelayFourthOn', label: 'Enchufe 4' }
-  ];
-
-  const renderSoilSensor1 = (plant: any,setting: any, i: any) => {
-    const selectedMode = humidityModeOptions.find((option) => option.value === plant?.soilHumiditySettings1?.mode);
-    const selectedManualState = manualModeOptions.find((option) => option.value === plant?.soilHumiditySettings1?.relayOneWorking);
-    const relayOneSelected = fourRelaysOptions.find((option) => option.value === plant?.soilHumiditySettings1?.relayOneIdRelated);
-    const relayTwoSelected = fourRelaysOptions.find((option) => option.value === plant?.soilHumiditySettings1?.relayTwoIdRelated);
-    return (
-      <>
-      <PlantsSensorContainer key={i + '-orderList'}>
-        <ListItem>
-          <ListTitle>
-            <Text bold>
-              <FormattedMessage
-                id="plantName"
-                defaultMessage="plantName"
-              />
-            </Text>
-          </ListTitle>
-          <ListDes>
-            <Input
-              type='text'
-              name='name'
-              value={plant?.soilHumiditySettings1.name}
-              onChange={(e: any) => handleHumiditySettings1Change(plant, 'name', e.target.value)}
-              backgroundColor='#F7F7F7'
-              width='197px'
-              height='34.5px'
-              // intlInputLabelId="profileEmailField"
-            />
-          </ListDes>
-        </ListItem>
-      
-
-          <ListItem style={{ justifyContent: 'flex-start' }}>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="soilHumidityId"
-                  defaultMessage="soilHumidityId"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes style={{ marginLeft: '10px' }}>
-              <Text>{plant?.soilHumidity1} %</Text>
-            </ListDes>
-          </ListItem>
-          <ListItem style={{ justifyContent: 'flex-start' }}>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="humidityModeId"
-                  defaultMessage="humidityModeId"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Select 
-                onChange={(e: any) => handleHumiditySettings1Change(plant, 'mode', e.value)}
-                value={selectedMode}
-                options={humidityModeOptions}
-                styles={selectStyle}
-                menuPosition={'fixed'}
-              />
-            </ListDes>
-          </ListItem>
-
-          <ListItem style={{ justifyContent: 'flex-start' }}>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="notifyChangesId"
-                  defaultMessage="notifyChangesId"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes style={{ marginLeft: '10px' }}>
-              <Switch 
-                disabled={false}
-                checked={plant?.soilHumiditySettings1?.sendWhatsappWarnings}
-                labelPosition={'right'}
-                // className,
-                onUpdate={() => handleHumiditySettings1Change(plant, 'sendWhatsappWarnings', !plant?.soilHumiditySettings1?.sendWhatsappWarnings)}
-                // style
-              />
-            </ListDes>
-          </ListItem>
-
-
-        { (plant?.soilHumiditySettings1?.mode === HumiditySensorMode.IRRIGATE_ON_DEMAND ||
-          plant?.soilHumiditySettings1?.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION) && (
-          <>
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='maxHumidityId'
-                    defaultMessage='maxHumidityId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Input
-                  type='number'
-                  name='maxWarning'
-                  value={plant?.soilHumiditySettings1.maxWarning}
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'maxWarning', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='minHumidityId'
-                    defaultMessage='minHumidityId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <InputUpper
-                  type='number'
-                  name='minWarning'
-                  value={plant?.soilHumiditySettings1?.minWarning}
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'minWarning', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='asociateRelayOneId'
-                    defaultMessage='asociateRelayOneId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayOneIdRelated', e.value)}
-                  value={relayOneSelected}
-                  options={fourRelaysOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='asociateRelayTwoId'
-                    defaultMessage='asociateRelayTwoId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayTwoIdRelated', e.value)}
-                  value={relayTwoSelected}
-                  options={fourRelaysOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-          </>
-        )}
-
-        { setting.mode === HumiditySensorMode.SCHEDULE && (
-          <>
-            <WeekContainer>
-            {Object.keys(WeekDays).map((day, i: number) => {
-               return (
-                  <DayContainer
-                    key={i + '-day--humidity-1container'}
-                    style={{ backgroundColor: daySelected === day ? '#E6E6E6' : 'transparent' }}
-                    onClick={() => setDay(day)}
-                  >
-                    {day.substring(0,3)}
-                  </DayContainer>
-                )
-              })
-            }
-            </WeekContainer>
-
-            { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-              return (
-                <WeekContainer>
-                  { schedule.daysToRepeat.includes(daySelected) ? (
-                    <ScheduleTime>
-                      <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
-                      <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
-                      <CardButtons className='button-wrapper'>
-                        <ActionButton onClick={() => handleModal( AddTimeSchedule, { name: 'add-humidity-1-schedule', plant, id: data?.getUser?.id } )} className='edit-btn'>
-                          <PencilIcon />
-                        </ActionButton>
-
-                        <ActionButton onClick={() => onDeleteSchedule(plant, 'soilHumiditySettings1', i)} className='delete-btn'>
-                          <CloseIcon />
-                        </ActionButton>
-                      </CardButtons>
-                    </ScheduleTime>
-                  ) : <ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>}
-                </WeekContainer>
-              )
-            }
-            )}
-            <Button
-              size='small'
-              variant='outlined'
-              type='button'
-              className='add-button'
-              onClick={() => handleModal(
-                  AddTimeSchedule, 
-                  {
-                      name: 'add-humidity-1-schedule',
-                      plant,
-                      id: data?.getUser?.id
-                  }
-                )
-              }
-            >
-              <FormattedMessage
-                id='addTimeScheduleId'
-                defaultMessage='addTimeScheduleId' 
-              />
-            </Button>
-          </>
-        )}
-        
-        { plant?.soilHumiditySettings1?.mode === HumiditySensorMode.MANUAL && (
-          <>
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='manualModeStateId'
-                    defaultMessage='manualModeStateId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayOneWorking', e.value)}
-                  value={selectedManualState}
-                  options={manualModeOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id={setting.relayOneIdRelated?.length ? 'asociateRelayId' :'asociatedRelayId' }
-                    defaultMessage={setting.relayOneIdRelated?.length ? 'asociateRelayId' :'asociatedRelayId'}
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayOneIdRelated', e.value)}
-                  value={relayOneSelected}
-                  options={fourRelaysOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-          </>
-        )}
-
-        { plant?.soilHumiditySettings1?.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION && (
-          <>
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='irrigationTimeId'
-                    defaultMessage='irrigationTimeId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Input
-                  type='number'
-                  name='relayOneAutomatedTimeToRun'
-                  value={plant?.soilHumiditySettings1.relayOneAutomatedTimeToRun}
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayOneAutomatedTimeToRun', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='irrigationEvacuationTimeId'
-                    defaultMessage='irrigationEvacuationTimeId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Input
-                  type='number'
-                  name='relayTwoAutomatedTimeToRun'
-                  value={plant?.soilHumiditySettings1.relayTwoAutomatedTimeToRun}
-                  onChange={(e: any) => handleHumiditySettings1Change(plant, 'relayTwoAutomatedTimeToRun', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-
-          </>
-        )}
-        
-        { setting?.logs.length > 0 && (
-          <HumidityLogsGraph
-            data={setting.logs}
-          />
-        )}
-        
-        { setting?.mode === HumiditySensorMode.NONE && (
-          <Text>Necesitas seleccionar un modo</Text>
-        )}
-        </PlantsSensorContainer>
-      </>
-    )
-  }
-
-  const renderSoilSensor2 = (plant: any, setting: any, i: any) => {
-    const selectedMode = humidityModeOptions.find((option) => option.value === plant?.soilHumiditySettings2?.mode);
-    const selectedManualState = manualModeOptions.find((option) => option.value === plant?.soilHumiditySettings2?.relayOneWorking);
-    const relayOneSelected = fourRelaysOptions.find((option) => option.value === plant?.soilHumiditySettings2?.relayOneIdRelated);
-    const relayTwoSelected = fourRelaysOptions.find((option) => option.value === plant?.soilHumiditySettings2?.relayTwoIdRelated);
-    return (
-      <PlantsSensorContainer key={i + '-orderList'}>
-        <ListItem>
-          <ListTitle>
-            <Text bold>
-              <FormattedMessage
-                id="plantName"
-                defaultMessage="plantName"
-              />
-            </Text>
-          </ListTitle>
-          <ListDes>
-            <Input
-              type='text'
-              name='name'
-              value={plant?.soilHumiditySettings2.name || ''}
-              onChange={(e: any) => handleHumiditySettings2Change(plant, 'name', e.target.value)}
-              backgroundColor='#F7F7F7'
-              width='197px'
-              height='34.5px'
-            />
-          </ListDes>
-        </ListItem>
-      
-
-          <ListItem style={{ justifyContent: 'flex-start' }}>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="soilHumidityId"
-                  defaultMessage="soilHumidityId"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes style={{ marginLeft: '10px' }}>
-              <Text>{plant?.soilHumidity2} %</Text>
-            </ListDes>
-          </ListItem>
-          <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="humidityModeId"
-                  defaultMessage="humidityModeId"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Select 
-                onChange={(e: any) => handleHumiditySettings2Change(plant, 'mode', e.value)}
-                value={selectedMode}
-                options={humidityModeOptions}
-                styles={selectStyle}
-                menuPosition={'fixed'}
-              />
-            </ListDes>
-          </ListItem>
-
-          <ListItem style={{ justifyContent: 'flex-start' }}>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="notifyChangesId"
-                  defaultMessage="notifyChangesId"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes style={{ marginLeft: '10px' }}>
-              <Switch 
-                disabled={false}
-                checked={plant?.soilHumiditySettings2?.sendWhatsappWarnings}
-                labelPosition={'right'}
-                // className,
-                onUpdate={() => handleHumiditySettings2Change(plant, 'sendWhatsappWarnings', !plant?.soilHumiditySettings2?.sendWhatsappWarnings)}
-                // style
-              />
-            </ListDes>
-          </ListItem>
-
-
-        { (plant?.soilHumiditySettings2?.mode === HumiditySensorMode.IRRIGATE_ON_DEMAND ||
-          plant?.soilHumiditySettings2?.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION) && (
-          <>
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='maxHumidityId'
-                    defaultMessage='maxHumidityId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Input
-                  type='number'
-                  // min="1" 
-                  // max="5"
-                  // placeholder={intl.formatMessage({
-                  //   id: 'couponPlaceholder',
-                  //   defaultMessage: 'Enter Coupon Here',
-                  // })}
-                  // inputRef={register({required: true})}
-                  //               placeholder='Ex: Search By Name'
-                  // required={true}
-                  name='maxWarning'
-                  value={plant?.soilHumiditySettings2.maxWarning}
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'maxWarning', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='minHumidityId'
-                    defaultMessage='minHumidityId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <InputUpper
-                  type='number'
-                  name='minWarning'
-                  value={plant?.soilHumiditySettings2?.minWarning}
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'minWarning', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='asociateRelayOneId'
-                    defaultMessage='asociateRelayOneId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayOneIdRelated', e.value)}
-                  value={relayOneSelected}
-                  options={fourRelaysOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='asociateRelayTwoId'
-                    defaultMessage='asociateRelayTwoId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayTwoIdRelated', e.value)}
-                  value={relayTwoSelected}
-                  options={fourRelaysOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-          </>
-        )}
-
-        { plant?.soilHumiditySettings2?.mode === HumiditySensorMode.MANUAL && (
-          <>
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='manualModeStateId'
-                    defaultMessage='manualModeStateId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayOneWorking', e.value)}
-                  value={selectedManualState}
-                  options={manualModeOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id={setting.relayOneIdRelated?.length ? 'asociateRelayId' : 'asociatedRelayId'}
-                    defaultMessage={setting.relayOneIdRelated?.length ? 'asociateRelayId' : 'asociatedRelayId'}
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayOneIdRelated', e.value)}
-                  value={relayOneSelected}
-                  options={fourRelaysOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-          </>
-        )}
-
-        { plant?.soilHumiditySettings2?.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION && (
-          <>
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='irrigationTimeId'
-                    defaultMessage='irrigationTimeId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Input
-                  type='number'
-                  name='relayOneAutomatedTimeToRun'
-                  value={plant?.soilHumiditySettings2.relayOneAutomatedTimeToRun}
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayOneAutomatedTimeToRun', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='irrigationEvacuationTimeId'
-                    defaultMessage='irrigationEvacuationTimeId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Input
-                  type='number'
-                  name='relayTwoAutomatedTimeToRun'
-                  value={plant?.soilHumiditySettings2.relayTwoAutomatedTimeToRun}
-                  onChange={(e: any) => handleHumiditySettings2Change(plant, 'relayTwoAutomatedTimeToRun', e.target.value)}
-                  backgroundColor='#F7F7F7'
-                  width='197px'
-                  height='34.5px'
-                />
-              </ListDes>
-            </ListItem>
-          </>
-        )}
-        
-        { setting.mode === HumiditySensorMode.SCHEDULE && (
-          <>
-            <WeekContainer>
-            {Object.keys(WeekDays).map((day, i: number) => {
-               return (
-                  <DayContainer
-                    key={i + '-day--humidity-2container'}
-                    style={{ backgroundColor: daySelected === day ? '#E6E6E6' : 'transparent' }}
-                    onClick={() => setDay(day)}
-                  >
-                    {day.substring(0,3)}
-                  </DayContainer>
-                )
-              })
-            }
-            </WeekContainer>
-
-            {/* { !setting?.scheduledOnTimes?.length && (<ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>) } */}
-            { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-              return (
-                <WeekContainer>
-                  { schedule.daysToRepeat.includes(daySelected) ? (
-                    <ScheduleTime key={i + '-day--schedule-on-time'}>
-                      <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
-                      <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
-                      <CardButtons className='button-wrapper'>
-                        <ActionButton onClick={() => handleModal( AddTimeSchedule, { name: 'add-humidity-2-schedule', plant, id: data?.getUser?.id } )} className='edit-btn'>
-                          <PencilIcon />
-                        </ActionButton>
-
-                        <ActionButton onClick={() => onDeleteSchedule(plant, 'soilHumiditySettings2', i)} className='delete-btn'>
-                          <CloseIcon />
-                        </ActionButton>
-                      </CardButtons>
-                    </ScheduleTime>
-                  ) : <ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>}
-                </WeekContainer>
-              )
-            }
-            )}
-
-            <Button
-              size='small'
-              variant='outlined'
-              type='button'
-              className='add-button'
-              onClick={() => handleModal(
-                  AddTimeSchedule, 
-                  {
-                      name: 'add-humidity-2-schedule',
-                      plant,
-                      id: data?.getUser?.id
-                  }
-                )
-              }
-            >
-              <FormattedMessage
-                id='addTimeScheduleId'
-                defaultMessage='addTimeScheduleId' 
-              />
-            </Button>
-          </>
-        )}
-        
-        { plant?.soilHumiditySettings2?.mode === HumiditySensorMode.NONE && (
-          <Text>Necesitas seleccionar un modo</Text>
-        )}
-        </PlantsSensorContainer>
-    )
-  }
 
   const renderAirTemperatureSensor = (plant: any, i: any) => {
     return (
@@ -980,181 +203,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     )
   }
 
-  const renderLightSensor = (plant: any, setting: any, i: any) => {
-    const selectedMode = lightModeOptions.find((option) => option.value === setting.mode);
-    const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
-    const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
-    const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    return (
-      <PlantsSensorContainer>
-        <ListItem style={{ justifyContent: 'flex-start' }}>
-          <ListTitle>
-            <Text bold>
-              <FormattedMessage
-                id="lightId"
-                defaultMessage="lightId"
-              />
-            </Text>
-          </ListTitle>
-          <ListDes style={{ marginLeft: '10px' }}>
-            <Text>{plant?.light} % {plant?.light < 40 ? '🌙' : '☀️'}</Text>
-          </ListDes>
-        </ListItem>
-
-        <ListItem style={{ justifyContent: 'flex-start' }}>
-          <ListTitle>
-            <Text bold>
-              <FormattedMessage
-                id="manualModeStateId"
-                defaultMessage="manualModeStateId"
-              />
-            </Text>
-          </ListTitle>
-          <ListDes style={{ marginLeft: '10px' }}>
-            <Text> 
-              <FormattedMessage
-                id={setting.relayOneWorking ? 'manualModeStateOnId' : 'manualModeStateOffId'}
-                defaultMessage='noDefaultOnOffMsg'
-              />
-            </Text>
-          </ListDes>
-        </ListItem>
-
-        <ListItem style={{ justifyContent: 'flex-start' }}>
-          <ListTitle>
-            <Text bold>
-              <FormattedMessage
-                id="lightModeId"
-                defaultMessage="lightModeId"
-              />
-            </Text>
-          </ListTitle>
-          <ListDes>
-            <Select 
-              onChange={(e: any) => handleLightSettingChange(plant, 'mode', e.value)}
-              value={selectedMode}
-              options={lightModeOptions}
-              styles={selectStyle}
-              menuPosition={'fixed'}
-            />
-          </ListDes>
-        </ListItem>
-
-        { (setting?.mode === LightSensorModes.MANUAL || setting?.mode === LightSensorModes.SCHEDULE || setting?.mode === LightSensorModes.SMART_SCHEDULE) && (
-          <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
-                  defaultMessage={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Select 
-                onChange={(e: any) => handleLightSettingChange(plant, 'relayOneIdRelated', e.value)}
-                value={relayOneSelected}
-                options={fourRelaysOptions}
-                styles={selectStyle}
-                menuPosition={'fixed'}
-              />
-            </ListDes>
-          </ListItem>
-        )}
-        
-        { setting.mode === LightSensorModes.MANUAL && (
-          <>
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id='manualModeStateId'
-                    defaultMessage='manualModeStateId'
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-                <Select 
-                  onChange={(e: any) => handleLightSettingChange(plant, 'relayOneWorking', e.value)}
-                  value={selectedManualState}
-                  options={manualModeOptions}
-                  styles={selectStyle}
-                  menuPosition={'fixed'}
-                />
-              </ListDes>
-            </ListItem>
-          </>
-        )}
-
-        { (setting.mode === LightSensorModes.SCHEDULE || setting.mode === LightSensorModes.SMART_SCHEDULE) && (
-          <>
-            <WeekContainer>
-            {Object.keys(WeekDays).map((day, i: number) => {
-               return (
-                  <DayContainer
-                    key={i + '-day-container'}
-                    style={{ backgroundColor: daySelected === day ? '#E6E6E6' : 'transparent' }}
-                    onClick={() => setDay(day)}
-                  >
-                    {day.substring(0,3)}
-                  </DayContainer>
-                )
-              })
-            }
-            </WeekContainer>
-
-            { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-              return (
-                <WeekContainer key={i + '-days-to-repeat-2'}>
-                  { schedule.daysToRepeat.includes(daySelected) ? (
-                    <ScheduleTime>
-                      <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
-                      <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
-                      <CardButtons className='button-wrapper'>
-                        <ActionButton onClick={() => handleModal( AddTimeSchedule, { name: 'add-light-schedule', plant, id: data?.getUser?.id } )} className='edit-btn'>
-                          <PencilIcon />
-                        </ActionButton>
-
-                        <ActionButton onClick={() => onDeleteSchedule(plant, 'lightSettings', i)} className='delete-btn'>
-                          <CloseIcon />
-                        </ActionButton>
-                      </CardButtons>
-                    </ScheduleTime>
-                  ) : <ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>}
-                </WeekContainer>
-              )
-            }
-            )}
-            <Button
-              size='small'
-              variant='outlined'
-              type='button'
-              className='add-button'
-              onClick={() => handleModal(
-                  AddTimeSchedule, 
-                  {
-                      name: 'add-light-schedule',
-                      plant,
-                      id: data?.getUser?.id
-                  }
-                )
-              }
-            >
-              <FormattedMessage
-                id='addTimeScheduleId'
-                defaultMessage='addTimeScheduleId' 
-              />
-            </Button>
-          </>
-        )}
-
-
-      </PlantsSensorContainer>
-
-    )
-  }
-
-  const selectStyle = { control: styles => ({ ...styles, width: '197px' }) };
 
   return (
     <PlantPageWrapper>
@@ -1193,7 +241,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                           disabled={true}
                           value={plant?.name || ''}
                           // we have to change the onChange because the is no one for the controller name actualy
-                          onChange={(e: any) => handleHumiditySettings1Change(plant, 'name', e.target.value)}
+                          onChange={(e: any) => handleSettingsChange(plant, 'name', e.target.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
                           backgroundColor='#F7F7F7'
                           width='197px'
                           height='34.5px'
@@ -1201,9 +249,33 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                       </ListDes>
                     </ListItem>
 
-                  {renderSoilSensor1(plant, plant.soilHumiditySettings1, i)}
-                  {renderSoilSensor2(plant, plant.soilHumiditySettings2, i)}
-                  {renderLightSensor(plant, plant.lightSettings, i)}
+                    <SoilHumiditySensor 
+                      data={data}
+                      plant={plant}
+                      openTab={openTab}
+                      setOpenTab={setOpenTab}
+                      settingName={SettingsNames.SOIL_HUMIDITY_SETTING_1}
+                      handleSettingsChange={handleSettingsChange}
+                      onDeleteSchedule={onDeleteSchedule} 
+                    />
+                    <SoilHumiditySensor 
+                      data={data}
+                      plant={plant}
+                      openTab={openTab}
+                      setOpenTab={setOpenTab}
+                      settingName={SettingsNames.SOIL_HUMIDITY_SETTING_2}
+                      handleSettingsChange={handleSettingsChange}
+                      onDeleteSchedule={onDeleteSchedule} 
+                    />
+                    <LightSensor 
+                      data={data}
+                      plant={plant}
+                      openTab={openTab}
+                      setOpenTab={setOpenTab}
+                      settingName={SettingsNames.LIGHT_SETTING}
+                      handleSettingsChange={handleSettingsChange}
+                      onDeleteSchedule={onDeleteSchedule} 
+                    />
                   {renderAirTemperatureSensor(plant, i)}
                   {renderAirHumiditySensor(plant, i)}
 

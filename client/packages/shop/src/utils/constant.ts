@@ -14,6 +14,18 @@ export const BANK_TRANSFER_ALIAS = 'dittofarm';
 export const BANK_TRANSFER_CBU = '0000003100030458924685';
 export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
 
+export enum SettingsNames {
+    SOIL_HUMIDITY_SETTING_1 = 'soilHumiditySettings1',
+    SOIL_HUMIDITY_SETTING_2 = 'soilHumiditySettings2',
+    LIGHT_SETTING = 'lightSettings',
+}
+
+export enum RelaysIds {
+    RELAY_ONE = 'isRelayOneOn',
+    RELAY_TWO = 'isRelayTwoOn',
+    RELAY_THIRD = 'isRelayThirdOn',
+    RELAY_FOURTH = 'isRelayFourthOn',
+}
 
 export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
@@ -40,3 +52,38 @@ export enum WeekDays {
     SATURDAY = 'SATURDAY',
     SUNDAY = 'SUNDAY'
 }
+
+export const humidityModeOptions = [
+    { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
+    { value: HumiditySensorMode.MANUAL, label: 'Manual' },
+    { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND, label: 'Semi-automático' },
+    { value: HumiditySensorMode.IRRIGATE_ON_DEMAND, label: 'Automático' },
+    { value: HumiditySensorMode.SCHEDULE, label: 'Calendario de riego' },
+    { value: HumiditySensorMode.NONE, label: 'Ninguno' }
+];
+
+export const lightModeOptions = [
+    { value: LightSensorModes.MANUAL, label: 'Manual' },
+    { value: LightSensorModes.NONE, label: 'Ninguno' },
+    { value: LightSensorModes.SCHEDULE, label: 'Calendario' },
+    { value: LightSensorModes.SMART_SCHEDULE, label: 'Calendario inteligente' }
+];
+
+export const manualModeOptions = [
+    { value: true, label: 'Prendido' },
+    { value: false, label: 'Apagado' }
+];
+
+export const fourRelaysOptions = [
+    { value: RelaysIds.RELAY_ONE, label: 'Enchufe 1' },
+    { value: RelaysIds.RELAY_TWO, label: 'Enchufe 2' },
+    { value: RelaysIds.RELAY_THIRD, label: 'Enchufe 3' },
+    { value: RelaysIds.RELAY_FOURTH, label: 'Enchufe 4' }
+];
+
+export const eightRelaysOptions = [
+    { value: RelaysIds.RELAY_ONE, label: 'Enchufe 1' },
+    { value: RelaysIds.RELAY_TWO, label: 'Enchufe 2' },
+    { value: RelaysIds.RELAY_THIRD, label: 'Enchufe 3' },
+    { value: RelaysIds.RELAY_FOURTH, label: 'Enchufe 4' }
+];

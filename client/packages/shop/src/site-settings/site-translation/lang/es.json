@@ -169,6 +169,7 @@
   "smartLightingId": "Apagar luces si en el rango hay luz solar",
   "manualModeStateOnId": "Prendido",
   "manualModeStateOffId": "Apagado",
+  "relayAlreadyAssinged": "Relay ya asignado en ",
   "humidityModeId": "Modo de riego",
   "lightModeId": "Modo",
   "tempSensorId": "Temperatura de ambiente",
