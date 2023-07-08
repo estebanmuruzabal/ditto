@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.noAvailableCategories = exports.noAvailableDeliveryMethods = exports.noAvailableProducts = exports.reEnterValidName = exports.manualInput = exports.unknownInputDefault = exports.listCategories = exports.hablarConUnRepMsg = exports.invalidProductQuantity = exports.thereWasAProblemWaitForAssistance2 = exports.purchaseErrorMsg = exports.thanksMsgNoPurchase = exports.thanksMsgNoDevelopedFunction = exports.thanksMsg = exports.enterValidAddress = exports.paymentMethodSelectedAndOrderConfirmationMsj = exports.unknownPaymentOptInput = exports.thereWasAProblemWaitForAssistance = exports.unknownDeliPickUpOptInput = exports.getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = exports.getDeliveryAddress = exports.deliveryOptions = exports.unknownUserInput = exports.reListingAvailableProducts = exports.invalidNumberInput = exports.getQuantityOfProduct = exports.tecnicasDeCultivoInfo = exports.listAvailableProducts = exports.enterValidName = exports.mainMenuAuthenticatedUser = exports.welcomeMsgNameRequired = exports.userSignedUp = exports.orderDeliveredAndFeedBack = exports.orderPaidConfirmation = exports.pickUpPurchaseWithCashPayment = exports.pickUpPurchaseWithTransferPayment = exports.deliveryPurchaseWithCashPayment = exports.deliveryPurchaseWithTransferPayment = exports.getPickUpAddress = exports.getAddressLinkText = exports.getPrelinkText = exports.getLinkOnly = exports.welcomeTextAndCategoriesOpts = void 0;
+exports.noAvailableCategories = exports.noAvailableDeliveryMethods = exports.noAvailableProducts = exports.reEnterValidName = exports.manualInput = exports.unknownInputDefault = exports.listCategories = exports.hablarConUnRepMsg = exports.invalidProductQuantity = exports.thereWasAProblemWaitForAssistance2 = exports.purchaseErrorMsg = exports.thanksMsgNoPurchase = exports.thanksMsgNoDevelopedFunction = exports.thanksMsg = exports.enterValidAddress = exports.paymentMethodSelectedAndOrderConfirmationMsj = exports.unknownPaymentOptInput = exports.thereWasAProblemWaitForAssistance = exports.unknownDeliPickUpOptInput = exports.getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = exports.getDeliveryAddress = exports.deliveryOptions = exports.unknownUserInput = exports.reListingAvailableProducts = exports.invalidNumberInput = exports.getQuantityOfProduct = exports.tecnicasDeCultivoInfo = exports.listAvailableProducts = exports.enterValidName = exports.mainMenuAuthenticatedUser = exports.welcomeMsgNameRequired = exports.userSignedUp = exports.orderDeliveredAndFeedBack = exports.orderPaidConfirmation = exports.pickUpPurchaseWithCashPayment = exports.pickUpPurchaseWithTransferPayment = exports.deliveryPurchaseWithCashPayment = exports.deliveryPurchaseWithTransferPayment = exports.getPickUpAddress = exports.getAddressLinkText = exports.getPrelinkText = exports.getLinkOnly = exports.mainMenuUnauthenticatedUser = exports.welcomeTextAndCategoriesOpts = void 0;
 const constant_1 = require("../lib/utils/constant");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
 const pickUpPurchaseWithTransferPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date) => `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
@@ -161,6 +161,15 @@ Para comenzar necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲
 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, (Por ejemplo: Sofia Martinez )
 `;
 exports.welcomeMsgNameRequired = welcomeMsgNameRequired;
+const mainMenuUnauthenticatedUser = (categories) => `Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.
+
+Seleccioná una categoría para ver/comprar nuestros productos:
+
+${categories.map((product, i) => (`${i + 1} - ${product.name}\n`)).join('')}${categories.length + 1} - Ayuda! Necesito hablar con una persona física.
+
+*Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
+`;
+exports.mainMenuUnauthenticatedUser = mainMenuUnauthenticatedUser;
 // 2 - Ver listado con precios mayorista de frutas/verduras.
 const mainMenuAuthenticatedUser = (customerName, categories) => `Hola ${customerName},
 

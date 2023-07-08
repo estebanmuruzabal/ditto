@@ -68,7 +68,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
 
     // nextTrigger means that we use the latest nextTrigger saved in user history chat, that was setted by us, 
     // depending on what client's latest answer.
-    
+
     if (isGrower(user)) nextTrigger = await lastGrowerTrigger(user, message);
     if (isUserStaff(user)) nextTrigger = await lastStaffTrigger(user, message);
     else nextTrigger = await lastClientTrigger(user, message);

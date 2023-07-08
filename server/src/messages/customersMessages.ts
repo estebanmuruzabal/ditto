@@ -26,8 +26,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
-Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
-Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
+También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
 `;
 
 const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>
@@ -53,8 +53,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
-Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
-Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
+También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
 `;
 
 const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
@@ -80,8 +80,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
-Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
-Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
+También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
 `;
 
 const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
@@ -106,8 +106,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
-Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra página web! http://www.dittofarm.com/
-Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia/
+También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
 `;
 
 const orderPaidConfirmation = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
@@ -152,8 +152,7 @@ Por favor escribí un número entre el 1 y el 2 para elegir una opción
 `;
 
 const thereWasAProblemWaitForAssistance2 = () =>  
-`Algo salío mal, pero revisaremos pronto este chat para corregirlo, 
-mientras tanto tenés las siguientes opciones:
+`Algo salío mal, pero revisaremos pronto este chat para corregirlo
 `;
 
 export const welcomeTextAndCategoriesOpts = () =>  
@@ -175,11 +174,21 @@ Para comenzar necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲
 `;
 
 
+export const mainMenuUnauthenticatedUser = (categories: ICategory[]) =>  
+    `Hola! 🙋🏻 Soy un asistente virtual de Ditto Farm y estoy para ayudarte!
+
+Seleccioná una categoría para ver/comprar nuestros productos:
+
+${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).join('')}${categories.length + 1} - Ayuda! Necesito hablar con una persona física.
+
+*Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
+`;
+
 // 2 - Ver listado con precios mayorista de frutas/verduras.
 const mainMenuAuthenticatedUser = (customerName: string, categories: ICategory[]) =>  
     `Hola ${customerName},
 
-Seleccioná una de las siguientes categorías para ver sus productos:
+Seleccioná una categoría para ver/comprar nuestras productos:
 
 ${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
 
@@ -326,7 +335,7 @@ export const getAddressLinkText = (detailsText: string) => {
 }
 
 export const getPickUpAddress = (pickUpAddress: string) => {
-    return pickUpAddress && !pickUpAddress.includes('http') ? `Dirección:* ${pickUpAddress}` : '';
+    return pickUpAddress && !pickUpAddress.includes('http') ? `*- Dirección:* ${pickUpAddress}` : '';
 }
 
 
@@ -349,7 +358,7 @@ const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption: IDeli
 
 *- Tipo de envío:* ${deliOption.name} 
 *- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
-*- ${getPickUpAddress(deliOption?.pickUpAddress || delivery_address)}
+${getPickUpAddress(deliOption?.pickUpAddress || delivery_address)}
 *- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
 
 *Por favor seleccione su forma de pago:*
@@ -377,7 +386,7 @@ const thanksMsg = () =>
 
 const thanksMsgNoPurchase = () =>  
 `Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra pagina web!
-Aprovecho para invitarte a que nos sigas en Instagram 😊:    https://www.instagram.com/dittofarm.rcia/                                                 
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia
 
 Gracias por tu tiempo, te invitamos a que vuelvas en el momento que desees.
 `;

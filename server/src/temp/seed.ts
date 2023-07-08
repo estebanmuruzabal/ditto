@@ -104,7 +104,9 @@ const seed = async () => {
                 taskRelated: null,
             },
             tasks: [],
-            logs: []
+            logs: [],
+            plants: [],
+            chatHistory: []
         };
 
         const typeData: IType = {

@@ -134,7 +134,7 @@ export const lastGrowerTrigger = async (customer: IUser, userMessage: string) =>
 
 export const lastClientTrigger = async (customer: IUser, userMessage: string) => {
   userMessage = normalizeText(userMessage);
-  if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+  // if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
   let lastDittoMessageSent: any = { trigger: undefined };
 
   if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
@@ -145,7 +145,7 @@ export const lastClientTrigger = async (customer: IUser, userMessage: string) =>
   // END: blocked chat checks
 
   // if is initial, we reset conversation and we start all over again, non matter what
-  if (initialConversationKeys.includes(userMessage)) return TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+  if (initialConversationKeys.includes(userMessage)) return customer ? TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES : TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
   if (endConversationKeys.includes(userMessage)) return TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
 
   if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');
@@ -158,6 +158,8 @@ export const lastStaffTrigger = async (customer: IUser, userMessage: string) => 
   if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
   let lastDittoMessageSent: any = { trigger: undefined };
 
+  if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
+  
   if (!lastDittoMessageSent?.trigger) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
   
   if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');

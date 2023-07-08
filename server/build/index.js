@@ -35,7 +35,7 @@ const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json';
 exports.client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: { headless: false }
+    puppeteer: { headless: true, args: ["--no-sandbox"] }
 });
 // let sessionData: any;
 /**

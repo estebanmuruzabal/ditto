@@ -44,6 +44,11 @@ var TriggerStaffSteps;
 (function (TriggerStaffSteps) {
     TriggerStaffSteps["STAFF_ALL_CATEGORIES"] = "STAFF_ALL_CATEGORIES";
     TriggerStaffSteps["ALL_CATEGORIES_ANSWER"] = "ALL_CATEGORIES_ANSWER";
+    TriggerStaffSteps[TriggerStaffSteps["CHANGE_WORKING_STATE"] = 1] = "CHANGE_WORKING_STATE";
+    TriggerStaffSteps[TriggerStaffSteps["SEE_PRODUCTS_TO_UPDATE_STOCK"] = 2] = "SEE_PRODUCTS_TO_UPDATE_STOCK";
+    TriggerStaffSteps[TriggerStaffSteps["SEE_STAFF_INFO"] = 3] = "SEE_STAFF_INFO";
+    TriggerStaffSteps["UPDATE_PRODUCT_STOCK"] = "UPDATE_PRODUCT_STOCK";
+    TriggerStaffSteps["INTRODUCE_PRODUCT_STOCK"] = "INTRODUCE_PRODUCT_STOCK";
 })(TriggerStaffSteps || (exports.TriggerStaffSteps = TriggerStaffSteps = {}));
 var TriggerSteps;
 (function (TriggerSteps) {

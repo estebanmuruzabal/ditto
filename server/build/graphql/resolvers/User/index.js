@@ -455,7 +455,7 @@ exports.usersResolvers = {
                 isRelayFourthOn: plants[index].isRelayFourthOn ? "ON" : "OF",
             };
         }),
-        updateSoilHumiditySettings1: (_root, { id, controllerId, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        updateSetting: (_root, { id, controllerId, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
             var _f;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
@@ -468,96 +468,26 @@ exports.usersResolvers = {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             }
             else {
-                plants[index].soilHumiditySettings1.name = input.name;
-                plants[index].soilHumiditySettings1.sendWhatsappWarnings = input.sendWhatsappWarnings;
-                plants[index].soilHumiditySettings1.maxWarning = input.maxWarning;
-                plants[index].soilHumiditySettings1.minWarning = input.minWarning;
-                plants[index].soilHumiditySettings1.mode = input.mode;
-                plants[index].soilHumiditySettings1.relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
-                plants[index].soilHumiditySettings1.relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
-                plants[index].soilHumiditySettings1.relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
-                plants[index].soilHumiditySettings1.relayOneIdRelated = input.relayOneIdRelated;
-                plants[index].soilHumiditySettings1.relayOneWorking = input.relayOneWorking;
-                plants[index].soilHumiditySettings1.relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
-                plants[index].soilHumiditySettings1.relayTwoIdRelated = input.relayTwoIdRelated;
-                plants[index].soilHumiditySettings1.relayTwoWorking = input.relayTwoWorking;
-                plants[index].soilHumiditySettings1.logs = input.logs;
-                plants[index].soilHumiditySettings1.scheduledOnTimes = input.scheduledOnTimes;
+                plants[index][input.settingName].name = input.name;
+                plants[index][input.settingName].sendWhatsappWarnings = input.sendWhatsappWarnings;
+                plants[index][input.settingName].maxWarning = input.maxWarning;
+                plants[index][input.settingName].minWarning = input.minWarning;
+                plants[index][input.settingName].mode = input.mode;
+                plants[index][input.settingName].relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
+                plants[index][input.settingName].relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
+                plants[index][input.settingName].relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
+                plants[index][input.settingName].relayOneIdRelated = input.relayOneIdRelated;
+                plants[index][input.settingName].relayOneWorking = input.relayOneWorking;
+                plants[index][input.settingName].relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
+                plants[index][input.settingName].relayTwoIdRelated = input.relayTwoIdRelated;
+                plants[index][input.settingName].relayTwoWorking = input.relayTwoWorking;
+                plants[index][input.settingName].logs = input.logs;
+                plants[index][input.settingName].scheduledOnTimes = input.scheduledOnTimes;
             }
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
             return {
                 status: true,
-                message: "Updated soil humidity settings 1 successfully."
-            };
-        }),
-        updateSoilHumiditySettings2: (_root, { id, controllerId, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            // await authorize(req, db);
-            var _g;
-            const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
-            if (!userResult) {
-                throw new Error("User does not exits.");
-            }
-            const plants = userResult.plants;
-            const index = (_g = userResult.plants) === null || _g === void 0 ? void 0 : _g.findIndex((plant) => (plant.controllerId == controllerId));
-            if (index < 0) {
-                throw new Error(`Controller id does not exists: ${controllerId})`);
-            }
-            else {
-                plants[index].soilHumiditySettings1.name = input.name;
-                plants[index].soilHumiditySettings1.sendWhatsappWarnings = input.sendWhatsappWarnings;
-                plants[index].soilHumiditySettings1.maxWarning = input.maxWarning;
-                plants[index].soilHumiditySettings1.minWarning = input.minWarning;
-                plants[index].soilHumiditySettings1.mode = input.mode;
-                plants[index].soilHumiditySettings1.relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
-                plants[index].soilHumiditySettings1.relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
-                plants[index].soilHumiditySettings1.relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
-                plants[index].soilHumiditySettings1.relayOneIdRelated = input.relayOneIdRelated;
-                plants[index].soilHumiditySettings1.relayOneWorking = input.relayOneWorking;
-                plants[index].soilHumiditySettings1.relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
-                plants[index].soilHumiditySettings1.relayTwoIdRelated = input.relayTwoIdRelated;
-                plants[index].soilHumiditySettings1.relayTwoWorking = input.relayTwoWorking;
-                plants[index].soilHumiditySettings1.logs = input.logs;
-                plants[index].soilHumiditySettings1.scheduledOnTimes = input.scheduledOnTimes;
-            }
-            yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
-            return {
-                status: true,
-                message: "Updated soil humidity settings 1 successfully."
-            };
-        }),
-        updateLightSettings: (_root, { id, controllerId, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
-            // await authorize(req, db);
-            var _h;
-            const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
-            if (!userResult) {
-                throw new Error("User does not exits.");
-            }
-            const plants = userResult.plants;
-            const index = (_h = userResult.plants) === null || _h === void 0 ? void 0 : _h.findIndex((plant) => (plant.controllerId == controllerId));
-            if (index < 0) {
-                throw new Error(`Controller id does not exists: ${controllerId})`);
-            }
-            else {
-                plants[index].lightSettings.name = input.name;
-                plants[index].lightSettings.sendWhatsappWarnings = input.sendWhatsappWarnings;
-                plants[index].lightSettings.maxWarning = input.maxWarning;
-                plants[index].lightSettings.minWarning = input.minWarning;
-                plants[index].lightSettings.mode = input.mode;
-                plants[index].lightSettings.relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
-                plants[index].lightSettings.relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
-                plants[index].lightSettings.relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
-                plants[index].lightSettings.relayOneIdRelated = input.relayOneIdRelated;
-                plants[index].lightSettings.relayOneWorking = input.relayOneWorking;
-                plants[index].lightSettings.relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
-                plants[index].lightSettings.relayTwoIdRelated = input.relayTwoIdRelated;
-                plants[index].lightSettings.relayTwoWorking = input.relayTwoWorking;
-                plants[index].lightSettings.logs = input.logs;
-                plants[index].lightSettings.scheduledOnTimes = input.scheduledOnTimes;
-            }
-            yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
-            return {
-                status: true,
-                message: "Updated soil humidity settings 2 successfully."
+                message: `Updated ${input.settingName} successfully`
             };
         }),
         addPhoneNumber: (_root, { id, number }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {

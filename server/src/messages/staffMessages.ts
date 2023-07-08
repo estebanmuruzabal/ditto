@@ -5,14 +5,13 @@ import { updateUserWorkInfoMutation } from "../api";
 export const getStuffMainMenuOptions = (resData: any, user: IUser) => {
     
     resData.replyMessage = 
-    `Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm,
-    
-    Seleccione una opcion:
+    `Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
 
-    ${user.workInfo.isWorking ?  '1 - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1 - Empezar a trabajar  🟢🧰⚒'}
-    2 - Actualizar stock
-    3 - Ver su informacion
-    `
+Seleccione una opcion:
+${user.workInfo.isWorking ? '1 - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1 - Empezar a trabajar  🟢🧰⚒'}
+2 - Actualizar stock
+3 - Ver su informacion`
+
         // empezar a trabajar/terminar de trabajar
         //  agregar stock de verduras (kg de frutilla p/ venta y no venta, cantidad de huevos p/venta y no venta) (que reciba whatsapp con audio pidiendo cantidades)
     resData.trigger = TriggerStaffSteps.ALL_CATEGORIES_ANSWER;
@@ -20,7 +19,7 @@ export const getStuffMainMenuOptions = (resData: any, user: IUser) => {
 };
 
 export const listAvailableProductsToUpdate = (products: any) =>  
-`*Apreta el boton del producto a actualizar:*
+`*Selecciona el producto a ctualizar el stock:*
 
 ${products.map((product: any, i: number) => (`${i+1} - ${getProductName(product.name)}\n`)).join('')}
 *Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*

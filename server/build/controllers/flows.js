@@ -10,20 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getNextStep = exports.findResponseMsg = void 0;
-const adapter_1 = require("../adapter");
+const growerBot_1 = require("../adapter/growerBot");
+const shopBot_1 = require("../adapter/shopBot");
+const staffBot_1 = require("../adapter/staffBot");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
 const handle_1 = require("./handle");
 const stepsReponse = require('../flow/response.json');
 const findResponseMsg = (trigger, customer, message, number, access_token) => __awaiter(void 0, void 0, void 0, function* () {
     let data;
     if ((0, shoppingUtils_1.isGrower)(customer)) {
-        data = (0, adapter_1.getReplyFromGrowerBot)(trigger, customer, message, number, access_token);
+        data = (0, growerBot_1.getReplyFromGrowerBot)(trigger, customer, message, number, access_token);
     }
     else if ((0, shoppingUtils_1.isUserStaff)(customer)) {
-        data = (0, adapter_1.getReplyFromEmployeeBot)(trigger, customer, message, number, access_token);
+        data = (0, staffBot_1.getReplyFromStaffBot)(trigger, customer, message, number, access_token);
     }
     else {
-        data = (0, adapter_1.getReplyFromShopBot)(trigger, customer, message, number, access_token);
+        data = (0, shopBot_1.getReplyFromShopBot)(trigger, customer, message, number, access_token);
     }
     if (data && data.media) {
         const file = (0, handle_1.checkIsUrl)(data.media) ? yield (0, handle_1.saveExternalFile)(data.media) : data.media;

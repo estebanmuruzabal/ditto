@@ -124,7 +124,9 @@ const seed = () => __awaiter(void 0, void 0, void 0, function* () {
                 taskRelated: null,
             },
             tasks: [],
-            logs: []
+            logs: [],
+            plants: [],
+            chatHistory: []
         };
         const typeData = {
             _id: new mongodb_1.ObjectId(),

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ADD_ADDRESS = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameAndEmailQuery = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.GET_SETTINGS = void 0;
+exports.ADD_ADDRESS = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameAndEmailQuery = exports.UPDATE_PRODUCT = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.GET_SETTINGS = void 0;
 exports.GET_SETTINGS = `
   query GetSetting {
     getSiteSetting(key: "site-settings") {
@@ -177,6 +177,38 @@ exports.signUpQuery = `
         message
     }
 }
+`;
+exports.UPDATE_PRODUCT = `
+  mutation UpdateProduct($id: ID!, $input: ProductUpdateInput!) {
+    updateProduct(id: $id, input: $input) {
+      id
+      type {
+        id
+        slug
+        name
+      }
+      categories {
+        id
+        slug
+        name
+      }
+      name
+      slug
+      description
+      images
+      packagePrice
+      unit
+      price
+      sale_price
+      discount_in_percent
+      product_quantity
+      is_featured
+      is_online
+      meta_title
+      meta_keyword
+      meta_description
+    }
+  }
 `;
 exports.updateUserNameAndEmailQuery = `
     mutation UpdateUser(

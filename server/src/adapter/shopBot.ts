@@ -3,7 +3,7 @@ import { cleanNumber } from "../controllers/handle"
 import { IDeliveryMethod, IProduct, IUser, TriggerSteps } from "../lib/types"
 import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME } from "../lib/utils/constant"
 import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText, containsValidName } from "../lib/utils/shoppingUtils"
-import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
+import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, mainMenuUnauthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
 
 
 export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
@@ -21,40 +21,26 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
     let categoriesRes: any;
     const num = cleanNumber(number);
 
-    console.log('nextTriggerStep received in Switch:', triggerStep)
+    console.log('step in SHOP BOT Switch:', triggerStep)
     switch (triggerStep) {
         case TriggerSteps.INITIAL_UNAUTHENTICATED_USER:
             const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
             const registeredSuccessfully = res?.data?.signUp?.status;
-            if (registeredSuccessfully) {
-                    resData.replyMessage = welcomeMsgNameRequired();
-                    resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
-                    resolve(resData);
-                } else {
-                    resData.replyMessage = thereWasAProblemWaitForAssistance();
-                    resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
-                    resolve(resData);
-                }
-            break;
 
-        case TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN:
-        case TriggerSteps.USER_SHOULD_INPUT_HIS_NAME:
+            if (!registeredSuccessfully) {
+                resData.replyMessage = thereWasAProblemWaitForAssistance();
+                resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+                resolve(resData);
+            }
+        
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
             categories = harcodedFilterOfUnusedCategories(categories);
-            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
-
-            if (containsValidName(userInput) && user?.id) {
-                const res: any = await updateUserNameAndEmail(user.id, userInput, '', access_token);
-                resData.replyMessage = mainMenuAuthenticatedUser(userInput, categories);
-                resData.trigger = TriggerSteps.SELECT_CATEGORY;
-                resolve(resData);
-            } else {
-                resData.replyMessage = enterValidName()
-                resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
-                resolve(resData);
-            }
+            resData.replyMessage = mainMenuUnauthenticatedUser(categories);
+            resData.trigger = TriggerSteps.SELECT_CATEGORY;
+            resolve(resData);
             break;
+
         case TriggerSteps.UNBLOCK_CHAT:
         case TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES:
             categoriesRes = await getCategories();
@@ -63,12 +49,12 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
 
             if (user?.id && user?.name) {
-                resData.replyMessage = mainMenuAuthenticatedUser(user?.name, categories);
+                resData.replyMessage = user.name !== INITIAL_USER_USERNAME ? mainMenuAuthenticatedUser(user?.name, categories) : mainMenuUnauthenticatedUser(categories);
                 resData.trigger = TriggerSteps.SELECT_CATEGORY;
                 resolve(resData);
             } else {
-                resData.replyMessage = 'error heere: 22020'
-                resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER_AGAIN;
+                resData.replyMessage = thereWasAProblemWaitForAssistance2();
+                resData.trigger = TriggerSteps.BLOCK_CHAT;
                 resolve(resData);
             }
             break;
@@ -96,6 +82,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             categoriesRes = await getCategories();
             categories = categoriesRes?.data?.categories?.items;
             categories = harcodedFilterOfUnusedCategories(categories);
+
             maxOptions = categories?.length + 1;
 
             // +1 because of the got to pay option
@@ -128,7 +115,15 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
             availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
             availableProducts = availableProducts?.data?.products?.items;
-            
+
+            if (availableProducts?.length <= 0 || !!!availableProducts) {
+                resData.replyMessage = noAvailableProducts()
+                resData.trigger = TriggerSteps.ALL_CATEGORIES;
+                // do we trigger a msj to admin phone?
+                resolve(resData);
+                break;
+            }
+
             resData.replyMessage = listAvailableProducts(availableProducts)
             resData.trigger = TriggerSteps.ADD_PRODUCT_TO_CART;
             resolve(resData);
@@ -367,14 +362,35 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 shoppingCart.total = totalItemsAmount + ccCharge + deliveryFee;
                 await updateUserShoppingCart(shoppingCart);
 
-                resData.replyMessage = paymentMethodSelectedAndOrderConfirmationMsj(shoppingCart);
-                resData.trigger = TriggerSteps.ORDER_CHECK_CONFIRMATION;
+                resData.replyMessage = user?.name !== INITIAL_USER_USERNAME ? paymentMethodSelectedAndOrderConfirmationMsj(shoppingCart) : enterValidName();
+                resData.trigger = user?.name !== INITIAL_USER_USERNAME ? TriggerSteps.ORDER_CHECK_CONFIRMATION : TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
                 resolve(resData);
                 break;
             }
             resData.replyMessage = unknownPaymentOptInput(paymentMethodsOpts)
             resData.trigger = TriggerSteps.SELECT_PAYMENT_METHOD;
             resolve(resData)
+            break;
+        case TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE:
+            const userName = userInput;
+            if (userName.length < 4 || /\d/.test(userName) || userName.split(' ').length < 2) {
+                resData.replyMessage = reEnterValidName();
+                resData.trigger = TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
+                resolve(resData)
+            }
+
+            const response: any = await updateUserNameAndEmail(user.id, userName, user.email, access_token);
+            if (!response?.data?.updateUserNameAndEmail?.status) {
+                console.log('coulnt updateUserNameAndEmail ', response);
+                resData.replyMessage = purchaseErrorMsg();
+                resData.trigger = TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
+                resolve(resData)
+                break;
+            }
+
+            resData.replyMessage = paymentMethodSelectedAndOrderConfirmationMsj(user?.shoppingCart);
+            resData.trigger = TriggerSteps.ORDER_CHECK_CONFIRMATION;
+            resolve(resData);
             break;
         case TriggerSteps.ORDER_CHECK_CONFIRMATION:
             userInputNumber = Number(userInput);
@@ -383,7 +399,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 case 1:
                     const res: any = await createOrder(shoppingCart);
                     if (res?.data?.createOrder?.customer_id) {
-                        console.log('shoppingCart::::::', shoppingCart)
                         resData.replyMessage = getOrderConfirmationMsgText(shoppingCart)
                         resData.trigger = TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
                         await updateUserShoppingCart(shoppingCart);

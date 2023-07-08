@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAddressToUser = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateUserNameAndEmail = exports.updateUserWorkInfoMutation = exports.signUpUser = exports.fetchCustomerAndToken = exports.getSettings = void 0;
+exports.addAddressToUser = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateProductStock = exports.updateUserNameAndEmail = exports.updateUserWorkInfoMutation = exports.signUpUser = exports.fetchCustomerAndToken = exports.getSettings = void 0;
 const handle_1 = require("../controllers/handle");
 const queries_1 = require("./queries");
 const { createApolloFetch } = require('apollo-fetch');
-const uri = 'http://52.67.194.237/api';
+const uri = 'http://54.232.137.175/api';
 // const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 const getSettings = () => new Promise((resolve, reject) => {
@@ -142,6 +142,27 @@ const updateUserNameAndEmail = (id, name, email, token) => new Promise((resolve,
     });
 });
 exports.updateUserNameAndEmail = updateUserNameAndEmail;
+const updateProductStock = (product) => new Promise((resolve, reject) => {
+    // @ts-ignore
+    // apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
+    apolloFetch({
+        query: queries_1.UPDATE_PRODUCT,
+        variables: { id: product._id, input: product },
+    }).then((res) => {
+        var _a, _b;
+        if (((_b = (_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.updateProduct) === null || _b === void 0 ? void 0 : _b.status) === true) {
+            console.log('updateProduct. Updated product quantity successguly.', name);
+        }
+        else {
+            console.log('updateProduct response:', res);
+        }
+        resolve(res);
+    }).catch((err) => {
+        console.log('updateProduct error:', err);
+        resolve(err);
+    });
+});
+exports.updateProductStock = updateProductStock;
 const saveUserChatHistory = (message, number, trigger, token) => new Promise((resolve, reject) => {
     // @ts-ignore
     apolloFetch.use(({ options }, next) => { options.headers = { 'x-access-token': token }; next(); });

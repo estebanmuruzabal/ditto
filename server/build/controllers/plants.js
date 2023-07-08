@@ -18,6 +18,7 @@ const __1 = require("..");
 const types_1 = require("../lib/types");
 const send_1 = require("./send");
 const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilHumidity) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const minHumiditySetted = !isNaN(Number(soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.minWarning)) ? Number(soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.minWarning) : null;
     const maxHumiditySetted = !isNaN(Number(soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.maxWarning)) ? Number(soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.maxWarning) : null;
     const relayOneIdRelated = soilHumiditySetting.relayOneIdRelated;
@@ -208,40 +209,28 @@ const checkSoilWarnings = (plant, soilHumiditySetting, phoneNumber, currentSoilH
             plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;
             break;
         case types_1.HumiditySensorMode.SCHEDULE:
-            // console.log('HumiditySensorMode.SCHEDULE entered')
+            moment_1.default.locale('es');
+            const today = (0, moment_1.default)(new Date(), 'MM/D/YYYY').day();
+            const currentTime1 = (0, moment_1.default)(new Date()).format('hh:mm:ss');
+            (_a = soilHumiditySetting === null || soilHumiditySetting === void 0 ? void 0 : soilHumiditySetting.scheduledOnTimes) === null || _a === void 0 ? void 0 : _a.map((schedule, i) => {
+                if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
+                    const startTime = (0, moment_1.default)(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    const endTime = (0, moment_1.default)(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = currentTime1.isBetween(startTime, endTime);
+                }
+            });
             break;
         default:
-            // const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-            // const lightSchedule = {
-            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]],
-            //     startTime: '00:00',
-            //     endTime: '23:59',
-            //     enabled: true,
-            //     smartLight: false
-            // }
-            // const b = {
-            //     daysToRepeat: [weekDays[0], weekDays[2], weekDays[3]]
-            // }
-            // const onTimes = [a, b]
-            console.log('defaulted entered');
-            //set notification schedule
-            // [mon] tue wed thu ...
-            // 00:00 --- 07:15
-            // 15:15 ----- 23:59
-            // Add time Schedule (button)
-            // (when pressing the button you see this pop up)
-            // Add time Schedule
-            //start time: 00:00
-            //end time: 23:59
-            // repeat: (touch and you can see all days of the week to select/deselect) press ok, and original view is seeing the selected days
-            // also the smart option for when is no light and there should be light
+            console.log('defaulted!!! papa');
             break;
     }
     return plant;
 });
 exports.checkSoilWarnings = checkSoilWarnings;
 const checkLightSensor = (plant, lightSettings, phoneNumber, light) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _b;
     console.log('lightSettings:', lightSettings);
     console.log('light:', light);
     // const minHumiditySetted = !isNaN(Number(soilHumiditySetting?.minWarning)) ? Number(soilHumiditySetting?.minWarning) : null;
@@ -263,20 +252,18 @@ const checkLightSensor = (plant, lightSettings, phoneNumber, light) => __awaiter
             moment_1.default.locale('es');
             const today = (0, moment_1.default)(new Date(), 'MM/D/YYYY').day();
             const currentTime = (0, moment_1.default)(new Date()).format('hh:mm:ss');
-            {
-                (_a = lightSettings === null || lightSettings === void 0 ? void 0 : lightSettings.scheduledOnTimes) === null || _a === void 0 ? void 0 : _a.map((schedule, i) => {
-                    if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
-                        const startTime = (0, moment_1.default)(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                        const endTime = (0, moment_1.default)(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                        const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+            (_b = lightSettings === null || lightSettings === void 0 ? void 0 : lightSettings.scheduledOnTimes) === null || _b === void 0 ? void 0 : _b.map((schedule, i) => {
+                if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
+                    const startTime = (0, moment_1.default)(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    const endTime = (0, moment_1.default)(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    // @ts-ignore
+                    if (currentTime.isBetween(startTime, endTime)) {
                         // @ts-ignore
-                        if (currentTime.isBetween(startTime, endTime)) {
-                            // @ts-ignore
-                            plant[relayOneIdRelated] = schedule.smartLight ? false : true;
-                        }
+                        plant[relayOneIdRelated] = schedule.smartLight ? false : true;
                     }
-                });
-            }
+                }
+            });
             break;
         default:
             console.log('defaulted entered');
@@ -291,11 +278,11 @@ const checkAirHumidityAndTempeture = (plant, phoneNumber) => __awaiter(void 0, v
 });
 exports.checkAirHumidityAndTempeture = checkAirHumidityAndTempeture;
 const checkSensors = (plant, phoneNumber) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b, _c, _d;
+    var _c, _d, _e;
     // make method to see how much water is used based on time that relay is ON       
-    const amountOfWater = (_b = plant.distanceSensorSettings) === null || _b === void 0 ? void 0 : _b.relayOneAutomatedTimeToRun;
-    const minWarningDistance = !isNaN(Number((_c = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _c === void 0 ? void 0 : _c.minWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.minWarning) : null;
-    const maxWarningDistance = !isNaN(Number((_d = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _d === void 0 ? void 0 : _d.maxWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.maxWarning) : null;
+    const amountOfWater = (_c = plant.distanceSensorSettings) === null || _c === void 0 ? void 0 : _c.relayOneAutomatedTimeToRun;
+    const minWarningDistance = !isNaN(Number((_d = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _d === void 0 ? void 0 : _d.minWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.minWarning) : null;
+    const maxWarningDistance = !isNaN(Number((_e = plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings) === null || _e === void 0 ? void 0 : _e.maxWarning)) ? Number(plant === null || plant === void 0 ? void 0 : plant.distanceSensorSettings.maxWarning) : null;
     const relayOneIdRelatedName = plant.distanceSensorSettings.relayOneIdRelated;
     const relayTwoIdRelatedName = plant.distanceSensorSettings.relayTwoIdRelated;
     // if distance is equal or grater than maxWarningDistance, and relayMaxWorking is not ON, meaning is not alreado working, we turn on maxWarningRelayIdRelatedName

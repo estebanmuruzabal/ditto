@@ -1,15 +1,15 @@
-import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updateProductStock } from "../api"
-import { cleanNumber } from "../controllers/handle"
-import { IDeliveryMethod, IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
-import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
-import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText, containsValidName } from "../lib/utils/shoppingUtils"
-import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
-import { getGrowerSensorList, getSensorsMenuList, getStuffMainMenuButtons, startWorking, stopWorking } from "../lib/utils/workUtils"
+// import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updateProductStock } from "../api"
+// import { cleanNumber } from "../controllers/handle"
+// import { IDeliveryMethod, IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
+// import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
+// import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText, containsValidName } from "../lib/utils/shoppingUtils"
+// import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
+// import { getGrowerSensorList, getSensorsMenuList } from "../lib/utils/workUtils"
 
-const { saveMessageJson } = require('./jsonDb')
-// const { getDataIa } = require('./diaglogflow')
-const  stepsInitial = require('../flow/initial.json')
-const  stepsReponse = require('../flow/response.json')
+// const { saveMessageJson } = require('./jsonDb')
+// // const { getDataIa } = require('./diaglogflow')
+// const  stepsInitial = require('../flow/initial.json')
+// const  stepsReponse = require('../flow/response.json')
 
 
 // export const getIA = (message: string) => new Promise((resolve, reject) => {
