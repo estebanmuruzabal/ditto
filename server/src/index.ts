@@ -40,10 +40,10 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     let settingResponse: any = await getSettings();
     let nextTrigger: TriggerSteps;
     const message = body;
-    // settingResponse = settingResponse?.data?.getSiteSetting?.value;
+    settingResponse = settingResponse?.data?.getSiteSetting?.value;
 
-    // const settingValues = JSON.parse(settingResponse);
-    // if (!settingValues?.whatsapp_bot_is_on) return;
+    const settingValues = JSON.parse(settingResponse);
+    if (!settingValues?.whatsapp_bot_is_on) return;
 
     console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
 

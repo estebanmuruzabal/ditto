@@ -1,6 +1,6 @@
 // import { saveMessage } from "../adapter";
 import { List } from "whatsapp-web.js";
-import { saveUserChatHistory, signUpUser } from "../api";
+import { getSettings, saveUserChatHistory, signUpUser } from "../api";
 import { ISetting, IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
 import { endConversationKeys, getCleanNumber, initialConversationKeys, isGrower, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
@@ -85,7 +85,17 @@ const list = new List(`/n Por favor, selecciona una opciÃ³n en el siguiente menÃ
     'footer');
             
 export const sendMessage = async (client: any, number: string, text: string, trigger?: TriggerSteps, token?: string) => {
+    let settingResponse: any = await getSettings();
+    settingResponse = settingResponse?.data?.getSiteSetting?.value;
+
+    const settingValues = JSON.parse(settingResponse);
+    if (!settingValues?.whatsapp_bot_is_on) {
+      console.log('Tried to send msg, but whatsapp setting is OFF', text);
+      return;
+    }
+    
   if (!number) { console.log('no number error at sendMessage!'); return; }
+  
    setTimeout(async () => {
      const message: any = text
      
@@ -159,7 +169,7 @@ export const lastStaffTrigger = async (customer: IUser, userMessage: string) => 
   let lastDittoMessageSent: any = { trigger: undefined };
 
   if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
-  
+
   if (!lastDittoMessageSent?.trigger) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
   
   if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');

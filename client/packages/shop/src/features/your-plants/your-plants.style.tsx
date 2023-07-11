@@ -152,7 +152,7 @@ export const PlantsSensorContainer = styled.button`
   // width: calc(100% - 30px);
   margin: 5px 0px;
   padding: 10px 5px;
-  width: 360px;  
+  width: 100%;  
   
   // @media (min-width: 991px) {
   //   width: 870px;

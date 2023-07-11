@@ -396,10 +396,10 @@ export const typeDefs = gql`
         product_id: String!
         name: String
         image: String
-        quantity: Int!
-        recicledQuantity: Int!
+        quantity: Int
+        recicledQuantity: Int
         unit: String
-        price: Float!
+        price: Float
         sale_price: Float
     }
 
@@ -408,10 +408,10 @@ export const typeDefs = gql`
         product_id: String!
         name: String
         image: String
-        quantity: Int!
-        recicledQuantity: Int!
+        quantity: Int
+        recicledQuantity: Int
         unit: String
-        price: Float!
+        price: Float
         sale_price: Float
     }
     input OrderInput {

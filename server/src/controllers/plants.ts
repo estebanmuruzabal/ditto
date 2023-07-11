@@ -4,6 +4,7 @@ import { client } from "..";
 import { HumiditySensorMode, ISoilHumiditySettings, LightSensorMode, Plant } from "../lib/types";
 import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
+import { logTimeStamp } from "../utils/logsUtils";
 
 export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoilHumiditySettings, phoneNumber: string, currentSoilHumidity: number) => {
     const minHumiditySetted = !isNaN(Number(soilHumiditySetting?.minWarning)) ? Number(soilHumiditySetting?.minWarning) : null;
@@ -11,6 +12,10 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
     const relayOneIdRelated: any = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
 
+    // if (currentSoilHumidity < 0 || currentSoilHumidity > 120) {
+    //     console.log('humidity outside normal paramethers', currentSoilHumidity);
+    //     return plant;
+    // }
     console.log('soilHumiditySetting being process:', soilHumiditySetting);
     switch (soilHumiditySetting.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -47,10 +52,8 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 soilHumiditySetting.relayOneWorking = false;
                 break;
             }
-            soilHumiditySetting?.logs.push({
-                humidity: currentSoilHumidity,
-                timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
-            });
+
+            soilHumiditySetting = logTimeStamp(soilHumiditySetting, currentSoilHumidity);
             break;
         case HumiditySensorMode.SEEDS_POOL_IRRIGATION:
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
@@ -162,10 +165,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                 });
                 break;
             }
-            soilHumiditySetting?.logs.push({
-                humidity: currentSoilHumidity,
-                timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
-            });
+            soilHumiditySetting = logTimeStamp(soilHumiditySetting, currentSoilHumidity);
             break;
         case HumiditySensorMode.MANUAL:
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', soilHumiditySetting); break; }
@@ -187,10 +187,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                     finishedWatering: true
                 });
             } else {
-                soilHumiditySetting?.logs.push({
-                    humidity: currentSoilHumidity,
-                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
-                });
+                soilHumiditySetting = logTimeStamp(soilHumiditySetting, currentSoilHumidity);
             }
             // @ts-ignore
             plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;

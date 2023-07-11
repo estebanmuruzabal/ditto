@@ -141,22 +141,22 @@ export const updateUserNameAndEmail = (id: string, name: string, email: string, 
     });
 });
 
-export const updateProductStock = (product: IProduct) => new Promise((resolve, reject) => {
+export const updateProductStock = (productId: string, product: IProduct) => new Promise((resolve, reject) => {
     // @ts-ignore
         // apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
     
         apolloFetch({
             query: UPDATE_PRODUCT,
-            variables: { id: product._id, input: product },
+            variables: { id: productId, input: product },
         }).then((res: any) => {
             if (res?.data?.updateProduct?.status === true) {
-                console.log('updateProduct. Updated product quantity successguly.', name);
+                console.log('updateProduct. Updated product quantity successguly.', product._id, product);
             } else {
                 console.log('updateProduct response:', res);
             }
             resolve(res);
         }).catch((err: any) => {
-            console.log('updateProduct error:', err);
+            console.log('updateProduct error, id: product._id, input: product', product._id, product, err);
             resolve(err);
         });
     });
