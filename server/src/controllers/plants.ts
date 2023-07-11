@@ -186,9 +186,8 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
                     finishedWatering: true
                 });
-            } else {
-                soilHumiditySetting = logTimeStamp(soilHumiditySetting, currentSoilHumidity);
             }
+            soilHumiditySetting = logTimeStamp(soilHumiditySetting, currentSoilHumidity);
             // @ts-ignore
             plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;
 
