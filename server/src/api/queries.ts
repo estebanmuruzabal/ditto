@@ -54,7 +54,7 @@ export const getCustomerQuery = `
                 }
                 role
                 plants {
-                    controllerId
+                    plantId
                     name
                     soilHumidity1
                     soilHumidity2

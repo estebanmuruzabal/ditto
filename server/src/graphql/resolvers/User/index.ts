@@ -396,8 +396,8 @@ export const usersResolvers: IResolvers = {
             _root: undefined,
             {   id, 
                 name,
-                controllerId
-            }: { id: string, name: string, controllerId: number },
+                plantId
+            }: { id: string, name: string, plantId: number },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -415,7 +415,7 @@ export const usersResolvers: IResolvers = {
             const plantObject = {
                 id: shortid.generate(),
                 name,
-                controllerId,
+                plantId,
                 soilHumidity1: 0,
                 soilHumidity2: 0,
                 airHumidity: 0,
@@ -522,7 +522,7 @@ export const usersResolvers: IResolvers = {
             }
 
             const plants = userResult.plants;
-            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == contrId));
+            const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == contrId));
 
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
@@ -564,7 +564,7 @@ export const usersResolvers: IResolvers = {
         },
         updateSetting: async (
             _root: undefined,
-            {id, controllerId, input}: ISettingsInputArgs,
+            {id, plantId, input}: ISettingsInputArgs,
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -575,10 +575,10 @@ export const usersResolvers: IResolvers = {
             }
 
             const plants = userResult.plants;
-            const index = userResult.plants?.findIndex((plant: any) => (plant.controllerId == controllerId));
+            const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
 
             if (index < 0) {
-                throw new Error(`Controller id does not exists: ${controllerId})`);
+                throw new Error(`Controller id does not exists: ${plantId})`);
             } else {
                 plants[index][input.settingName].name = input.name;
                 plants[index][input.settingName].sendWhatsappWarnings = input.sendWhatsappWarnings;

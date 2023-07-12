@@ -4,7 +4,7 @@ import { IScheduleInput } from '../graphql/resolvers/User/types';
 
 export interface Plant {
     id?: string;
-    controllerId: number;
+    plantId: number;
     name?: string;
     soilHumidity1: number;
     soilHumidity2: number;

@@ -169,7 +169,7 @@ export const getGrowerMainMenuButtons = (resData: any, user: IUser, plant: Plant
     const buttons: any = [{ body: '1 - Editar configuración' }, { body: '2 - Agregar sensor' }];
 
     const bodyContent =
-        `Controller ID: ${plant.controllerId}
+        `Controller ID: ${plant.plantId}
 Humedad del suelo: ${plant.soilHumidity1}
 Humedad del aire: ${plant.airHumidity}
 Temperatura: ${plant.tempeture}

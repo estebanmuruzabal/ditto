@@ -102,7 +102,7 @@ void updateServerAndRelaysState() {
 
     // now we put everything together
     char queryString[950];
-    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"630d325b4872db758bb808b9\", \"controllerId\": 20, \"soilHumidity1\": ";
+    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"630d325b4872db758bb808b9\", \"plantId\": 20, \"soilHumidity1\": ";
     const char *secon = ", \"airHumidity\": ";
     const char *third = ", \"tempeture\": ";
     const char *thirdAndAHalf = ", \"distance_cm\": ";
@@ -112,7 +112,7 @@ void updateServerAndRelaysState() {
     const char *fifth = isRelayTwoOn ? ", \"isRelayTwoOn\": true" : ", \"isRelayTwoOn\": false";
     const char *sixth = isRelayThirdOn ? ", \"isRelayThirdOn\": true" : ", \"isRelayThirdOn\": false";
     const char *seventh = isRelayFourthOn ? ", \"isRelayFourthOn\": true" : ", \"isRelayFourthOn\": false";
-    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $controllerId: Int!, $soilHumidity1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soilHumidity2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, controllerId: $controllerId, soilHumidity1: $soilHumidity1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soilHumidity2: $soilHumidity2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
+    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $plantId: Int!, $soilHumidity1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soilHumidity2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, plantId: $plantId, soilHumidity1: $soilHumidity1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soilHumidity2: $soilHumidity2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
     
     strcpy(queryString,first);
     strcat(queryString,addSoilHumidity1);
@@ -135,7 +135,7 @@ void updateServerAndRelaysState() {
     Serial.println(queryString);
 
     // this is how the body looks like
-    // {"operationName": "UpdatePlant","variables":{"id": "630d325b4872db758bb808b9", "controllerId": 20, "soilHumidity": 42, "airHumidity": 0, "tempeture": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $controllerId: Int!, $soilHumidity: Int, $airHumidity: Int, $tempeture: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, controllerId: $controllerId, soilHumidity: $soilHumidity, airHumidity: $airHumidity, tempeture: $tempeture, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
+    // {"operationName": "UpdatePlant","variables":{"id": "630d325b4872db758bb808b9", "plantId": 20, "soilHumidity": 42, "airHumidity": 0, "tempeture": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $plantId: Int!, $soilHumidity: Int, $airHumidity: Int, $tempeture: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, plantId: $plantId, soilHumidity: $soilHumidity, airHumidity: $airHumidity, tempeture: $tempeture, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
     const char* body = queryString;
 
     int httpResponseCode = http.POST(body);

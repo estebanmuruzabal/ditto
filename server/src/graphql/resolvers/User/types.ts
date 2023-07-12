@@ -20,7 +20,7 @@ export interface ISettingsInput {
 
 export interface ISettingsInputArgs {
     id?: string;
-    controllerId: string;
+    plantId: string;
     input: ISettingsInput;
 }
 
