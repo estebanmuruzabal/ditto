@@ -22,7 +22,7 @@ query GetUser{
         isRelayFourthOn
         soilHumiditySettings1 {
             name
-            sendWhatsappWarnings
+            whatsappWarningsOn
             minWarning
             maxWarning
             mode
@@ -50,7 +50,7 @@ query GetUser{
         }
         soilHumiditySettings2 {
             name
-            sendWhatsappWarnings
+            whatsappWarningsOn
             minWarning
             maxWarning
             mode
@@ -78,7 +78,7 @@ query GetUser{
         }
         lightSettings {
           name
-          sendWhatsappWarnings
+          whatsappWarningsOn
           minWarning
           maxWarning
           mode

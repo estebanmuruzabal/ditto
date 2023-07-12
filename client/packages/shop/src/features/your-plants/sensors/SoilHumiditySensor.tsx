@@ -129,10 +129,10 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                 <ListDes style={{ marginLeft: '10px' }}>
                 <Switch 
                     disabled={false}
-                    checked={setting.sendWhatsappWarnings}
+                    checked={setting.whatsappWarningsOn}
                     labelPosition={'right'}
                     // className,
-                    onUpdate={() => handleSettingsChange(plant, 'sendWhatsappWarnings', !setting.sendWhatsappWarnings, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
                     // style
                 />
                 </ListDes>
@@ -379,7 +379,6 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                     />
                 </ListDes>
                 </ListItem>
-
             </>
             )}
             

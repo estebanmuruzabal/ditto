@@ -218,7 +218,14 @@ const LightSensor: React.FC<Props> = ({ plant, settingName, handleSettingsChange
                   defaultMessage='addTimeScheduleId' 
                 />
               </Button>
-
+              <Switch 
+                    disabled={false}
+                    checked={setting.whatsappWarningsOn}
+                    labelPosition={'right'}
+                    // className,
+                    onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, SettingsNames.LIGHT_SETTING)}
+                    // style
+                />
               { setting?.logs?.length > 0 && (
                     <HumidityLogsGraph
                         data={setting.logs}
