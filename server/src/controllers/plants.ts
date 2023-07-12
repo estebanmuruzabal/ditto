@@ -12,11 +12,6 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
     const relayOneIdRelated: any = soilHumiditySetting.relayOneIdRelated;
     const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
 
-    // if (currentSoilHumidity < 0 || currentSoilHumidity > 120) {
-    //     console.log('humidity outside normal paramethers', currentSoilHumidity);
-    //     return plant;
-    // }
-    console.log('soilHumiditySetting being process:', soilHumiditySetting);
     switch (soilHumiditySetting.mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
@@ -83,9 +78,6 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
 
             console.log('irrigationComplete', irrigationComplete)
             console.log('currentEvacuationMins', currentEvacuationMins)
-            // console.log('soilHumiditySetting.relayOneAutomatedStartedTime', soilHumiditySetting.relayOneAutomatedStartedTime)
-            // console.log('!!!soilHumiditySetting.relayTwoAutomatedStartedTime.length', !!soilHumiditySetting.relayTwoAutomatedStartedTime.length)
-            // console.log('soilHumiditySetting.relayTwoAutomatedStartedTime.length', soilHumiditySetting.relayTwoAutomatedStartedTime.length)
             if (irrigationInProgress) {
                 soilHumiditySetting?.logs.push({
                     humidity: currentSoilHumidity,
@@ -190,7 +182,6 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             soilHumiditySetting = logTimeStamp(soilHumiditySetting, currentSoilHumidity);
             // @ts-ignore
             plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;
-            console.log("soilHumiditySetting::", soilHumiditySetting)
             break;
         case HumiditySensorMode.SCHEDULE:
             moment.locale('es');
@@ -212,19 +203,12 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             console.log('defaulted!!! papa')
             break;
     }
-    console.log("plant", plant)
     return plant;
 };
 
 export const checkLightSensor = async (plant: Plant, lightSettings: ISoilHumiditySettings, phoneNumber: string, light: number) => {
-    console.log('lightSettings:', lightSettings)
-    console.log('light:', light)
-    // const minHumiditySetted = !isNaN(Number(soilHumiditySetting?.minWarning)) ? Number(soilHumiditySetting?.minWarning) : null;
-    // const maxHumiditySetted = !isNaN(Number(soilHumiditySetting?.maxWarning)) ? Number(soilHumiditySetting?.maxWarning) : null;
     const relayOneIdRelated: any = lightSettings.relayOneIdRelated;
-    // const relayTwoIdRelated: any = soilHumiditySetting.relayTwoIdRelated;
 
-    // console.log('soilHumiditySetting being process:', soilHumiditySetting);
     switch (lightSettings.mode) {
         case HumiditySensorMode.MANUAL:
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', lightSettings); break; }
@@ -241,7 +225,6 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISoilHumidit
                 if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     
                     // @ts-ignore
                     if (currentTime.isBetween(startTime, endTime)) {
