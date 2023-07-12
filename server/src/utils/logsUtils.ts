@@ -7,7 +7,7 @@ export const logTimeStamp = (soilHumiditySetting: ISoilHumiditySettings, current
     console.log('currentTimeMoment',currentTimeMoment)
     console.log('soilHumiditySetting?.logs?.length',soilHumiditySetting?.logs?.length)
     if (soilHumiditySetting?.logs?.length > 0) {
-        const lastTimeStamp = soilHumiditySetting?.logs[soilHumiditySetting?.logs?.length]?.timestamp;
+        const lastTimeStamp = soilHumiditySetting?.logs[soilHumiditySetting?.logs?.length - 1]?.timestamp;
         console.log('lastTimeStamp', lastTimeStamp)
         const lastTimeStampMoment = moment(new Date(lastTimeStamp));
         console.log('lastTimeStampMoment', lastTimeStampMoment)
