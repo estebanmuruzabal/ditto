@@ -4,14 +4,19 @@ import { ISoilHumiditySettings } from "../lib/types";
 export const logTimeStamp = (soilHumiditySetting: ISoilHumiditySettings, currentSoilHumidity: number) => {
     const currentTimeMoment = moment(new Date());
 
+    console.log('currentTimeMoment',currentTimeMoment)
+    console.log('soilHumiditySetting?.logs?.length',soilHumiditySetting?.logs?.length)
     if (soilHumiditySetting?.logs?.length > 0) {
         const lastTimeStamp = soilHumiditySetting?.logs[soilHumiditySetting?.logs?.length]?.timestamp;
+        console.log('lastTimeStamp', lastTimeStamp)
         const lastTimeStampMoment = moment(new Date(lastTimeStamp));
+        console.log('lastTimeStampMoment', lastTimeStampMoment)
         const lastTimestampInMins = currentTimeMoment?.diff(lastTimeStampMoment, 'minutes');
+        console.log('lastTimestampInMins', lastTimestampInMins)
 
         if (lastTimestampInMins < 5 && soilHumiditySetting?.logs.length !== 0) return soilHumiditySetting;
     }
-
+    console.log('asdasdsa')
 //         // we only log timestamp if there has pass 5 mins from the latest timestamp currently
 //     const lastTimeStamp = soilHumiditySetting?.logs[soilHumiditySetting?.logs?.length]?.timestamp || currentTimeMoment;
 //     console.log('lastTimeStamp', lastTimeStamp)
