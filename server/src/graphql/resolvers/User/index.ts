@@ -581,7 +581,7 @@ export const usersResolvers: IResolvers = {
                 throw new Error(`Controller id does not exists: ${controllerId})`);
             } else {
                 plants[index][input.settingName].name = input.name;
-                plants[index][input.settingName].sendWhatsappWarnings = input.sendWhatsappWarnings;
+                plants[index][input.settingName].whatsappWarningsOn = input.whatsappWarningsOn;
                 plants[index][input.settingName].maxWarning = input.maxWarning;
                 plants[index][input.settingName].minWarning = input.minWarning;
                 plants[index][input.settingName].mode = input.mode;

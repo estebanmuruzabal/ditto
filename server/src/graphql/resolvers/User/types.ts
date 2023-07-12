@@ -14,7 +14,7 @@ export interface ISettingsInput {
     relayTwoWorking: boolean;
     logs?: Array<ILogsInput>;
     scheduledOnTimes?: Array<IScheduleInput>;
-    sendWhatsappWarnings: boolean;
+    whatsappWarningsOn: boolean;
     settingName: string;
 }
 

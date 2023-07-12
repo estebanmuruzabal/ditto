@@ -33,7 +33,7 @@ export const typeDefs = gql`
 
     type SoilHumiditySettings {
         name: String
-        sendWhatsappWarnings: Boolean
+        whatsappWarningsOn: Boolean
         minWarning: String
         maxWarning: String
         mode: String
@@ -51,7 +51,7 @@ export const typeDefs = gql`
 
     type LightSettings {
         name: String
-        sendWhatsappWarnings: Boolean
+        whatsappWarningsOn: Boolean
         minWarning: String
         maxWarning: String
         mode: String
@@ -116,7 +116,7 @@ export const typeDefs = gql`
 
     input InputSettings {
         name: String
-        sendWhatsappWarnings: Boolean
+        whatsappWarningsOn: Boolean
         minWarning: String
         maxWarning: String
         mode: String

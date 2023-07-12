@@ -12,7 +12,8 @@ export interface Plant {
     airHumidity: number;
     tempeture: number;
     light: number;
-    soilHumiditySettings1: ISoilHumiditySettings;
+    sensors: [ISetting] 
+    soilHumiditySettings1: ISetting;
     soilHumiditySettings2: ISoilHumiditySettings;
     distanceSensorSettings: IDistanceSensorSettings; 
     lightSettings: ILightSettings; 
@@ -41,10 +42,12 @@ export interface IDistanceSensorSettings {
     relayTwoWorking: boolean;
 }
 
-export interface ISoilHumiditySettings {
+export interface ISetting {
+    reading: number;
     minWarning: string;
     maxWarning: string;
     mode: string;
+    whatsappWarningsOn: boolean;
     relayOneAutomatedTimeToRun: string;
     relayOneAutomatedStartedTime: string;
     relayTwoAutomatedStartedTime: string;
@@ -61,6 +64,7 @@ export interface ILightSettings {
     minWarning: string;
     maxWarning: string;
     mode: string;
+    whatsappWarningsOn: boolean;
     relayOneAutomatedTimeToRun: string;
     relayOneAutomatedStartedTime: string;
     relayTwoAutomatedStartedTime: string;
