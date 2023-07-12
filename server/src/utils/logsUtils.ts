@@ -27,7 +27,6 @@ export const logTimeStamp = (soilHumiditySetting: ISoilHumiditySettings, current
 // console.log('lastTimestampInMins', lastTimestampInMins)
 //     if (lastTimestampInMins < 5 && soilHumiditySetting?.logs.length !== 0) return soilHumiditySetting;
 
-    soilHumiditySetting.logs = [];
     soilHumiditySetting?.logs.push({
         humidity: currentSoilHumidity,
         timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
