@@ -49,7 +49,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
   const intl = useIntl();
   const [name, setPlantName] = useState('');
   const [openTab, setOpenTab] = useState('');
-  const [controllerId, setControllerID] = useState('');
+  const [plantId, setControllerID] = useState('');
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [addPlant] = useMutation(ADD_PLANT);
   
@@ -104,7 +104,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
       variables: {
         id: data?.getUser?.id,
         name,
-        controllerId: Number(controllerId)
+        plantId: Number(plantId)
       },
     });
 
@@ -121,7 +121,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     updateSetting({
       variables: {
         id: data?.getUser?.id,
-        controllerId: plant.controllerId,
+        plantId: plant.plantId,
         input: { ...plant[settingName], settingName: settingName }
       },
     });
@@ -136,7 +136,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     updateSetting({
       variables: {
         id: data?.getUser?.id,
-        controllerId: plant.controllerId,
+        plantId: plant.plantId,
         input: { [fieldName]: fieldValue, ...plant[settingName], settingName: settingName }
       },
     });
@@ -329,7 +329,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           <ListTitle>
             <Text bold>
               <FormattedMessage
-                id='controllerIdField'
+                id='plantIdField'
                 defaultMessage='ID of the controller'
               />
             </Text>
@@ -337,8 +337,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           <ListDes>
             <Input
               type='number'
-              name='controllerId'
-              value={controllerId}
+              name='plantId'
+              value={plantId}
               onChange={(e) => setControllerID(e.target.value)}
               backgroundColor='#F7F7F7'
               width='197px'

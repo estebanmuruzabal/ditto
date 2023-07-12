@@ -108,7 +108,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                 </ListTitle>
                 <ListDes>
                 <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'mode', e.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'mode', e.value, settingName)}
                     value={selectedMode}
                     options={humidityModeOptions}
                     styles={selectStyle}
@@ -132,7 +132,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                     checked={setting.sendWhatsappWarnings}
                     labelPosition={'right'}
                     // className,
-                    onUpdate={() => handleSettingsChange(plant, 'sendWhatsappWarnings', !setting.sendWhatsappWarnings, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onUpdate={() => handleSettingsChange(plant, 'sendWhatsappWarnings', !setting.sendWhatsappWarnings, settingName)}
                     // style
                 />
                 </ListDes>
@@ -156,7 +156,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                     type='number'
                     name='maxWarning'
                     value={setting.maxWarning}
-                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingName)}
                     backgroundColor='#F7F7F7'
                     width='197px'
                     height='34.5px'
@@ -178,7 +178,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                     type='number'
                     name='minWarning'
                     value={setting.minWarning}
-                    onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingName)}
                     backgroundColor='#F7F7F7'
                     width='197px'
                     height='34.5px'
@@ -197,7 +197,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                 </ListTitle>
                 <ListDes>
                     <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingName)}
                     value={relayOneSelected}
                     options={fourRelaysOptions}
                     styles={selectStyle}
@@ -217,7 +217,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                 </ListTitle>
                 <ListDes>
                     <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingName)}
                     value={relayTwoSelected}
                     options={fourRelaysOptions}
                     styles={selectStyle}
@@ -253,11 +253,11 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                         <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
                         <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
                         <CardButtons className='button-wrapper'>
-                            <ActionButton onClick={() => handleModal( AddTimeSchedule, { settingName: SettingsNames.SOIL_HUMIDITY_SETTING_1, plant, id: data?.getUser?.id } )} className='edit-btn'>
+                            <ActionButton onClick={() => handleModal( AddTimeSchedule, { settingName: settingName, plant, id: data?.getUser?.id } )} className='edit-btn'>
                             <PencilIcon />
                             </ActionButton>
 
-                            <ActionButton onClick={() => onDeleteSchedule(plant, SettingsNames.SOIL_HUMIDITY_SETTING_1, i)} className='delete-btn'>
+                            <ActionButton onClick={() => onDeleteSchedule(plant, settingName, i)} className='delete-btn'>
                             <CloseIcon />
                             </ActionButton>
                         </CardButtons>
@@ -303,7 +303,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                 </ListTitle>
                 <ListDes>
                     <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, settingName)}
                     value={selectedManualState}
                     options={manualModeOptions}
                     styles={selectStyle}
@@ -323,7 +323,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                 </ListTitle>
                 <ListDes>
                     <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingName)}
                     value={relayOneSelected}
                     options={fourRelaysOptions}
                     styles={selectStyle}
@@ -350,7 +350,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                     type='number'
                     name='relayOneAutomatedTimeToRun'
                     value={setting.relayOneAutomatedTimeToRun}
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingName)}
                     backgroundColor='#F7F7F7'
                     width='197px'
                     height='34.5px'
@@ -372,7 +372,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
                     type='number'
                     name='relayTwoAutomatedTimeToRun'
                     value={setting.relayTwoAutomatedTimeToRun}
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoAutomatedTimeToRun', e.target.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoAutomatedTimeToRun', e.target.value, settingName)}
                     backgroundColor='#F7F7F7'
                     width='197px'
                     height='34.5px'

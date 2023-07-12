@@ -9,7 +9,7 @@ query GetUser{
     created_at
     role
     plants {
-        controllerId
+        plantId
         name
         soilHumidity1
         soilHumidity2
