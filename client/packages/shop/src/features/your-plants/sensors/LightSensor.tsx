@@ -219,7 +219,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingName, handleSettingsChange
                 />
               </Button>
 
-              { setting?.logs.length > 0 && (
+              { setting?.logs?.length > 0 && (
                     <HumidityLogsGraph
                         data={setting.logs}
                     />

@@ -383,7 +383,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingName, handleSetting
             </>
             )}
             
-            { setting?.logs.length > 0 && (
+            { setting?.logs?.length > 0 && (
                 <HumidityLogsGraph
                     data={setting.logs}
                 />

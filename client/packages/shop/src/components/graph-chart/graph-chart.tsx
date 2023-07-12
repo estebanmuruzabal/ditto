@@ -134,6 +134,7 @@ const GrpahChart = ({
           options={options.options}
           series={options.series}
           width='100%'
+          height="300px"
           type='area'
         />
       </BoxContent>
