@@ -190,7 +190,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             soilHumiditySetting = logTimeStamp(soilHumiditySetting, currentSoilHumidity);
             // @ts-ignore
             plant[relayOneIdRelated] = soilHumiditySetting.relayOneWorking;
-
+            console.log("soilHumiditySetting::", soilHumiditySetting)
             break;
         case HumiditySensorMode.SCHEDULE:
             moment.locale('es');
@@ -212,6 +212,7 @@ export const checkSoilWarnings = async (plant: Plant, soilHumiditySetting: ISoil
             console.log('defaulted!!! papa')
             break;
     }
+    console.log("plant", plant)
     return plant;
 };
 

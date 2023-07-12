@@ -32,6 +32,7 @@ export const logTimeStamp = (soilHumiditySetting: ISoilHumiditySettings, current
         humidity: currentSoilHumidity,
         timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
     });
-
+    console.log('soilHumiditySetting', soilHumiditySetting)
+    console.log('soilHumiditySetting.logs', soilHumiditySetting.logs)
     return soilHumiditySetting;
 }
