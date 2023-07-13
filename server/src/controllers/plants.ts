@@ -214,6 +214,7 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISoilHumidit
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', lightSettings); break; }
             // @ts-ignore
             plant[relayOneIdRelated] = lightSettings.relayOneWorking;
+            lightSettings = logTimeStamp(lightSettings, light);
             break;
         case LightSensorMode.SCHEDULE:
         case LightSensorMode.SMART_SCHEDULE:
