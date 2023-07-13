@@ -2775,7 +2775,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* WEBPACK VAR INJECTION */(f
 
 /***/ }),
 
-/***/ 3:
+/***/ 4:
 /*!*******************************************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2F%5Btype%5D&absolutePagePath=%2FUsers%2Festebanmuruzabal%2Fwork%2Fditto%2Fclient%2Fpackages%2Fshop%2Fsrc%2Fpages%2F%5Btype%5D.tsx ***!
   \*******************************************************************************************************************************************************************************/
@@ -2798,4 +2798,4 @@ eval("module.exports = dll_5f8cbafe2dc5ec1aeb78;//# sourceURL=[module]\n//# sour
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js"]]]);
+},[[4,"static/runtime/webpack.js"]]]);

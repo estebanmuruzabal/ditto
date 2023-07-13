@@ -91,8 +91,8 @@ query GetUser{
           relayTwoIdRelated
           relayTwoWorking
           logs {
-            logDescription
             timestamp
+            humidity
           }
           scheduledOnTimes {
             daysToRepeat

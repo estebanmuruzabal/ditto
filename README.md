@@ -22,6 +22,16 @@ here are all the tabs and language settings: client/packages/shop/src/site-setti
 - better ui in task listing edit staff modal
 
 # To do VENTAS:
+poner  numeros
+1️⃣ Compra tu AssistCard 💳
+2️⃣ Asistencia en viaje 🩺
+3️⃣ Reintegros 💲
+4️⃣ Modificación de voucher ✏️
+5️⃣ Sugerencias y otras consultas 🧔🏽💻
+6️⃣ Cancelar❌(Puedes escribirlo en cualquier momento para finalizar o volver al inicio).
+7️⃣ Change my language / Mudar meu idioma 🔁
+
+- agregar flow venta rapida para SELLER_POSITION, /grower
 - chequear flujo compras web.
  - chechear flujo compra whatsapp
  - hacer flujo juan para actualizar huevos y stock de frutillas por ej. (lunes y miercoles) (para hacer ventas martes y jueves) (check)
@@ -31,12 +41,17 @@ here are all the tabs and language settings: client/packages/shop/src/site-setti
  - Ver listado con precios mayorista de frutas/verduras.
 
 # To do arduino:
+- al agregar planta no hace refresh con la planta agregada, tenes que andar haciendo un F5..
+- agregar disabled de todo hasta que no selecciones tu modoId 
+- joing all settings into the same type model ISettings [add type property[soil1, soil2, soil3, light1, light 2, disntance, etc]]
+- dejar andando el switch de whatsapp desde el admin
 - probar lighting (schedule, manual, etc)
 - probar humidity (schedule, manual, etc)
 - agregar checks para que te diga si ya tiene asignado el id de un relay a otro setting (que no te deje, al menos que quieras hacer un overwrite).
 - agregar relay 3 y 4 en las opciones a asignar
 - Agregar graficos logs a humidity2
 - Agregar graficos logs a lighting
+- agregar a que numbero avisar. al del user o otro
 
 # Improvements: 
 - add delete user func in staffmembers.tsx
