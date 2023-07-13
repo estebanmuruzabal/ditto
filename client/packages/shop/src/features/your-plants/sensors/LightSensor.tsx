@@ -23,7 +23,7 @@ interface Props {
   settingName: SettingsNames;
   openTab: string;
   setOpenTab: (settingName: string) => void;
-  handleSettingsChange: (plant: any, field: string, value: string | boolean, settingName: SettingsNames) => void;
+  handleSettingsChange: (e: any, plant: any, field: string, value: string | boolean, settingName: SettingsNames) => void;
   onDeleteSchedule: (plant: any, settingName: SettingsNames, position: number) => void;
 }
 
@@ -104,7 +104,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingName, handleSettingsChange
             </ListTitle>
             <ListDes>
               <Select 
-                onChange={(e: any) => handleSettingsChange(plant, 'mode', e.value, SettingsNames.LIGHT_SETTING)}
+                onChange={(e: any) => handleSettingsChange(e, plant, 'mode', e.value, SettingsNames.LIGHT_SETTING)}
                 value={selectedMode}
                 options={lightModeOptions}
                 styles={selectStyle}
@@ -125,7 +125,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingName, handleSettingsChange
               </ListTitle>
               <ListDes>
                 <Select 
-                  onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, SettingsNames.LIGHT_SETTING)}
+                  onChange={(e: any) => handleSettingsChange(e, plant, 'relayOneIdRelated', e.value, SettingsNames.LIGHT_SETTING)}
                   value={relayOneSelected}
                   options={fourRelaysOptions}
                   styles={selectStyle}
@@ -148,7 +148,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingName, handleSettingsChange
                 </ListTitle>
                 <ListDes>
                   <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, SettingsNames.LIGHT_SETTING)}
+                    onChange={(e: any) => handleSettingsChange(e, plant, 'relayOneWorking', e.value, SettingsNames.LIGHT_SETTING)}
                     value={selectedManualState}
                     options={manualModeOptions}
                     styles={selectStyle}

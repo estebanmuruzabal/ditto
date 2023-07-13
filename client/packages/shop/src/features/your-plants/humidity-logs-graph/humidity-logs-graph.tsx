@@ -11,7 +11,7 @@ interface Props {
 }
 
 const HumidityLogsGraph: React.FC<Props> = ({ data, ...props  }) => {
-  console.log(data)
+  // console.log(data)
   JSON.stringify(data)
   let humidities = [];
   let times = [];
@@ -22,15 +22,15 @@ const HumidityLogsGraph: React.FC<Props> = ({ data, ...props  }) => {
     times.push(data[key].timestamp);
     
 });
-  console.log('times', times)
-  console.log('humidities', humidities)
+  // console.log('times', times)
+  // console.log('humidities', humidities)
   return (
     <SearchWrapper>
       <GraphChart
         // widgetTitle='Humidity history'
         colors={['#6571f0']}
-        series={humidities.slice(Math.max(humidities.length - 20, 0))}
-        labels={times.slice(Math.max(times.length - 20, 0))}
+        series={humidities}
+        labels={times}
       />
     </SearchWrapper>
   );

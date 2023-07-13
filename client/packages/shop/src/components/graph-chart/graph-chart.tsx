@@ -85,8 +85,8 @@ const GrpahChart = ({
       },
       yaxis: {
         show: true,
-        // min: 0,
-        // max: 100,
+        min: 0,
+        max: 100,
         labels: {
           show: true,
           style: {
