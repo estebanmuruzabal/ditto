@@ -233,7 +233,7 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISoilHumidit
                     }
                 }
             })
-
+            lightSettings = logTimeStamp(lightSettings, light);
             break;
         default:
             console.log('defaulted entered')
