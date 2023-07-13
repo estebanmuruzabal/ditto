@@ -13,6 +13,7 @@ import {useMutation, useQuery} from "@apollo/react-hooks";
 import {getBase64Value} from "../../helpers/convert-image-base64";
 import {styled} from "baseui";
 import {ADMIN_IMAGE_HOST} from "../../helpers/images-path";
+import Checkbox from '../../components/CheckBox/CheckBox';
 
 const GET_SETTING = gql`
   query GetSetting {
@@ -116,6 +117,7 @@ const SiteSettingsForm: React.FC<Props> = () => {
   const [title, setTitle] = React.useState('');
   const [keyword, setKeyword] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [whatsapp_bot_is_on, setWhatsapp_bot_is_on] = React.useState(true);
   const [siteData, setSiteData] = React.useState<ValueType>();
   const settingData = (): ValueType => {
     const settingData = JSON.parse(data.getSiteSetting.value);
@@ -124,6 +126,7 @@ const SiteSettingsForm: React.FC<Props> = () => {
     setTitle(settingData.site_title);
     setKeyword(settingData.site_keyword);
     setDescription(settingData.site_description);
+    setWhatsapp_bot_is_on(settingData.whatsapp_bot_is_on);
     setSiteData(settingData);
 
     return settingData;
@@ -167,6 +170,7 @@ const SiteSettingsForm: React.FC<Props> = () => {
       site_title: title,
       site_keyword: keyword,
       site_description: description,
+      whatsapp_bot_is_on: whatsapp_bot_is_on,
     };
 
     updateSiteSetting({
@@ -243,6 +247,25 @@ const SiteSettingsForm: React.FC<Props> = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
+              </FormFields>
+
+              <FormFields>
+                {/* <FormLabel>WhatsApp Notifications</FormLabel> */}
+                <Checkbox
+                    checked={whatsapp_bot_is_on}
+                    onChange={() => setWhatsapp_bot_is_on(!whatsapp_bot_is_on) }
+                    // inputRef={register({ required: true })}
+                    name='whatsapp_bot_is_on'
+                    overrides={{
+                    Label: {
+                        style: ({ $theme }) => ({
+                        color: $theme.colors.textNormal,
+                        }),
+                    },
+                    }}
+                >
+                    {'WhatsApp Notifications'}
+                </Checkbox>
               </FormFields>
 
               <FormFields>
