@@ -1,49 +1,48 @@
 import moment from "moment";
 import { IUser, TriggerStaffSteps } from "../lib/types";
 import { updateUserWorkInfoMutation } from "../api";
+import { getEmojiNumber } from "../lib/utils/whatsAppUtils";
 
-export const getStuffMainMenuOptions = (resData: any, user: IUser) => {
+export const getStuffMainMenuOptions = (resData: any, user: IUser, showSuccessChanged?: boolean) => {
     
     resData.replyMessage = 
-    `Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
+    `${showSuccessChanged ? 'Venta exitosa!' :  `Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm`}
 
-Seleccione una opcion:
-${user.workInfo.isWorking ? '1 - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1 - Empezar a trabajar  🟢🧰⚒'}
-2 - Actualizar stock
-3 - Ver su informacion`
+${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+2️⃣ - Actualizar stock
+3️⃣ - Ver su informacion
+4️⃣ - Venta rapida`
 
-        // empezar a trabajar/terminar de trabajar
-        //  agregar stock de verduras (kg de frutilla p/ venta y no venta, cantidad de huevos p/venta y no venta) (que reciba whatsapp con audio pidiendo cantidades)
     resData.trigger = TriggerStaffSteps.ALL_CATEGORIES_ANSWER;
     return resData;
 };
 
 export const listAvailableProductsToUpdate = (products: any) =>  
-`*Selecciona el producto a ctualizar el stock:*
+`*Selecciona el producto a actualizar el stock:*
 
-${products.map((product: any, i: number) => (`${i+1} - ${getProductName(product.name)}\n`)).join('')}
-*Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
+${products.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${getProductName(product.name)}\n`)).join('')}
 `;
+// *Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
 
 export const listAvailableProductsToUpdateAsInvalid = (products: any) =>  
 `*Numero incorrecto! Apreta el boton del producto a actualizar:*
 
-${products.map((product: any, i: number) => (`${i+1} - ${getProductName(product.name)}\n`)).join('')}
-*Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
+${products.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${getProductName(product.name)}\n`)).join('')}
 `;
+// *Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
 
-export const getNewStockOfProduct = (productName: string) =>  
-`Ingrese la cantidad nueva de ${productName}`;
+export const getNewStockOfProduct = (productName: string) =>  `Ingrese la cantidad nueva de ${productName}`;
+
+export const getAmountOfProductToSell = (productName: string) =>  `Ingrese la cantidad a vender de ${productName}`;
 
 export const getProductName = (productName: string) => {
-    if (productName.toLocaleLowerCase().includes('frutilla') && productName.toLocaleLowerCase().includes('1/4')) {
-        return `Icono frutilla ${productName}`
-    } else if (productName.toLocaleLowerCase().includes('frutilla') && productName.toLocaleLowerCase().includes('1 kg')) {
-        return `Icono frutilla ${productName}`
+    // 🍅🍆🥦🥕🥬🫑🧄🧅🪺   🔁❌ 💲💳
+    if (productName.toLocaleLowerCase().includes('frutilla')) {
+        return `🍓 ${productName}`
     } else if (productName.toLocaleLowerCase().includes('maple')) {
-        return `Icono maple huevo ${productName}`
+        return `🥚 ${productName}`
     } else if (productName.toLocaleLowerCase().includes('6 huevos')) {
-        return `Icono 6 huevos ${productName}`
+        return `🥚 ${productName}`
     }
 
     return productName;

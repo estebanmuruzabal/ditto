@@ -30,6 +30,24 @@ export const getEmptyShoppingCart = (user: any) => {
     }
 }
 
+export const getQuickSaleShoppingCart = (user: any) => { 
+    return {
+        products: [],
+        customer_id: user.id,
+        contact_number: getCustomerPrimaryNumber(user),
+        payment_option_id: null,
+        delivery_method_id: null,
+        delivery_date: null,
+        delivery_address: null,
+        selectedCategorySlug: null,
+        sub_total: null,
+        total: null,
+        coupon_code: null,
+        discount_amount: null,
+        payment_id: null
+    }
+}
+
 export const getEmptyAddress = (userId = null, address: string = '', title: string = '', location: string = '', instructions: string = '', is_primary = false) => { 
     return {
         id: userId,

@@ -238,7 +238,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             }
 
             break;
-
         case TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED:
             userInputNumber = Number(userInput);
             deliveryOpts = await getDeliveryMethods();
