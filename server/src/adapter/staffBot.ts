@@ -1,9 +1,9 @@
-import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updateProductStock } from "../api"
+import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updateProductStock, createQuickOrder } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IUser, TriggerStaffSteps } from "../lib/types"
 import { getEmptyShoppingCart, getQuickSaleShoppingCart, isUserInputInvalid } from "../lib/utils/shoppingUtils"
 import { invalidNumberInput, invalidProductQuantity } from "../messages/customersMessages"
-import { getAmountOfProductToSell, getNewStockOfProduct, getStuffMainMenuOptions, getStuffWorkingInfo, listAvailableProductsToUpdate, listAvailableProductsToUpdateAsInvalid, startWorking, stopWorking } from "../messages/staffMessages"
+import { getAmountOfProductToSell, getNewStockOfProduct, getStuffMainMenuOptions, getStuffWorkingInfo, listAvailableProductsToSale, listAvailableProductsToUpdate, listAvailableProductsToUpdateAsInvalid, noOptionFound, startWorking, stopWorking } from "../messages/staffMessages"
 
 export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
     let resData = { replyMessage: '', media: null, trigger: '' }
@@ -39,7 +39,7 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                     resolve(resData);
                     break;
                 case TriggerStaffSteps.SEE_STAFF_INFO:
-                    
+                    resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
                     resData = getStuffWorkingInfo(resData, user);
                     resolve(resData);
                     break;
@@ -47,11 +47,14 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                     availableProducts = await getProducts('verduleria');
                     availableProducts = availableProducts?.data?.products?.items;
 
-                    resData.replyMessage = listAvailableProductsToUpdate(availableProducts)
-                    resData.trigger = TriggerStaffSteps.CHOOSE_PRODUCT_TO_UPDATE_STOCK;
+                    resData.replyMessage = listAvailableProductsToSale(availableProducts)
+                    resData.trigger = TriggerStaffSteps.CHOOSE_PRODUCT_TO_SALE;
                     resolve(resData);
                     break;
                 default:
+                    resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+                    resData.replyMessage = noOptionFound();
+                    resolve(resData);
                     break;
             }
             break;
@@ -74,10 +77,11 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                 break;
             } 
 
-            shoppingCart = user?.shoppingCart ? user?.shoppingCart : getQuickSaleShoppingCart(user);
+            shoppingCart = getQuickSaleShoppingCart(user);
 
-            shoppingCart.products.push(productSelected)
-
+            shoppingCart.products.push({
+                product_id: productSelected.id
+            })
             await updateUserShoppingCart(shoppingCart);   
 
             resData.replyMessage = getAmountOfProductToSell(productSelected.name);
@@ -103,7 +107,7 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                 break;
             } 
 
-            shoppingCart = user?.shoppingCart ? user?.shoppingCart : getEmptyShoppingCart(user);
+            shoppingCart = getEmptyShoppingCart(user);
 
             shoppingCart.products.push({
                 product_id: productSelected.id
@@ -151,12 +155,10 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                 resData.trigger = TriggerStaffSteps.CHOOSE_AMOUNT_UNITS_TO_SALE;
                 resolve(resData);
             } else {
-                const res: any = await createOrder(shoppingCart);
-                if (res?.data?.createOrder?.customer_id) {
-                    resData.replyMessage = getStuffMainMenuOptions(resData, user, true);
+                const res: any = await createQuickOrder(shoppingCart);
+                if (res?.data?.createQuickOrder?.customer_id) {
+                    resData = getStuffMainMenuOptions(resData, user, true);
                     resData.trigger = TriggerStaffSteps.SUCCESS_SALE_AND_MAIN_MENU;
-                    shoppingCart.products = [];
-                    await updateUserShoppingCart(shoppingCart);
                     resolve(resData)
                 }
             }
@@ -201,13 +203,12 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                 meta_description: product.meta_description,
               });
 
-            shoppingCart.products = [];
-            await updateUserShoppingCart(shoppingCart);   
-
-            resData.replyMessage = 'Actualizado correctamente. Gracias'
+            resData.replyMessage = 'Actualizado correctamente. Gracias';
             resData.trigger = TriggerStaffSteps.STAFF_ALL_CATEGORIES;
             resolve(resData);
             break;
+        // define this oneeee, and go to "23213521"
+        // case TriggerStaffSteps.END_CONVERSATION_AND_RESET_CHAT:
         default:
             console.log('defaultedd');
             resolve([resData]);

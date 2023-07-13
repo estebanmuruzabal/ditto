@@ -1,7 +1,7 @@
 import { cleanNumber } from "../controllers/handle";
-import { IOrderInput } from "../graphql/resolvers/Orders/types";
+import { IOrderInput, IOrderQuickInput } from "../graphql/resolvers/Orders/types";
 import { ICategory, IPaymentOption, IProduct, IUser, Plant } from "../lib/types";
-import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO, UPDATE_PRODUCT } from "./queries";
+import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO, UPDATE_PRODUCT, createQuickOrderQuery } from "./queries";
 
 const { createApolloFetch } = require('apollo-fetch');
 
@@ -323,6 +323,35 @@ export const createOrder = (input: IOrderInput) => new Promise((resolve, reject)
         resolve(res);
     }).catch((err: any) => {
         console.log('[createOrder error]:', err.response);
+        resolve(err);
+    });
+});
+
+export const createQuickOrder = (input: IOrderQuickInput) => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: createQuickOrderQuery,
+        variables: {
+            input: {
+                customer_id: input.customer_id,
+                contact_number: input.contact_number,
+                payment_option_id: input.payment_option_id,
+                delivery_method_id: input.delivery_method_id,
+                payment_option_type: input.payment_option_type,
+                delivery_date: input.delivery_date,
+                isWhatsappPurchase: true,
+                delivery_address: input.delivery_address,
+                sub_total: input.sub_total,
+                total: input.total,
+                coupon_code: input.coupon_code,
+                discount_amount: input.discount_amount,
+                products: input.products
+            }
+        }
+    }).then((res: any) => {
+        console.log('[createQuickOrder]:',res);
+        resolve(res);
+    }).catch((err: any) => {
+        console.log('[createQuickOrder error]:', err.response);
         resolve(err);
     });
 });

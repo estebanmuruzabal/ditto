@@ -5,20 +5,34 @@ import { getEmojiNumber } from "../lib/utils/whatsAppUtils";
 
 export const getStuffMainMenuOptions = (resData: any, user: IUser, showSuccessChanged?: boolean) => {
     
-    resData.replyMessage = 
-    `${showSuccessChanged ? 'Venta exitosa!' :  `Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm`}
+    resData.replyMessage = showSuccessChanged ?
+    `Venta exitosa!
 
 ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
 2️⃣ - Actualizar stock
 3️⃣ - Ver su informacion
 4️⃣ - Venta rapida`
+:
+`Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
+
+${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+2️⃣ - Actualizar stock
+3️⃣ - Ver su informacion
+4️⃣ - Venta rapida`;
 
     resData.trigger = TriggerStaffSteps.ALL_CATEGORIES_ANSWER;
     return resData;
 };
 
+
 export const listAvailableProductsToUpdate = (products: any) =>  
-`*Selecciona el producto a actualizar el stock:*
+`*Selecciona el producto que desea actualizar el stock:*
+
+${products.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${getProductName(product.name)}\n`)).join('')}
+`;
+
+export const listAvailableProductsToSale = (products: any) =>  
+`*Selecciona el producto que desea vender:*
 
 ${products.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${getProductName(product.name)}\n`)).join('')}
 `;
@@ -32,6 +46,8 @@ ${products.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${getPr
 // *Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
 
 export const getNewStockOfProduct = (productName: string) =>  `Ingrese la cantidad nueva de ${productName}`;
+
+export const noOptionFound = () =>  `No encontramos la opción ingresada, intente nuevamente`;
 
 export const getAmountOfProductToSell = (productName: string) =>  `Ingrese la cantidad a vender de ${productName}`;
 

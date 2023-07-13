@@ -170,6 +170,10 @@ export const lastStaffTrigger = async (customer: IUser, userMessage: string) => 
 
   if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
 
+  // if is initial, we reset conversation and we start all over again, non matter what
+  if (initialConversationKeys.includes(userMessage)) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+  // id: 23213521  if (endConversationKeys.includes(userMessage)) return TriggerStaffSteps.END_CONVERSATION_AND_RESET_CHAT;
+
   if (!lastDittoMessageSent?.trigger) return TriggerStaffSteps.STAFF_ALL_CATEGORIES;
   
   if (!lastDittoMessageSent?.trigger) console.log('No lastDittoMessageSent?.trigger setted');

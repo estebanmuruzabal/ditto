@@ -396,6 +396,19 @@ export const createOrderQuery = `
     }
 `;
 
+export const createQuickOrderQuery = `
+    mutation CreateQuickOrder($input: OrderQuickInput!) {
+        createQuickOrder(
+        input: $input
+        ) 
+        {
+            customer_id
+            payment_status
+            status
+        }
+    }
+`;
+
 export const ADD_ADDRESS = `
     mutation AddDeliveryAddress(
         $id: ID!, 
