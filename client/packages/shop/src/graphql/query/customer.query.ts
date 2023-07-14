@@ -138,7 +138,6 @@ query GetUser{
       workedHours
     }
     logs{
-      logDescription
       timestamp
     }
   }
