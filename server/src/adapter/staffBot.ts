@@ -1,7 +1,7 @@
 import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updateProductStock, createQuickOrder } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IUser, TriggerStaffSteps } from "../lib/types"
-import { getEmptyShoppingCart, getQuickSaleShoppingCart, isUserInputInvalid } from "../lib/utils/shoppingUtils"
+import { getEmptyShoppingCart, getQuickSaleShoppingCart, getTotalAmount, isUserInputInvalid } from "../lib/utils/shoppingUtils"
 import { invalidNumberInput, invalidProductQuantity } from "../messages/customersMessages"
 import { getAmountOfProductToSell, getNewStockOfProduct, getStuffMainMenuOptions, getStuffWorkingInfo, listAvailableProductsToSale, listAvailableProductsToUpdate, listAvailableProductsToUpdateAsInvalid, noOptionFound, startWorking, stopWorking } from "../messages/staffMessages"
 
@@ -80,7 +80,11 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
             shoppingCart = getQuickSaleShoppingCart(user);
 
             shoppingCart.products.push({
-                product_id: productSelected.id
+                product_id: productSelected.id,
+                price: productSelected.price,
+                sale_price: productSelected.sale_price,
+                name: productSelected.name,
+
             })
             await updateUserShoppingCart(shoppingCart);   
 
@@ -155,6 +159,12 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                 resData.trigger = TriggerStaffSteps.CHOOSE_AMOUNT_UNITS_TO_SALE;
                 resolve(resData);
             } else {
+                const totalItemsAmount = getTotalAmount(shoppingCart.products);
+                shoppingCart.discount_amount = 0;
+                shoppingCart.sub_total = totalItemsAmount;
+                shoppingCart.total = totalItemsAmount;
+                shoppingCart.payment_status = 'Pagado'
+                await updateUserShoppingCart(shoppingCart);
                 const res: any = await createQuickOrder(shoppingCart);
                 if (res?.data?.createQuickOrder?.customer_id) {
                     resData = getStuffMainMenuOptions(resData, user, true);

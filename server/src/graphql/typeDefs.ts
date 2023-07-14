@@ -103,8 +103,8 @@ export const typeDefs = gql`
     }
 
     type Logs {
-        logDescription: String
         timestamp: String
+        humidity: Int
     }
 
     input InputLogs {
