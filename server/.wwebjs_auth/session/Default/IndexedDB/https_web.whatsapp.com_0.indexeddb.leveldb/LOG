@@ -1,3 +1,14 @@
-2023/07/11-20:13:36.951 b503 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2023/07/11-20:13:36.951 b503 Recovering log #180
-2023/07/11-20:13:36.968 b503 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000180.log 
+2023/07/14-13:14:03.010 f603 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/07/14-13:14:03.011 f603 Recovering log #297
+2023/07/14-13:14:03.064 f603 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000297.log 
+2023/07/14-13:14:36.129 f603 Level-0 table #303: started
+2023/07/14-13:14:36.148 f603 Level-0 table #303: 1091355 bytes OK
+2023/07/14-13:14:36.154 f603 Delete type=0 #297
+2023/07/14-13:14:36.162 f603 Compacting 1@1 + 2@2 files
+2023/07/14-13:14:36.212 f603 Generated table #304@1: 59110 keys, 2234686 bytes
+2023/07/14-13:14:36.222 f603 Generated table #305@1: 5816 keys, 297151 bytes
+2023/07/14-13:14:36.222 f603 Compacted 1@1 + 2@2 files => 2531837 bytes
+2023/07/14-13:14:36.228 f603 compacted to: files[ 0 0 3 0 0 0 0 ]
+2023/07/14-13:14:36.228 f603 Delete type=2 #300
+2023/07/14-13:14:36.228 f603 Delete type=2 #303
+2023/07/14-13:14:36.228 f603 Delete type=2 #299

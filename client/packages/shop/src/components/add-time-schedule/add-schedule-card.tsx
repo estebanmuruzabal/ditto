@@ -90,7 +90,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     updateSetting({
       variables: {
         id: item.data?.getUser?.id,
-        controllerId: plant.controllerId,
+        plantId: plant.plantId,
         input: { [fieldName]: fieldValue, ...plant[settingName], settingName: settingName }
       },
     });
@@ -107,31 +107,10 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
 
     setLoading(true);
     // if (isValid) {
-      switch (item.settingName) {
-        // si veo que no hay diferencias, sacamos el switch!!
-        case SettingsNames.LIGHT_SETTING:
-          item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
-          item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
-          
-          handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
-          break;
-        case SettingsNames.SOIL_HUMIDITY_SETTING_1:
-          item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
-          item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
-          
-          handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
-          break;
-        case SettingsNames.SOIL_HUMIDITY_SETTING_2:
-          item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
-          item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
-          
-          handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
-          break;
-        default:
-          console.log('defaulted aca!!')
-          break;
-      }
-      
+      item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
+      item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
+      handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
+
       closeModal();
       setLoading(false);
     // }

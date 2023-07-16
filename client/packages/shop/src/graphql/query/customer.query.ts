@@ -9,7 +9,7 @@ query GetUser{
     created_at
     role
     plants {
-        controllerId
+        plantId
         name
         soilHumidity1
         soilHumidity2
@@ -91,8 +91,8 @@ query GetUser{
           relayTwoIdRelated
           relayTwoWorking
           logs {
-            logDescription
             timestamp
+            humidity
           }
           scheduledOnTimes {
             daysToRepeat
@@ -138,7 +138,6 @@ query GetUser{
       workedHours
     }
     logs{
-      logDescription
       timestamp
     }
   }

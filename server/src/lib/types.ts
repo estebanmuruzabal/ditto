@@ -4,7 +4,7 @@ import { IScheduleInput } from '../graphql/resolvers/User/types';
 
 export interface Plant {
     id?: string;
-    controllerId: number;
+    plantId: number;
     name?: string;
     soilHumidity1: number;
     soilHumidity2: number;
@@ -194,8 +194,13 @@ export enum TriggerStaffSteps {
     CHANGE_WORKING_STATE = 1,
     SEE_PRODUCTS_TO_UPDATE_STOCK = 2,
     SEE_STAFF_INFO = 3,
-    UPDATE_PRODUCT_STOCK = 'UPDATE_PRODUCT_STOCK',
-    INTRODUCE_PRODUCT_STOCK = 'INTRODUCE_PRODUCT_STOCK'
+    SEE_PRODUCTS_TO_QUICK_SALE = 4,
+    CHOOSE_AMOUNT_UNITS_TO_SALE = 'CHOOSE_AMOUNT_UNITS_TO_SALE',
+    CHOOSE_PRODUCT_TO_SALE = 'CHOOSE_PRODUCT_TO_SALE',
+    CHOOSE_PRODUCT_TO_UPDATE_STOCK = 'CHOOSE_PRODUCT_TO_UPDATE_STOCK',
+    INTRODUCE_PRODUCT_NEW_STOCK = 'INTRODUCE_PRODUCT_NEW_STOCK',
+    SUCCESS_SALE_AND_MAIN_MENU = 'SUCCESS_SALE_AND_MAIN_MENU',
+    END_CONVERSATION_AND_RESET_CHAT = 'END_CONVERSATION_AND_RESET_CHAT'
 }
 
 export enum TriggerSteps {
@@ -401,7 +406,7 @@ export interface IOrder {
     _id?: ObjectId;
     order_code: string;
     customer_id: string;
-    contact_number: string;
+    contact_number?: string;
     payment_option_id: string;
     datetime: string;
     delivery_method_id?: string;
@@ -421,6 +426,32 @@ export interface IOrder {
     customer_name: string;
     delivery_method_name: string;
     delivery_pickup_date: string;
+}
+
+export interface IQuickOrder {
+    _id?: ObjectId;
+    order_code: string;
+    customer_id: string;
+    contact_number?: string;
+    payment_option_id?: string;
+    datetime: string;
+    delivery_method_id?: string;
+    delivery_address?: string;
+    sub_total?: number;
+    total: number;
+    coupon_code?: string;
+    discount_amount?: number;
+    payment_id?: string;
+    payment_method?: string;
+    payment_status?: string;
+    status?: string;
+    order_tracking: Array<IOrderTracker>;
+    order_products: Array<OrderProducts>;
+    created_at?: string;
+    updated_at?: string;
+    customer_name: string;
+    delivery_method_name?: string;
+    delivery_pickup_date?: string;
 }
 
 export interface ICommonMessageReturnType {
@@ -465,7 +496,7 @@ export interface Database {
     products: Collection<IProduct>;
     delivery_methods: Collection<IDeliveryMethod>;
     payment_options: Collection<IPaymentOption>;
-    orders: Collection<IOrder>;
+    orders: Collection<IOrder | IQuickOrder>;
     settings: Collection<ISetting>;
     coupons: Collection<ICoupon>;
     home_cards: Collection<IHomeCard>;

@@ -420,6 +420,17 @@ export const ScheduleTime = styled.div`
   border: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
 `;
 
+export const Status = styled.span`
+  font-family: ${themeGet('fonts.body', 'Lato')};
+  font-size: ${themeGet('fontSizes.sm', '13')}px;
+  font-weight: ${themeGet('fontWeights.regular', '400')};
+  color: ${themeGet('colors.black', '#2e70fa')};
+  line-height: 1;
+  background-color: rgba(46, 112, 250, 0.1);
+  padding: 10px;
+  border-radius: ${themeGet('radii.base', '6px')};
+`;
+
 export const ActionButton = styled.span`
   display: flex;
   align-items: center;

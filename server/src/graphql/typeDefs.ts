@@ -15,7 +15,7 @@ export const typeDefs = gql`
 
     type Plant {
         id: String!
-        controllerId: Int!
+        plantId: Int!
         name: String!
         soilHumidity1: Int
         soilHumidity2: Int
@@ -103,8 +103,8 @@ export const typeDefs = gql`
     }
 
     type Logs {
-        logDescription: String
         timestamp: String
+        humidity: Int
     }
 
     input InputLogs {
@@ -430,6 +430,23 @@ export const typeDefs = gql`
         products: [OrderProductInput!]!
         payment_id:  String
     }
+
+    input OrderQuickInput {
+        customer_id: String!
+        contact_number: String!
+        payment_option_id: String
+        delivery_method_id: String
+        payment_option_type: String
+        isWhatsappPurchase: Boolean!
+        delivery_address: String
+        delivery_date: String
+        sub_total: Float
+        total: Float
+        coupon_code: String
+        discount_amount: Float
+        products: [OrderProductInput!]!
+        payment_id:  String
+    }
     
     input OrderInputNotRequires {
         customer_id: String
@@ -474,22 +491,22 @@ export const typeDefs = gql`
       id: ID!
       order_code: String
       customer_id: String!
-      contact_number: String!
+      contact_number: String
       payment_option_id: String
       datetime: String
       delivery_method_id: String
-      delivery_address: String!
+      delivery_address: String
       delivery_date: String
       sub_total: Float
       total: Float
       coupon_code: String
       discount_amount: Float
       payment_id: String
-      payment_method: String!
+      payment_method: String
       customer_name: String
       delivery_method_name: String
       delivery_pickup_date: String
-      payment_status: String!
+      payment_status: String
       status: String!
       order_tracking: [OrderTracker]
       order_products: [OrderProducts]
@@ -625,13 +642,14 @@ export const typeDefs = gql`
         updatePaymentOption(id: ID!, name: String!, type: String!, image: String!, image_data: String, details: String): PaymentOption!
         deletePaymentOption(id: ID!): DefaultMessageType!
         createOrder(input: OrderInput): Order!
+        createQuickOrder(input: OrderQuickInput): Order!
         updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
+        addPlant(id: ID!, name: String!, plantId: Int!): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
-        updateSetting(id: ID!, controllerId: Int!, input: InputSettings): DefaultMessageType!
+        updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

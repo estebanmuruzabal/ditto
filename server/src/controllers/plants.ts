@@ -4,7 +4,7 @@ import moment from "moment";
 import { HumiditySensorMode, ISetting, LightSensorMode, Plant } from "../lib/types";
 import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
-import { logTimeStamp, logTimeStampWithTimeFilter } from "../utils/logsUtils";
+import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
 
 export const checkSoilWarnings = async (plant: Plant, setting: ISetting, phoneNumber: string) => {
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
@@ -69,6 +69,8 @@ export const checkSoilWarnings = async (plant: Plant, setting: ISetting, phoneNu
             const evacuationShouldStart = reading >= maxHumiditySetted && !relayTwoWorking && relayOneAutomatedStartedTime.length > 0;
             const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!relayTwoAutomatedStartedTime.length;
 
+            console.log('irrigationComplete', irrigationComplete)
+            console.log('currentEvacuationMins', currentEvacuationMins)
             if (irrigationInProgress) {
                 logs.push({ humidity: reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
                 return plant;
@@ -155,7 +157,6 @@ export const checkSoilWarnings = async (plant: Plant, setting: ISetting, phoneNu
             setting = logTimeStampWithTimeFilter(setting, reading);
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
-
             break;
         case HumiditySensorMode.SCHEDULE:
             moment.locale('es');
@@ -181,19 +182,16 @@ export const checkSoilWarnings = async (plant: Plant, setting: ISetting, phoneNu
 };
 
 export const checkLightSensor = async (plant: Plant, lightSettings: ISetting, phoneNumber: string, light: number) => {
-    console.log('lightSettings:', lightSettings)
-    console.log('light:', light)
     // const minHumiditySetted = !isNaN(Number(minWarning)) ? Number(minWarning) : null;
     // const maxHumiditySetted = !isNaN(Number(maxWarning)) ? Number(maxWarning) : null;
     const relayOneIdRelated: any = lightSettings.relayOneIdRelated;
-    // const relayTwoIdRelated: any = relayTwoIdRelated;
 
-    // console.log('soilHumiditySetting being process:', soilHumiditySetting);
     switch (lightSettings.mode) {
         case HumiditySensorMode.MANUAL:
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', lightSettings); break; }
             // @ts-ignore
             plant[relayOneIdRelated] = lightSettings.relayOneWorking;
+            lightSettings = logTimeStampWithTimeFilter(lightSettings, light);
             break;
         case LightSensorMode.SCHEDULE:
         case LightSensorMode.SMART_SCHEDULE:
@@ -205,7 +203,6 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISetting, ph
                 if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     
                     // @ts-ignore
                     if (currentTime.isBetween(startTime, endTime)) {
@@ -214,7 +211,7 @@ export const checkLightSensor = async (plant: Plant, lightSettings: ISetting, ph
                     }
                 }
             })
-
+            lightSettings = logTimeStampWithTimeFilter(lightSettings, light);
             break;
         default:
             console.log('defaulted entered')

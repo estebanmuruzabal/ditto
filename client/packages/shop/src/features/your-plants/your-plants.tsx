@@ -49,7 +49,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
   const intl = useIntl();
   const [name, setPlantName] = useState('');
   const [openTab, setOpenTab] = useState('');
-  const [controllerId, setControllerID] = useState('');
+  const [plantId, setControllerID] = useState('');
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [addPlant] = useMutation(ADD_PLANT);
   
@@ -71,7 +71,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
 
     {Object.keys(SettingsNames).map((settingName, i: number) => {
       const relaysIds = [RelaysIds.RELAY_ONE, RelaysIds.RELAY_TWO, RelaysIds.RELAY_THIRD, RelaysIds.RELAY_FOURTH];
-      const relayAlreadyAssigned = relaysIds.includes(plant[settingName][field]);
+      const relayAlreadyAssigned = plant[settingName] && relaysIds.includes(plant[settingName][field]);
 
       if (relayAlreadyAssigned) {
         setUserinfoMsg(`${intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' })} ${plant[settingName]}`);
@@ -86,7 +86,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
   };
   
 
-  const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingName: SettingsNames) => {
+  const handleSettingsChange = (e: any, plant: any, field: string, value: string | boolean, settingName: SettingsNames) => {
     if (isRelayIdAlreadyAssigend(plant, field)) return;
 
     dispatch({ type: settingName, payload: { plant, value, field } });
@@ -104,7 +104,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
       variables: {
         id: data?.getUser?.id,
         name,
-        controllerId: Number(controllerId)
+        plantId: Number(plantId)
       },
     });
 
@@ -121,7 +121,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
     updateSetting({
       variables: {
         id: data?.getUser?.id,
-        controllerId: plant.controllerId,
+        plantId: plant.plantId,
         input: { ...plant[settingName], settingName: settingName }
       },
     });
@@ -133,11 +133,14 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
   };
     
   const dispatchSettingSave = (plant: any, fieldName: string, fieldValue: string | boolean, settingName: SettingsNames) => {
+    const plantSettingInput = plant[settingName];
+    plantSettingInput[fieldName] = fieldValue;
+    plantSettingInput.settingName = settingName;
     updateSetting({
       variables: {
         id: data?.getUser?.id,
-        controllerId: plant.controllerId,
-        input: { [fieldName]: fieldValue, ...plant[settingName], settingName: settingName }
+        plantId: plant.plantId,
+        input: plantSettingInput
       },
     });
   };
@@ -241,7 +244,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
                           disabled={true}
                           value={plant?.name || ''}
                           // we have to change the onChange because the is no one for the controller name actualy
-                          onChange={(e: any) => handleSettingsChange(plant, 'name', e.target.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
+                          onChange={(e: any) => handleSettingsChange(e, plant, 'name', e.target.value, SettingsNames.SOIL_HUMIDITY_SETTING_1)}
                           backgroundColor='#F7F7F7'
                           width='197px'
                           height='34.5px'
@@ -329,7 +332,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           <ListTitle>
             <Text bold>
               <FormattedMessage
-                id='controllerIdField'
+                id='plantIdField'
                 defaultMessage='ID of the controller'
               />
             </Text>
@@ -337,8 +340,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType }) => {
           <ListDes>
             <Input
               type='number'
-              name='controllerId'
-              value={controllerId}
+              name='plantId'
+              value={plantId}
               onChange={(e) => setControllerID(e.target.value)}
               backgroundColor='#F7F7F7'
               width='197px'

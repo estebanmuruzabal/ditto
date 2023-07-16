@@ -54,7 +54,7 @@ export const getCustomerQuery = `
                 }
                 role
                 plants {
-                    controllerId
+                    plantId
                     name
                     soilHumidity1
                     soilHumidity2
@@ -390,6 +390,19 @@ export const createOrderQuery = `
         {
             customer_id
             contact_number
+            payment_status
+            status
+        }
+    }
+`;
+
+export const createQuickOrderQuery = `
+    mutation CreateQuickOrder($input: OrderQuickInput!) {
+        createQuickOrder(
+        input: $input
+        ) 
+        {
+            customer_id
             payment_status
             status
         }
