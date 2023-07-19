@@ -57,6 +57,14 @@ poner  numeros
 - add delete user func in staffmembers.tsx
 - add comment on tasks for feedback.
 
+# GreenMarket:
+- puede ser como marketplace, puede ser como un mapa, con buen filtro,
+- cada sub/brand que tengo, puede ser un ditto cell, acceso admin,
+- necesitaria servidores, devops, 
+- fullstack dev
+- door to door service/installation team, 0800 operation/complains person, 
+alguien para la estrategia de branding (pueden ser door to door seller, try to register a market square, by telling/showing how others neibors are signing in)
+
 # Bugs:
 0- se puede agregar mas cant de productos de la que hay en stock. El error recien salta en el pago (unhandled: This product do not have enough product quantity. Available quantity: 3)
 !!!!! se muestra el error de token expirado todo "GraphQL error: E ", buscar "GraphQL error: useQuery(GET_LOGGED_IN_USER);" en el proyectop y agregar handler para el error asi como esta en checkout:
