@@ -1,14 +1,15 @@
-2023/07/14-13:14:03.010 f603 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2023/07/14-13:14:03.011 f603 Recovering log #297
-2023/07/14-13:14:03.064 f603 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000297.log 
-2023/07/14-13:14:36.129 f603 Level-0 table #303: started
-2023/07/14-13:14:36.148 f603 Level-0 table #303: 1091355 bytes OK
-2023/07/14-13:14:36.154 f603 Delete type=0 #297
-2023/07/14-13:14:36.162 f603 Compacting 1@1 + 2@2 files
-2023/07/14-13:14:36.212 f603 Generated table #304@1: 59110 keys, 2234686 bytes
-2023/07/14-13:14:36.222 f603 Generated table #305@1: 5816 keys, 297151 bytes
-2023/07/14-13:14:36.222 f603 Compacted 1@1 + 2@2 files => 2531837 bytes
-2023/07/14-13:14:36.228 f603 compacted to: files[ 0 0 3 0 0 0 0 ]
-2023/07/14-13:14:36.228 f603 Delete type=2 #300
-2023/07/14-13:14:36.228 f603 Delete type=2 #303
-2023/07/14-13:14:36.228 f603 Delete type=2 #299
+2023/07/19-09:41:49.925 f503 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/07/19-09:41:49.925 f503 Recovering log #349
+2023/07/19-09:41:49.959 f503 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000349.log 
+2023/07/19-16:27:42.647 1fa4f Level-0 table #355: started
+2023/07/19-16:27:42.681 1fa4f Level-0 table #355: 1161159 bytes OK
+2023/07/19-16:27:42.690 1fa4f Delete type=0 #349
+2023/07/19-16:28:01.047 851f Compacting 1@1 + 2@2 files
+2023/07/19-16:28:01.128 851f Generated table #356@1: 88713 keys, 2237926 bytes
+2023/07/19-16:28:01.183 851f Generated table #357@1: 51260 keys, 2290407 bytes
+2023/07/19-16:28:01.187 851f Generated table #358@1: 2840 keys, 49604 bytes
+2023/07/19-16:28:01.187 851f Compacted 1@1 + 2@2 files => 4577937 bytes
+2023/07/19-16:28:01.192 851f compacted to: files[ 0 0 3 0 0 0 0 ]
+2023/07/19-16:28:01.192 851f Delete type=2 #355
+2023/07/19-16:28:01.192 851f Delete type=2 #351
+2023/07/19-16:28:01.192 851f Delete type=2 #352

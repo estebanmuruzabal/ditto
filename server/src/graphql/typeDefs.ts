@@ -17,21 +17,20 @@ export const typeDefs = gql`
         id: String!
         plantId: Int!
         name: String!
-        soilHumidity1: Int
-        soilHumidity2: Int
+        soil_humidity_1: Int
+        soil_humidity_2: Int
         airHumidity: Int
         tempeture: Int
         light: Int
-        soilHumiditySettings1: SoilHumiditySettings
-        soilHumiditySettings2: SoilHumiditySettings
-        lightSettings: LightSettings
+        sensors: [ISensorSetting]
         isRelayOneOn: Boolean
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
     }
 
-    type SoilHumiditySettings {
+    type ISensorSetting {
+        reading: Int
         name: String
         whatsappWarningsOn: Boolean
         minWarning: String
@@ -45,28 +44,11 @@ export const typeDefs = gql`
         relayOneWorking: Boolean
         relayTwoIdRelated: String
         relayTwoWorking: Boolean
-        logs: [IHumidityLogs]
+        settingType: String
+        logs: [ILogs]
         scheduledOnTimes: [ScheduledOnTimes]
     }
 
-    type LightSettings {
-        name: String
-        whatsappWarningsOn: Boolean
-        minWarning: String
-        maxWarning: String
-        mode: String
-        relayOneAutomatedTimeToRun: String
-        relayTwoAutomatedTimeToRun: String
-        relayOneAutomatedStartedTime: String
-        relayTwoAutomatedStartedTime: String
-        relayOneIdRelated: String
-        relayOneWorking: Boolean
-        relayTwoIdRelated: String
-        relayTwoWorking: Boolean
-        logs: [Logs]
-        scheduledOnTimes: [ScheduledOnTimes]
-    }
-   
     type ScheduledOnTimes {
         daysToRepeat: [String]
         startTime: String
@@ -95,23 +77,23 @@ export const typeDefs = gql`
         taskRelated: String
     }
 
-    type IHumidityLogs {
-        timestamp: String
-        humidity: Int
-        startedWatering: Boolean
-        finishedWatering: Boolean
-    }
-
     type Logs {
         timestamp: String
-        humidity: Int
+        logDescription: String
+    }
+
+    type ILogs {
+        timestamp: String
+        reading: Int
+        started: Boolean
+        finished: Boolean
     }
 
     input InputLogs {
         timestamp: String
-        humidity: Int
-        startedWatering: Boolean
-        finishedWatering: Boolean
+        reading: Int
+        started: Boolean
+        finished: Boolean
     }
 
     input InputSettings {
@@ -130,7 +112,8 @@ export const typeDefs = gql`
         relayTwoWorking: Boolean
         logs: [InputLogs]
         scheduledOnTimes: [ScheduleInput]  
-        settingName: String 
+        settingType: String 
+        reading: Int
     }
 
     type ShoppingCart {
@@ -650,6 +633,7 @@ export const typeDefs = gql`
         addPlant(id: ID!, name: String!, plantId: Int!): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
+        deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

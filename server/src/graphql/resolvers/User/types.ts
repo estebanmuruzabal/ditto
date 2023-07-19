@@ -1,5 +1,6 @@
 
 export interface ISettingsInput {
+    reading: number;
     name: string;
     minWarning: string;
     maxWarning: string;
@@ -15,13 +16,19 @@ export interface ISettingsInput {
     logs?: Array<ILogsInput>;
     scheduledOnTimes?: Array<IScheduleInput>;
     whatsappWarningsOn: boolean;
-    settingName: string;
+    settingType: string;
 }
 
 export interface ISettingsInputArgs {
     id?: string;
     plantId: string;
     input: ISettingsInput;
+}
+
+export interface deleteSettingsArgs {
+    id?: string;
+    plantId: string;
+    settingName: string;
 }
 
 export interface ILogsInput {

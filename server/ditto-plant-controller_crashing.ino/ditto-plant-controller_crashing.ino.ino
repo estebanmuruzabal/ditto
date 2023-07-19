@@ -22,8 +22,8 @@ const int wet = 1357;
 
 // variables of the plant
 int tempeture = 0;
-int soilHumidity1 = 0;
-int soilHumidity2 = 0;
+int soil_humidity_1 = 0;
+int soil_humidity_2 = 0;
 int airHumidity = 0;
 int light = 0;
 bool isRelayOneOn = false; 
@@ -79,11 +79,11 @@ void updateServerAndRelaysState() {
     stringstream strs4;
     stringstream strs5;
     stringstream strs6;
-    strs1 << soilHumidity1;
+    strs1 << soil_humidity_1;
     strs2 << airHumidity;
     strs3 << tempeture;
     strs4 << distance;
-    strs5 << soilHumidity2;
+    strs5 << soil_humidity_2;
     strs6 << light;
     string temp_str1 = strs1.str();
     string temp_str2 = strs2.str();
@@ -102,17 +102,17 @@ void updateServerAndRelaysState() {
 
     // now we put everything together
     char queryString[950];
-    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"630d325b4872db758bb808b9\", \"plantId\": 20, \"soilHumidity1\": ";
+    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"630d325b4872db758bb808b9\", \"plantId\": 20, \"soil_humidity_1\": ";
     const char *secon = ", \"airHumidity\": ";
     const char *third = ", \"tempeture\": ";
     const char *thirdAndAHalf = ", \"distance_cm\": ";
-    const char *thirdAndThirdHalf = ", \"soilHumidity2\": ";
+    const char *thirdAndThirdHalf = ", \"soil_humidity_2\": ";
     const char *thirdAndThirdHalfOfHalf = ", \"light\": ";
     const char *fourth = isRelayOneOn ? ", \"isRelayOneOn\": true" : ", \"isRelayOneOn\": false";
     const char *fifth = isRelayTwoOn ? ", \"isRelayTwoOn\": true" : ", \"isRelayTwoOn\": false";
     const char *sixth = isRelayThirdOn ? ", \"isRelayThirdOn\": true" : ", \"isRelayThirdOn\": false";
     const char *seventh = isRelayFourthOn ? ", \"isRelayFourthOn\": true" : ", \"isRelayFourthOn\": false";
-    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $plantId: Int!, $soilHumidity1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soilHumidity2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, plantId: $plantId, soilHumidity1: $soilHumidity1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soilHumidity2: $soilHumidity2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
+    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $plantId: Int!, $soil_humidity_1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soil_humidity_2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, plantId: $plantId, soil_humidity_1: $soil_humidity_1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soil_humidity_2: $soil_humidity_2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
     
     strcpy(queryString,first);
     strcat(queryString,addSoilHumidity1);
@@ -169,9 +169,9 @@ void updateServerAndRelaysState() {
 
 void readSoilHumidity1() {
     int rawHumidity = analogRead(sensor_pin_for_soil_humidity1);
-    soilHumidity1 = map(rawHumidity, wet, dry, 100, 0);
+    soil_humidity_1 = map(rawHumidity, wet, dry, 100, 0);
     Serial.print("SoilHumidity 1 = ");
-    Serial.print(soilHumidity1);  /* Print Temperature on the serial window */
+    Serial.print(soil_humidity_1);  /* Print Temperature on the serial window */
     Serial.println("%");
 }
 
@@ -181,9 +181,9 @@ void readLight() {
 
 void readSoilHumidity2() {
     int rawHumidity2 = analogRead(sensor_pin_for_soil_humidity2);
-    soilHumidity2 = map(rawHumidity2, wet, dry, 100, 0);
+    soil_humidity_2 = map(rawHumidity2, wet, dry, 100, 0);
     Serial.print("SoilHumidity 2 = ");
-    Serial.print(soilHumidity2);  /* Print Temperature on the serial window */
+    Serial.print(soil_humidity_2);  /* Print Temperature on the serial window */
     Serial.println("%");
 }
 

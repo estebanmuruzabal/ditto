@@ -1,7 +1,7 @@
 // import { saveMessage } from "../adapter";
 import { List } from "whatsapp-web.js";
 import { getSettings, saveUserChatHistory, signUpUser } from "../api";
-import { ISetting, IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
+import { IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
 import { endConversationKeys, getCleanNumber, initialConversationKeys, isGrower, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
 import { client } from "..";

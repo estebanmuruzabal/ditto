@@ -1,7 +1,7 @@
 import moment from "moment";
-import { ISetting } from "../lib/types";
+import { ISensorSetting } from "../lib/types";
 
-export const logTimeStampWithTimeFilter = (setting: ISetting, currentSoilHumidity: number) => {
+export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: number) => {
     if (setting?.logs?.length > 0) {
         const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
         const lastTimeStamp = setting?.logs[setting?.logs?.length - 1]?.timestamp;
@@ -12,7 +12,7 @@ export const logTimeStampWithTimeFilter = (setting: ISetting, currentSoilHumidit
         if (lastTimestampInMins < 30) return setting;
     }
 
-    setting?.logs.push({ humidity: currentSoilHumidity, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
+    setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
 
     return setting;
 }

@@ -1,6 +1,5 @@
 import { cleanNumber } from "../controllers/handle";
 import { IUser, TriggerGrowerSteps } from "../lib/types";
-import { getSensorsMenuList } from "../lib/utils/workUtils";
 
 export const getReplyFromGrowerBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
     let resData = { replyMessage: '', media: null, trigger: '' }
@@ -20,7 +19,7 @@ export const getReplyFromGrowerBot = async (triggerStep: string, user: IUser | a
             }
 
             let resDataArrayOfPlants: any = [];
-            resData.replyMessage = getSensorsMenuList(resData, user, user?.plants[0], TriggerGrowerSteps.CHANGE_MIN_HUMIDITY, 'title1', 'buttonText1');
+            // resData.replyMessage = getSensorsMenuList(resData, user, user?.plants[0], TriggerGrowerSteps.CHANGE_MIN_HUMIDITY, 'title1', 'buttonText1');
             resolve([resData]);
             break;
         
