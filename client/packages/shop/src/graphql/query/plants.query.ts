@@ -22,12 +22,12 @@ export const UPDATE_SETTING = gql`
     }
 `;
 
-// export const GET_PLANTS = gql`
-// mutation GetUserPlants($id: ID!, $name: String!, $humedad: Int, $tempeture: Int, $mapeoTierra: Int, $mapeoLuz: Int) {
-//   getUserPlants(
-//     id: $id,
-//   ) {
-//     id
-//   }
-// }
-// `;
+export const DELETE_SETTING = gql`
+    mutation DeleteSetting($id: ID!, $plantId: Int!, $settingName: String!) {
+      deleteSetting(id: $id, plantId: $plantId, settingName: $settingName) {
+        message
+        status
+      }
+    }
+`;
+

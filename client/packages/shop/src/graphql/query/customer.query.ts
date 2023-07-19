@@ -9,98 +9,47 @@ query GetUser{
     created_at
     role
     plants {
-        plantId
+      plantId
+      name
+      soil_humidity_1
+      soil_humidity_2
+      light
+      airHumidity
+      tempeture
+      isRelayOneOn
+      isRelayTwoOn
+      isRelayThirdOn
+      isRelayFourthOn
+      sensors {
+        reading
         name
-        soilHumidity1
-        soilHumidity2
-        light
-        airHumidity
-        tempeture
-        isRelayOneOn
-        isRelayTwoOn
-        isRelayThirdOn
-        isRelayFourthOn
-        soilHumiditySettings1 {
-            name
-            whatsappWarningsOn
-            minWarning
-            maxWarning
-            mode
-            relayOneAutomatedStartedTime
-            relayOneAutomatedTimeToRun
-            relayTwoAutomatedStartedTime
-            relayTwoAutomatedTimeToRun
-            relayOneIdRelated
-            relayOneWorking
-            relayTwoIdRelated
-            relayTwoWorking
-            logs {
-              timestamp
-              humidity
-              startedWatering
-              finishedWatering
-            }
-            scheduledOnTimes {
-              daysToRepeat
-              startTime
-              endTime
-              enabled
-              smartLight
-            } 
+        whatsappWarningsOn
+        minWarning
+        maxWarning
+        reading
+        mode
+        relayOneAutomatedStartedTime
+        relayOneAutomatedTimeToRun
+        relayTwoAutomatedStartedTime
+        relayTwoAutomatedTimeToRun
+        relayOneIdRelated
+        relayOneWorking
+        relayTwoIdRelated
+        relayTwoWorking
+        settingType
+        logs {
+          timestamp
+          reading
+          started
+          finished
         }
-        soilHumiditySettings2 {
-            name
-            whatsappWarningsOn
-            minWarning
-            maxWarning
-            mode
-            relayOneAutomatedStartedTime
-            relayOneAutomatedTimeToRun
-            relayTwoAutomatedStartedTime
-            relayTwoAutomatedTimeToRun
-            relayOneIdRelated
-            relayOneWorking
-            relayTwoIdRelated
-            relayTwoWorking
-            logs {
-              timestamp
-              humidity
-              startedWatering
-              finishedWatering
-            }
-            scheduledOnTimes {
-              daysToRepeat
-              startTime
-              endTime
-              enabled
-              smartLight
-            }
+        scheduledOnTimes {
+          daysToRepeat
+          startTime
+          endTime
+          enabled
+          smartLight
         }
-        lightSettings {
-          name
-          whatsappWarningsOn
-          minWarning
-          maxWarning
-          mode
-          relayOneAutomatedStartedTime
-          relayOneAutomatedTimeToRun
-          relayTwoAutomatedStartedTime
-          relayTwoAutomatedTimeToRun
-          relayOneIdRelated
-          relayOneWorking
-          relayTwoIdRelated
-          relayTwoWorking
-          logs {
-            timestamp
-            humidity
-          }
-          scheduledOnTimes {
-            daysToRepeat
-            startTime
-            endTime
-            enabled
-            smartLight
-          }
       }
     }
     delivery_address{

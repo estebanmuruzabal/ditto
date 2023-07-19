@@ -1,13 +1,13 @@
 import React, { useReducer } from 'react';
 import { ProfileContext } from './profile.context';
-import { SettingsNames } from 'utils/constant';
+import { SensorsTypes } from 'utils/constant';
 
 type Action =
   | { type: 'HANDLE_ON_INPUT_CHANGE'; payload: any }
-  | { type: SettingsNames.SOIL_HUMIDITY_SETTING_1; payload: any }
-  | { type: SettingsNames.SOIL_HUMIDITY_SETTING_2; payload: any }
+  | { type: SensorsTypes.SOIL_HUMIDITY_SETTING_1; payload: any }
+  | { type: SensorsTypes.SOIL_HUMIDITY_SETTING_2; payload: any }
   | { type: 'HANDLE_ADD_PLANT'; payload: any }
-  | { type: SettingsNames.LIGHT_SETTING; payload: any }
+  | { type: SensorsTypes.LIGHT_SETTING; payload: any }
   | { type: 'HANDLE_PASSWORD_CLEAR'; payload: any }
   | { type: 'ADD_CONTACT'; payload: any }
   | { type: 'UPDATE_CONTACT'; payload: any }
@@ -26,23 +26,23 @@ function reducer(state: any, action: Action): any {
     case 'HANDLE_ON_INPUT_CHANGE':
       return { ...state, [action.payload.field]: action.payload.value };
     
-    case SettingsNames.SOIL_HUMIDITY_SETTING_1:
-      state.plants[0][SettingsNames.SOIL_HUMIDITY_SETTING_1][action.payload.field] = action.payload.value;
+    // case SensorsTypes.SOIL_HUMIDITY_SETTING_1:
+    //   state.plants[0][SensorsTypes.SOIL_HUMIDITY_SETTING_1][action.payload.field] = action.payload.value;
 
-      return { ...state};
+    //   return { ...state};
     
-    case SettingsNames.SOIL_HUMIDITY_SETTING_2:
-      state.plants[0][SettingsNames.SOIL_HUMIDITY_SETTING_2][action.payload.field] = action.payload.value;
+    // case SensorsTypes.SOIL_HUMIDITY_SETTING_2:
+    //   state.plants[0][SensorsTypes.SOIL_HUMIDITY_SETTING_2][action.payload.field] = action.payload.value;
     
-      return { ...state};
+    //   return { ...state};
     
     case 'HANDLE_ADD_PLANT':
       state.plants[0][action.payload.field] = action.payload.value;
     
       return { ...state};
   
-    case SettingsNames.LIGHT_SETTING:
-        state.plants[0][SettingsNames.LIGHT_SETTING][action.payload.field] = action.payload.value;
+    case SensorsTypes.LIGHT_SETTING:
+        state.plants[0][SensorsTypes.LIGHT_SETTING][action.payload.field] = action.payload.value;
       
         return { ...state};
     case 'ADD_CONTACT':
