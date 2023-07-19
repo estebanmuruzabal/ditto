@@ -55,10 +55,6 @@ const GET_CUSTOMERS = gql`
         description
         workedHours
       }
-      logs{
-        logDescription
-        timestamp
-      }
     }
   }
 `;

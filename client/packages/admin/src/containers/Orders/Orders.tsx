@@ -309,7 +309,7 @@ export default function Orders() {
                                                     <StyledCell>{item.payment_status}</StyledCell>
                                                     <StyledCell>{item.delivery_pickup_date}</StyledCell>
                                                     <StyledCell>${item.total}</StyledCell>
-                                                    <StyledCell>{item.order_products.map((product) => (<div>{product.quantity + product.recicledQuantity} - {product.name} - ${product.price}</div>))}</StyledCell>
+                                                    <StyledCell>{item.order_products.map((product, i: number) => (<div key={'item' + i}>{product.quantity + product.recicledQuantity} - {product.name} - ${product.price}</div>))}</StyledCell>
                                                     
                                                 </React.Fragment>
                                             );
