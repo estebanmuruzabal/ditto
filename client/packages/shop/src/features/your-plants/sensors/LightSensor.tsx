@@ -35,7 +35,6 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
     const intl = useIntl();
-
     const selectedMode = lightModeOptions.find((option) => option.value === setting.mode);
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
@@ -140,25 +139,6 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
             <ListTitle>
               <Text>
                 <FormattedMessage
-                  id="manualModeStateId"
-                  defaultMessage="manualModeStateId"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Text  bold> 
-                <FormattedMessage
-                  id={setting.relayOneWorking ? 'manualModeStateOnId' : 'manualModeStateOffId'}
-                  defaultMessage='noDefaultOnOffMsg'
-                />
-              </Text>
-            </ListDes>
-          </ListItem>
-  
-          <ListItem style={{ justifyContent: 'flex-start' }}>
-            <ListTitle>
-              <Text>
-                <FormattedMessage
                   id="lightModeId"
                   defaultMessage="lightModeId"
                 />
@@ -167,14 +147,14 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
             <ListDes>
                 { editIsOn ? (
                     <Select 
-                        onChange={(e: any) => handleSettingsChange(plant, 'mode', e.value, SensorsTypes.LIGHT)}
+                        onChange={(e: any) => handleSettingsChange(plant, 'mode', e.value, settingType)}
                         value={selectedMode}
                         options={lightModeOptions}
                         styles={selectStyle}
                         menuPosition={'fixed'}
                     />
                 ) : (
-                    <Text bold>{setting?.mode}</Text>
+                    <Text  bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
                 )}
             </ListDes>
           </ListItem>
@@ -192,7 +172,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
               <ListDes>
               { editIsOn ? (
                     <Select 
-                        onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, SensorsTypes.LIGHT)}
+                        onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
                         value={relayOneSelected}
                         options={fourRelaysOptions}
                         styles={selectStyle}
@@ -218,7 +198,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
                 </ListTitle>
                 <ListDes>
                   <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, SensorsTypes.LIGHT)}
+                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, settingType)}
                     value={selectedManualState}
                     options={manualModeOptions}
                     styles={selectStyle}
@@ -228,29 +208,48 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
               </ListItem>
             </>
           )}
-  
-        <ListItem style={{ justifyContent: 'flex-start' }}>
-            <ListTitle>
-            <Text>
-                <FormattedMessage
-                id="notifyChangesId"
-                defaultMessage="notifyChangesId"
-                />
-            </Text>
-            </ListTitle>
-            <ListDes>
-                <Switch 
-                    disabled={false}
-                    checked={setting.whatsappWarningsOn}
-                    labelPosition={'right'}
-                    // className,
-                    onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, settingType)}
-                />
-            </ListDes>
-        </ListItem>
 
           { (setting.mode === LightSensorModes.SCHEDULE || setting.mode === LightSensorModes.SMART_SCHEDULE) && (
             <>
+              <ListItem style={{ justifyContent: 'flex-start' }}>
+                <ListTitle>
+                <Text>
+                    <FormattedMessage
+                    id="manualModeStateId"
+                    defaultMessage="manualModeStateId"
+                    />
+                </Text>
+                </ListTitle>
+                <ListDes>
+                    <Text  bold> 
+                        <FormattedMessage
+                        id={setting.relayOneWorking ? 'manualModeStateOnId' : 'manualModeStateOffId'}
+                        defaultMessage='noDefaultOnOffMsg'
+                        />
+                    </Text>
+                    </ListDes>
+                </ListItem>
+
+                <ListItem style={{ justifyContent: 'flex-start' }}>
+                    <ListTitle>
+                    <Text>
+                        <FormattedMessage
+                        id="notifyChangesId"
+                        defaultMessage="notifyChangesId"
+                        />
+                    </Text>
+                    </ListTitle>
+                    <ListDes>
+                        <Switch 
+                            disabled={false}
+                            checked={setting.whatsappWarningsOn}
+                            labelPosition={'right'}
+                            // className,
+                            onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, settingType)}
+                        />
+                    </ListDes>
+                </ListItem>
+
                 { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                     return (
                         <WeekContainer>

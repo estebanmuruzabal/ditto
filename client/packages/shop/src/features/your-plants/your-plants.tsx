@@ -34,6 +34,7 @@ import { ISetting } from 'utils/types';
 import Select from 'react-select';
 import Plug from './sensors/Plug';
 import DistanceSensor from './sensors/DistanceSensor';
+import { AuthContext } from 'contexts/auth/auth.context';
   
 
 type YourPlantsProps = {
@@ -50,13 +51,21 @@ type YourPlantsProps = {
 
 const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   const { state, dispatch } = useContext(ProfileContext);
-  const { data, error, loading  } = useQuery(GET_LOGGED_IN_USER, {
-    pollInterval: 5000,
+  const {authDispatch} = useContext<any>(AuthContext);
+  // const { data, error, loading, refetch: userRefetchh  } = useQuery(GET_LOGGED_IN_USER, {
+  //   pollInterval: 5000,
+  // });
+
+  const { loading, error, data = {}, refetch: userRefetchh } = useQuery(GET_LOGGED_IN_USER, {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: "no-cache",
   });
+  
   // const router = useRouter();
   const intl = useIntl();
   const [name, setPlantName] = useState('');
   const [openTab, setOpenTab] = useState('');
+  const [errorId, setErrorId] = useState('');
   const [plantId, setControllerID] = useState('');
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [sensorSelected, setSensor] = useState('');
@@ -76,32 +85,68 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     );
   };
 
-  const isRelayIdAlreadyAssigend = (plant: any, field: string) => {
-    if (field !== 'relayOneIdRelated' && field !== 'relayTwoIdRelated' && field !== 'relayThreeIdRelated' && field !== 'relayFourIdRelated') return false;
+  const isRelayIdAlreadyAssigend = (plant: any, field: string, value: string | boolean) => {
+    const relayOneIdRelated = 'relayOneIdRelated';
+    const relayTwoIdRelated = 'relayTwoIdRelated';
 
-    {Object.keys(SensorsTypes).map((settingType, i: number) => {
-      const relaysIds = [RelaysIds.RELAY_ONE, RelaysIds.RELAY_TWO, RelaysIds.RELAY_THIRD, RelaysIds.RELAY_FOURTH];
-      const relayAlreadyAssigned = plant[settingType] && relaysIds.includes(plant[settingType][field]);
+    if (field !== relayOneIdRelated && field !== relayTwoIdRelated) return false;
 
-      if (relayAlreadyAssigned) {
-        setUserinfoMsg(`${intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' })} ${plant[settingType]}`);
-        setTimeout(function () {
-          setUserinfoMsg('');
-        }, 8000)
-        return true;
+    let relayAlreadyAssigned = false;
+
+    plant.sensors.map((sensor) => {
+      console.log(value)
+      if ((sensor[relayOneIdRelated] === value || sensor[relayTwoIdRelated] === value ) && value !== '') {
+        const texto1 = intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' });
+        const texto2 = intl.formatMessage({ id: 'relayAlreadyAssinged2', defaultMessage: 'desigagned  ' });
+          alert(texto1 + sensor.name + texto2);
+          relayAlreadyAssigned = true;
       }
-     })
-   }
-   return false;
+    })
+
+   return relayAlreadyAssigned;
   };
-  
+
+  const releaseRelaysIfModeNone = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
+    const mode = 'mode';
+    const relayOneIdRelated = 'relayOneIdRelated';
+    const relayTwoIdRelated = 'relayTwoIdRelated';
+
+    if (field !== mode) return plant;
+    if (value !== CommonMode.NONE) return plant;
+
+    const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
+    plant.sensors[settingIndex][relayOneIdRelated] = '';
+    plant.sensors[settingIndex][relayTwoIdRelated] = '';
+    
+   return plant;
+  };
+
+  const isClean = (plant: any, field: string, value: string | boolean) => {
+    // min max checks
+    const minWarning = 'minWarning';
+    const maxWarning = 'maxWarning';
+
+    if (field !== minWarning && field !== maxWarning) return true;
+    if (Number(value) < 0 || Number(value) > 100) {
+      setErrorId(field);
+      setTimeout(() => {
+          setErrorId('')
+      }, 2000)
+      return false;
+    }
+    setErrorId(''); 
+
+    // add more checks
+    return true;
+  };
 
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
-    if (isRelayIdAlreadyAssigend(plant, field)) return;
+    if (isRelayIdAlreadyAssigend(plant, field, value)) return;
+    plant = releaseRelaysIfModeNone(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
 
-    dispatchSettingSave(plant, field, value, settingType);
+    isClean(plant, field, value) && dispatchSettingSave(plant, field, value, settingType);
 
     setUserinfoMsg('Update user info successfully');
     setTimeout(function () {
@@ -109,7 +154,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     }, 8000)
   };
   
-  const handleAddClick = () => {
+  const handleAddDittoBotClick = () => {
     addPlant({
       variables: {
         id: data?.getUser?.id,
@@ -122,8 +167,25 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     setTimeout(function () {
       setUserinfoMsg('');
       userRefetch();
-      window.location.reload();
-    }, 3000)
+    }, 2000)  
+  };
+
+  const handleUpdateDittoControllerName = (plant, name: string) => {
+    setTimeout(function () {
+      addPlant({
+        variables: {
+          id: data?.getUser?.id,
+          name,
+          plantId: plant.plantId
+        },
+      });
+  
+    }, 2000)
+    setUserinfoMsg('added plany successfully');
+    setTimeout(function () {
+      setUserinfoMsg('');
+      userRefetch();
+    }, 2000)  
   };
 
   const handleDeleteSensor = (plant: any, settingName: SensorsTypes) => {
@@ -135,16 +197,16 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
       },
     });
 
+    // dispatch({ type: settingType, payload: { plant, value, field } });
+
     setUserinfoMsg('deleted setting successfully');
     setTimeout(function () {
       setUserinfoMsg('');
       userRefetch();
-      window.location.reload();
-    }, 3000)
+    }, 2000)  
   };
 
   const onDeleteSchedule = (plant: any, settingType: SensorsTypes, scheduleIndex: number) => {
-
     const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
     plant.sensors[settingIndex]?.scheduledOnTimes.splice(scheduleIndex, 1);
     
@@ -160,8 +222,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     setTimeout(function () {
       setUserinfoMsg('');
       userRefetch();
-      window.location.reload();
-  }, 3000)
+    }, 2000)  
   };
 
   const getDefaultSetting = (settingTypeName: string) => { 
@@ -216,32 +277,13 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
         input: getDefaultSetting(completeSensorTypeName)
       },
     });
+
+    // add new sensor in the state!!
+    // dispatch({ type: settingType, payload: { plant, value, field } });
+
     setTimeout(function () {
       userRefetch();
-      window.location.reload();
-    }, 2000)
-  };
-
-
-  // Add or edit modal
-  const handleModal = (
-    modalComponent: any,
-    modalProps = {},
-    className: string = 'add-time-schedule-modal'
-  ) => {
-    openModal({
-      show: true,
-      config: {
-        width: 360,
-        height: 'auto',
-        enableResizing: false,
-        disableDragging: true,
-        className: className,
-      },
-      closeOnClickOutside: true,
-      component: modalComponent,
-      componentProps: { item: modalProps },
-    });
+    }, 2000)  
   };
 
   const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left' }) };
@@ -270,7 +312,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
             />
           </BlockTitle>
 
-          { plants?.length < 1 && (<Text>No tienes plantas registradas</Text>) }
+          { plants?.length < 1 && (<Text>{intl.formatMessage({ id: 'noDittoBotsTextId', defaultMessage: 'noDittoBotsTextId' })}</Text>) }
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
               return (
@@ -291,9 +333,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             type='text'
                             name='name'
                             disabled={true}
-                            value={plant?.name || ''}
+                            value={plant?.name}
                             // we have to change the onChange because the is no one for the controller name actualy
-                            // onChange={(e: any) => handleSettingsChange(plant, 'name', e.target.value, SensorsTypes.SOIL_HUMIDITY_SETTING_1)}
+                            onChange={(e: any) => handleUpdateDittoControllerName(plant, e.target.value)}
                             backgroundColor='#F7F7F7'
                             width='197px'
                             height='34.5px'
@@ -336,6 +378,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                               key={i + sensor.settingType}
                               data={data}
                               plant={plant}
+                              errorId={errorId}
                               openTab={openTab}
                               handleDeleteSensor={handleDeleteSensor}
                               setOpenTab={setOpenTab}
@@ -362,6 +405,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             <DistanceSensor
                               data={data}
                               plant={plant}
+                              errorId={errorId}
                               handleDeleteSensor={handleDeleteSensor}
                               openTab={openTab}
                               setOpenTab={setOpenTab}
@@ -457,9 +501,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           </ListDes>
         </ListItem>
 
-        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddClick}>
+        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddDittoBotClick}>
           <ButtonText>
-            <FormattedMessage id={"addPlantButton"} defaultMessage="Add plant" />
+            <FormattedMessage id={"addDittoBotButton"} defaultMessage="Add plant" />
           </ButtonText>
         </Button>
       </PlantsPageContainer>

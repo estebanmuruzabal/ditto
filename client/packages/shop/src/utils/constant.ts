@@ -17,7 +17,7 @@ export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
 export enum SensorsTypes {
     SOIL_HUMIDITY = 'SOIL_HUMIDITY',
     LIGHT = 'LIGHT',
-    DISTANCE = 'distance',
+    DISTANCE = 'DISTANCE',
     PLUG = 'PLUG',
     HUMIDITY_TEMPETURE = 'HUMIDITY_TEMPETURE',
 }
@@ -93,9 +93,9 @@ export const humidityModeOptions = [
 
 export const lightModeOptions = [
     { value: LightSensorModes.MANUAL, label: 'Manual' },
-    { value: LightSensorModes.NONE, label: 'Ninguno' },
     { value: LightSensorModes.SCHEDULE, label: 'Calendario' },
-    { value: LightSensorModes.SMART_SCHEDULE, label: 'Calendario inteligente' }
+    { value: LightSensorModes.SMART_SCHEDULE, label: 'Calendario inteligente' },
+    { value: LightSensorModes.NONE, label: 'Ninguno' }
 ];
 
 export const manualModeOptions = [
@@ -115,5 +115,6 @@ export const eightRelaysOptions = [
     { value: RelaysIds.RELAY_ONE, label: 'Enchufe 1' },
     { value: RelaysIds.RELAY_TWO, label: 'Enchufe 2' },
     { value: RelaysIds.RELAY_THIRD, label: 'Enchufe 3' },
-    { value: RelaysIds.RELAY_FOURTH, label: 'Enchufe 4' }
+    { value: RelaysIds.RELAY_FOURTH, label: 'Enchufe 4' },
+    { value: '', label: 'Desasociar enchufe' }
 ];

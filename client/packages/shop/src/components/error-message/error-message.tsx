@@ -7,7 +7,7 @@ const StyledAside = styled.aside({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '100vh',
+  // height: '100vh',
   padding: '1.5rem',
   fontSize: '15px',
   color: '000',

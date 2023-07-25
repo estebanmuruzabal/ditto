@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { Input } from 'components/forms/input';
 import { HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions, SensorsTypes, DistanceMode, distanceModeOptions } from 'utils/constant';
 import HumidityLogsGraph from '../humidity-logs-graph/humidity-logs-graph';
-import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, Row } from '../your-plants.style';
+import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, Row, ErrorMsg } from '../your-plants.style';
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
@@ -26,11 +26,12 @@ interface Props {
   setOpenTab: (settingType: string) => void;
   handleDeleteSensor: (plant: any, settingType: string) => void;
   settingType: SensorsTypes;
+  errorId: string;
   handleSettingsChange: (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => void;
   onDeleteSchedule: (plant: any, settingType: SensorsTypes, position: number) => void;
 }
 
-const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor  }) => {
+const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor, errorId  }) => {
     const setting = plant.sensors.find((sensor: ISetting) => sensor.settingType === settingType);
     const intl = useIntl();
     const [daySelected, setDay] = useState('');
@@ -158,7 +159,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                         menuPosition={'fixed'}
                     />
                     ) : (
-                        <Text bold>{selectedMode.label}</Text>
+                        <Text  bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
                     )}
                 </ListDes>
             </ListItem>
@@ -197,14 +198,21 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                     </ListTitle>
                     <ListDes>
                         { editIsOn ? (
-                            <Input
-                                type='number'
-                                name='maxWarning'
-                                value={setting.maxWarning}
-                                onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
-                                backgroundColor='#F7F7F7'
-                                height='34.5px'
-                            />
+                            <>
+                                <Input
+                                    type='number'
+                                    name='maxWarning'
+                                    value={setting.maxWarning}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                />
+                                {errorId === 'maxWarning' && (
+                                    <ErrorMsg>
+                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                    </ErrorMsg>
+                                )}
+                            </>
                         ) : (
                             <Text bold>{setting.maxWarning}</Text>
                         )}
@@ -222,14 +230,21 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                     </ListTitle>
                     <ListDes>
                         { editIsOn ? (
-                            <InputUpper
-                                type='number'
-                                name='minWarning'
-                                value={setting.minWarning}
-                                onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
-                                backgroundColor='#F7F7F7'
-                                height='34.5px'
+                            <>
+                                <InputUpper
+                                    type='number'
+                                    name='minWarning'
+                                    value={setting.minWarning}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
                                 />
+                                {errorId === 'minWarning' && (
+                                    <ErrorMsg>
+                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                    </ErrorMsg>
+                                )}
+                            </>
                         ) : (
                             <Text bold>{setting.minWarning}</Text>
                         )}
