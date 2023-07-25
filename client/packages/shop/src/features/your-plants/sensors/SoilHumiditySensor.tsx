@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { Input } from 'components/forms/input';
 import { SensorsTypes, HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions } from 'utils/constant';
 import HumidityLogsGraph from '../humidity-logs-graph/humidity-logs-graph';
-import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, ActionsButtons, Row, ScheduleTimeContainer, WeekContainerModal } from '../your-plants.style';
+import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, ActionsButtons, Row, ScheduleTimeContainer, WeekContainerModal, ErrorMsg } from '../your-plants.style';
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
@@ -23,6 +23,7 @@ interface Props {
   data?: any;
   plant: any;
   openTab: string;
+  errorId: string;
   setOpenTab: (settingType: string) => void;
   handleDeleteSensor: (plant: any, settingType: string) => void;
   settingType: SensorsTypes;
@@ -30,7 +31,7 @@ interface Props {
   onDeleteSchedule: (plant: any, settingType: SensorsTypes, position: number) => void;
 }
 
-const SoilHumiditySensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor  }) => {
+const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor  }) => {
     const setting = plant.sensors.find((sensor: ISetting) => sensor.settingType === settingType);
     const intl = useIntl();
     const [editIsOn, setEditIsOn] = useState(false);
@@ -194,14 +195,21 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingType, handleSetting
                     </ListTitle>
                     <ListDes>
                         { editIsOn ? (
-                            <Input
-                                type='number'
-                                name='maxWarning'
-                                value={setting.maxWarning}
-                                onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
-                                backgroundColor='#F7F7F7'
-                                height='34.5px'
-                            />
+                            <>
+                                <Input
+                                    type='number'
+                                    name='maxWarning'
+                                    value={setting.maxWarning}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                />
+                                {errorId === 'maxWarning' && (
+                                    <ErrorMsg>
+                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                    </ErrorMsg>
+                                )}
+                            </>
                         ) : (
                             <Text bold>{(setting.maxWarning >= 0 && setting.maxWarning <= 100) ? setting?.maxWarning : '-'} %</Text>
                         )}
@@ -219,14 +227,21 @@ const SoilHumiditySensor: React.FC<Props> = ({ plant, settingType, handleSetting
                     </ListTitle>
                     <ListDes>
                         { editIsOn ? (
-                            <InputUpper
-                                type='number'
-                                name='minWarning'
-                                value={setting.minWarning}
-                                onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
-                                backgroundColor='#F7F7F7'
-                                height='34.5px'
-                            />
+                             <>
+                                <InputUpper
+                                    type='number'
+                                    name='minWarning'
+                                    value={setting.minWarning}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                />
+                                {errorId === 'minWarning' && (
+                                    <ErrorMsg>
+                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                    </ErrorMsg>
+                                )}
+                            </>
                         ) : (
                             <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} %</Text>
                         )}

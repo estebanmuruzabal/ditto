@@ -158,7 +158,7 @@ const Plug: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDel
                         menuPosition={'fixed'}
                     />
                     ) : (
-                        <Text bold>{selectedMode.label}</Text>
+                        <Text  bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
                     )}
                 </ListDes>
             </ListItem>

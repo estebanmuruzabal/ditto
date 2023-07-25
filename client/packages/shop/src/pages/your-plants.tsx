@@ -19,8 +19,10 @@ type Props = {
   };
 };
 const YourPlantsPage: NextPage<Props> = ({ deviceType }) => {
-  const { data, error, loading, refetch: userRefetch } = useQuery(GET_LOGGED_IN_USER);
-
+  const { loading, error, data = {}, refetch: userRefetch } = useQuery(GET_LOGGED_IN_USER, {
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: "no-cache",
+  });
   if (!data || loading) {
     return <div>loading...</div>;
   }

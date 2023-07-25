@@ -15,7 +15,7 @@ import {useMutation} from "@apollo/react-hooks";
 import {PHONE_VERIFICATION_MUTATION} from "../../graphql/mutation/signup";
 
 
-export default function PhoneVerificationModal() {
+export default function PhoneVerificationModal(props: FormikProps<FormValues> & MyFormProps) {
   const { authDispatch } = useContext<any>(AuthContext);
   const [phone, setPhone] = React.useState('');
 

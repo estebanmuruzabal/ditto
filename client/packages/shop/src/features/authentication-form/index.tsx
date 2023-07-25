@@ -30,5 +30,9 @@ export default function AuthenticationForm() {
     RenderForm = PhoneVerificationModal;
   }
 
+  if (authState.currentForm === 'errorForm') {
+    RenderForm = PhoneVerificationModal;
+  }
+
   return <RenderForm />;
 }
