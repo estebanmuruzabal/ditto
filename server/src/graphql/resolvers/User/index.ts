@@ -401,7 +401,7 @@ export const usersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
-
+            // we use this very same method to update the ditto bot name!
             const userResult = await db.users.findOne({ _id: new ObjectId(id) });
 
             if (!userResult) {
@@ -412,29 +412,41 @@ export const usersResolvers: IResolvers = {
                 throw new Error("Already added three plants. You are not allowed to add more than three.");
             }
 
-            const plantObject = {
-                id: shortid.generate(),
-                name,
-                plantId,
-                soil_humidity_1: 0,
-                soil_humidity_2: 0,
-                airHumidity: 0,
-                tempeture: 0,
-                distance_cm: 0,
-                light: 0,
-                isRelayOneOn: false,
-                isRelayTwoOn: false,
-                isRelayThirdOn: false,
-                isRelayFourthOn: false,
-                sensors: []
-            };
+            const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
+            
+            if (index < 0) {
+                const plantObject = {
+                    id: shortid.generate(),
+                    name,
+                    plantId,
+                    soil_humidity_1: 0,
+                    soil_humidity_2: 0,
+                    airHumidity: 0,
+                    tempeture: 0,
+                    distance_cm: 0,
+                    light: 0,
+                    isRelayOneOn: false,
+                    isRelayTwoOn: false,
+                    isRelayThirdOn: false,
+                    isRelayFourthOn: false,
+                    sensors: []
+                };
+    
+                await db.users.updateOne(
+                    {_id: new ObjectId(id)},
+                    // @ts-ignore
+                    {$push: {plants: plantObject}}
+                );
+            } else {
+                const plants = userResult.plants;
+                plants[index].name = name;
 
-            await db.users.updateOne(
-                {_id: new ObjectId(id)},
-                // @ts-ignore
-                {$push: {plants: plantObject}}
-            );
-
+                await db.users.updateOne(
+                    {_id: new ObjectId(id)},
+                    {$set: { plants }}
+                );
+    
+            }
             return {
                 status: true,
                 message: "Created plant successfully."
