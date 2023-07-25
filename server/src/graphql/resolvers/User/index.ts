@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, DistanceSensorMode, HumiditySensorMode, ICommonMessageReturnType, IPlantReturnType, IProduct, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
+import {Address, Database, DistanceSensorMode, HumiditySensorMode, ICommonMessageReturnType, IPlantReturnType, IProduct, ISensorSetting, ISetting, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize, takeNineOutIfItHasIt} from "../../../lib/utils";
@@ -9,8 +9,8 @@ import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
-import { checkAirHumidityAndTempeture, checkLightSensor, checkSensors, checkSoilWarnings } from '../../../controllers/plants';
-import { ISettingsInputArgs } from './types';
+import { checkSensor } from '../../../controllers/plants';
+import { ISettingsInputArgs, deleteSettingsArgs } from './types';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -401,7 +401,7 @@ export const usersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
-
+            // we use this very same method to update the ditto bot name!
             const userResult = await db.users.findOne({ _id: new ObjectId(id) });
 
             if (!userResult) {
@@ -412,86 +412,41 @@ export const usersResolvers: IResolvers = {
                 throw new Error("Already added three plants. You are not allowed to add more than three.");
             }
 
-            const plantObject = {
-                id: shortid.generate(),
-                name,
-                plantId,
-                soilHumidity1: 0,
-                soilHumidity2: 0,
-                airHumidity: 0,
-                tempeture: 0,
-                distance_cm: 0,
-                light: 0,
-                isRelayOneOn: false,
-                isRelayTwoOn: false,
-                isRelayThirdOn: false,
-                isRelayFourthOn: false,
-                distanceSensorSettings: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: DistanceSensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                },
-                soilHumiditySettings1: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: HumiditySensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                    scheduledOnTimes: []
-                },
-                soilHumiditySettings2: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: DistanceSensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                    scheduledOnTimes: []
-                },
-                lightSettings: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: DistanceSensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                    scheduledOnTimes: []
-                }
-            };
+            const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
+            
+            if (index < 0) {
+                const plantObject = {
+                    id: shortid.generate(),
+                    name,
+                    plantId,
+                    soil_humidity_1: 0,
+                    soil_humidity_2: 0,
+                    airHumidity: 0,
+                    tempeture: 0,
+                    distance_cm: 0,
+                    light: 0,
+                    isRelayOneOn: false,
+                    isRelayTwoOn: false,
+                    isRelayThirdOn: false,
+                    isRelayFourthOn: false,
+                    sensors: []
+                };
+    
+                await db.users.updateOne(
+                    {_id: new ObjectId(id)},
+                    // @ts-ignore
+                    {$push: {plants: plantObject}}
+                );
+            } else {
+                const plants = userResult.plants;
+                plants[index].name = name;
 
-            await db.users.updateOne(
-                {_id: new ObjectId(id)},
-                {$push: {plants: plantObject}}
-            );
-
+                await db.users.updateOne(
+                    {_id: new ObjectId(id)},
+                    {$set: { plants }}
+                );
+    
+            }
             return {
                 status: true,
                 message: "Created plant successfully."
@@ -527,8 +482,8 @@ export const usersResolvers: IResolvers = {
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
             } else {
-                plants[index].soilHumidity1 = hum1;
-                plants[index].soilHumidity2 = hum2;
+                plants[index].soil_humidity_1 = hum1;
+                plants[index].soil_humidity_2 = hum2;
                 plants[index].airHumidity = airHum;
                 plants[index].tempeture = temp;
                 plants[index].distance_cm = dist;
@@ -538,19 +493,17 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayThirdOn = isRelayThirdOn;
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
+            // const a = {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "contrId": 30, "hum1": 109, "airHum": 0, "temp": 0, "dist": 1, "hum2": 85, "light": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
 
-            console.log('Arduino', plants[index].name)
-            console.log('Humedad sensor 1', plants[index].soilHumidity1)
-            console.log('Humedad sensor 2', plants[index].soilHumidity2)
-            console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
+            // console.log('Arduino', plants[index].name)
+            // console.log('Humedad sensor 1', plants[index].soil_humidity_1)
+            // console.log('Humedad sensor 2', plants[index].soil_humidity_2)
+            // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
-            plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings1, userResult?.phones[0]?.number, Number(plants[index].soilHumidity1));
-            plants[index] = await checkSoilWarnings(plants[index], plants[index].soilHumiditySettings2, userResult?.phones[0]?.number, Number(plants[index].soilHumidity2));
-            // plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
-            plants[index] = await checkLightSensor(plants[index], plants[index].lightSettings, userResult?.phones[0]?.number, Number(plants[index].light));
-            
+            plants[index].sensors?.map(async (sensorSetting: ISensorSetting) => await checkSensor(plants[index], sensorSetting, userResult?.phones[0]?.number))
+
             console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
-            // plants[index] = await checkSensors(plants[index], userResult?.phones[0]?.number);
+
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}
@@ -577,27 +530,51 @@ export const usersResolvers: IResolvers = {
 
             const plants = userResult.plants;
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
+            const replaceIndex = plants[index].sensors?.findIndex((plant: any) => (plant.settingType == input.settingType));
 
-            if (index < 0) {
-                throw new Error(`Controller id does not exists: ${plantId})`);
+            if (index < 0) {throw new Error("plant Id not found.");}
+
+            if (replaceIndex >= 0) {
+                plants[index].sensors[replaceIndex] = {
+                    settingType: input.settingType,
+                    name: input.name,
+                    whatsappWarningsOn: input.whatsappWarningsOn,
+                    maxWarning: input.maxWarning,
+                    minWarning: input.minWarning,
+                    reading: input.reading,
+                    mode: input.mode,
+                    relayOneAutomatedTimeToRun: input.relayOneAutomatedTimeToRun,
+                    relayTwoAutomatedStartedTime: input.relayTwoAutomatedStartedTime,
+                    relayOneAutomatedStartedTime: input.relayOneAutomatedStartedTime,
+                    relayOneIdRelated: input.relayOneIdRelated,
+                    relayOneWorking: input.relayOneWorking,
+                    relayTwoAutomatedTimeToRun: input.relayTwoAutomatedTimeToRun,
+                    relayTwoIdRelated: input.relayTwoIdRelated,
+                    relayTwoWorking: input.relayTwoWorking,
+                    logs: input.logs,
+                    scheduledOnTimes: input.scheduledOnTimes
+                };
             } else {
-                plants[index][input.settingName].name = input.name;
-                plants[index][input.settingName].sendWhatsappWarnings = input.sendWhatsappWarnings;
-                plants[index][input.settingName].maxWarning = input.maxWarning;
-                plants[index][input.settingName].minWarning = input.minWarning;
-                plants[index][input.settingName].mode = input.mode;
-                plants[index][input.settingName].relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
-                plants[index][input.settingName].relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
-                plants[index][input.settingName].relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
-                plants[index][input.settingName].relayOneIdRelated = input.relayOneIdRelated;
-                plants[index][input.settingName].relayOneWorking = input.relayOneWorking;
-                plants[index][input.settingName].relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
-                plants[index][input.settingName].relayTwoIdRelated = input.relayTwoIdRelated;
-                plants[index][input.settingName].relayTwoWorking = input.relayTwoWorking;
-                plants[index][input.settingName].logs = input.logs;
-                plants[index][input.settingName].scheduledOnTimes = input.scheduledOnTimes;
+                plants[index].sensors.push({
+                    settingType: input.settingType,
+                    name: input.name,
+                    whatsappWarningsOn: input.whatsappWarningsOn,
+                    maxWarning: input.maxWarning,
+                    minWarning: input.minWarning,
+                    mode: input.mode,
+                    reading: input.reading,
+                    relayOneAutomatedTimeToRun: input.relayOneAutomatedTimeToRun,
+                    relayTwoAutomatedStartedTime: input.relayTwoAutomatedStartedTime,
+                    relayOneAutomatedStartedTime: input.relayOneAutomatedStartedTime,
+                    relayOneIdRelated: input.relayOneIdRelated,
+                    relayOneWorking: input.relayOneWorking,
+                    relayTwoAutomatedTimeToRun: input.relayTwoAutomatedTimeToRun,
+                    relayTwoIdRelated: input.relayTwoIdRelated,
+                    relayTwoWorking: input.relayTwoWorking,
+                    logs: input.logs,
+                    scheduledOnTimes: input.scheduledOnTimes
+                })
             }
-
                 
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
@@ -606,7 +583,36 @@ export const usersResolvers: IResolvers = {
 
             return {
                 status: true,
-                message: `Updated ${input.settingName} successfully`
+                message: `Updated ${input.settingType} successfully`
+            };
+        },
+        deleteSetting: async (
+            _root: undefined,
+            {id, plantId, settingName}: deleteSettingsArgs,
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+
+            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
+
+            const plants = userResult.plants;
+            const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
+            if (index < 0) {throw new Error("plant Id not found.");}
+
+            const settingIndex = plants[index].sensors.findIndex((sensor: ISensorSetting) => sensor.settingType === settingName);            
+            plants[index].sensors.splice(settingIndex, 1);
+
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$set: {plants}}
+            );
+
+            return {
+                status: true,
+                message: `${settingName} deleted successfully`
             };
         },
         addPhoneNumber: async (

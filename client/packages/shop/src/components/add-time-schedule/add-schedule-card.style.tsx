@@ -40,7 +40,7 @@ export const DayContainer = styled.button`
   margin-right: 3px;
   width: 50px;
   height: 30px;
-  border: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
+  border: 1px solid ${themeGet('colors.gray.700', '#c3b2b2')};
   border-radius: 5px;
   fontFamily: $theme.typography.primaryFontFamily,
   color: $theme.colors.red400,
@@ -83,7 +83,6 @@ export const ListItem = styled.div`
 
 export const ListTitle = styled.div`
   flex-basis: 140px;
-  width: 197px;
   flex-shrink: 0;
   position: relative;
   // @media (max-width: 767px) {

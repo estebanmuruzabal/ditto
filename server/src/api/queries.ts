@@ -56,8 +56,8 @@ export const getCustomerQuery = `
                 plants {
                     plantId
                     name
-                    soilHumidity1
-                    soilHumidity2
+                    soil_humidity_1
+                    soil_humidity_2
                     airHumidity
                     tempeture
                     light
@@ -65,45 +65,35 @@ export const getCustomerQuery = `
                     isRelayTwoOn
                     isRelayThirdOn
                     isRelayFourthOn
-                    soilHumiditySettings1 {
+                    sensors {
+                        name
+                        whatsappWarningsOn
                         minWarning
                         maxWarning
+                        reading
                         mode
-                        relayOneAutomatedTimeToRun
                         relayOneAutomatedStartedTime
+                        relayOneAutomatedTimeToRun
                         relayTwoAutomatedStartedTime
+                        relayTwoAutomatedTimeToRun
                         relayOneIdRelated
                         relayOneWorking
-                        relayTwoAutomatedTimeToRun
                         relayTwoIdRelated
                         relayTwoWorking
-                    }
-                    soilHumiditySettings2 {
-                        minWarning
-                        maxWarning
-                        mode
-                        relayOneAutomatedTimeToRun
-                        relayOneAutomatedStartedTime
-                        relayTwoAutomatedStartedTime
-                        relayOneIdRelated
-                        relayOneWorking
-                        relayTwoAutomatedTimeToRun
-                        relayTwoIdRelated
-                        relayTwoWorking
-                    }
-                    lightSettings {
-                        minWarning
-                        maxWarning
-                        mode
-                        relayOneAutomatedTimeToRun
-                        relayOneAutomatedStartedTime
-                        relayTwoAutomatedStartedTime
-                        relayOneIdRelated
-                        relayOneWorking
-                        relayTwoAutomatedTimeToRun
-                        relayTwoIdRelated
-                        relayTwoWorking
-                    }
+                        logs {
+                          timestamp
+                          reading
+                          started
+                          finished
+                        }
+                        scheduledOnTimes {
+                          daysToRepeat
+                          startTime
+                          endTime
+                          enabled
+                          smartLight
+                        }
+                      }
                 }
                 workInfo {
                     stoppedWorkTime

@@ -19,7 +19,7 @@ type Props = {
   };
 };
 const YourPlantsPage: NextPage<Props> = ({ deviceType }) => {
-  const { data, error, loading } = useQuery(GET_LOGGED_IN_USER);
+  const { data, error, loading, refetch: userRefetch } = useQuery(GET_LOGGED_IN_USER);
 
   if (!data || loading) {
     return <div>loading...</div>;
@@ -35,7 +35,7 @@ const YourPlantsPage: NextPage<Props> = ({ deviceType }) => {
               <Sidebar />
             </SidebarSection>
             <ContentBox>
-              <YourPlants deviceType={deviceType} />
+              <YourPlants userRefetch={userRefetch} deviceType={deviceType} />
             </ContentBox>
           </PlantsPageWrapper>
         </Modal>

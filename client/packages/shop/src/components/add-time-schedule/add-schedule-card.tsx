@@ -12,9 +12,10 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import Loader from 'components/loader/loader';
 
 import TimePicker from 'react-time-picker'
-import { SettingsNames, WeekDays } from 'utils/constant';
+import { SensorsTypes, WeekDays } from 'utils/constant';
 import Checkbox from '../../components/checkbox/checkbox';
 import { UPDATE_SETTING } from 'graphql/query/plants.query';
+import { ISetting } from 'utils/types';
 
 
 // Shape of form values
@@ -69,29 +70,34 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     name: values.name,
     info: values.info,
   };
+  
+  const settingIndex = item.plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === item.settingType);
+    
+  const currentSchedule = item.plant.sensors[settingIndex].scheduledOnTimes[item?.schedulePosition];
+
+    
   const { state, dispatch } = useContext(ProfileContext);
   const [loading, setLoading] = useState(false);
   const [isSmartLightingOn, isSmartLighting] = useState(false);
-  const [startTime, startTimeChange] = useState('00:00');
-  const [endTime, endTimeChange] = useState('23:59');
-  const [daysSelected,setDaysSelected] = useState([]);
+  const [startTime, startTimeChange] = useState(currentSchedule.startTime?.length > 0 ? currentSchedule?.startTime : '00:00');
+  const [endTime, endTimeChange] = useState(currentSchedule?.endTime?.length > 0 ? currentSchedule.endTime : '23:59');
+  const [daysSelected,setDaysSelected] = useState(currentSchedule.daysToRepeat?.length >= 0 ? currentSchedule.daysToRepeat : [])
   const [updateSetting] = useMutation(UPDATE_SETTING);
   
   const intl = useIntl();
 
-  const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingName: SettingsNames) => {
-
-    dispatch({ type: settingName, payload: { plant, value, field } });
-
-    dispatchSettingSave(plant, field, value, settingName);
+  const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
+    dispatch({ type: settingType, payload: { plant, value, field } });
+    dispatchSettingSave(plant, field, value, settingType);
   };
 
-  const dispatchSettingSave = (plant: any, fieldName: string, fieldValue: string | boolean, settingName: SettingsNames) => {
+  const dispatchSettingSave = (plant: any, fieldName: string, fieldValue: string | boolean, settingType: SensorsTypes) => {
+    const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);
     updateSetting({
       variables: {
-        id: item.data?.getUser?.id,
+        id: item.id,
         plantId: plant.plantId,
-        input: { [fieldName]: fieldValue, ...plant[settingName], settingName: settingName }
+        input: { [fieldName]: fieldValue, ...plant.sensors[settingIndex], settingType: settingType }
       },
     });
   };
@@ -106,13 +112,16 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     };
 
     setLoading(true);
-    // if (isValid) {
-      item.plant[item.settingName].scheduledOnTimes = item.plant[item.settingName].scheduledOnTimes ? item.plant[item.settingName].scheduledOnTimes : [];
-      item.plant[item.settingName].scheduledOnTimes.push(newSchedule)
-      handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant[item.settingName].scheduledOnTimes, item.settingName);
+    const settingIndex = item.plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === item.settingType);
+    item.plant.sensors[settingIndex].scheduledOnTimes = item.plant.sensors[settingIndex]?.scheduledOnTimes?.length >= 0 ? item.plant.sensors[settingIndex]?.scheduledOnTimes : [];
 
-      closeModal();
-      setLoading(false);
+    // if (isValid) {
+
+    item.plant.sensors[settingIndex].scheduledOnTimes.push(newSchedule)
+    handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant.sensors[settingIndex].scheduledOnTimes, item.settingType);
+
+    closeModal();
+    setLoading(false);
     // }
   };
 
@@ -129,7 +138,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
   return (
     <Form>
       <PlantsSensorContainer>
-        <Heading>{<Heading>{intl.formatMessage({ id: 'addTimeScheduleId', defaultMessage: 'addTimeScheduleId' })}</Heading>}</Heading>
+        <Heading>{<Heading>{intl.formatMessage({ id: currentSchedule ? 'editTimeScheduleId' : 'addTimeScheduleId', defaultMessage: 'addTimeScheduleId' })}</Heading>}</Heading>
       
         <ListItem>
           <ListTitle>
@@ -208,7 +217,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
           isDisabled={loading}
           isLoading={loading}
         >
-          <FormattedMessage id="addTimeFrameId" defaultMessage="addTimeFrameId" />
+          <FormattedMessage id={ currentSchedule ? "editTimeFrameId" : "addTimeFrameId"} defaultMessage="addTimeFrameId" />
         </Button>
         <Button
           onClick={() => closeModal()}

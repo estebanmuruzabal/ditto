@@ -86,7 +86,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
 
     // if (!messages?.length) console.log('no messages to send: ', messages);
     
-    await sendMessage(client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);
+    await sendMessage(from, msgResponse.replyMessage, msgResponse.trigger, access_token);
 
     // messages.map(async (msj: any) => {
     //     await sendMessage(client, from, msj.replyMessage, msj.trigger, access_token);

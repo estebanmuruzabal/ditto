@@ -61,40 +61,6 @@ export const signUpUser = (name: string, phone: string, password: string) => new
     });
 });
 
-// export const updateSoilHumiditySettings1 = (user: any, plant: Plant, fieldName: string, fieldValue: any) => new Promise((resolve, reject) => {
-//     apolloFetch({
-//         query: UPDATE_HUMIDITY_SETTINGS_1,
-//         variables: {
-//             id: user.id,
-//             [fieldName]: fieldValue,
-//             ...plant
-//         }
-//     }).then((res: ICategory[]) => {
-//         console.log('[updateSoilHumiditySettings1]:', res);
-//         resolve(res);
-//     }).catch((err: any) => {
-//         console.log('[updateSoilHumiditySettings1 error]:', err);
-//         resolve(err);
-//     });
-// });
-
-// export const updateSoilHumiditySettings2 = (user: any, plant: Plant, fieldName: string, fieldValue: any) => new Promise((resolve, reject) => {
-//     apolloFetch({
-//         query: UPDATE_HUMIDITY_SETTINGS_2,
-//         variables: {
-//             id: user.id,
-//             [fieldName]: fieldValue,
-//             ...plant
-//         }
-//     }).then((res: ICategory[]) => {
-//         console.log('[updateSoilHumiditySettings2]:', res);
-//         resolve(res);
-//     }).catch((err: any) => {
-//         console.log('[updateSoilHumiditySettings2 error]:', err);
-//         resolve(err);
-//     });
-// });
-
 export const updateUserWorkInfoMutation = (user: any, logDescription: string) => new Promise((resolve, reject) => {
     console.log(user, logDescription)
     apolloFetch({

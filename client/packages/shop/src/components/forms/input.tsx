@@ -6,7 +6,7 @@ export const Input = styled.input<any>(
     display: 'block',
     width: '100%',
 
-    p: '0 18px',
+    padding:'0px 8px',
     appearance: 'none',
     fontFamily: 'body',
     fontSize: 'base',

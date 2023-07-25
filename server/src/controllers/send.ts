@@ -1,9 +1,10 @@
 // import { saveMessage } from "../adapter";
 import { List } from "whatsapp-web.js";
 import { getSettings, saveUserChatHistory, signUpUser } from "../api";
-import { ISetting, IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
+import { IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
 import { endConversationKeys, getCleanNumber, initialConversationKeys, isGrower, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
+import { client } from "..";
 
 const ExcelJS = require('exceljs');
 const fs = require('fs');
@@ -84,7 +85,7 @@ const list = new List(`/n Por favor, selecciona una opción en el siguiente men�
     'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
     'footer');
             
-export const sendMessage = async (client: any, number: string, text: string, trigger?: TriggerSteps, token?: string) => {
+export const sendMessage = async (number: string, text: string, trigger?: TriggerSteps, token?: string) => {
     let settingResponse: any = await getSettings();
     settingResponse = settingResponse?.data?.getSiteSetting?.value;
 

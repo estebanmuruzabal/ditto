@@ -6,16 +6,13 @@ export interface Plant {
     id?: string;
     plantId: number;
     name?: string;
-    soilHumidity1: number;
-    soilHumidity2: number;
+    soil_humidity_1: number;
+    soil_humidity_2: number;
     distance_cm: number;
     airHumidity: number;
     tempeture: number;
     light: number;
-    soilHumiditySettings1: ISoilHumiditySettings;
-    soilHumiditySettings2: ISoilHumiditySettings;
-    distanceSensorSettings: IDistanceSensorSettings; 
-    lightSettings: ILightSettings; 
+    sensors: [ISensorSetting];
     isRelayOneOn: boolean;
     isRelayTwoOn: boolean;
     isRelayThirdOn: boolean;
@@ -29,19 +26,9 @@ export interface Phone {
     is_primary?: boolean
 }
 
-export interface IDistanceSensorSettings {
-    minWarning: string;
-    maxWarning: string;
-    mode: string;
-    relayOneAutomatedTimeToRun: string;
-    relayOneIdRelated: string;
-    relayOneWorking: boolean;
-    relayTwoAutomatedTimeToRun: string;
-    relayTwoIdRelated: string;
-    relayTwoWorking: boolean;
-}
-
-export interface ISoilHumiditySettings {
+export interface ISensorSetting {
+    reading: number;
+    name: string;
     minWarning: string;
     maxWarning: string;
     mode: string;
@@ -53,31 +40,17 @@ export interface ISoilHumiditySettings {
     relayTwoAutomatedTimeToRun: string;
     relayTwoIdRelated: string;
     relayTwoWorking: boolean;
-    logs: Array<HumidityLogs>;
-    scheduledOnTimes: Array<IScheduleInput>;
+    logs: Array<ILogs>;
+    scheduledOnTimes?: Array<IScheduleInput>;
+    whatsappWarningsOn: boolean;
+    settingType: string;
 }
 
-export interface ILightSettings {
-    minWarning: string;
-    maxWarning: string;
-    mode: string;
-    relayOneAutomatedTimeToRun: string;
-    relayOneAutomatedStartedTime: string;
-    relayTwoAutomatedStartedTime: string;
-    relayOneIdRelated: string;
-    relayOneWorking: boolean;
-    relayTwoAutomatedTimeToRun: string;
-    relayTwoIdRelated: string;
-    relayTwoWorking: boolean;
-    logs: Array<Logs>;
-    scheduledOnTimes: Array<IScheduleInput>;
-}
-
-export interface HumidityLogs {
-    humidity: number;
+export interface ILogs {
+    reading: number;
     timestamp: string;
-    startedWatering?: boolean;
-    finishedWatering?: boolean;
+    started?: boolean;
+    finished?: boolean;
 }
 
 export interface Logs {
