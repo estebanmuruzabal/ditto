@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getReplyFromGrowerBot = void 0;
 const handle_1 = require("../controllers/handle");
 const types_1 = require("../lib/types");
-const workUtils_1 = require("../lib/utils/workUtils");
 const getReplyFromGrowerBot = (triggerStep, user, userInput, number, access_token) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
@@ -32,7 +31,7 @@ const getReplyFromGrowerBot = (triggerStep, user, userInput, number, access_toke
                     break;
                 }
                 let resDataArrayOfPlants = [];
-                resData.replyMessage = (0, workUtils_1.getSensorsMenuList)(resData, user, user === null || user === void 0 ? void 0 : user.plants[0], types_1.TriggerGrowerSteps.CHANGE_MIN_HUMIDITY, 'title1', 'buttonText1');
+                // resData.replyMessage = getSensorsMenuList(resData, user, user?.plants[0], TriggerGrowerSteps.CHANGE_MIN_HUMIDITY, 'title1', 'buttonText1');
                 resolve([resData]);
                 break;
             // case TriggerGrowerSteps.PLANT_DETAILS:

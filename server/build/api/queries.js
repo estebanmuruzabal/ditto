@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ADD_ADDRESS = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameAndEmailQuery = exports.UPDATE_PRODUCT = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.GET_SETTINGS = void 0;
+exports.ADD_ADDRESS = exports.createQuickOrderQuery = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameAndEmailQuery = exports.UPDATE_PRODUCT = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.GET_SETTINGS = void 0;
 exports.GET_SETTINGS = `
   query GetSetting {
     getSiteSetting(key: "site-settings") {
@@ -55,10 +55,10 @@ exports.getCustomerQuery = `
                 }
                 role
                 plants {
-                    controllerId
+                    plantId
                     name
-                    soilHumidity1
-                    soilHumidity2
+                    soil_humidity_1
+                    soil_humidity_2
                     airHumidity
                     tempeture
                     light
@@ -66,45 +66,35 @@ exports.getCustomerQuery = `
                     isRelayTwoOn
                     isRelayThirdOn
                     isRelayFourthOn
-                    soilHumiditySettings1 {
+                    sensors {
+                        name
+                        whatsappWarningsOn
                         minWarning
                         maxWarning
+                        reading
                         mode
-                        relayOneAutomatedTimeToRun
                         relayOneAutomatedStartedTime
+                        relayOneAutomatedTimeToRun
                         relayTwoAutomatedStartedTime
+                        relayTwoAutomatedTimeToRun
                         relayOneIdRelated
                         relayOneWorking
-                        relayTwoAutomatedTimeToRun
                         relayTwoIdRelated
                         relayTwoWorking
-                    }
-                    soilHumiditySettings2 {
-                        minWarning
-                        maxWarning
-                        mode
-                        relayOneAutomatedTimeToRun
-                        relayOneAutomatedStartedTime
-                        relayTwoAutomatedStartedTime
-                        relayOneIdRelated
-                        relayOneWorking
-                        relayTwoAutomatedTimeToRun
-                        relayTwoIdRelated
-                        relayTwoWorking
-                    }
-                    lightSettings {
-                        minWarning
-                        maxWarning
-                        mode
-                        relayOneAutomatedTimeToRun
-                        relayOneAutomatedStartedTime
-                        relayTwoAutomatedStartedTime
-                        relayOneIdRelated
-                        relayOneWorking
-                        relayTwoAutomatedTimeToRun
-                        relayTwoIdRelated
-                        relayTwoWorking
-                    }
+                        logs {
+                          timestamp
+                          reading
+                          started
+                          finished
+                        }
+                        scheduledOnTimes {
+                          daysToRepeat
+                          startTime
+                          endTime
+                          enabled
+                          smartLight
+                        }
+                      }
                 }
                 workInfo {
                     stoppedWorkTime
@@ -376,6 +366,18 @@ exports.createOrderQuery = `
         {
             customer_id
             contact_number
+            payment_status
+            status
+        }
+    }
+`;
+exports.createQuickOrderQuery = `
+    mutation CreateQuickOrder($input: OrderQuickInput!) {
+        createQuickOrder(
+        input: $input
+        ) 
+        {
+            customer_id
             payment_status
             status
         }

@@ -43,14 +43,15 @@ exports.client = new Client({
  */
 // const listenMessage = async (msg: any) => {
 const listenMessage = () => exports.client.on('message', (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c, _d;
     const { from, body, hasMedia } = msg;
     let settingResponse = yield (0, api_1.getSettings)();
     let nextTrigger;
     const message = body;
-    // settingResponse = settingResponse?.data?.getSiteSetting?.value;
-    // const settingValues = JSON.parse(settingResponse);
-    // if (!settingValues?.whatsapp_bot_is_on) return;
+    settingResponse = (_b = (_a = settingResponse === null || settingResponse === void 0 ? void 0 : settingResponse.data) === null || _a === void 0 ? void 0 : _a.getSiteSetting) === null || _b === void 0 ? void 0 : _b.value;
+    const settingValues = JSON.parse(settingResponse);
+    if (!(settingValues === null || settingValues === void 0 ? void 0 : settingValues.whatsapp_bot_is_on))
+        return;
     console.log('from: ', from === null || from === void 0 ? void 0 : from.toString());
     console.log('text msg: ', message === null || message === void 0 ? void 0 : message.toString());
     if (!(0, handle_1.isValidNumber)(from) || message.trim === '' || from === 'status@broadcast')
@@ -66,7 +67,7 @@ const listenMessage = () => exports.client.on('message', (msg) => __awaiter(void
         return;
     //   if (number !== '5493624651317') return;
     const res = yield (0, api_1.fetchCustomerAndToken)(number);
-    if (!!(((_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.getCustomer.user) && ((_b = res === null || res === void 0 ? void 0 : res.data) === null || _b === void 0 ? void 0 : _b.getCustomer.access_token))) {
+    if (!!(((_c = res === null || res === void 0 ? void 0 : res.data) === null || _c === void 0 ? void 0 : _c.getCustomer.user) && ((_d = res === null || res === void 0 ? void 0 : res.data) === null || _d === void 0 ? void 0 : _d.getCustomer.access_token))) {
         user = res.data.getCustomer.user;
         access_token = res.data.getCustomer.access_token;
     }
@@ -87,7 +88,7 @@ const listenMessage = () => exports.client.on('message', (msg) => __awaiter(void
     // const messages = await findResponseMsg(nextTrigger, user, message, number, access_token);
     const msgResponse = yield (0, flows_1.findResponseMsg)(nextTrigger, user, message, number, access_token);
     // if (!messages?.length) console.log('no messages to send: ', messages);
-    yield (0, send_1.sendMessage)(exports.client, from, msgResponse.replyMessage, msgResponse.trigger, access_token);
+    yield (0, send_1.sendMessage)(from, msgResponse.replyMessage, msgResponse.trigger, access_token);
     // messages.map(async (msj: any) => {
     //     await sendMessage(client, from, msj.replyMessage, msj.trigger, access_token);
     // });

@@ -201,6 +201,83 @@ exports.ordersResolvers = {
             }
             return insertResult.ops[0];
         }),
+        createQuickOrder: (_root, { input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            // await authorize(req, db);
+            // const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
+            const products = yield db.products.find({ _id: { $in: (0, exports.makeObjectIds)(input.products) } }).toArray();
+            // @ts-ignore
+            // const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
+            // const deliveryMethod = await db.delivery_methods.findOne({ _id: new ObjectId(input.delivery_method_id) });
+            // @ts-ignore
+            // const { name: deliveryMethodName } = deliveryMethod;
+            const customer = yield db.users.findOne({ _id: new mongodb_1.ObjectId(input.customer_id) });
+            if (!customer)
+                throw new Error('Customer not found');
+            const { name: customerName, email: customerEmail } = customer;
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            // Products quantity substation
+            for (let i = 0; i < input.products.length; i++) {
+                // @ts-ignore
+                const dbProduct = yield db.products.findOne({ _id: new mongodb_1.ObjectId(input.products[i].product_id) });
+                if (!dbProduct) {
+                    throw new Error("Something went wrong! Product not found. Please contact support to resolve this problem.");
+                }
+                const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
+                if (dbProduct.product_quantity < purchasedQuantity) {
+                    throw new Error(`'${input.products[i].name}', This product do not have enough product quantity. Available quantity: ${products[i].product_quantity}`);
+                }
+            }
+            /*let paymentStatus = "";
+            if (paymentType.toLowerCase() == 'cod' || paymentType.toLowerCase() == 'cash on delivery') {
+                paymentStatus = "Unpaid";
+            } else {
+                paymentStatus = "Paid";
+            }*/
+            const insertData = {
+                _id: new mongodb_1.ObjectId(),
+                order_code: generateOrderCode(),
+                customer_id: input.customer_id,
+                customer_name: customerName,
+                delivery_method_id: input.delivery_method_id,
+                datetime: purchasedDate,
+                delivery_address: input.delivery_address,
+                total: input.total,
+                coupon_code: input.coupon_code,
+                discount_amount: input.discount_amount,
+                payment_id: input.payment_id,
+                payment_status: "Pagado",
+                status: "Pendiente",
+                order_tracking: oderTracker,
+                order_products: input.products,
+                created_at: purchasedDate,
+            };
+            const insertResult = yield db.orders.insertOne(insertData);
+            if (insertResult.ops[0]) {
+                for (let i = 0; i < products.length; i++) {
+                    // @ts-ignore
+                    const dbProduct = yield db.products.findOne({ _id: new mongodb_1.ObjectId(input.products[i].product_id) });
+                    const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
+                    const total = dbProduct.product_quantity - purchasedQuantity;
+                    yield db.products.updateOne({ _id: products[i]._id }, { $set: { product_quantity: total } });
+                }
+            }
+            try {
+                // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
+                yield (0, number_verification_otp_1.sendCompanyConfirmationMail)(constant_1.COMPANY_EMAIL, customer, input, '', '');
+                // if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                // whatsapp confirmation whatsapp is handled in another logic
+                // if (!input.isWhatsappPurchase) {
+                //     const input2 = { delivery_method_name: deliveryMethodName, payment_option_type: paymentOptionType, delivery_address: input.delivery_address, payment_method_name: paymentOptionName, products: input.products, delivery_date: input.delivery_date, total: input.total }
+                //     const message = getOrderConfirmationMsgText(input2, customer);
+                //     // @ts-ignore
+                //     sendMessage(client, input.contact_number, message, null);
+                // }
+            }
+            catch (error) {
+                console.log('error in sending mail/whatsapp', error);
+            }
+            return insertResult.ops[0];
+        }),
         updateOrderStatus: (_root, { id, orderingPosition }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             yield (0, utils_1.authorize)(req, db);
             const orderResult = yield db.orders.findOne({ _id: new mongodb_1.ObjectId(id) });

@@ -17,25 +17,24 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
 
     type Plant {
         id: String!
-        controllerId: Int!
+        plantId: Int!
         name: String!
-        soilHumidity1: Int
-        soilHumidity2: Int
+        soil_humidity_1: Int
+        soil_humidity_2: Int
         airHumidity: Int
         tempeture: Int
         light: Int
-        soilHumiditySettings1: SoilHumiditySettings
-        soilHumiditySettings2: SoilHumiditySettings
-        lightSettings: LightSettings
+        sensors: [ISensorSetting]
         isRelayOneOn: Boolean
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
     }
 
-    type SoilHumiditySettings {
+    type ISensorSetting {
+        reading: Int
         name: String
-        sendWhatsappWarnings: Boolean
+        whatsappWarningsOn: Boolean
         minWarning: String
         maxWarning: String
         mode: String
@@ -47,28 +46,11 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         relayOneWorking: Boolean
         relayTwoIdRelated: String
         relayTwoWorking: Boolean
-        logs: [IHumidityLogs]
+        settingType: String
+        logs: [ILogs]
         scheduledOnTimes: [ScheduledOnTimes]
     }
 
-    type LightSettings {
-        name: String
-        sendWhatsappWarnings: Boolean
-        minWarning: String
-        maxWarning: String
-        mode: String
-        relayOneAutomatedTimeToRun: String
-        relayTwoAutomatedTimeToRun: String
-        relayOneAutomatedStartedTime: String
-        relayTwoAutomatedStartedTime: String
-        relayOneIdRelated: String
-        relayOneWorking: Boolean
-        relayTwoIdRelated: String
-        relayTwoWorking: Boolean
-        logs: [Logs]
-        scheduledOnTimes: [ScheduledOnTimes]
-    }
-   
     type ScheduledOnTimes {
         daysToRepeat: [String]
         startTime: String
@@ -97,28 +79,28 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         taskRelated: String
     }
 
-    type IHumidityLogs {
+    type Logs {
         timestamp: String
-        humidity: Int
-        startedWatering: Boolean
-        finishedWatering: Boolean
+        logDescription: String
     }
 
-    type Logs {
-        logDescription: String
+    type ILogs {
         timestamp: String
+        reading: Int
+        started: Boolean
+        finished: Boolean
     }
 
     input InputLogs {
         timestamp: String
-        humidity: Int
-        startedWatering: Boolean
-        finishedWatering: Boolean
+        reading: Int
+        started: Boolean
+        finished: Boolean
     }
 
     input InputSettings {
         name: String
-        sendWhatsappWarnings: Boolean
+        whatsappWarningsOn: Boolean
         minWarning: String
         maxWarning: String
         mode: String
@@ -132,7 +114,8 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         relayTwoWorking: Boolean
         logs: [InputLogs]
         scheduledOnTimes: [ScheduleInput]  
-        settingName: String 
+        settingType: String 
+        reading: Int
     }
 
     type ShoppingCart {
@@ -398,10 +381,10 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         product_id: String!
         name: String
         image: String
-        quantity: Int!
-        recicledQuantity: Int!
+        quantity: Int
+        recicledQuantity: Int
         unit: String
-        price: Float!
+        price: Float
         sale_price: Float
     }
 
@@ -410,10 +393,10 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         product_id: String!
         name: String
         image: String
-        quantity: Int!
-        recicledQuantity: Int!
+        quantity: Int
+        recicledQuantity: Int
         unit: String
-        price: Float!
+        price: Float
         sale_price: Float
     }
     input OrderInput {
@@ -424,6 +407,23 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         payment_option_type: String!
         isWhatsappPurchase: Boolean!
         delivery_address: String!
+        delivery_date: String
+        sub_total: Float
+        total: Float
+        coupon_code: String
+        discount_amount: Float
+        products: [OrderProductInput!]!
+        payment_id:  String
+    }
+
+    input OrderQuickInput {
+        customer_id: String!
+        contact_number: String!
+        payment_option_id: String
+        delivery_method_id: String
+        payment_option_type: String
+        isWhatsappPurchase: Boolean!
+        delivery_address: String
         delivery_date: String
         sub_total: Float
         total: Float
@@ -476,22 +476,22 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
       id: ID!
       order_code: String
       customer_id: String!
-      contact_number: String!
+      contact_number: String
       payment_option_id: String
       datetime: String
       delivery_method_id: String
-      delivery_address: String!
+      delivery_address: String
       delivery_date: String
       sub_total: Float
       total: Float
       coupon_code: String
       discount_amount: Float
       payment_id: String
-      payment_method: String!
+      payment_method: String
       customer_name: String
       delivery_method_name: String
       delivery_pickup_date: String
-      payment_status: String!
+      payment_status: String
       status: String!
       order_tracking: [OrderTracker]
       order_products: [OrderProducts]
@@ -627,13 +627,15 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         updatePaymentOption(id: ID!, name: String!, type: String!, image: String!, image_data: String, details: String): PaymentOption!
         deletePaymentOption(id: ID!): DefaultMessageType!
         createOrder(input: OrderInput): Order!
+        createQuickOrder(input: OrderQuickInput): Order!
         updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, controllerId: Int!): DefaultMessageType!
+        addPlant(id: ID!, name: String!, plantId: Int!): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
-        updateSetting(id: ID!, controllerId: Int!, input: InputSettings): DefaultMessageType!
+        updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
+        deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!
         setPhoneNumberPrimary(id: ID!, phoneId: String!): DefaultMessageType!
         deletePhoneNumber(id: ID!, phoneId: String!): DefaultMessageType!

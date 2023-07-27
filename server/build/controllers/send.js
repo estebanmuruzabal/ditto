@@ -15,6 +15,7 @@ const whatsapp_web_js_1 = require("whatsapp-web.js");
 const api_1 = require("../api");
 const types_1 = require("../lib/types");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
+const __1 = require("..");
 const ExcelJS = require('exceljs');
 const fs = require('fs');
 const { MessageMedia, Buttons } = require('whatsapp-web.js');
@@ -87,7 +88,15 @@ const productSections = {
     ],
 };
 const list = new whatsapp_web_js_1.List(`/n Por favor, selecciona una opción en el siguiente menú:`, 'Ver menu', [productSections], 'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.', 'footer');
-const sendMessage = (client, number, text, trigger, token) => __awaiter(void 0, void 0, void 0, function* () {
+const sendMessage = (number, text, trigger, token) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    let settingResponse = yield (0, api_1.getSettings)();
+    settingResponse = (_b = (_a = settingResponse === null || settingResponse === void 0 ? void 0 : settingResponse.data) === null || _a === void 0 ? void 0 : _a.getSiteSetting) === null || _b === void 0 ? void 0 : _b.value;
+    const settingValues = JSON.parse(settingResponse);
+    if (!(settingValues === null || settingValues === void 0 ? void 0 : settingValues.whatsapp_bot_is_on)) {
+        console.log('Tried to send msg, but whatsapp setting is OFF', text);
+        return;
+    }
     if (!number) {
         console.log('no number error at sendMessage!');
         return;
@@ -99,7 +108,7 @@ const sendMessage = (client, number, text, trigger, token) => __awaiter(void 0, 
                 number = '549' + number.substring(2, number.length);
             if (!number.endsWith('@c.us'))
                 number += '@c.us';
-            client.sendMessage(number, message);
+            __1.client.sendMessage(number, message);
             console.log(`⚡⚡⚡ Enviando mensaje:`, message);
         }
         catch (error) {
@@ -125,12 +134,12 @@ exports.sendMessageButton = sendMessageButton;
  * Opte
  */
 const lastGrowerTrigger = (customer, userMessage) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _c;
     userMessage = (0, shoppingUtils_1.normalizeText)(userMessage);
     if (!customer)
         return types_1.TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
     let lastDittoMessageSent = { trigger: undefined };
-    if (((_a = customer === null || customer === void 0 ? void 0 : customer.chatHistory) === null || _a === void 0 ? void 0 : _a.length) >= 1)
+    if (((_c = customer === null || customer === void 0 ? void 0 : customer.chatHistory) === null || _c === void 0 ? void 0 : _c.length) >= 1)
         lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1];
     if (!(lastDittoMessageSent === null || lastDittoMessageSent === void 0 ? void 0 : lastDittoMessageSent.trigger))
         return types_1.TriggerGrowerSteps.SHOW_ALL_PLANTS;
@@ -140,12 +149,11 @@ const lastGrowerTrigger = (customer, userMessage) => __awaiter(void 0, void 0, v
 });
 exports.lastGrowerTrigger = lastGrowerTrigger;
 const lastClientTrigger = (customer, userMessage) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
+    var _d;
     userMessage = (0, shoppingUtils_1.normalizeText)(userMessage);
-    if (!customer)
-        return types_1.TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+    // if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
     let lastDittoMessageSent = { trigger: undefined };
-    if (((_b = customer === null || customer === void 0 ? void 0 : customer.chatHistory) === null || _b === void 0 ? void 0 : _b.length) >= 1)
+    if (((_d = customer === null || customer === void 0 ? void 0 : customer.chatHistory) === null || _d === void 0 ? void 0 : _d.length) >= 1)
         lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1];
     // START: blocked unblock chats checks
     if ((lastDittoMessageSent === null || lastDittoMessageSent === void 0 ? void 0 : lastDittoMessageSent.trigger) === types_1.TriggerSteps.BLOCK_CHAT && !userMessage.includes('menu'))
@@ -155,7 +163,7 @@ const lastClientTrigger = (customer, userMessage) => __awaiter(void 0, void 0, v
     // END: blocked chat checks
     // if is initial, we reset conversation and we start all over again, non matter what
     if (shoppingUtils_1.initialConversationKeys.includes(userMessage))
-        return types_1.TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES;
+        return customer ? types_1.TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES : types_1.TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
     if (shoppingUtils_1.endConversationKeys.includes(userMessage))
         return types_1.TriggerSteps.END_CONVERSATION_AND_RESET_CHAT;
     if (!(lastDittoMessageSent === null || lastDittoMessageSent === void 0 ? void 0 : lastDittoMessageSent.trigger))
@@ -164,10 +172,17 @@ const lastClientTrigger = (customer, userMessage) => __awaiter(void 0, void 0, v
 });
 exports.lastClientTrigger = lastClientTrigger;
 const lastStaffTrigger = (customer, userMessage) => __awaiter(void 0, void 0, void 0, function* () {
+    var _e;
     userMessage = (0, shoppingUtils_1.normalizeText)(userMessage);
     if (!customer)
         return types_1.TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
     let lastDittoMessageSent = { trigger: undefined };
+    if (((_e = customer === null || customer === void 0 ? void 0 : customer.chatHistory) === null || _e === void 0 ? void 0 : _e.length) >= 1)
+        lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1];
+    // if is initial, we reset conversation and we start all over again, non matter what
+    if (shoppingUtils_1.initialConversationKeys.includes(userMessage))
+        return types_1.TriggerStaffSteps.STAFF_ALL_CATEGORIES;
+    // id: 23213521  if (endConversationKeys.includes(userMessage)) return TriggerStaffSteps.END_CONVERSATION_AND_RESET_CHAT;
     if (!(lastDittoMessageSent === null || lastDittoMessageSent === void 0 ? void 0 : lastDittoMessageSent.trigger))
         return types_1.TriggerStaffSteps.STAFF_ALL_CATEGORIES;
     if (!(lastDittoMessageSent === null || lastDittoMessageSent === void 0 ? void 0 : lastDittoMessageSent.trigger))

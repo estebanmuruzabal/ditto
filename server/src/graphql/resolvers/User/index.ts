@@ -500,9 +500,11 @@ export const usersResolvers: IResolvers = {
             // console.log('Humedad sensor 2', plants[index].soil_humidity_2)
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
-            plants[index].sensors?.map(async (sensorSetting: ISensorSetting) => await checkSensor(plants[index], sensorSetting, userResult?.phones[0]?.number))
+            plants[index].sensors?.map(async (i: number) => {
+                plants[index] = await checkSensor(plants[index], i, userResult?.phones[0]?.number) 
+            })
 
-            console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
+            // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
             await db.users.updateOne(
                 {_id: new ObjectId(id)},

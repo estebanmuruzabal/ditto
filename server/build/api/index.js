@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAddressToUser = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateProductStock = exports.updateUserNameAndEmail = exports.updateUserWorkInfoMutation = exports.signUpUser = exports.fetchCustomerAndToken = exports.getSettings = void 0;
+exports.addAddressToUser = exports.createQuickOrder = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateProductStock = exports.updateUserNameAndEmail = exports.updateUserWorkInfoMutation = exports.signUpUser = exports.fetchCustomerAndToken = exports.getSettings = void 0;
 const handle_1 = require("../controllers/handle");
 const queries_1 = require("./queries");
 const { createApolloFetch } = require('apollo-fetch');
-const uri = 'http://54.232.137.175/api';
-// const uri = 'http://localhost:7000/api';
+// const uri = 'http://54.232.137.175/api';
+const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 const getSettings = () => new Promise((resolve, reject) => {
     apolloFetch({
@@ -63,38 +63,6 @@ const signUpUser = (name, phone, password) => new Promise((resolve, reject) => {
     });
 });
 exports.signUpUser = signUpUser;
-// export const updateSoilHumiditySettings1 = (user: any, plant: Plant, fieldName: string, fieldValue: any) => new Promise((resolve, reject) => {
-//     apolloFetch({
-//         query: UPDATE_HUMIDITY_SETTINGS_1,
-//         variables: {
-//             id: user.id,
-//             [fieldName]: fieldValue,
-//             ...plant
-//         }
-//     }).then((res: ICategory[]) => {
-//         console.log('[updateSoilHumiditySettings1]:', res);
-//         resolve(res);
-//     }).catch((err: any) => {
-//         console.log('[updateSoilHumiditySettings1 error]:', err);
-//         resolve(err);
-//     });
-// });
-// export const updateSoilHumiditySettings2 = (user: any, plant: Plant, fieldName: string, fieldValue: any) => new Promise((resolve, reject) => {
-//     apolloFetch({
-//         query: UPDATE_HUMIDITY_SETTINGS_2,
-//         variables: {
-//             id: user.id,
-//             [fieldName]: fieldValue,
-//             ...plant
-//         }
-//     }).then((res: ICategory[]) => {
-//         console.log('[updateSoilHumiditySettings2]:', res);
-//         resolve(res);
-//     }).catch((err: any) => {
-//         console.log('[updateSoilHumiditySettings2 error]:', err);
-//         resolve(err);
-//     });
-// });
 const updateUserWorkInfoMutation = (user, logDescription) => new Promise((resolve, reject) => {
     console.log(user, logDescription);
     apolloFetch({
@@ -142,23 +110,23 @@ const updateUserNameAndEmail = (id, name, email, token) => new Promise((resolve,
     });
 });
 exports.updateUserNameAndEmail = updateUserNameAndEmail;
-const updateProductStock = (product) => new Promise((resolve, reject) => {
+const updateProductStock = (productId, product) => new Promise((resolve, reject) => {
     // @ts-ignore
     // apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
     apolloFetch({
         query: queries_1.UPDATE_PRODUCT,
-        variables: { id: product._id, input: product },
+        variables: { id: productId, input: product },
     }).then((res) => {
         var _a, _b;
         if (((_b = (_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.updateProduct) === null || _b === void 0 ? void 0 : _b.status) === true) {
-            console.log('updateProduct. Updated product quantity successguly.', name);
+            console.log('updateProduct. Updated product quantity successguly.', product._id, product);
         }
         else {
             console.log('updateProduct response:', res);
         }
         resolve(res);
     }).catch((err) => {
-        console.log('updateProduct error:', err);
+        console.log('updateProduct error, id: product._id, input: product', product._id, product, err);
         resolve(err);
     });
 });
@@ -334,6 +302,35 @@ const createOrder = (input) => new Promise((resolve, reject) => {
     });
 });
 exports.createOrder = createOrder;
+const createQuickOrder = (input) => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: queries_1.createQuickOrderQuery,
+        variables: {
+            input: {
+                customer_id: input.customer_id,
+                contact_number: input.contact_number,
+                payment_option_id: input.payment_option_id,
+                delivery_method_id: input.delivery_method_id,
+                payment_option_type: input.payment_option_type,
+                delivery_date: input.delivery_date,
+                isWhatsappPurchase: true,
+                delivery_address: input.delivery_address,
+                sub_total: input.sub_total,
+                total: input.total,
+                coupon_code: input.coupon_code,
+                discount_amount: input.discount_amount,
+                products: input.products
+            }
+        }
+    }).then((res) => {
+        console.log('[createQuickOrder]:', res);
+        resolve(res);
+    }).catch((err) => {
+        console.log('[createQuickOrder error]:', err.response);
+        resolve(err);
+    });
+});
+exports.createQuickOrder = createQuickOrder;
 const addAddressToUser = (id, address, title, location, instructions, isPrimary) => new Promise((resolve, reject) => {
     apolloFetch({
         query: queries_1.ADD_ADDRESS,

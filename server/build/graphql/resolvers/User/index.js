@@ -325,8 +325,10 @@ exports.usersResolvers = {
                 message: "updated successfully."
             };
         }),
-        addPlant: (_root, { id, name, controllerId }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        addPlant: (_root, { id, name, plantId }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            var _b;
             // await authorize(req, db);
+            // we use this very same method to update the ditto bot name!
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
                 throw new Error("User does not exits.");
@@ -334,81 +336,33 @@ exports.usersResolvers = {
             if (userResult.plants.length === 3) {
                 throw new Error("Already added three plants. You are not allowed to add more than three.");
             }
-            const plantObject = {
-                id: shortid_1.default.generate(),
-                name,
-                controllerId,
-                soilHumidity1: 0,
-                soilHumidity2: 0,
-                airHumidity: 0,
-                tempeture: 0,
-                distance_cm: 0,
-                light: 0,
-                isRelayOneOn: false,
-                isRelayTwoOn: false,
-                isRelayThirdOn: false,
-                isRelayFourthOn: false,
-                distanceSensorSettings: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: types_1.DistanceSensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                },
-                soilHumiditySettings1: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: types_1.HumiditySensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                    scheduledOnTimes: []
-                },
-                soilHumiditySettings2: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: types_1.DistanceSensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                    scheduledOnTimes: []
-                },
-                lightSettings: {
-                    minWarning: "",
-                    maxWarning: "",
-                    mode: types_1.DistanceSensorMode.NONE,
-                    relayOneAutomatedTimeToRun: "",
-                    relayOneAutomatedStartedTime: "",
-                    relayTwoAutomatedStartedTime: "",
-                    relayOneIdRelated: "",
-                    relayOneWorking: false,
-                    relayTwoAutomatedTimeToRun: "",
-                    relayTwoIdRelated: "",
-                    relayTwoWorking: false,
-                    logs: [],
-                    scheduledOnTimes: []
-                }
-            };
-            yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $push: { plants: plantObject } });
+            const index = (_b = userResult.plants) === null || _b === void 0 ? void 0 : _b.findIndex((plant) => (plant.plantId == plantId));
+            if (index < 0) {
+                const plantObject = {
+                    id: shortid_1.default.generate(),
+                    name,
+                    plantId,
+                    soil_humidity_1: 0,
+                    soil_humidity_2: 0,
+                    airHumidity: 0,
+                    tempeture: 0,
+                    distance_cm: 0,
+                    light: 0,
+                    isRelayOneOn: false,
+                    isRelayTwoOn: false,
+                    isRelayThirdOn: false,
+                    isRelayFourthOn: false,
+                    sensors: []
+                };
+                yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, 
+                // @ts-ignore
+                { $push: { plants: plantObject } });
+            }
+            else {
+                const plants = userResult.plants;
+                plants[index].name = name;
+                yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
+            }
             return {
                 status: true,
                 message: "Created plant successfully."
@@ -416,19 +370,19 @@ exports.usersResolvers = {
         }),
         updatePlant: (_root, { id, contrId, hum1, airHum, temp, dist, hum2, light, isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
-            var _b, _c, _d, _e;
+            var _c, _d;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
             const plants = userResult.plants;
-            const index = (_b = userResult.plants) === null || _b === void 0 ? void 0 : _b.findIndex((plant) => (plant.controllerId == contrId));
+            const index = (_c = userResult.plants) === null || _c === void 0 ? void 0 : _c.findIndex((plant) => (plant.plantId == contrId));
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
             }
             else {
-                plants[index].soilHumidity1 = hum1;
-                plants[index].soilHumidity2 = hum2;
+                plants[index].soil_humidity_1 = hum1;
+                plants[index].soil_humidity_2 = hum2;
                 plants[index].airHumidity = airHum;
                 plants[index].tempeture = temp;
                 plants[index].distance_cm = dist;
@@ -438,15 +392,13 @@ exports.usersResolvers = {
                 plants[index].isRelayThirdOn = isRelayThirdOn;
                 plants[index].isRelayFourthOn = isRelayFourthOn;
             }
-            console.log('Humedad sensor 1', plants[index].soilHumidity1);
-            console.log('Humedad sensor 2', plants[index].soilHumidity2);
-            console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`);
-            plants[index] = yield (0, plants_1.checkSoilWarnings)(plants[index], plants[index].soilHumiditySettings1, (_c = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _c === void 0 ? void 0 : _c.number, Number(plants[index].soilHumidity1));
-            plants[index] = yield (0, plants_1.checkSoilWarnings)(plants[index], plants[index].soilHumiditySettings2, (_d = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _d === void 0 ? void 0 : _d.number, Number(plants[index].soilHumidity2));
-            // plants[index] = await checkAirHumidityAndTempeture(plants[index], userResult?.phones[0]?.number);
-            plants[index] = yield (0, plants_1.checkLightSensor)(plants[index], plants[index].lightSettings, (_e = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _e === void 0 ? void 0 : _e.number, Number(plants[index].light));
+            // const a = {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "contrId": 30, "hum1": 109, "airHum": 0, "temp": 0, "dist": 1, "hum2": 85, "light": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
+            // console.log('Arduino', plants[index].name)
+            // console.log('Humedad sensor 1', plants[index].soil_humidity_1)
+            // console.log('Humedad sensor 2', plants[index].soil_humidity_2)
+            // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
+            (_d = plants[index].sensors) === null || _d === void 0 ? void 0 : _d.map((sensorSetting) => __awaiter(void 0, void 0, void 0, function* () { var _e; return yield (0, plants_1.checkSensor)(plants[index], sensorSetting, (_e = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _e === void 0 ? void 0 : _e.number); }));
             console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`);
-            // plants[index] = await checkSensors(plants[index], userResult?.phones[0]?.number);
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
             return {
                 isRelayOneOn: plants[index].isRelayOneOn ? "ON" : "OF",
@@ -455,39 +407,85 @@ exports.usersResolvers = {
                 isRelayFourthOn: plants[index].isRelayFourthOn ? "ON" : "OF",
             };
         }),
-        updateSetting: (_root, { id, controllerId, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        updateSetting: (_root, { id, plantId, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
-            var _f;
+            var _f, _g;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
             const plants = userResult.plants;
-            const index = (_f = userResult.plants) === null || _f === void 0 ? void 0 : _f.findIndex((plant) => (plant.controllerId == controllerId));
+            const index = (_f = userResult.plants) === null || _f === void 0 ? void 0 : _f.findIndex((plant) => (plant.plantId == plantId));
+            const replaceIndex = (_g = plants[index].sensors) === null || _g === void 0 ? void 0 : _g.findIndex((plant) => (plant.settingType == input.settingType));
             if (index < 0) {
-                throw new Error(`Controller id does not exists: ${controllerId})`);
+                throw new Error("plant Id not found.");
+            }
+            if (replaceIndex >= 0) {
+                plants[index].sensors[replaceIndex] = {
+                    settingType: input.settingType,
+                    name: input.name,
+                    whatsappWarningsOn: input.whatsappWarningsOn,
+                    maxWarning: input.maxWarning,
+                    minWarning: input.minWarning,
+                    reading: input.reading,
+                    mode: input.mode,
+                    relayOneAutomatedTimeToRun: input.relayOneAutomatedTimeToRun,
+                    relayTwoAutomatedStartedTime: input.relayTwoAutomatedStartedTime,
+                    relayOneAutomatedStartedTime: input.relayOneAutomatedStartedTime,
+                    relayOneIdRelated: input.relayOneIdRelated,
+                    relayOneWorking: input.relayOneWorking,
+                    relayTwoAutomatedTimeToRun: input.relayTwoAutomatedTimeToRun,
+                    relayTwoIdRelated: input.relayTwoIdRelated,
+                    relayTwoWorking: input.relayTwoWorking,
+                    logs: input.logs,
+                    scheduledOnTimes: input.scheduledOnTimes
+                };
             }
             else {
-                plants[index][input.settingName].name = input.name;
-                plants[index][input.settingName].sendWhatsappWarnings = input.sendWhatsappWarnings;
-                plants[index][input.settingName].maxWarning = input.maxWarning;
-                plants[index][input.settingName].minWarning = input.minWarning;
-                plants[index][input.settingName].mode = input.mode;
-                plants[index][input.settingName].relayOneAutomatedTimeToRun = input.relayOneAutomatedTimeToRun;
-                plants[index][input.settingName].relayTwoAutomatedStartedTime = input.relayTwoAutomatedStartedTime;
-                plants[index][input.settingName].relayOneAutomatedStartedTime = input.relayOneAutomatedStartedTime;
-                plants[index][input.settingName].relayOneIdRelated = input.relayOneIdRelated;
-                plants[index][input.settingName].relayOneWorking = input.relayOneWorking;
-                plants[index][input.settingName].relayTwoAutomatedTimeToRun = input.relayTwoAutomatedTimeToRun;
-                plants[index][input.settingName].relayTwoIdRelated = input.relayTwoIdRelated;
-                plants[index][input.settingName].relayTwoWorking = input.relayTwoWorking;
-                plants[index][input.settingName].logs = input.logs;
-                plants[index][input.settingName].scheduledOnTimes = input.scheduledOnTimes;
+                plants[index].sensors.push({
+                    settingType: input.settingType,
+                    name: input.name,
+                    whatsappWarningsOn: input.whatsappWarningsOn,
+                    maxWarning: input.maxWarning,
+                    minWarning: input.minWarning,
+                    mode: input.mode,
+                    reading: input.reading,
+                    relayOneAutomatedTimeToRun: input.relayOneAutomatedTimeToRun,
+                    relayTwoAutomatedStartedTime: input.relayTwoAutomatedStartedTime,
+                    relayOneAutomatedStartedTime: input.relayOneAutomatedStartedTime,
+                    relayOneIdRelated: input.relayOneIdRelated,
+                    relayOneWorking: input.relayOneWorking,
+                    relayTwoAutomatedTimeToRun: input.relayTwoAutomatedTimeToRun,
+                    relayTwoIdRelated: input.relayTwoIdRelated,
+                    relayTwoWorking: input.relayTwoWorking,
+                    logs: input.logs,
+                    scheduledOnTimes: input.scheduledOnTimes
+                });
             }
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
             return {
                 status: true,
-                message: `Updated ${input.settingName} successfully`
+                message: `Updated ${input.settingType} successfully`
+            };
+        }),
+        deleteSetting: (_root, { id, plantId, settingName }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+            // await authorize(req, db);
+            var _h;
+            const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
+            const plants = userResult.plants;
+            const index = (_h = userResult.plants) === null || _h === void 0 ? void 0 : _h.findIndex((plant) => (plant.plantId == plantId));
+            if (index < 0) {
+                throw new Error("plant Id not found.");
+            }
+            const settingIndex = plants[index].sensors.findIndex((sensor) => sensor.settingType === settingName);
+            plants[index].sensors.splice(settingIndex, 1);
+            yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
+            return {
+                status: true,
+                message: `${settingName} deleted successfully`
             };
         }),
         addPhoneNumber: (_root, { id, number }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {

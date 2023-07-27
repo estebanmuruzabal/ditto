@@ -12,52 +12,63 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startWorking = exports.stopWorking = exports.getStuffWorkingInfo = exports.getProductName = exports.getNewStockOfProduct = exports.listAvailableProductsToUpdateAsInvalid = exports.listAvailableProductsToUpdate = exports.getStuffMainMenuOptions = void 0;
+exports.startWorking = exports.stopWorking = exports.getStuffWorkingInfo = exports.getProductName = exports.getAmountOfProductToSell = exports.noOptionFound = exports.getNewStockOfProduct = exports.listAvailableProductsToUpdateAsInvalid = exports.listAvailableProductsToSale = exports.listAvailableProductsToUpdate = exports.getStuffMainMenuOptions = void 0;
 const moment_1 = __importDefault(require("moment"));
 const types_1 = require("../lib/types");
 const api_1 = require("../api");
-const getStuffMainMenuOptions = (resData, user) => {
-    resData.replyMessage =
-        `Hola ${user === null || user === void 0 ? void 0 : user.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm,
-    
-    Seleccione una opcion:
+const whatsAppUtils_1 = require("../lib/utils/whatsAppUtils");
+const getStuffMainMenuOptions = (resData, user, showSuccessChanged) => {
+    resData.replyMessage = showSuccessChanged ?
+        `Venta exitosa!
 
-    ${user.workInfo.isWorking ? '1 - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1 - Empezar a trabajar  🟢🧰⚒'}
-    2 - Actualizar stock
-    3 - Ver su informacion
-    `;
-    // empezar a trabajar/terminar de trabajar
-    //  agregar stock de verduras (kg de frutilla p/ venta y no venta, cantidad de huevos p/venta y no venta) (que reciba whatsapp con audio pidiendo cantidades)
+${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+2️⃣ - Actualizar stock
+3️⃣ - Ver su informacion
+4️⃣ - Venta rapida`
+        :
+            `Hola ${user === null || user === void 0 ? void 0 : user.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
+
+${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+2️⃣ - Actualizar stock
+3️⃣ - Ver su informacion
+4️⃣ - Venta rapida`;
     resData.trigger = types_1.TriggerStaffSteps.ALL_CATEGORIES_ANSWER;
     return resData;
 };
 exports.getStuffMainMenuOptions = getStuffMainMenuOptions;
-const listAvailableProductsToUpdate = (products) => `*Apreta el boton del producto a actualizar:*
+const listAvailableProductsToUpdate = (products) => `*Selecciona el producto que desea actualizar el stock:*
 
-${products.map((product, i) => (`${i + 1} - ${(0, exports.getProductName)(product.name)}\n`)).join('')}
-*Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
+${products.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${(0, exports.getProductName)(product.name)}\n`)).join('')}
 `;
 exports.listAvailableProductsToUpdate = listAvailableProductsToUpdate;
+const listAvailableProductsToSale = (products) => `*Selecciona el producto que desea vender:*
+
+${products.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${(0, exports.getProductName)(product.name)}\n`)).join('')}
+`;
+exports.listAvailableProductsToSale = listAvailableProductsToSale;
+// *Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
 const listAvailableProductsToUpdateAsInvalid = (products) => `*Numero incorrecto! Apreta el boton del producto a actualizar:*
 
-${products.map((product, i) => (`${i + 1} - ${(0, exports.getProductName)(product.name)}\n`)).join('')}
-*Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
+${products.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${(0, exports.getProductName)(product.name)}\n`)).join('')}
 `;
 exports.listAvailableProductsToUpdateAsInvalid = listAvailableProductsToUpdateAsInvalid;
+// *Por favor ingresá un número entre el 1 y el ${products.length} para actualizar su stock*
 const getNewStockOfProduct = (productName) => `Ingrese la cantidad nueva de ${productName}`;
 exports.getNewStockOfProduct = getNewStockOfProduct;
+const noOptionFound = () => `No encontramos la opción ingresada, intente nuevamente`;
+exports.noOptionFound = noOptionFound;
+const getAmountOfProductToSell = (productName) => `Ingrese la cantidad a vender de ${productName}`;
+exports.getAmountOfProductToSell = getAmountOfProductToSell;
 const getProductName = (productName) => {
-    if (productName.toLocaleLowerCase().includes('frutilla') && productName.toLocaleLowerCase().includes('1/4')) {
-        return `Icono frutilla ${productName}`;
-    }
-    else if (productName.toLocaleLowerCase().includes('frutilla') && productName.toLocaleLowerCase().includes('1 kg')) {
-        return `Icono frutilla ${productName}`;
+    // 🍅🍆🥦🥕🥬🫑🧄🧅🪺   🔁❌ 💲💳
+    if (productName.toLocaleLowerCase().includes('frutilla')) {
+        return `🍓 ${productName}`;
     }
     else if (productName.toLocaleLowerCase().includes('maple')) {
-        return `Icono maple huevo ${productName}`;
+        return `🥚 ${productName}`;
     }
     else if (productName.toLocaleLowerCase().includes('6 huevos')) {
-        return `Icono 6 huevos ${productName}`;
+        return `🥚 ${productName}`;
     }
     return productName;
 };

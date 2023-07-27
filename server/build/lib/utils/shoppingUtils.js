@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.normalizeText = exports.endConversationKeys = exports.initialConversationKeys = exports.getTotalAmount = exports.calculateCCCharge = exports.calculateSubTotalPrice = exports.calculateDeliveryCharge = exports.getOrderConfirmationButtons = exports.getPaymentButtons = exports.getInputDeliveryAddress = exports.getDeliveryMethodsButtons = exports.getProductsList = exports.confirmNameOrNewNameButtons = exports.getAddQuantityButtons = exports.getCategoriesButtons = exports.addTalkToRepresentativeOptToButtons = exports.addTalkToRepresentativeOptToList = exports.getDeliveryOrPickUpDatetime = exports.isGrower = exports.isUserStaff = exports.getCustomerPrimaryNumber = exports.containsValidName = exports.getCleanNumber = exports.getOrderConfirmationMsgText = exports.getEmptyAddress = exports.getEmptyShoppingCart = exports.harcodedFilterOfUnusedCategories = exports.getDeliveryPickUpDate = exports.isUserInputInvalid = void 0;
+exports.normalizeText = exports.endConversationKeys = exports.initialConversationKeys = exports.getTotalAmount = exports.calculateCCCharge = exports.calculateSubTotalPrice = exports.calculateDeliveryCharge = exports.getOrderConfirmationButtons = exports.getPaymentButtons = exports.getInputDeliveryAddress = exports.getDeliveryMethodsButtons = exports.getProductsList = exports.confirmNameOrNewNameButtons = exports.getAddQuantityButtons = exports.getCategoriesButtons = exports.addTalkToRepresentativeOptToButtons = exports.addTalkToRepresentativeOptToList = exports.getDeliveryOrPickUpDatetime = exports.isGrower = exports.isUserStaff = exports.getCustomerPrimaryNumber = exports.containsValidName = exports.getCleanNumber = exports.getOrderConfirmationMsgText = exports.getEmptyAddress = exports.getQuickSaleShoppingCart = exports.getEmptyShoppingCart = exports.harcodedFilterOfUnusedCategories = exports.getDeliveryPickUpDate = exports.isUserInputInvalid = void 0;
 const customersMessages_1 = require("../../messages/customersMessages");
 const types_1 = require("../types");
 const constant_1 = require("./constant");
@@ -32,6 +32,24 @@ const getEmptyShoppingCart = (user) => {
     };
 };
 exports.getEmptyShoppingCart = getEmptyShoppingCart;
+const getQuickSaleShoppingCart = (user) => {
+    return {
+        products: [],
+        customer_id: user.id,
+        contact_number: (0, exports.getCustomerPrimaryNumber)(user),
+        payment_option_id: null,
+        delivery_method_id: null,
+        delivery_date: null,
+        delivery_address: null,
+        selectedCategorySlug: null,
+        sub_total: null,
+        total: null,
+        coupon_code: null,
+        discount_amount: null,
+        payment_id: null
+    };
+};
+exports.getQuickSaleShoppingCart = getQuickSaleShoppingCart;
 const getEmptyAddress = (userId = null, address = '', title = '', location = '', instructions = '', is_primary = false) => {
     return {
         id: userId,
