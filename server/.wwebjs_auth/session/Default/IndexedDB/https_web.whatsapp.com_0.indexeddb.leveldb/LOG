@@ -1,16 +1,3 @@
-2023/07/26-12:09:08.283 8703 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2023/07/26-12:09:08.283 8703 Recovering log #389
-2023/07/26-12:09:08.299 8703 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000389.log 
-2023/07/26-14:16:58.785 e99f Level-0 table #396: started
-2023/07/26-14:16:58.807 e99f Level-0 table #396: 1151927 bytes OK
-2023/07/26-14:16:58.816 e99f Delete type=0 #389
-2023/07/26-14:16:59.196 1e943 Compacting 1@1 + 3@2 files
-2023/07/26-14:16:59.278 1e943 Generated table #397@1: 85754 keys, 2233934 bytes
-2023/07/26-14:16:59.332 1e943 Generated table #398@1: 54028 keys, 2306358 bytes
-2023/07/26-14:16:59.357 1e943 Generated table #399@1: 35246 keys, 977103 bytes
-2023/07/26-14:16:59.357 1e943 Compacted 1@1 + 3@2 files => 5517395 bytes
-2023/07/26-14:16:59.365 1e943 compacted to: files[ 0 0 3 0 0 0 0 ]
-2023/07/26-14:16:59.365 1e943 Delete type=2 #396
-2023/07/26-14:16:59.365 1e943 Delete type=2 #393
-2023/07/26-14:16:59.365 1e943 Delete type=2 #392
-2023/07/26-14:16:59.365 1e943 Delete type=2 #391
+2023/07/27-15:28:51.411 8703 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/07/27-15:28:51.411 8703 Recovering log #395
+2023/07/27-15:28:51.473 8703 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000395.log 

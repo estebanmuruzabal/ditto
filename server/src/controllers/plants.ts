@@ -7,6 +7,8 @@ import { WeekDays } from "../utils/constants";
 import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string) => {
+    if (!plant.sensors[sensorIndex]) { console.log('NO SENSOR FOUND', plant.sensors[sensorIndex]); return plant; }
+
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = plant.sensors[sensorIndex];
     console.log('setting BF process:', plant.sensors[sensorIndex]);
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();

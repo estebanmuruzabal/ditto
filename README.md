@@ -41,13 +41,17 @@ poner  numeros
  - Ver listado con precios mayorista de frutas/verduras.
 
 # To do arduino:
-- al agregar planta no hace refresh con la planta agregada, tenes que andar haciendo un F5..
+- agregar warnings a soil: No relayOneIdRelated, or no minWarning setted: [please set one]  
+- mejorar refresh (agregar al state los nuevos sensores que se agregan asi no refresca toda la pagina)
+- make check to not colapse when no whatsapp is linked when shuting a warning for instance.
+- cambiar el reading en el state cada vez que traemos nuevos valores (ditto above)
 - agregar disabled de todo hasta que no selecciones tu modoId 
-- joing all settings into the same type model ISettings [add type property[soil1, soil2, soil3, light1, light 2, disntance, etc]]
-- dejar andando el switch de whatsapp desde el admin
+
 - probar lighting (schedule, manual, etc)
 - probar humidity (schedule, manual, etc)
-- agregar checks para que te diga si ya tiene asignado el id de un relay a otro setting (que no te deje, al menos que quieras hacer un overwrite).
+- agregar checks para que te diga si ya t
+
+iene asignado el id de un relay a otro setting (que no te deje, al menos que quieras hacer un overwrite).
 - agregar relay 3 y 4 en las opciones a asignar
 - Agregar graficos logs a humidity2
 - Agregar graficos logs a lighting
