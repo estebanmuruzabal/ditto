@@ -52,17 +52,8 @@ const FormEnhancer = withFormik<MyFormProps, FormValues>({
 
 const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
   const {
-    isValid,
     item,
     values,
-    touched,
-    errors,
-    dirty,
-    handleChange,
-    handleBlur,
-    
-    handleReset,
-    isSubmitting,
   } = props;
   const addressValue = {
     id: values.id,
@@ -72,32 +63,25 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
   };
   
   const settingIndex = item.plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === item.settingType);
-    
   const currentSchedule = item.plant.sensors[settingIndex].scheduledOnTimes[item?.schedulePosition];
 
     
   const { state, dispatch } = useContext(ProfileContext);
   const [loading, setLoading] = useState(false);
   const [isSmartLightingOn, isSmartLighting] = useState(false);
-  const [startTime, startTimeChange] = useState(currentSchedule.startTime?.length > 0 ? currentSchedule?.startTime : '00:00');
+  const [startTime, startTimeChange] = useState(currentSchedule?.startTime?.length > 0 ? currentSchedule.startTime : '00:00');
   const [endTime, endTimeChange] = useState(currentSchedule?.endTime?.length > 0 ? currentSchedule.endTime : '23:59');
-  const [daysSelected,setDaysSelected] = useState(currentSchedule.daysToRepeat?.length >= 0 ? currentSchedule.daysToRepeat : [])
+  const [daysSelected,setDaysSelected] = useState(currentSchedule?.daysToRepeat?.length >= 0 ? currentSchedule.daysToRepeat : [])
   const [updateSetting] = useMutation(UPDATE_SETTING);
   
   const intl = useIntl();
 
-  const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
-    dispatch({ type: settingType, payload: { plant, value, field } });
-    dispatchSettingSave(plant, field, value, settingType);
-  };
-
-  const dispatchSettingSave = (plant: any, fieldName: string, fieldValue: string | boolean, settingType: SensorsTypes) => {
-    const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);
+  const dispatchSettingSave = (plant: any, sensorSetting: any, settingType: SensorsTypes) => {
     updateSetting({
       variables: {
         id: item.id,
         plantId: plant.plantId,
-        input: { [fieldName]: fieldValue, ...plant.sensors[settingIndex], settingType: settingType }
+        input: { ...sensorSetting, settingType: settingType }
       },
     });
   };
@@ -112,17 +96,22 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     };
 
     setLoading(true);
+    // here we just check and make it an array in case its not
     const settingIndex = item.plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === item.settingType);
-    item.plant.sensors[settingIndex].scheduledOnTimes = item.plant.sensors[settingIndex]?.scheduledOnTimes?.length >= 0 ? item.plant.sensors[settingIndex]?.scheduledOnTimes : [];
+    const setting = item.plant.sensors[settingIndex];
+    // setting.scheduledOnTimes = setting?.scheduledOnTimes?.length >= 0 ? setting?.scheduledOnTimes : [];
 
-    // if (isValid) {
-
-    item.plant.sensors[settingIndex].scheduledOnTimes.push(newSchedule)
-    handleSettingsChange(item.plant, 'scheduledOnTimes', item.plant.sensors[settingIndex].scheduledOnTimes, item.settingType);
+    if (currentSchedule && item?.schedulePosition >= 0) {
+      setting.scheduledOnTimes[item?.schedulePosition] = newSchedule;
+    } else {
+      setting.scheduledOnTimes.push(newSchedule)
+    }
+    
+    dispatch({ type: 'UPDATE_SENSOR', payload: { setting, plantId: item.plant.plantId, settingIndex } });
+    dispatchSettingSave(item.plant, setting, item.settingType);
 
     closeModal();
     setLoading(false);
-    // }
   };
 
 

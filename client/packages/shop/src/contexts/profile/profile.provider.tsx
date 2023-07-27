@@ -4,10 +4,9 @@ import { SensorsTypes } from 'utils/constant';
 
 type Action =
   | { type: 'HANDLE_ON_INPUT_CHANGE'; payload: any }
-  | { type: SensorsTypes.SOIL_HUMIDITY_SETTING_1; payload: any }
-  | { type: SensorsTypes.SOIL_HUMIDITY_SETTING_2; payload: any }
-  | { type: 'HANDLE_ADD_PLANT'; payload: any }
-  | { type: SensorsTypes.LIGHT_SETTING; payload: any }
+  | { type: 'ADD_SENSOR'; payload: any }
+  | { type: 'DELETE_SENSOR'; payload: any }
+  | { type: 'UPDATE_SENSOR'; payload: any }
   | { type: 'HANDLE_PASSWORD_CLEAR'; payload: any }
   | { type: 'ADD_CONTACT'; payload: any }
   | { type: 'UPDATE_CONTACT'; payload: any }
@@ -25,24 +24,18 @@ function reducer(state: any, action: Action): any {
   switch (action.type) {
     case 'HANDLE_ON_INPUT_CHANGE':
       return { ...state, [action.payload.field]: action.payload.value };
-    
-    // case SensorsTypes.SOIL_HUMIDITY_SETTING_1:
-    //   state.plants[0][SensorsTypes.SOIL_HUMIDITY_SETTING_1][action.payload.field] = action.payload.value;
 
-    //   return { ...state};
-    
-    // case SensorsTypes.SOIL_HUMIDITY_SETTING_2:
-    //   state.plants[0][SensorsTypes.SOIL_HUMIDITY_SETTING_2][action.payload.field] = action.payload.value;
-    
-    //   return { ...state};
-    
-    case 'HANDLE_ADD_PLANT':
-      state.plants[0][action.payload.field] = action.payload.value;
-    
-      return { ...state};
-  
-    case SensorsTypes.LIGHT_SETTING:
-        state.plants[0][SensorsTypes.LIGHT_SETTING][action.payload.field] = action.payload.value;
+    case 'ADD_SENSOR':
+        state.plants[action.payload.plantIndex].sensors.push(action.payload.setting);
+      
+        return { ...state};
+    case 'UPDATE_SENSOR':
+        const plantIndex = state.plants.findIndex((plant: any) => plant.plantId === action.payload.plantId);            
+        state.plants[plantIndex].sensors[action.payload.settingIndex] = action.payload.setting;
+      
+        return { ...state};
+    case 'DELETE_SENSOR':
+        state.plants[action.payload.plantIndex].sensors.splice(action.payload.settingIndex, 1);
       
         return { ...state};
     case 'ADD_CONTACT':

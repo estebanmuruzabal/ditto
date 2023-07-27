@@ -39,7 +39,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    const selectStyle = { control: styles => ({ ...styles, width: '160px', textAlign: 'left' }) };
+    const selectStyle = { control: styles => ({ ...styles, width: '179.88px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
 
@@ -62,13 +62,14 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
             componentProps: { item: modalProps },
         });
     };
+    const reading = (setting?.reading >= -5 && setting?.reading < 0) ? 0 + ' %' : (setting?.reading >= 0 && setting?.reading <= 100) ? setting?.reading + ' %' : 'Disconected';
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={() => setOpenTab(tabIsOpen ? '' : settingType)}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
                     <Type bold>{getSettingTypeText(setting?.settingType)}</Type>
                 </ListTitle>
-                <ListDes style={{ marginLeft: '-10px' }}>
+                <ListDes>
                     <CardButtons className='button-wrapper'>
                         { editIsOn ? (
                             <ActionButton onClick={() => setEditIsOn(!editIsOn)} className='edit-btn'>
@@ -105,7 +106,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     </Text>
                 </ListTitle>
                 <ListDes>
-                    <Text bold>{(setting?.reading > 0 && setting?.reading < 100) ? setting?.reading + '%'  : '-' } </Text>
+                    <Text bold>{reading} </Text>
                 </ListDes>
             </ListItem>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -181,41 +182,8 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                 </ListItem>
             )}
             
-            { (setting.mode === HumiditySensorMode.IRRIGATE_ON_DEMAND ||
-                setting.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION) && (
+            { setting.mode === HumiditySensorMode.IRRIGATE_ON_DEMAND && (
             <>
-                <ListItem style={{ justifyContent: 'flex-start' }}>
-                    <ListTitle>
-                        <Text>
-                        <FormattedMessage
-                            id='maxHumidityId'
-                            defaultMessage='maxHumidityId'
-                        />
-                        </Text>
-                    </ListTitle>
-                    <ListDes>
-                        { editIsOn ? (
-                            <>
-                                <Input
-                                    type='number'
-                                    name='maxWarning'
-                                    value={setting.maxWarning}
-                                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
-                                    backgroundColor='#F7F7F7'
-                                    height='34.5px'
-                                />
-                                {errorId === 'maxWarning' && (
-                                    <ErrorMsg>
-                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
-                                    </ErrorMsg>
-                                )}
-                            </>
-                        ) : (
-                            <Text bold>{(setting.maxWarning >= 0 && setting.maxWarning <= 100) ? setting?.maxWarning : '-'} %</Text>
-                        )}
-                    </ListDes>
-                </ListItem>
-
                 <ListItem>
                     <ListTitle>
                         <Text>
@@ -228,7 +196,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     <ListDes>
                         { editIsOn ? (
                              <>
-                                <InputUpper
+                                <Input
                                     type='number'
                                     name='minWarning'
                                     value={setting.minWarning}
@@ -252,8 +220,156 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     <ListTitle>
                         <Text>
                         <FormattedMessage
-                            id='asociateRelayOneId'
-                            defaultMessage='asociateRelayOneId'
+                            id='asociateCalendarRelayOneId'
+                            defaultMessage='asociateCalendarRelayOneId'
+                        />
+                        </Text>
+                    </ListTitle>
+                    <ListDes>
+                        { editIsOn ? (
+                            <Select 
+                                onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                                value={relayOneSelected}
+                                options={fourRelaysOptions}
+                                styles={selectStyle}
+                                menuPosition={'fixed'}
+                            />
+                        ) : (
+                            <>
+                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                <Text bold>{setting?.relayOneWorking ? 'Prendido' : 'Apagado'}</Text>
+                            </>
+                        )}
+                    </ListDes>
+                </ListItem>
+            </>
+            )}
+
+            {   setting.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION && (
+                <>
+                    <ListItem style={{ justifyContent: 'flex-start' }}>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='maxHumidityId'
+                                defaultMessage='maxHumidityId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <>
+                                    <Input
+                                        type='number'
+                                        name='maxWarning'
+                                        value={setting.maxWarning}
+                                        onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                        backgroundColor='#F7F7F7'
+                                        height='34.5px'
+                                    />
+                                    {errorId === 'maxWarning' && (
+                                        <ErrorMsg>
+                                            <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                        </ErrorMsg>
+                                    )}
+                                </>
+                            ) : (
+                                <Text bold>{(setting.maxWarning >= 0 && setting.maxWarning <= 100) ? setting?.maxWarning : '-'} %</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='minHumidityId'
+                                defaultMessage='minHumidityId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <>
+                                    <Input
+                                        type='number'
+                                        name='minWarning'
+                                        value={setting.minWarning}
+                                        onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
+                                        backgroundColor='#F7F7F7'
+                                        height='34.5px'
+                                    />
+                                    {errorId === 'minWarning' && (
+                                        <ErrorMsg>
+                                            <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                        </ErrorMsg>
+                                    )}
+                                </>
+                            ) : (
+                                <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} %</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='asociateRelayOneId'
+                                defaultMessage='asociateRelayOneId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Select 
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                                    value={relayOneSelected}
+                                    options={fourRelaysOptions}
+                                    styles={selectStyle}
+                                    menuPosition={'fixed'}
+                                />
+                            ) : (
+                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='asociateRelayTwoId'
+                                defaultMessage='asociateRelayTwoId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                        { editIsOn ? (
+                            <Select 
+                                onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingType)}
+                                value={relayTwoSelected}
+                                options={fourRelaysOptions}
+                                styles={selectStyle}
+                                menuPosition={'fixed'}
+                            />
+                        ) : (
+                            <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
+                        )}
+                        </ListDes>
+                    </ListItem>
+
+                </>
+            )}
+
+            { setting.mode === HumiditySensorMode.SCHEDULE && (
+            <>
+                <ListItem>
+                    <ListTitle>
+                        <Text>
+                        <FormattedMessage
+                            id='asociateCalendarRelayOneId'
+                            defaultMessage='asociateCalendarRelayOneId'
                         />
                         </Text>
                     </ListTitle>
@@ -272,56 +388,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     </ListDes>
                 </ListItem>
 
-                <ListItem>
-                    <ListTitle>
-                        <Text>
-                        <FormattedMessage
-                            id='asociateRelayTwoId'
-                            defaultMessage='asociateRelayTwoId'
-                        />
-                        </Text>
-                    </ListTitle>
-                    <ListDes>
-                    { editIsOn ? (
-                        <Select 
-                            onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingType)}
-                            value={relayTwoSelected}
-                            options={fourRelaysOptions}
-                            styles={selectStyle}
-                            menuPosition={'fixed'}
-                        />
-                    ) : (
-                        <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
-                    )}
-                    </ListDes>
-                </ListItem>
 
-
-            <ListItem style={{ justifyContent: 'flex-start' }}>
-                <ListTitle>
-                <Text>
-                    <FormattedMessage
-                    id="notifyChangesId"
-                    defaultMessage="notifyChangesId"
-                    />
-                </Text>
-                </ListTitle>
-                <ListDes>
-                    <Switch 
-                        disabled={false}
-                        checked={setting.whatsappWarningsOn}
-                        labelPosition={'right'}
-                        // className,
-                        onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, settingType)}
-                    />
-                </ListDes>
-            </ListItem>
-
-            </>
-            )}
-
-            { setting.mode === HumiditySensorMode.SCHEDULE && (
-            <>
                 { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                     return (
                         <WeekContainer>

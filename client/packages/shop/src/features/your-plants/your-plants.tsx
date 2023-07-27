@@ -35,6 +35,7 @@ import Select from 'react-select';
 import Plug from './sensors/Plug';
 import DistanceSensor from './sensors/DistanceSensor';
 import { AuthContext } from 'contexts/auth/auth.context';
+import { getLastNumOfSensor, getSensorWithoutNumber } from 'utils/ditto-bot';
   
 
 type YourPlantsProps = {
@@ -52,13 +53,11 @@ type YourPlantsProps = {
 const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   const { state, dispatch } = useContext(ProfileContext);
   const {authDispatch} = useContext<any>(AuthContext);
-  // const { data, error, loading, refetch: userRefetchh  } = useQuery(GET_LOGGED_IN_USER, {
-  //   pollInterval: 5000,
-  // });
 
-  const { loading, error, data = {}, refetch: userRefetchh } = useQuery(GET_LOGGED_IN_USER, {
+  const { loading, error, data = {} } = useQuery(GET_LOGGED_IN_USER, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: "no-cache",
+    // pollInterval: 5000,
   });
   
   // const router = useRouter();
@@ -106,13 +105,13 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
    return relayAlreadyAssigned;
   };
 
-  const releaseRelaysIfModeNone = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
+  const releaseRelaysIfModeChanges = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     const mode = 'mode';
     const relayOneIdRelated = 'relayOneIdRelated';
     const relayTwoIdRelated = 'relayTwoIdRelated';
 
     if (field !== mode) return plant;
-    if (value !== CommonMode.NONE) return plant;
+    // if (value !== CommonMode.NONE) return plant;
 
     const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
     plant.sensors[settingIndex][relayOneIdRelated] = '';
@@ -142,7 +141,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     if (isRelayIdAlreadyAssigend(plant, field, value)) return;
-    plant = releaseRelaysIfModeNone(plant, field, value, settingType);
+    plant = releaseRelaysIfModeChanges(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
 
@@ -166,7 +165,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     setUserinfoMsg('added plany successfully');
     setTimeout(function () {
       setUserinfoMsg('');
-      userRefetch();
     }, 2000)  
   };
 
@@ -184,25 +182,26 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     setUserinfoMsg('added plany successfully');
     setTimeout(function () {
       setUserinfoMsg('');
-      userRefetch();
     }, 2000)  
   };
 
-  const handleDeleteSensor = (plant: any, settingName: SensorsTypes) => {
+  const handleDeleteSensor = (plantSelected: any, settingType: SensorsTypes) => {
     deleteSetting({
       variables: {
         id: data?.getUser?.id,
-        plantId: plant.plantId,
-        settingName
+        plantId: plantSelected.plantId,
+        settingName: settingType
       },
     });
 
-    // dispatch({ type: settingType, payload: { plant, value, field } });
+    const plantIndex = plants.findIndex((plant: any) => plant.plantId === plantSelected.plantId);            
+    const settingIndex = plants[plantIndex].sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
+
+    dispatch({ type: 'DELETE_SENSOR', payload: {plantIndex, settingIndex }});
 
     setUserinfoMsg('deleted setting successfully');
     setTimeout(function () {
       setUserinfoMsg('');
-      userRefetch();
     }, 2000)  
   };
 
@@ -221,7 +220,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     setUserinfoMsg('deleted schedule successfully');
     setTimeout(function () {
       setUserinfoMsg('');
-      userRefetch();
     }, 2000)  
   };
 
@@ -260,14 +258,21 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   };
   
   const getSensorCompleteName = (plant, settingType: SensorsTypes) => {
-    let amountOfSameType = 1;
+    let sensorNewNumber = 1;
+
     plant?.sensors?.map((sensor: ISetting) => {
-      if (sensor?.settingType?.split('_')[0] === settingType) amountOfSameType ++;
+      let lastSensorNum = getLastNumOfSensor(sensor.settingType);
+      const rawSensorTypeName = getSensorWithoutNumber(sensor?.settingType);
+
+      if (!isNaN(lastSensorNum) && rawSensorTypeName === settingType) {
+        sensorNewNumber = lastSensorNum + 1;
+      }
     });
-    return `${settingType}_${amountOfSameType}`;
+
+    return `${settingType}_${sensorNewNumber}`;
   };
 
-  const dispatchNewSettingSave = (plant: any, settingType: SensorsTypes) => {
+  const dispatchNewSettingSave = (plant: any, settingType: SensorsTypes, plantIndex: number) => {
     const completeSensorTypeName = getSensorCompleteName(plant, settingType);
 
     updateSetting({
@@ -278,12 +283,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
       },
     });
 
-    // add new sensor in the state!!
-    // dispatch({ type: settingType, payload: { plant, value, field } });
-
-    setTimeout(function () {
-      userRefetch();
-    }, 2000)  
+    dispatch({ type: 'ADD_SENSOR', payload: {plantIndex, setting: getDefaultSetting(completeSensorTypeName) }});
   };
 
   const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left' }) };
@@ -354,7 +354,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         </ListTitle>
                         <ListDes>
                         <Select 
-                            onChange={(e: any) => dispatchNewSettingSave(plant, e.value)}
+                            onChange={(e: any) => dispatchNewSettingSave(plant, e.value, i)}
                             value={sensorSelected}
                             // @ts-ignore
                             options={sensorsOptions}
@@ -390,6 +390,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         case `${SensorsTypes.LIGHT}_1`:
                           return (
                             <LightSensor 
+                              key={i + sensor.settingType}
                               data={data}
                               plant={plant}
                               handleDeleteSensor={handleDeleteSensor}
@@ -403,6 +404,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         case `${SensorsTypes.DISTANCE}_1`:
                           return (
                             <DistanceSensor
+                              key={i + sensor.settingType}
                               data={data}
                               plant={plant}
                               errorId={errorId}
@@ -416,7 +418,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                           );
                         case `${SensorsTypes.PLUG}_1`:
                           return (
-                            <Plug 
+                            <Plug
+                              key={i + sensor.settingType}
                               data={data}
                               plant={plant}
                               handleDeleteSensor={handleDeleteSensor}

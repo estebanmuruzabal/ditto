@@ -155,10 +155,9 @@ export const PlantsSensorContainer = styled.button`
   overflow: hidden;
   position: relative;
   // width: calc(100% - 30px);
-  margin: 15px;
+  margin: 5px;
   width: fit-content;
   padding: 10px 5px;
-  margin-top: 6px;
   box-shaddow: 0.5px 0.5px;
   
   .delete-setting-btn {
@@ -335,7 +334,7 @@ export const Type = styled.p<TextProps>`
   color: ${themeGet('colors.text.bold', '#0D1136')};
   // text-align: right;
   // padding: 0px 0px 0px 10px;
-  width: 150px;
+  width: 160px;
 
   font-weight: ${(props) =>
     props.bold
@@ -430,7 +429,7 @@ export const ListItem = styled.div`
     margin-bottom: 20;
   }
   // @media (max-width: 767px) {
-    max-width: 300px;
+    max-width: 330px;
   // }
 `;
 
