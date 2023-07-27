@@ -10,7 +10,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     if (!plant.sensors[sensorIndex]) { console.log('NO SENSOR FOUND', plant.sensors[sensorIndex]); return plant; }
 
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = plant.sensors[sensorIndex];
-    console.log('setting BF process:', plant.sensors[sensorIndex]);
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     // @ts-ignore
     reading = plant[sensorReadingName];
@@ -21,7 +20,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     moment.locale('es');
     const today = moment(new Date(), 'MM/D/YYYY').day();
     const currentTime = moment(new Date()).format('hh:mm:ss');
-    
+    console.log('setting BF process:', plant);
 
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -31,25 +30,26 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya estamos regando!`);
+                console.log(1)
 
                 logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), started: true });
-                console.log('setting BF process:', plant.sensors[sensorIndex]);
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
                 plant.sensors[sensorIndex].relayOneWorking = true;
+
+                if (whatsappWarningsOn) sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya estamos regando!`);
                 break;
             } else if (reading >= minReading && relayOneWorking) {
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
-
+                console.log(2)
                 logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 plant.sensors[sensorIndex].relayOneWorking = false;
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
                 break;
             }
-            
+            console.log(3)
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(plant.sensors[sensorIndex], reading);
             break;
         case HumiditySensorMode.SEEDS_POOL_IRRIGATION:
@@ -245,6 +245,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             console.log('defaulted!!! papa')
             break;
     }
+    console.log('setting AF process:', plant);
     return plant;
 };
 
