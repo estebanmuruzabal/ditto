@@ -8,18 +8,32 @@ import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string) => {
     if (!plant.sensors[sensorIndex]) { console.log('NO SENSOR FOUND', plant.sensors[sensorIndex]); return plant; }
-
+    const setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = plant.sensors[sensorIndex];
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     // @ts-ignore
     reading = plant[sensorReadingName];
-    plant.sensors[sensorIndex].reading = reading;
+    setting.reading = reading;
 
-    const minReading = !isNaN(Number(minWarning)) ? Number(minWarning) : null;
-    const maxReading = !isNaN(Number(maxWarning)) ? Number(maxWarning) : null;
+    const minReading = Number(minWarning);
+    const maxReading = Number(maxWarning);
+    const timeToEvacuateInMins = Number(relayTwoAutomatedTimeToRun);
+    const timeToIrrigateInMins = Number(relayOneAutomatedTimeToRun);
+
+    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
+
+    const startedIrrigationTime = moment(relayOneAutomatedStartedTime);
+    const startedEvacuationTime = moment(relayTwoAutomatedStartedTime);
+    const currentIrrigationMins = currentTime?.diff(startedIrrigationTime, 'minutes');
+    const currentEvacuationMins = currentTime?.diff(startedEvacuationTime, 'minutes');
+
+    const irrigationShouldStart = reading < minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
+    const irrigationInProgress = currentIrrigationMins >= 0 && currentIrrigationMins < timeToIrrigateInMins;
+    const irrigationComplete = currentIrrigationMins >= timeToIrrigateInMins && relayOneWorking;
+    const evacuationShouldStart = reading >= maxReading && !relayTwoWorking && relayOneAutomatedStartedTime.length > 0;
+    const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!relayTwoAutomatedStartedTime.length;
     moment.locale('es');
     const today = moment(new Date(), 'MM/D/YYYY').day();
-    const currentTime = moment(new Date()).format('hh:mm:ss');
     console.log('setting BF process:', plant);
 
     switch (mode) {
@@ -30,26 +44,67 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
-                console.log(1)
 
                 logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), started: true });
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
-                plant.sensors[sensorIndex].relayOneWorking = true;
+                setting.relayOneWorking = true;
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya estamos regando!`);
                 break;
             } else if (reading >= minReading && relayOneWorking) {
-                console.log(2)
                 logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
-                plant.sensors[sensorIndex].relayOneWorking = false;
+                setting.relayOneWorking = false;
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
                 break;
             }
-            console.log(3)
+
+            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
+            break;
+        case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND:
+            // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
+            // must have minWarning and relayIdRelated variables setted!!!
+
+            // relayTwoAutomatedTimeToRun SHOULD CONTAIN THE MINUTES TIME
+
+            if (!minReading || !relayOneIdRelated)  { console.log('No relayOneIdRelated or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
+            if (timeToEvacuateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', plant.sensors[sensorIndex]); break; }
+
+            console.log('irrigationComplete', irrigationComplete)
+            console.log('currentEvacuationMins', currentEvacuationMins)
+            if (irrigationInProgress) {
+                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
+                return plant;
+            }
+
+            if (irrigationShouldStart) {
+                // we turn the filling in watering relay ON
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                plant.sensors[sensorIndex].relayOneWorking = true;
+
+                plant.sensors[sensorIndex].relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), started: true });
+                // we turn evacuation watering relay OFF just in case
+                // @ts-ignore
+                plant[relayTwoIdRelated] = false;
+                plant.sensors[sensorIndex].relayTwoWorking = false;
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting?.name} llego a ${reading}% de humedad, ya estamos llenando la pileta con agua.`);
+                break;
+            } else if (irrigationComplete) {
+                // we just turn off the filling in watter system
+                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
+
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                plant.sensors[sensorIndex].relayOneWorking = false;
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${plant.name} acaba de llenar la pileta con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
+                break;
+            }
+
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(plant.sensors[sensorIndex], reading);
             break;
         case HumiditySensorMode.SEEDS_POOL_IRRIGATION:
@@ -57,8 +112,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             // must have minWarning and relayIdRelated variables setted!!!
 
             // relayTwoAutomatedTimeToRun SHOULD CONTAIN THE MINUTES TIME
-            const timeToEvacuateInMins = Number(relayTwoAutomatedTimeToRun);
-            const timeToIrrigateInMins = Number(relayOneAutomatedTimeToRun);
 
             if (!minReading || !relayOneIdRelated || !maxReading)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
             if (timeToEvacuateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', plant.sensors[sensorIndex]); break; }
@@ -66,16 +119,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
 
             
-            const startedIrrigationTime = moment(relayOneAutomatedStartedTime);
-            const startedEvacuationTime = moment(relayTwoAutomatedStartedTime);
-            const currentIrrigationMins = currentTime?.diff(startedIrrigationTime, 'minutes');
-            const currentEvacuationMins = currentTime?.diff(startedEvacuationTime, 'minutes');
-
-            const irrigationShouldStart = reading < minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
-            const irrigationInProgress = currentIrrigationMins >= 0 && currentIrrigationMins < timeToIrrigateInMins;
-            const irrigationComplete = currentIrrigationMins >= timeToIrrigateInMins && relayOneWorking;
-            const evacuationShouldStart = reading >= maxReading && !relayTwoWorking && relayOneAutomatedStartedTime.length > 0;
-            const evacuationComplete = currentEvacuationMins >= timeToEvacuateInMins && !!relayTwoAutomatedStartedTime.length;
 
             console.log('irrigationComplete', irrigationComplete)
             console.log('currentEvacuationMins', currentEvacuationMins)
@@ -187,14 +230,14 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             break;
         case LightSensorMode.SCHEDULE:
         case LightSensorMode.SMART_SCHEDULE:
-
+            const currentTimee = moment(new Date()).format('hh:mm:ss');
             plant.sensors[sensorIndex]?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     
                     // @ts-ignore
-                    if (currentTime.isBetween(startTime, endTime)) {
+                    if (currentTimee.isBetween(startTime, endTime)) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
                     }

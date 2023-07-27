@@ -501,7 +501,7 @@ export const usersResolvers: IResolvers = {
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             console.log('BF check sensor:', plants[index])
             plants[index].sensors?.map(async (sensor: any, i: number) => {
-                plants[index] = await checkSensor(plants[index], i + 1, userResult?.phones[0]?.number) 
+                plants[index] = await checkSensor(plants[index], i, userResult?.phones[0]?.number) 
             })
             console.log('AF check sensor:', plants[index])
             // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
