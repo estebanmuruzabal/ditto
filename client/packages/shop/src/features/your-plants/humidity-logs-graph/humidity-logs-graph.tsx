@@ -16,14 +16,16 @@ const HumidityLogsGraph: React.FC<Props> = ({ data, ...props  }) => {
   let humidities = [];
   let times = [];
   Object.keys(data).forEach(function (key, index) {
-    if (data[key].humidity >= 0 || data[key].humidity <= 100) humidities.push(data[key].humidity);
+    if (data[key].reading >= 0 || data[key].reading <= 100) {
+      humidities.push(data[key].reading);
+      times.push(data[key].timestamp);
+    }
     // let trimed = data[key]?.timestamp?.substring(0, data[key].timestamp.length - 6);
 
-    times.push(data[key].timestamp);
     
 });
-  // console.log('times', times)
-  // console.log('humidities', humidities)
+  console.log('times', times)
+  console.log('humidities', humidities)
   return (
     <SearchWrapper>
       <GraphChart

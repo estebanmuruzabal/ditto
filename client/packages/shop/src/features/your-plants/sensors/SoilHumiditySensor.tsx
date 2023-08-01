@@ -62,7 +62,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
             componentProps: { item: modalProps },
         });
     };
-    const reading = (setting?.reading >= -5 && setting?.reading < 0) ? 0 + ' %' : (setting?.reading >= 0 && setting?.reading <= 100) ? setting?.reading + ' %' : 'Disconected';
+    const reading = (setting?.reading >= -5 && setting?.reading < 0) ? 0 + ' % 💧' : (setting?.reading >= 0 && setting?.reading <= 100) ? setting?.reading + ' %' : 'Disconected';
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={() => setOpenTab(tabIsOpen ? '' : settingType)}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -359,6 +359,144 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         </ListDes>
                     </ListItem>
 
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='irrigationTimeId'
+                                defaultMessage='irrigationTimeId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Input
+                                    type='number'
+                                    name='relayOneAutomatedTimeToRun'
+                                    value={setting.relayOneAutomatedTimeToRun}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                />
+                            ) : (
+                                <Text bold>{setting?.relayOneAutomatedTimeToRun >= 0 ? setting.relayOneAutomatedTimeToRun + ' mins' : '-'}</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='irrigationEvacuationTimeId'
+                                defaultMessage='irrigationEvacuationTimeId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Input
+                                    type='number'
+                                    name='relayTwoAutomatedTimeToRun'
+                                    value={setting.relayTwoAutomatedTimeToRun}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoAutomatedTimeToRun', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                />
+                            ) : (
+                                <Text bold>{setting?.relayTwoAutomatedTimeToRun?.length > 1 ? setting.relayTwoAutomatedTimeToRun + ' mins' : '-'}</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+                </>
+            )}
+
+            {   setting.mode === HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND && (
+                <>
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='minHumidityId'
+                                defaultMessage='minHumidityId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <>
+                                    <Input
+                                        type='number'
+                                        name='minWarning'
+                                        value={setting.minWarning}
+                                        onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
+                                        backgroundColor='#F7F7F7'
+                                        height='34.5px'
+                                    />
+                                    {errorId === 'minWarning' && (
+                                        <ErrorMsg>
+                                            <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                        </ErrorMsg>
+                                    )}
+                                </>
+                            ) : (
+                                <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} %</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='asociateRelayOneId'
+                                defaultMessage='asociateRelayOneId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Select 
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                                    value={relayOneSelected}
+                                    options={fourRelaysOptions}
+                                    styles={selectStyle}
+                                    menuPosition={'fixed'}
+                                />
+                            ) : (
+                                <>
+                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                    <Text bold>{setting?.relayOneWorking ? 'Prendido' : 'Apagado'}</Text>
+                                </>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='irrigationTimeId'
+                                defaultMessage='irrigationTimeId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Input
+                                    type='number'
+                                    name='relayOneAutomatedTimeToRun'
+                                    value={setting.relayOneAutomatedTimeToRun}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                />
+                            ) : (
+                                <Text bold>{setting?.relayOneAutomatedTimeToRun >= 0 ? setting.relayOneAutomatedTimeToRun + ' mins' : '-'}</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
                 </>
             )}
 
@@ -438,86 +576,70 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
             </>
             )}
             
-            { (setting.mode === HumiditySensorMode.MANUAL && setting.relayOneIdRelated.length > 1) && (
-            <ListItem style={{ justifyContent: 'flex-start' }}>
-                <ListTitle>
-                    <Text>
-                    <FormattedMessage
-                        id='manualModeStateId'
-                        defaultMessage='manualModeStateId'
-                    />
-                    </Text>
-                </ListTitle>
-                <ListDes>
-                    { editIsOn ? (
-                        <Select 
-                            onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, settingType)}
-                            value={selectedManualState}
-                            options={manualModeOptions}
-                            styles={selectStyle}
-                            menuPosition={'fixed'}
-                        />
-                    ) : (
-                        <Text bold>{selectedManualState.label}</Text>
-                    )}
-                </ListDes>
-            </ListItem>
+            { (setting.mode === HumiditySensorMode.MANUAL) && (
+                <>
+                    <ListItem style={{ justifyContent: 'flex-start' }}>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='manualModeStateId'
+                                defaultMessage='manualModeStateId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            {/* { editIsOn ? (
+                                <Select 
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, settingType)}
+                                    value={selectedManualState}
+                                    options={manualModeOptions}
+                                    styles={selectStyle}
+                                    menuPosition={'fixed'}
+                                />
+                            ) : (
+                                <Text bold>{setting.relayOneWorking}</Text>
+                            )} */}
+                            <Switch 
+                                disabled={false}
+                                checked={setting.relayOneWorking}
+                                labelPosition={'right'}
+                                label={setting?.relayOneWorking ? 'Prendido' : 'Apagado'}
+                                // className,
+                                onUpdate={() => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
+                            />
+
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='asociateCalendarRelayOneId'
+                                defaultMessage='asociateCalendarRelayOneId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Select 
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                                    value={relayOneSelected}
+                                    options={fourRelaysOptions}
+                                    styles={selectStyle}
+                                    menuPosition={'fixed'}
+                                />
+                            ) : (
+                                <>
+                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                    <Text bold>{setting?.relayOneWorking ? 'Prendido' : 'Apagado'}</Text>
+                                </>
+                            )}
+                        </ListDes>
+                    </ListItem>
+                </>
             )}
 
-            { setting.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION && (
-            <>
-                <ListItem>
-                <ListTitle>
-                    <Text>
-                    <FormattedMessage
-                        id='irrigationTimeId'
-                        defaultMessage='irrigationTimeId'
-                    />
-                    </Text>
-                </ListTitle>
-                <ListDes>
-                    { editIsOn ? (
-                        <Input
-                            type='number'
-                            name='relayOneAutomatedTimeToRun'
-                            value={setting.relayOneAutomatedTimeToRun}
-                            onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingType)}
-                            backgroundColor='#F7F7F7'
-                            height='34.5px'
-                        />
-                    ) : (
-                        <Text bold>{setting?.relayOneAutomatedTimeToRun >= 0 ? setting.relayOneAutomatedTimeToRun + ' mins' : '-'}</Text>
-                    )}
-                </ListDes>
-                </ListItem>
-
-                <ListItem>
-                <ListTitle>
-                    <Text>
-                    <FormattedMessage
-                        id='irrigationEvacuationTimeId'
-                        defaultMessage='irrigationEvacuationTimeId'
-                    />
-                    </Text>
-                </ListTitle>
-                <ListDes>
-                    { editIsOn ? (
-                        <Input
-                            type='number'
-                            name='relayTwoAutomatedTimeToRun'
-                            value={setting.relayTwoAutomatedTimeToRun}
-                            onChange={(e: any) => handleSettingsChange(plant, 'relayTwoAutomatedTimeToRun', e.target.value, settingType)}
-                            backgroundColor='#F7F7F7'
-                            height='34.5px'
-                        />
-                    ) : (
-                        <Text bold>{setting?.relayTwoAutomatedTimeToRun?.length > 1 ? setting.relayTwoAutomatedTimeToRun + ' mins' : '-'}</Text>
-                    )}
-                </ListDes>
-                </ListItem>
-            </>
-            )}
-            
             { setting?.logs?.length > 0 && ( <HumidityLogsGraph data={setting.logs} /> )}
         </PlantsSensorContainer>
     );

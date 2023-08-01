@@ -104,7 +104,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
               </Text>
             </ListTitle>
             <ListDes>
-              <Text bold>{plant?.light} % {plant?.light < 40 ? '🌙' : '☀️'}</Text>
+              <Text bold>{plant?.light} % {plant?.light < 40 ? '🌙' : '💡'}</Text>
             </ListDes>
           </ListItem>
   

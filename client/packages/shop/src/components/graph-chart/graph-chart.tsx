@@ -44,13 +44,13 @@ const GrpahChart = ({
           offsetX: -25,
           style: {
             colors: '#161F6A',
-            fontSize: '14px',
+            fontSize: '10px',
             fontFamily: "'Lato', sans-serif",
           },
-          // format: 'dd-MM HH:mm'
-          formatter: function(value, timestamp, index) {
-            return moment(new Date(timestamp)).format("DD/MM hh:mm")
-          }
+          // format: 'HH:mm'
+          // formatter: function(value, timestamp, index) {
+          //   return moment(new Date(timestamp)).format("DD/MM hh:mm")
+          // }
           // datetimeFormatter: {
           //   // month: 'MMM \'yy',
           //   // day: 'dd MMM',

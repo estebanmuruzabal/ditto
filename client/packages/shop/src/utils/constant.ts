@@ -85,8 +85,8 @@ export const distanceModeOptions = [
 export const humidityModeOptions = [
     { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
     { value: HumiditySensorMode.MANUAL, label: 'Manual' },
-    { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND, label: 'Semi-automático' },
-    { value: HumiditySensorMode.IRRIGATE_ON_DEMAND, label: 'Automático' },
+    { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND, label: 'A demanda cant. exacta' },
+    { value: HumiditySensorMode.IRRIGATE_ON_DEMAND, label: 'A demanda' },
     { value: HumiditySensorMode.SCHEDULE, label: 'Calendario de riego' },
     { value: HumiditySensorMode.NONE, label: 'Ninguno' }
 ];
@@ -108,7 +108,7 @@ export const fourRelaysOptions = [
     { value: RelaysIds.RELAY_TWO, label: 'Enchufe 2' },
     { value: RelaysIds.RELAY_THIRD, label: 'Enchufe 3' },
     { value: RelaysIds.RELAY_FOURTH, label: 'Enchufe 4' },
-    { value: '', label: 'Desasociar enchufe' }
+    { value: '', label: 'Ninguno' }
 ];
 
 export const eightRelaysOptions = [
@@ -116,5 +116,5 @@ export const eightRelaysOptions = [
     { value: RelaysIds.RELAY_TWO, label: 'Enchufe 2' },
     { value: RelaysIds.RELAY_THIRD, label: 'Enchufe 3' },
     { value: RelaysIds.RELAY_FOURTH, label: 'Enchufe 4' },
-    { value: '', label: 'Desasociar enchufe' }
+    { value: '', label: 'Ninguno' }
 ];

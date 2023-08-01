@@ -105,7 +105,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
    return relayAlreadyAssigned;
   };
 
-  const releaseRelaysIfModeChanges = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
+  const defaultSettingValuesIfModeChanges = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     const mode = 'mode';
     const relayOneIdRelated = 'relayOneIdRelated';
     const relayTwoIdRelated = 'relayTwoIdRelated';
@@ -114,8 +114,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     // if (value !== CommonMode.NONE) return plant;
 
     const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
-    plant.sensors[settingIndex][relayOneIdRelated] = '';
-    plant.sensors[settingIndex][relayTwoIdRelated] = '';
+    plant.sensors[settingIndex] = getDefaultSetting(settingType);
     
    return plant;
   };
@@ -141,7 +140,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     if (isRelayIdAlreadyAssigend(plant, field, value)) return;
-    plant = releaseRelaysIfModeChanges(plant, field, value, settingType);
+    plant = defaultSettingValuesIfModeChanges(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
 
