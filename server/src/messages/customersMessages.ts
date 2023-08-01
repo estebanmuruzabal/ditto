@@ -1,6 +1,7 @@
 import { ICategory, IDeliveryMethod, IPaymentOption, IProduct } from "../lib/types";
 import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, COMPANY_DESCRIPTION_TEXT, CURRENCY } from "../lib/utils/constant";
 import { getDeliveryOrPickUpDatetime, getTotalAmount } from "../lib/utils/shoppingUtils";
+import { getEmojiNumber } from "../lib/utils/whatsAppUtils";
 
 const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>
 `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
@@ -179,7 +180,7 @@ export const mainMenuUnauthenticatedUser = (categories: ICategory[]) =>
 
 Seleccioná una categoría para ver/comprar nuestros productos:
 
-${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).join('')}${categories.length + 1} - Ayuda! Necesito hablar con una persona física.
+${categories.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${product.name}\n`)).join('')}${categories.length + 1} - Ayuda! Necesito hablar con una persona física.
 
 *Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
 `;
@@ -188,43 +189,37 @@ ${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).jo
 const mainMenuAuthenticatedUser = (customerName: string, categories: ICategory[]) =>  
     `Hola ${customerName},
 
-Seleccioná una categoría para ver/comprar nuestras productos:
+*Seleccioná una categoría para ver/comprar nuestras productos:*
 
-${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
+${categories.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${product.name}\n`)).join('')} ${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
 
 *Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
 `;
 
 const listAvailableProducts = (products: any) =>  
-`*Tenemos disponibles los siguientes productos:*
+`*Ingresá el número del producto para agregarlo a tu carrito:*
 
-${products.map((product: any, i: number) => (`${i+1} - ${product.name} - $${product.price}\n`)).join('')}
-*Por favor ingresá un número entre el 1 y el ${products.length} para agregarlo a tu carrito*
+${products.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${product.name} - $${product.price}\n`)).join('')}
 `;
 
 const listCategories = (categories: ICategory[]) =>  
-`*Seleccione una categoría:*
+`*Seleccione una categoría ingresando su número:*
 
-${categories.map((product: any, i: number) => (`${i+1} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
-
-*Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
+${categories.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
 `;
 
 const reListingAvailableProducts = (productsAdded: any, availableProducts: any) => {
 const totalItemsAmount = getTotalAmount(productsAdded);
     return (
-`*Producto agregado al carrito correctamente!*
+`*Agregado correctamente*
 
-*Su carrito:*
+Su carrito:
 ${productsAdded.map((product: any, i: number) => (`- ${product.name} - Cantidad: ${product.quantity}\n`)).join('')}
 Total: $${totalItemsAmount}
 
 *Puedes seguir agregando productos:*
 
-${availableProducts.map((product: any, i: number) => (`${i+1} - ${product.name} - $${product.price}\n`)).join('')}
-*${availableProducts.length + 1} - Ir a pagar*
-
-(Por favor ingresá un numero entre el 1 y el ${availableProducts.length + 1})
+${availableProducts.map((product: any, i: number) => (`${getEmojiNumber(i + 1)} - ${product.name} - $${product.price}\n`)).join('')}*${availableProducts.length + 1} - Ir a pagar*
 `)};
 
 const tecnicasDeCultivoInfo = () =>  
@@ -266,13 +261,8 @@ const manualInput = () =>
 `Que cantidad necesita? Por favor ingrese un número. Ejemplo: "2"`;
 
 const getQuantityOfProduct = (productName: string, quantity: string) =>  
-`Cuántas unidades de 
+`Ingresá la cantidad de ${productName} querés agregar a tu pedido. Por favor ingrese un número. Ejemplo: "2"`;
 
-*- ${productName}*
-
- querés agregar a tu pedido?
-`;
-//  Ingresa un numero entre el 1 y el ${quantity})
 const unknownUserInput = () =>  
 `Disculpe no reconocimos su respuesta, por favor elija una opción
 entre las siguientes:
@@ -341,43 +331,40 @@ export const getPickUpAddress = (pickUpAddress: string) => {
 
 const deliveryOptions = (deliveryOptions: any) => {
     return (
-        `*Por favor seleccione día y opción de envío o retiro de su compra:*
+        `*Seleccioná día y opción de envío/retiro:*
 ${deliveryOptions.map((deliOption: any, i: number) => (`
 *${i + 1} - ${deliOption.name}*
 Dirección: ${deliOption.pickUpAddress}
 ¿Cuándo?: ${getDeliveryOrPickUpDatetime(deliOption.details)}
 ${getPrelinkText(deliOption.details)}: ${getAddressLinkText(deliOption.details)}`)).join('')}
-
-- *Responda escribiendo un núm. entre el 1 y el ${deliveryOptions.length} para elegir una opción.*`
+`
 );};
 
 const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption: IDeliveryMethod, paymentMethods: any, delivery_address: string) => {
     const hasDeliveryAddress = deliOption?.pickUpAddress || delivery_address;
     return hasDeliveryAddress ? (
-`*Método seleccionado con éxito!*
+//         *Método seleccionado con éxito!*
 
-*- Tipo de envío:* ${deliOption.name} 
-*- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
-${getPickUpAddress(deliOption?.pickUpAddress || delivery_address)}
-*- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
+// *- Tipo de envío:* ${deliOption.name} 
+// *- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
+// ${getPickUpAddress(deliOption?.pickUpAddress || delivery_address)}
+// *- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
 
-*Por favor seleccione su forma de pago:*
+`
+*Seleccione su forma de pago:*
 
-${paymentMethods.map((method: IPaymentOption, i: number) => (`*${i + 1} - ${method.name}* \n${method.details}\n`)).join('')}
-
-- Responda escribiendo un núm. entre el 1 y el ${paymentMethods.length}.
+${paymentMethods.map((method: IPaymentOption, i: number) => (`*${getEmojiNumber(i + 1)} - ${method.name}* \n${method.details}\n`)).join('')}
 `): (
-`*Método seleccionado con éxito!*
+//     *Método seleccionado con éxito!*
 
-*- Tipo de envío:* ${deliOption.name} 
-*- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
-*- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
+// *- Tipo de envío:* ${deliOption.name} 
+// *- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
+// *- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
 
+`
 *Por favor seleccione su forma de pago:*
 
 ${paymentMethods.map((method: IPaymentOption, i: number) => (`*${i + 1} - ${method.name}* \n${method.details}\n`)).join('')}
-
-- Responda escribiendo un núm. entre el 1 y el ${paymentMethods.length}.
 `)};
 
 const thanksMsg = () =>  
@@ -414,23 +401,21 @@ const paymentMethodSelectedAndOrderConfirmationMsj = (shoppingCart: any) => {
     const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
     return `*Por favor verifique que su orden sea correcta.*
 
-*Método de pago:* ${shoppingCart.payment_method_name}
-*Método de envío:* ${shoppingCart.delivery_method_name}
-*Dirección:* ${shoppingCart.delivery_address}
+Mét. de pago: *${shoppingCart.payment_method_name}*
+Mét. de envío: *${shoppingCart.delivery_method_name}*
+Dir. *${shoppingCart.delivery_address}*
 
 *Su carrito:*
-${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
+${shoppingCart.products.map((product: any, i: number) => (`- ${product.name} $${product.price}. *Unidades:* ${product.quantity}\n`)).join('')}
 Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
 *Total a Pagar: $${(total).toFixed(2)}*
 
-*Por favor ingresa un número del 1 al 5 para elegir una opción*
-1 - Para confirmar tu compra
-2 - Para cambiar forma de pago
-3 - Para cambiar método de envio
-4 - Cambiar productos de tu carrito
-5 - Para desistir de tu compra :(
-`
-};
+1️⃣ - Confirmar tu compra
+2️⃣ - Cambiar forma de pago
+3️⃣ - Cambiar método de envio
+4️⃣ - Cambiar productos de tu carrito
+5️⃣ - Desistir de tu compra
+`};
 
 export {
     deliveryPurchaseWithTransferPayment,
