@@ -27,6 +27,7 @@ export const typeDefs = gql`
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
+        timestamp: String
     }
 
     type ISensorSetting {
