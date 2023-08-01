@@ -1,3 +1,2 @@
-2023/07/27-15:28:51.153 13407 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Service Worker/Database/MANIFEST-000001
-2023/07/27-15:28:51.154 13407 Recovering log #3
-2023/07/27-15:28:51.156 13407 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Service Worker/Database/000003.log 
+2023/08/01-16:18:49.634 39d90 Creating DB /home/ubuntu/ditto/server/.wwebjs_auth/session/Default/Service Worker/Database since it was missing.
+2023/08/01-16:18:49.647 39d90 Delete type=3 #1

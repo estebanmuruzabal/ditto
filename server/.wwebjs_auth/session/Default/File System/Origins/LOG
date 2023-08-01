@@ -1,3 +1,2 @@
-2023/07/27-15:28:51.984 8203 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/File System/Origins/MANIFEST-000001
-2023/07/27-15:28:51.984 8203 Recovering log #3
-2023/07/27-15:28:51.984 8203 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/File System/Origins/000003.log 
+2023/08/01-16:18:49.991 39d8e Creating DB /home/ubuntu/ditto/server/.wwebjs_auth/session/Default/File System/Origins since it was missing.
+2023/08/01-16:18:50.004 39d8e Delete type=3 #1

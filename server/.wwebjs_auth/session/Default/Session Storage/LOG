@@ -1,3 +1,2 @@
-2023/07/27-15:28:51.604 8703 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000001
-2023/07/27-15:28:51.604 8703 Recovering log #4
-2023/07/27-15:28:51.604 8703 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Session Storage/000004.log 
+2023/08/01-16:18:45.434 39d87 Creating DB /home/ubuntu/ditto/server/.wwebjs_auth/session/Default/Session Storage since it was missing.
+2023/08/01-16:18:45.446 39d87 Delete type=3 #1
