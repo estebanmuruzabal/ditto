@@ -35,7 +35,8 @@ import Select from 'react-select';
 import Plug from './sensors/Plug';
 import DistanceSensor from './sensors/DistanceSensor';
 import { AuthContext } from 'contexts/auth/auth.context';
-import { getLastNumOfSensor, getSensorWithoutNumber } from 'utils/ditto-bot';
+import { hasDittoBotUpdatedInLastMinute, getLastNumOfSensor, getSensorWithoutNumber } from 'utils/ditto-bot';
+import moment from 'moment';
   
 
 type YourPlantsProps = {
@@ -93,7 +94,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     let relayAlreadyAssigned = false;
 
     plant.sensors.map((sensor) => {
-      console.log(value)
       if ((sensor[relayOneIdRelated] === value || sensor[relayTwoIdRelated] === value ) && value !== '') {
         const texto1 = intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' });
         const texto2 = intl.formatMessage({ id: 'relayAlreadyAssinged2', defaultMessage: 'desigagned  ' });
@@ -114,7 +114,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     // if (value !== CommonMode.NONE) return plant;
 
     const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
-    plant.sensors[settingIndex] = getDefaultSetting(settingType);
+    plant.sensors[settingIndex] = getDefaultSetting(settingType, plant.sensors[settingIndex].name);
     
    return plant;
   };
@@ -222,9 +222,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     }, 2000)  
   };
 
-  const getDefaultSetting = (settingTypeName: string) => { 
+  const getDefaultSetting = (settingTypeName: string, name?: string) => { 
     return {
-      name: '',
+      name: name || '',
       whatsappWarningsOn: false,
       maxWarning: '',
       minWarning: '',
@@ -314,6 +314,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           { plants?.length < 1 && (<Text>{intl.formatMessage({ id: 'noDittoBotsTextId', defaultMessage: 'noDittoBotsTextId' })}</Text>) }
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
+            console.log('plant.timestamp:::', plant.timestamp);
               return (
                 <PlantsWrapper key={i + '-orderList'}>
                   <Row1>
@@ -339,6 +340,20 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             width='197px'
                             height='34.5px'
                           />
+                        </ListDes>
+                      </ListItem>
+
+                      <ListItem>
+                        <ListTitle>
+                          <Text bold>
+                            <FormattedMessage
+                              id="statusId"
+                              defaultMessage="statusId"
+                            />
+                          </Text>
+                        </ListTitle>
+                        <ListDes>
+                          <Text>{moment(plant.timestamp).format('hh:mm A - DD MMM')} {hasDittoBotUpdatedInLastMinute(plant.timestamp) ? '[ONLINE]' : '[OFFLINE]'}</Text>
                         </ListDes>
                       </ListItem>
 

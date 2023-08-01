@@ -20,6 +20,7 @@ query GetUser{
       isRelayTwoOn
       isRelayThirdOn
       isRelayFourthOn
+      timestamp
       sensors {
         reading
         name
