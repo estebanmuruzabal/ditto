@@ -7,9 +7,12 @@ import { WeekDays } from "../utils/constants";
 import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string) => {
-    if (!plant.sensors[sensorIndex]) { console.log('NO SENSOR FOUND', plant.sensors[sensorIndex]); return plant; }
-    const setting = plant.sensors[sensorIndex];
-    let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = plant.sensors[sensorIndex];
+    if (!plant?.sensors[sensorIndex]) { console.log('NO SENSOR FOUND', plant?.sensors[sensorIndex]); return plant; }
+    let setting = plant.sensors[sensorIndex];
+    let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
+
+
+    // we assign the reading with the settingType name by only lower casing it!
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     // @ts-ignore
     reading = plant[sensorReadingName];
@@ -50,7 +53,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                if (whatsappWarningsOn) sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya estamos regando!`);
+                if (whatsappWarningsOn) sendMessage(phoneNumber, `Aviso: tu planta: ${setting.name} llego a ${reading}% de humedad, ya estamos regando!`);
                 break;
             } else if (reading >= minReading && relayOneWorking) {
                 logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
@@ -58,7 +61,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 setting.relayOneWorking = false;
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${plant.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${setting.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
                 break;
             }
 
@@ -70,8 +73,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
             // relayTwoAutomatedTimeToRun SHOULD CONTAIN THE MINUTES TIME
 
-            if (!minReading || !relayOneIdRelated)  { console.log('No relayOneIdRelated or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
-            if (timeToEvacuateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', plant.sensors[sensorIndex]); break; }
+            if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             console.log('irrigationComplete', irrigationComplete)
             console.log('currentEvacuationMins', currentEvacuationMins)
@@ -84,28 +86,25 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 // we turn the filling in watering relay ON
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
-                plant.sensors[sensorIndex].relayOneWorking = true;
+                setting.relayOneWorking = true;
 
-                plant.sensors[sensorIndex].relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
-                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), started: true });
-                // we turn evacuation watering relay OFF just in case
-                // @ts-ignore
-                plant[relayTwoIdRelated] = false;
-                plant.sensors[sensorIndex].relayTwoWorking = false;
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), started: true });
+
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting?.name} llego a ${reading}% de humedad, ya estamos llenando la pileta con agua.`);
                 break;
             } else if (irrigationComplete) {
                 // we just turn off the filling in watter system
-                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
+                setting.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
-                plant.sensors[sensorIndex].relayOneWorking = false;
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${plant.name} acaba de llenar la pileta con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${setting.name} acaba de llenar la pileta con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
                 break;
             }
 
-            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(plant.sensors[sensorIndex], reading);
+            setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case HumiditySensorMode.SEEDS_POOL_IRRIGATION:
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
@@ -113,8 +112,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
             // relayTwoAutomatedTimeToRun SHOULD CONTAIN THE MINUTES TIME
 
-            if (!minReading || !relayOneIdRelated || !maxReading)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
-            if (timeToEvacuateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', plant.sensors[sensorIndex]); break; }
+            if (!minReading || !relayOneIdRelated || !maxReading || !relayTwoIdRelated || !relayOneAutomatedTimeToRun || !relayTwoAutomatedTimeToRun)  { console.log('No relayOneIdRelated, or no minWarning setted: ', setting); break; }
+            if (timeToEvacuateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', setting); break; }
 
             const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
 
@@ -123,52 +122,52 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             console.log('irrigationComplete', irrigationComplete)
             console.log('currentEvacuationMins', currentEvacuationMins)
             if (irrigationInProgress) {
-                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
+                setting.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
                 return plant;
             }
 
             if (irrigationShouldStart) {
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${plant.name} llego a ${reading}% de humedad, ya estamos llenando la pileta con agua.`);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${setting.name} llego a ${reading}% de humedad, ya estamos llenando la pileta con agua.`);
 
                 // we turn the filling in watering relay ON
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
-                plant.sensors[sensorIndex].relayOneWorking = true;
+                setting.relayOneWorking = true;
 
-                plant.sensors[sensorIndex].relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
-                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), started: true });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), started: true });
                 // we turn evacuation watering relay OFF just in case
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
-                plant.sensors[sensorIndex].relayTwoWorking = false;
+                setting.relayTwoWorking = false;
                 break;
             } else if (irrigationComplete) {
                 // we just turn off the filling in watter system
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${plant.name} acaba de llenar la pileta con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${setting.name} acaba de llenar la pileta con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
 
-                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
+                setting.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), finished: true });
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
-                plant.sensors[sensorIndex].relayOneWorking = false;
+                setting.relayOneWorking = false;
                 break;
             } else if (evacuationShouldStart) {
                 if (!relayTwoIdRelated) { console.log('No relayTwoIdRelated setted: ', reading); break; }
 
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${plant.name} llego a ${reading}% de humedad, ya estamos evacuamos el agua.`);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu semillero: ${setting.name} llego a ${reading}% de humedad, ya estamos evacuamos el agua.`);
 
                 // we turn the exit watering relay ON
                 // @ts-ignore
                 plant[relayTwoIdRelated] = true;
-                plant.sensors[sensorIndex].relayTwoWorking = true;
+                setting.relayTwoWorking = true;
 
                 // we set the start time of the relay
-                plant.sensors[sensorIndex].relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
 
-                plant.sensors[sensorIndex].logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
+                setting.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
                 break;
             } else if (evacuationComplete) {
-                const whatsappMsg = `Aviso: tu semillero: ${plant.name} mantiene ${reading}% de humedad, y ya se termino de evacuar el agua en ${timeToIrrigateInMins} minutos.`;
+                const whatsappMsg = `Aviso: tu semillero: ${setting.name} mantiene ${reading}% de humedad, y ya se termino de evacuar el agua en ${timeToIrrigateInMins} minutos.`;
                 if (phoneNumber) await sendMessage(phoneNumber, whatsappMsg, undefined, undefined);
 
                 // we turn the exit watering relay OFF, and reset relayOneAutomatedTimeToRun (that has the start time of the relay)
@@ -178,34 +177,34 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 relayOneAutomatedStartedTime = '';
                 relayTwoAutomatedStartedTime = '';
                 
-                plant.sensors[sensorIndex].logs.push({
+                setting.logs.push({
                     reading,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }) });
                 break;
             }
-            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(plant.sensors[sensorIndex], reading);
+            setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case HumiditySensorMode.MANUAL:
-            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', plant.sensors[sensorIndex]); break; }
+            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
             
             // @ts-ignore
             const willStartWatering = !plant[relayOneIdRelated] && relayOneWorking!;
             // @ts-ignore
             const willStopWatering = plant[relayOneIdRelated] && relayOneWorking;
             if (willStartWatering) {
-                plant.sensors[sensorIndex].logs.push({
+                setting.logs.push({
                     reading,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
                     started: true
                 });
             } else if (willStopWatering) {
-                plant.sensors[sensorIndex].logs.push({
+                setting.logs.push({
                     reading,
                     timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
                     finished: true
                 });
             }
-            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(plant.sensors[sensorIndex], reading);
+            setting = logTimeStampWithTimeFilter(setting, reading);
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
             break;
@@ -223,15 +222,15 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             })
             break;
         case HumiditySensorMode.MANUAL:
-            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', plant.sensors[sensorIndex]); break; }
+            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
-            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(plant.sensors[sensorIndex], reading);
+            setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case LightSensorMode.SCHEDULE:
         case LightSensorMode.SMART_SCHEDULE:
             const currentTimee = moment(new Date()).format('hh:mm:ss');
-            plant.sensors[sensorIndex]?.scheduledOnTimes?.map((schedule: any, i: number) => {
+            setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
@@ -243,7 +242,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                     }
                 }
             })
-            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(plant.sensors[sensorIndex], reading);
+            setting = logTimeStampWithTimeFilter(setting, reading);
             break;
             // case checkSensors.distance:
             //     const amountOfWater = plant.distanceSensorSettings?.relayOneAutomatedTimeToRun;

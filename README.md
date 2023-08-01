@@ -40,26 +40,57 @@ poner  numeros
  - chequear a juan que le falta para ahcer para hcer mermelada (envases, azucar, olla y elementos de limpieza)
  - Ver listado con precios mayorista de frutas/verduras.
 
-# To do arduino:
-- agregar warnings a soil: No relayOneIdRelated, or no minWarning setted: [please set one]  
-- mejorar refresh (agregar al state los nuevos sensores que se agregan asi no refresca toda la pagina)
+
+-------------------
+# TODO DITTOBOT
+
+# PRODUCTS
+- arduino box (esp32), cable usb, cargador/enchufe.
+- zapatilla (con 1, 2, 3, 4 enchufes/relays), una entrada usb para arduino y con su debida cantidad de cables hasta el arduino (todos unidos) (metros a seleccionar). 
+- Sensor de humedad (mts, cms de cable a seleccionar) (add on: mas metros)
+- Sensor de luz y mts, cm de cable a seleccionar (add on: palito para sujetarlo)
+- Sensor de moviemiento con su cable(add on: palito para sujetarloy mts, cm de cable a seleccionar)
+- Sensor de distancia (cajita) con su cable, (add on: mas metros)
+
+# TO PRINT:
+- arduino box (esp32) --- 
+- box for 1 releay, 2 , 3 or 4 or 8 (tienen que ser zapatillas, con 1 usb)
+- cajitas para sensor de humedad
+- palito para sensor de luz y cajita
+- palito para sensor de movimiento y cajita
+- cajita para sensor de distancia, con tornillitos
+
+# BUGS
+- if you add a sensor when its already conected, it shows disconeccted/no reading, (we should ?)
+- change mode, tiene que poner todo el setting en default!
 - make check to not colapse when no whatsapp is linked when shuting a warning for instance.
-- cambiar el reading en el state cada vez que traemos nuevos valores (ditto above)
-- agregar disabled de todo hasta que no selecciones tu modoId 
 
-- probar lighting (schedule, manual, etc)
-- probar humidity (schedule, manual, etc)
-- agregar checks para que te diga si ya t
-
-iene asignado el id de un relay a otro setting (que no te deje, al menos que quieras hacer un overwrite).
-- agregar relay 3 y 4 en las opciones a asignar
-- Agregar graficos logs a humidity2
-- Agregar graficos logs a lighting
+# Improvements
+- Add wifi password ip address improvement.
 - agregar a que numbero avisar. al del user o otro
+- hacer super dinamico el campo: encendido/apagado y el reading!!
+- Arreglar wording de whatsapp para plants.ts
+- Distance sensor: add logic to start something on max or min with the two relays, or nothing just notification
+- agregar warnings en el front a soil: No relayOneIdRelated, or no minWarning setted: [please set one]  
 
+
+# ONGOING
+- Add timestamp to see if sensor/arduino is disconected. 
+
+# Tests
+- Humidity sensor modes: MANUAL, SCHEDULE, SEEDS_POOL_IRRIGATION, 
+- Distance sensor: 
+- Light sensor 
+
+# DONE
+
+
+------------
 # Improvements: 
 - add delete user func in staffmembers.tsx
 - add comment on tasks for feedback.
+
+-- IDEAS
 
 # GreenMarket:
 - puede ser como marketplace, puede ser como un mapa, con buen filtro,
