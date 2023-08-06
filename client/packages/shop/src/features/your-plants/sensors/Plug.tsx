@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { Input } from 'components/forms/input';
 import { HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions, SensorsTypes, PlugMode, distanceModeOptions } from 'utils/constant';
 import HumidityLogsGraph from '../humidity-logs-graph/humidity-logs-graph';
-import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, Row } from '../your-plants.style';
+import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, Row, Porcentage } from '../your-plants.style';
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
@@ -195,20 +195,24 @@ const Plug: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDel
                         />
                         </Text>
                     </ListTitle>
-                    <ListDes>
+                    <Row>
                         { editIsOn ? (
-                            <Input
-                                type='number'
-                                name='maxWarning'
-                                value={setting.maxWarning}
-                                onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
-                                backgroundColor='#F7F7F7'
-                                height='34.5px'
-                            />
+                            <>
+                                <Input
+                                    type='number'
+                                    name='maxWarning'
+                                    value={setting.maxWarning}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                    width='45px'
+                                />
+                                <Porcentage>%</Porcentage>
+                            </>
                         ) : (
                             <Text bold>{setting.maxWarning}</Text>
                         )}
-                    </ListDes>
+                    </Row>
                 </ListItem>
 
                 <ListItem>
@@ -220,20 +224,24 @@ const Plug: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDel
                         />
                         </Text>
                     </ListTitle>
-                    <ListDes>
+                    <Row>
                         { editIsOn ? (
-                            <InputUpper
-                                type='number'
-                                name='minWarning'
-                                value={setting.minWarning}
-                                onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
-                                backgroundColor='#F7F7F7'
-                                height='34.5px'
+                            <>
+                                <InputUpper
+                                    type='number'
+                                    name='minWarning'
+                                    value={setting.minWarning}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                    width='45px'
                                 />
+                                <Porcentage>%</Porcentage>
+                            </>
                         ) : (
                             <Text bold>{setting.minWarning}</Text>
                         )}
-                    </ListDes>
+                    </Row>
                 </ListItem>
 
                 <ListItem>

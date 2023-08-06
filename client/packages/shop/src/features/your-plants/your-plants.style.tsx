@@ -62,6 +62,47 @@ export const InputUpper = styled.input<any>(
   compose(layout, space, color, border)
 );
 
+export const NumberInput = styled.input<any>(
+  css({
+    display: 'block',
+    width: '45px',
+    textTransform: 'capitalize',
+    p: '0 12px',
+    appearance: 'none',
+    fontFamily: 'body',
+    fontSize: 'base',
+    lineHeight: 'inherit',
+    border: '1px solid',
+    borderColor: 'gray.500',
+    borderRadius: 'base',
+    backgroundColor: 'white',
+    color: 'text.bold',
+    transition: 'all 0.25s ease',
+    // mb: 3,
+    '&:focus': {
+      borderColor: 'primary.regular',
+    },
+  }),
+  {
+    '&:hover,&:focus': {
+      outline: 0,
+    },
+
+    '&::placeholder': {
+      color: '',
+    },
+    '&::-webkit-inner-spin-button,&::-webkit-outer-spin-button': {
+      '-webkit-appearance': 'none',
+      margin: 0,
+    },
+    '&.disabled': {
+      cursor: 'not-allowed',
+      opacity: 0.6,
+    },
+  },
+  compose(layout, space, color, border)
+);
+
 export const ButtonText = styled.span`
 /* @media (max-width: 767px) {
   display: none;
@@ -280,11 +321,7 @@ export const OrderInfo = styled.div`
 `;
 
 export const Row = styled(Rows)`
-  // margin-bottom: 40px;
-
-  @media only screen and (min-width: 0em) and (max-width: 47.99em) {
-    margin-bottom: 30px;
-  }
+  margin-left: 0px;
 `;
 
 
@@ -457,6 +494,12 @@ export const ListDes = styled.div`
   // @media (max-width: 767px) {
   //   padding-left: 20px;
   // }
+`;
+export const Porcentage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 5px;
 `;
 
 export const ErrorMsg = styled('span')`

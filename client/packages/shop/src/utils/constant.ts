@@ -38,8 +38,19 @@ export enum HumiditySensorMode {
     NONE = 'NONE'
 }
 
+// - Accion vacio custom: avisa cuando esta vacio y activa relay asociado x cantidad de tiempo
+// - Accion vacio automatico: avisa cuando esta vacio y activa relay asociado hasta llegar al maximo
+// - Accion lleno custom: avisa cuando esta lleno y activa relay asociado x cantidad de tiempo
+// - Accion lleno automatico: avisa cuando esta lleno y activa relay asociado hasta llegar al minimo
+// - Aviso vacio: avisa cuando esta vacio.
+// - Aviso lleno: avisa cuando esta lleno.
 export enum DistanceMode {
-    ASSOCIATED_MIN_MAX = 'ASSOCIATED_MIN_MAX',
+    WHEN_EMPTY_ACTION_CUSTOM = 'WHEN_EMPTY_ACTION_CUSTOM',
+    WHEN_EMPTY_ACTION_AUTOMATED = 'WHEN_EMPTY_ACTION_AUTOMATED',
+    WHEN_FULL_ACTION_CUSTOM = 'WHEN_FULL_ACTION_CUSTOM',
+    WHEN_FULL_ACTION_AUTOMATED = 'WHEN_FULL_ACTION_AUTOMATED',
+    MIN_WARNING = 'MIN_WARNING',
+    MAX_WARNING = 'MAX_WARNING',
     NONE = 'NONE'
 }
 
@@ -77,8 +88,20 @@ export enum WeekDays {
     SUNDAY = 'DOMINGO'
 }
 
+    // - Accion vacio custom: activa relay asociado x cantidad de tiempo
+    // - Accion vacio automatico: avisa cuando esta vacio y activa relay asociado hasta llegar al maximo
+    // - Accion lleno custom: avisa cuando esta lleno y activa relay asociado x cantidad de tiempo
+    // - Accion lleno automatico: avisa cuando esta lleno y activa relay asociado hasta llegar al minimo
+    // - Aviso vacio: avisa cuando esta vacio.
+    // - Aviso lleno: avisa cuando esta lleno.
+  
 export const distanceModeOptions = [
-    { value: DistanceMode.ASSOCIATED_MIN_MAX, label: 'Maximos' },
+    { value: DistanceMode.WHEN_EMPTY_ACTION_CUSTOM, label: 'Acción custom en mínimos' },
+    { value: DistanceMode.WHEN_EMPTY_ACTION_AUTOMATED, label: 'Acción automatico en mínimos' },
+    { value: DistanceMode.WHEN_FULL_ACTION_CUSTOM, label: 'Acción custom en máximos' },
+    { value: DistanceMode.WHEN_FULL_ACTION_AUTOMATED, label: 'Acción automatico en máximos' },
+    { value: DistanceMode.MIN_WARNING, label: 'Aviso en mínimos' },
+    { value: DistanceMode.MAX_WARNING, label: 'Aviso en máximos' },
     { value: DistanceMode.NONE, label: 'Ninguno' }
 ];
 

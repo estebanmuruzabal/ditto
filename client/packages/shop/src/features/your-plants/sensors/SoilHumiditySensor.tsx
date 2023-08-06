@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { Input } from 'components/forms/input';
 import { SensorsTypes, HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions } from 'utils/constant';
 import HumidityLogsGraph from '../humidity-logs-graph/humidity-logs-graph';
-import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, ActionsButtons, Row, ScheduleTimeContainer, WeekContainerModal, ErrorMsg } from '../your-plants.style';
+import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, ActionsButtons, Row, ScheduleTimeContainer, WeekContainerModal, ErrorMsg, Porcentage } from '../your-plants.style';
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
@@ -195,7 +195,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     </ListTitle>
                     <ListDes>
                         { editIsOn ? (
-                             <>
+                             <Row>
                                 <Input
                                     type='number'
                                     name='minWarning'
@@ -203,15 +203,17 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                     onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
                                     backgroundColor='#F7F7F7'
                                     height='34.5px'
+                                    width='45px'
                                 />
-                                {errorId === 'minWarning' && (
-                                    <ErrorMsg>
-                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
-                                    </ErrorMsg>
-                                )}
-                            </>
+                                <Porcentage>%</Porcentage>
+                            </Row>
                         ) : (
                             <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} %</Text>
+                        )}
+                        {errorId === 'minWarning' && (
+                            <ErrorMsg>
+                                <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                            </ErrorMsg>
                         )}
                     </ListDes>
                 </ListItem>
@@ -258,7 +260,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         </ListTitle>
                         <ListDes>
                             { editIsOn ? (
-                                <>
+                                <Row>
                                     <Input
                                         type='number'
                                         name='maxWarning'
@@ -266,13 +268,15 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                         onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
                                         backgroundColor='#F7F7F7'
                                         height='34.5px'
+                                        width='45px'
                                     />
+                                    <Porcentage>%</Porcentage>
                                     {errorId === 'maxWarning' && (
                                         <ErrorMsg>
                                             <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
                                         </ErrorMsg>
                                     )}
-                                </>
+                                </Row>
                             ) : (
                                 <Text bold>{(setting.maxWarning >= 0 && setting.maxWarning <= 100) ? setting?.maxWarning : '-'} %</Text>
                             )}
@@ -290,7 +294,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         </ListTitle>
                         <ListDes>
                             { editIsOn ? (
-                                <>
+                                <Row>
                                     <Input
                                         type='number'
                                         name='minWarning'
@@ -298,13 +302,15 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                         onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
                                         backgroundColor='#F7F7F7'
                                         height='34.5px'
-                                    />
+                                        width='45px'
+                                        />
+                                        <Porcentage>%</Porcentage>
                                     {errorId === 'minWarning' && (
                                         <ErrorMsg>
                                             <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
                                         </ErrorMsg>
                                     )}
-                                </>
+                                </Row>
                             ) : (
                                 <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} %</Text>
                             )}
@@ -424,7 +430,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         </ListTitle>
                         <ListDes>
                             { editIsOn ? (
-                                <>
+                                <Row>
                                     <Input
                                         type='number'
                                         name='minWarning'
@@ -432,15 +438,17 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                         onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
                                         backgroundColor='#F7F7F7'
                                         height='34.5px'
+                                        width='45px'
                                     />
-                                    {errorId === 'minWarning' && (
-                                        <ErrorMsg>
-                                            <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
-                                        </ErrorMsg>
-                                    )}
-                                </>
+                                    <Porcentage>%</Porcentage>
+                                </Row>
                             ) : (
                                 <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} %</Text>
+                            )}
+                            {errorId === 'minWarning' && (
+                                <ErrorMsg>
+                                    <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                </ErrorMsg>
                             )}
                         </ListDes>
                     </ListItem>

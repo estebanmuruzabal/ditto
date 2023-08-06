@@ -1,5 +1,5 @@
 import { Box } from "components/box";
-import { BoxContent, BoxTitle, BoxTitleWrapper } from "components/box/Box";
+import { BoxContent, BoxTitle, BoxTitleWrapper } from 'components/box/box';
 import Chart from "components/charts/chart";
 import React from "react";
 

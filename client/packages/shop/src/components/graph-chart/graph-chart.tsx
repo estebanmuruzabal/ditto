@@ -1,5 +1,5 @@
 import { Box } from 'components/box';
-import { BoxTitleWrapper, BoxTitle, BoxContent } from 'components/box/Box';
+import { BoxContent, BoxTitle, BoxTitleWrapper } from 'components/box/box';
 import Chart from 'components/charts/chart';
 import moment from 'moment';
 import React from 'react';

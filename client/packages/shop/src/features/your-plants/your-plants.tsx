@@ -114,7 +114,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     // if (value !== CommonMode.NONE) return plant;
 
     const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
-    plant.sensors[settingIndex] = getDefaultSetting(settingType, plant.sensors[settingIndex].name);
+    plant.sensors[settingIndex] = getDefaultSetting(settingType, plant.sensors[settingIndex].name, plant.sensors[settingIndex].logs);
     
    return plant;
   };
@@ -222,7 +222,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     }, 2000)  
   };
 
-  const getDefaultSetting = (settingTypeName: string, name?: string) => { 
+  const getDefaultSetting = (settingTypeName: string, name?: string, logs?: string) => { 
     return {
       name: name || '',
       whatsappWarningsOn: false,
@@ -237,7 +237,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
       relayTwoAutomatedTimeToRun: '',
       relayTwoIdRelated: '',
       relayTwoWorking: false,
-      logs: [],
+      logs: logs || [],
       scheduledOnTimes: [],
       settingType: settingTypeName
     }

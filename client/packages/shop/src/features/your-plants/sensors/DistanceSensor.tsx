@@ -12,7 +12,7 @@ import Select from 'react-select';
 import { Input } from 'components/forms/input';
 import { HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions, SensorsTypes, DistanceMode, distanceModeOptions } from 'utils/constant';
 import HumidityLogsGraph from '../humidity-logs-graph/humidity-logs-graph';
-import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, Row, ErrorMsg } from '../your-plants.style';
+import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, Row, ErrorMsg, Porcentage } from '../your-plants.style';
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
@@ -40,7 +40,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    const selectStyle = { control: styles => ({ ...styles, width: '160px', textAlign: 'left' }) };
+    const selectStyle = { control: styles => ({ ...styles, width: '179.88px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
     
@@ -63,6 +63,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
             componentProps: { item: modalProps },
         });
     };
+
 
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={() => setOpenTab(tabIsOpen ? '' : settingType)}>
@@ -167,7 +168,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
             { setting?.mode !== DistanceMode.NONE && (
                 <ListItem style={{ justifyContent: 'flex-start' }}>
                     <ListTitle>
-                    <Text bold>
+                    <Text>
                         <FormattedMessage
                         id="notifyChangesId"
                         defaultMessage="notifyChangesId"
@@ -176,8 +177,8 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                     </ListTitle>
                     <ListDes>
                     <Switch 
-                        disabled={false}
-                        checked={setting.whatsappWarningsOn}
+                        disabled={(setting?.mode === DistanceMode.MIN_WARNING || setting?.mode === DistanceMode.MAX_WARNING) ? true : false}
+                        checked={setting.whatsappWarningsOn || (setting?.mode === DistanceMode.MIN_WARNING || setting?.mode === DistanceMode.MAX_WARNING)}
                         labelPosition={'right'}
                         // className,
                         onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, settingType)}
@@ -185,40 +186,8 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                     </ListDes>
                 </ListItem>
             )}
-            { setting.mode === DistanceMode.ASSOCIATED_MIN_MAX && (
-            <>
-                <ListItem>
-                    <ListTitle>
-                        <Text>
-                        <FormattedMessage
-                            id='maxDistanceId'
-                            defaultMessage='maxDistanceId'
-                        />
-                        </Text>
-                    </ListTitle>
-                    <ListDes>
-                        { editIsOn ? (
-                            <>
-                                <Input
-                                    type='number'
-                                    name='maxWarning'
-                                    value={setting.maxWarning}
-                                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
-                                    backgroundColor='#F7F7F7'
-                                    height='34.5px'
-                                />
-                                {errorId === 'maxWarning' && (
-                                    <ErrorMsg>
-                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
-                                    </ErrorMsg>
-                                )}
-                            </>
-                        ) : (
-                            <Text bold>{setting.maxWarning}</Text>
-                        )}
-                    </ListDes>
-                </ListItem>
 
+            { setting?.mode === DistanceMode.MIN_WARNING && (
                 <ListItem>
                     <ListTitle>
                         <Text>
@@ -230,249 +199,354 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                     </ListTitle>
                     <ListDes>
                         { editIsOn ? (
-                            <>
-                                <InputUpper
+                            <Row>
+                                <Input
                                     type='number'
                                     name='minWarning'
                                     value={setting.minWarning}
                                     onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
                                     backgroundColor='#F7F7F7'
                                     height='34.5px'
+                                    width='45px'
                                 />
-                                {errorId === 'minWarning' && (
-                                    <ErrorMsg>
-                                        <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
-                                    </ErrorMsg>
-                                )}
-                            </>
+                                <Porcentage>%</Porcentage>
+                            </Row>
                         ) : (
                             <Text bold>{setting.minWarning}</Text>
                         )}
                     </ListDes>
+                    {errorId === 'minWarning' && (
+                        <ErrorMsg>
+                            <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                        </ErrorMsg>
+                    )}
                 </ListItem>
+            )}
 
-                <ListItem>
+            { setting?.mode === DistanceMode.MAX_WARNING && (
+                 <ListItem>
                     <ListTitle>
                         <Text>
                         <FormattedMessage
-                            id='asociateRelayOneId'
-                            defaultMessage='asociateRelayOneId'
+                            id='maxDistanceId'
+                            defaultMessage='maxDistanceId'
                         />
                         </Text>
                     </ListTitle>
                     <ListDes>
                         { editIsOn ? (
+                            <Row>
+                                <Input
+                                    type='number'
+                                    name='maxWarning'
+                                    value={setting.maxWarning}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                    width='45px'
+                                />
+                                <Porcentage>%</Porcentage>
+                            </Row>
+                        ) : (
+                            <Text bold>{setting.maxWarning}</Text>
+                        )}
+                        {errorId === 'maxWarning' && (
+                            <ErrorMsg>
+                                <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                            </ErrorMsg>
+                        )}
+                    </ListDes>
+                </ListItem>
+            )}
+
+            { (setting?.mode === DistanceMode.MIN_WARNING || setting?.mode === DistanceMode.MAX_WARNING) && (
+                 <ListItem>
+                    <ListTitle>
+                        <Text>
+                        <FormattedMessage
+                            id='timeWithoutNotice'
+                            defaultMessage='timeWithoutNotice'
+                        />
+                        </Text>
+                    </ListTitle>
+                    <ListDes>
+                        { editIsOn ? (
+                            <Row>
+                                <Input
+                                    type='number'
+                                    name='relayTwoAutomatedStartedTime'
+                                    value={setting.relayTwoAutomatedStartedTime}
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoAutomatedStartedTime', e.target.value, settingType)}
+                                    backgroundColor='#F7F7F7'
+                                    height='34.5px'
+                                    width='45px'
+                                />
+                                <Porcentage>mins</Porcentage>
+                            </Row>
+                        ) : (
+                            <Text bold>{setting.relayTwoAutomatedStartedTime}</Text>
+                        )}
+                    </ListDes>
+                </ListItem>
+            )}
+
+            { [DistanceMode.WHEN_FULL_ACTION_CUSTOM, DistanceMode.WHEN_FULL_ACTION_AUTOMATED].indexOf(setting.mode) >= 0 && (
+                <>
+                    { setting?.mode === DistanceMode.WHEN_FULL_ACTION_AUTOMATED && (
+                        <ListItem>
+                            <ListTitle>
+                                <Text>
+                                <FormattedMessage
+                                    id='minDistanceId'
+                                    defaultMessage='minDistanceId'
+                                />
+                                </Text>
+                            </ListTitle>
+                            <ListDes>
+                                { editIsOn ? (
+                                    <Row>
+                                        <Input
+                                            type='number'
+                                            name='minWarning'
+                                            value={setting.minWarning}
+                                            onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
+                                            backgroundColor='#F7F7F7'
+                                            height='34.5px'
+                                            width='45px'
+                                        />
+                                        <Porcentage>%</Porcentage>
+                                    </Row>
+                                ) : (
+                                    <Text bold>{setting.minWarning}</Text>
+                                )}
+                            </ListDes>
+                            {errorId === 'minWarning' && (
+                                <ErrorMsg>
+                                    <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                </ErrorMsg>
+                            )}
+                        </ListItem>
+                    )}
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='maxDistanceId'
+                                defaultMessage='maxDistanceId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Row>
+                                    <Input
+                                        type='number'
+                                        name='maxWarning'
+                                        value={setting.maxWarning}
+                                        onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                        backgroundColor='#F7F7F7'
+                                        height='34.5px'
+                                        width='45px'
+                                    />
+                                    <Porcentage>%</Porcentage>
+                                </Row>
+                            ) : (
+                                <Text bold>{setting.maxWarning}</Text>
+                            )}
+                            {errorId === 'maxWarning' && (
+                                <ErrorMsg>
+                                    <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                </ErrorMsg>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    { setting?.mode === DistanceMode.WHEN_FULL_ACTION_CUSTOM && (
+                         <ListItem>
+                            <ListTitle>
+                                <Text>
+                                <FormattedMessage
+                                    id='runingMinMaxWarningTimeId'
+                                    defaultMessage='runingMinMaxWarningTimeId'
+                                />
+                                </Text>
+                            </ListTitle>
+                            <ListDes>
+                                { editIsOn ? (
+                                    <Row>
+                                        <Input
+                                            type='number'
+                                            name='relayOneAutomatedTimeToRun'
+                                            value={setting.relayOneAutomatedTimeToRun}
+                                            onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingType)}
+                                            backgroundColor='#F7F7F7'
+                                            height='34.5px'
+                                            width='45px'
+                                        />
+                                        <Porcentage>mins.</Porcentage>
+                                    </Row>
+                                ) : (
+                                    <Text bold>{setting.relayOneAutomatedTimeToRun}</Text>
+                                )}
+                            </ListDes>
+                        </ListItem>
+                    )}
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='asociateRelayTwoId'
+                                defaultMessage='asociateRelayTwoId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                        { editIsOn ? (
                             <Select 
-                                onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
-                                value={relayOneSelected}
+                                onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingType)}
+                                value={relayTwoSelected}
                                 options={fourRelaysOptions}
                                 styles={selectStyle}
                                 menuPosition={'fixed'}
                             />
                         ) : (
-                            <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                            <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
                         )}
-                    </ListDes>
-                </ListItem>
-                
-                <ListItem>
-                    <ListTitle>
-                        <Text>
-                        <FormattedMessage
-                            id='asociateRelayTwoId'
-                            defaultMessage='asociateRelayTwoId'
-                        />
-                        </Text>
-                    </ListTitle>
-                    <ListDes>
-                    { editIsOn ? (
-                        <Select 
-                            onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingType)}
-                            value={relayTwoSelected}
-                            options={fourRelaysOptions}
-                            styles={selectStyle}
-                            menuPosition={'fixed'}
-                        />
-                    ) : (
-                        <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
+                        </ListDes>
+                    </ListItem>
+
+                </>
+            )}
+
+            { [DistanceMode.WHEN_EMPTY_ACTION_CUSTOM, DistanceMode.WHEN_EMPTY_ACTION_AUTOMATED].indexOf(setting.mode) >= 0 && (
+                <>
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='minDistanceId'
+                                defaultMessage='minDistanceId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Row>
+                                    <Input
+                                        type='number'
+                                        name='minWarning'
+                                        value={setting.minWarning}
+                                        onChange={(e: any) => handleSettingsChange(plant, 'minWarning', e.target.value, settingType)}
+                                        backgroundColor='#F7F7F7'
+                                        height='34.5px'
+                                        width='45px'
+                                    />
+                                    <Porcentage>%</Porcentage>
+                                </Row>
+                            ) : (
+                                <Text bold>{setting.minWarning}</Text>
+                            )}
+                        </ListDes>
+                        {errorId === 'minWarning' && (
+                            <ErrorMsg>
+                                <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                            </ErrorMsg>
+                        )}
+                    </ListItem>
+
+                    { setting?.mode === DistanceMode.WHEN_EMPTY_ACTION_AUTOMATED && (
+                        <ListItem>
+                             <ListTitle>
+                                 <Text>
+                                 <FormattedMessage
+                                     id='maxDistanceId'
+                                     defaultMessage='maxDistanceId'
+                                 />
+                                 </Text>
+                             </ListTitle>
+                             <ListDes>
+                                 { editIsOn ? (
+                                     <Row>
+                                         <Input
+                                             type='number'
+                                             name='maxWarning'
+                                             value={setting.maxWarning}
+                                             onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                             backgroundColor='#F7F7F7'
+                                             height='34.5px'
+                                             width='45px'
+                                         />
+                                         <Porcentage>%</Porcentage>
+                                     </Row>
+                                 ) : (
+                                     <Text bold>{setting.maxWarning}</Text>
+                                 )}
+                                 {errorId === 'maxWarning' && (
+                                     <ErrorMsg>
+                                         <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                     </ErrorMsg>
+                                 )}
+                             </ListDes>
+                         </ListItem>
                     )}
-                    </ListDes>
-                </ListItem>
 
-            </>
-            )}
+                    { setting?.mode === DistanceMode.WHEN_EMPTY_ACTION_CUSTOM && (
+                         <ListItem>
+                            <ListTitle>
+                                <Text>
+                                <FormattedMessage
+                                    id='runingMinMaxWarningTimeId'
+                                    defaultMessage='runingMinMaxWarningTimeId'
+                                />
+                                </Text>
+                            </ListTitle>
+                            <ListDes>
+                                { editIsOn ? (
+                                    <Row>
+                                        <Input
+                                            type='number'
+                                            name='relayOneAutomatedTimeToRun'
+                                            value={setting.relayOneAutomatedTimeToRun}
+                                            onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingType)}
+                                            backgroundColor='#F7F7F7'
+                                            height='34.5px'
+                                            width='45px'
+                                        />
+                                        <Porcentage>mins.</Porcentage>
+                                    </Row>
+                                ) : (
+                                    <Text bold>{setting.relayOneAutomatedTimeToRun}</Text>
+                                )}
+                            </ListDes>
+                        </ListItem>
+                    )}
 
-            { setting.mode === HumiditySensorMode.SCHEDULE && (
-            <>
-                <WeekContainer>
-                {Object.keys(WeekDays).map((day, i: number) => {
-                    return (
-                        <DayContainer
-                            key={i + '-day--humidity-1container'}
-                            style={{ backgroundColor: daySelected === day ? '#c2b0b0' : 'transparent' }}
-                            onClick={() => setDay(day)}
-                        >
-                            {day.substring(0,3)}
-                        </DayContainer>
-                        )
-                    })
-                }
-                </WeekContainer>
-
-                { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-                    return (
-                        <WeekContainer>
-                            { schedule.daysToRepeat.includes(daySelected) ? (
-                                <ScheduleTime>
-                                <TextSpaced><FormattedMessage id='startTimeId' defaultMessage='startTimeId' /></TextSpaced> <TextSpaced>{schedule.startTime}</TextSpaced>
-                                <TextSpaced><FormattedMessage id='endTimeId' defaultMessage='endTimeId' /></TextSpaced> <TextSpaced>{schedule.endTime}</TextSpaced>
-                                <CardButtons className='button-wrapper'>
-                                    <ActionButton onClick={() => handleModal( AddTimeSchedule, { settingType: settingType, plant, id: data?.getUser?.id } )} className='edit-btn'>
-                                    <PencilIcon />
-                                    </ActionButton>
-
-                                    <ActionButton onClick={() => onDeleteSchedule(plant, settingType, i)} className='delete-btn'>
-                                    <CloseIcon />
-                                    </ActionButton>
-                                </CardButtons>
-                                </ScheduleTime>
-                            ) : <ScheduleTime style={{ border: '0px', height: '42px' }}></ScheduleTime>}
-                        </WeekContainer>
-                    )
-                })}
-
-                <ListItem style={{ justifyContent: 'flex-start' }}>
-                    <ListTitle>
-                    <Text bold>
-                        <FormattedMessage
-                        id="notifyChangesId"
-                        defaultMessage="notifyChangesId"
-                        />
-                    </Text>
-                    </ListTitle>
-                    <ListDes>
-                    <Switch 
-                        disabled={false}
-                        checked={setting.whatsappWarningsOn}
-                        labelPosition={'right'}
-                        // className,
-                        onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, settingType)}
-                    />
-                    </ListDes>
-                </ListItem>
-
-
-                <Button
-                    size='small'
-                    variant='outlined'
-                    type='button'
-                    className='add-button'
-                    onClick={() => handleModal(
-                        AddTimeSchedule, 
-                        {
-                            name: 'add-humidity-1-schedule',
-                            plant,
-                            id: data?.getUser?.id
-                        }
-                        )
-                    }
-                >
-                <FormattedMessage
-                    id='addTimeScheduleId'
-                    defaultMessage='addTimeScheduleId' 
-                />
-                </Button>
-            </>
-            )}
-            
-            { setting.mode === HumiditySensorMode.MANUAL && (
-            <>
-                <ListItem>
-                    <ListTitle>
-                        <Text bold>
-                        <FormattedMessage
-                            id='manualModeStateId'
-                            defaultMessage='manualModeStateId'
-                        />
-                        </Text>
-                    </ListTitle>
-                    <ListDes>
-                        <Select 
-                        onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, settingType)}
-                        value={selectedManualState}
-                        options={manualModeOptions}
-                        styles={selectStyle}
-                        menuPosition={'fixed'}
-                        />
-                    </ListDes>
-                </ListItem>
-
-                <ListItem>
-                    <ListTitle>
-                        <Text bold>
-                        <FormattedMessage
-                            id={setting.relayOneIdRelated?.length ? 'asociateRelayId' :'asociatedRelayId' }
-                            defaultMessage={setting.relayOneIdRelated?.length ? 'asociateRelayId' :'asociatedRelayId'}
-                        />
-                        </Text>
-                    </ListTitle>
-                    <ListDes>
-                        <Select 
-                        onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
-                        value={relayOneSelected}
-                        options={fourRelaysOptions}
-                        styles={selectStyle}
-                        menuPosition={'fixed'}
-                        />
-                    </ListDes>
-                </ListItem>
-            </>
-            )}
-
-            { setting.mode === HumiditySensorMode.SEEDS_POOL_IRRIGATION && (
-            <>
-                <ListItem>
-                <ListTitle>
-                    <Text bold>
-                    <FormattedMessage
-                        id='irrigationTimeId'
-                        defaultMessage='irrigationTimeId'
-                    />
-                    </Text>
-                </ListTitle>
-                <ListDes>
-                    <Input
-                    type='number'
-                    name='relayOneAutomatedTimeToRun'
-                    value={setting.relayOneAutomatedTimeToRun}
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingType)}
-                    backgroundColor='#F7F7F7'
-                    height='34.5px'
-                    />
-                </ListDes>
-                </ListItem>
-
-                <ListItem>
-                <ListTitle>
-                    <Text bold>
-                    <FormattedMessage
-                        id='irrigationEvacuationTimeId'
-                        defaultMessage='irrigationEvacuationTimeId'
-                    />
-                    </Text>
-                </ListTitle>
-                <ListDes>
-                    <Input
-                    type='number'
-                    name='relayTwoAutomatedTimeToRun'
-                    value={setting.relayTwoAutomatedTimeToRun}
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoAutomatedTimeToRun', e.target.value, settingType)}
-                    backgroundColor='#F7F7F7'
-                    height='34.5px'
-                    />
-                </ListDes>
-                </ListItem>
-            </>
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='asociateRelayOneId'
+                                defaultMessage='asociateRelayOneId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Select 
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                                    value={relayOneSelected}
+                                    options={fourRelaysOptions}
+                                    styles={selectStyle}
+                                    menuPosition={'fixed'}
+                                />
+                            ) : (
+                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                            )}
+                        </ListDes>
+                    </ListItem>
+                </>
             )}
             
             { setting?.logs?.length > 0 && (
@@ -480,15 +554,6 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                     data={setting.logs}
                 />
             )}
-{/*         
-            <CardButtons className='button-wrapper'>
-                <ActionButton onClick={() => setEditIsOn(!editIsOn)} className='edit-btn'>
-                    <PencilIcon />
-                </ActionButton>
-                <ActionButton onClick={() => handleDeleteSensor(plant, settingType)} className='delete-btn'>
-                    <CloseIcon />
-                </ActionButton>
-            </CardButtons> */}
         </PlantsSensorContainer>
     );
 };
