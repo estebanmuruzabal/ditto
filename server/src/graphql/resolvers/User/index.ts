@@ -429,7 +429,7 @@ export const usersResolvers: IResolvers = {
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
                     isRelayFourthOn: false,
-                    timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }),
+                    timestamp: null,
                     sensors: []
                 };
     

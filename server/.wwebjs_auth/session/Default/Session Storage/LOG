@@ -1,2 +1,3 @@
-2023/08/01-16:18:45.434 39d87 Creating DB /home/ubuntu/ditto/server/.wwebjs_auth/session/Default/Session Storage since it was missing.
-2023/08/01-16:18:45.446 39d87 Delete type=3 #1
+2023/08/08-18:01:26.026 13907 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Session Storage/MANIFEST-000002
+2023/08/08-18:01:26.026 13907 Recovering log #4
+2023/08/08-18:01:26.026 13907 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Session Storage/000004.log 
