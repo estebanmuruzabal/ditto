@@ -12,13 +12,19 @@ import Select from 'react-select';
 import { Input } from 'components/forms/input';
 import { SensorsTypes, HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions } from 'utils/constant';
 import HumidityLogsGraph from '../humidity-logs-graph/humidity-logs-graph';
-import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, ActionsButtons, Row, ScheduleTimeContainer, WeekContainerModal, ErrorMsg, Porcentage } from '../your-plants.style';
+import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, Status, ButtonText, Type, ActionsButtons, Row, ScheduleTimeContainer, ErrorMsg, Porcentage } from '../your-plants.style';
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
 import { CheckMark } from 'assets/icons/CheckMark';
 import { getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
-
+import Reading from './Reading';
+// import { useQuery } from '@apollo/react-hooks';
+// const { loading, error, data = {} } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
+//     notifyOnNetworkStatusChange: true,
+//     fetchPolicy: "network-only",
+//     // pollInterval: 5000,
+//   });
 interface Props {
   data?: any;
   plant: any;
@@ -62,9 +68,9 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
             componentProps: { item: modalProps },
         });
     };
-    const reading = (setting?.reading >= -5 && setting?.reading < 0) ? 0 + ' % 💧' : (setting?.reading >= 0 && setting?.reading <= 100) ? setting?.reading + ' %' : 'Disconected';
+    const reading = (setting?.reading >= -5 && setting?.reading < 0) ? 0 + ' % 💧' : (setting?.reading >= 0 && setting?.reading <= 100 && setting?.reading) ? setting?.reading + ' % 💧' : 'Disconected';
     return (
-        <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={() => setOpenTab(tabIsOpen ? '' : settingType)}>
+        <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
                     <Type bold>{getSettingTypeText(setting?.settingType)}</Type>
@@ -72,15 +78,15 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                 <ListDes>
                     <CardButtons className='button-wrapper'>
                         { editIsOn ? (
-                            <ActionButton onClick={() => setEditIsOn(!editIsOn)} className='edit-btn'>
+                            <ActionButton onClick={(e) => { e.stopPropagation(); setEditIsOn(!editIsOn); }} className='edit-btn'>
                                 <CheckMark />
                             </ActionButton>
                         ) : (
-                            <ActionButton onClick={() => setEditIsOn(!editIsOn)} className='edit-btn'>
+                            <ActionButton onClick={(e) => { e.stopPropagation(); setEditIsOn(!editIsOn); }} className='edit-btn'>
                                 <PencilIcon />
                             </ActionButton>
                         )}
-                        <ActionButton onClick={() => handleDeleteSensor(plant, settingType)} className='delete-btn'>
+                        <ActionButton onClick={(e) => { e.stopPropagation(); handleDeleteSensor(plant, settingType); }} className='delete-btn'>
                             <CloseIcon />
                         </ActionButton>
                     </CardButtons>
@@ -106,7 +112,19 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     </Text>
                 </ListTitle>
                 <ListDes>
-                    <Text bold>{reading} </Text>
+                    <Reading
+                        key={'1-' + settingType}
+                        data={data}
+                        plant={plant}
+                        errorId={errorId}
+                        openTab={openTab}
+                        handleDeleteSensor={handleDeleteSensor}
+                        setOpenTab={setOpenTab}
+                        settingType={settingType}
+                        handleSettingsChange={handleSettingsChange}
+                        onDeleteSchedule={onDeleteSchedule} 
+                    />
+                    {/* <Text bold>{reading} </Text> */}
                 </ListDes>
             </ListItem>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -238,8 +256,31 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                             />
                         ) : (
                             <>
+                            {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
                                 <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
                                 <Text bold>{setting?.relayOneWorking ? 'Prendido' : 'Apagado'}</Text>
+                                {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}{/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
                             </>
                         )}
                     </ListDes>
@@ -558,7 +599,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 <TextSpaced> <FormattedMessage id='aId' defaultMessage='aId' /> </TextSpaced> 
                                 <TextSpaced bold>{schedule.endTime}</TextSpaced>
                                 <ActionsButtons className='button-wrapper'>
-                                    <ActionButton onClick={() => handleModal( AddTimeSchedule, { settingType: settingType, plant, id: data?.getUser?.id, schedulePosition: i } )} className='edit-btn'>
+                                    <ActionButton onClick={(e) => { handleModal( AddTimeSchedule, { settingType: settingType, plant, id: data?.getUser?.id, schedulePosition: i } ); e.stopPropagation(); } } className='edit-btn'>
                                         <PencilIcon />
                                     </ActionButton>
 
@@ -607,11 +648,19 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                             ) : (
                                 <Text bold>{setting.relayOneWorking}</Text>
                             )} */}
+                            {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
                             <Switch 
                                 disabled={false}
                                 checked={setting.relayOneWorking}
                                 labelPosition={'right'}
-                                label={setting?.relayOneWorking ? 'Prendido' : 'Apagado'}
+                                label={setting?.relayOneWorking ? 'Prendido' : 'Apagadao'}
                                 // className,
                                 onUpdate={() => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
                             />

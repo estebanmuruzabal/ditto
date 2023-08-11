@@ -64,7 +64,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
     };
 
     return (
-        <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '66px' }} onClick={() => setOpenTab(tabIsOpen ? '' : settingType)}>
+        <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '66px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
                     <Type bold>{getSettingTypeText(setting?.settingType)}</Type>
@@ -72,15 +72,15 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
                 <ListDes style={{ marginLeft: '-10px' }}>
                     <CardButtons className='button-wrapper'>
                         { editIsOn ? (
-                            <ActionButton onClick={() => setEditIsOn(!editIsOn)} className='edit-btn'>
+                            <ActionButton onClick={(e) => { e.stopPropagation(); setEditIsOn(!editIsOn); }} className='edit-btn'>
                                 <CheckMark />
                             </ActionButton>
                         ) : (
-                            <ActionButton onClick={() => setEditIsOn(!editIsOn)} className='edit-btn'>
+                            <ActionButton onClick={(e) => { e.stopPropagation(); setEditIsOn(!editIsOn); }} className='edit-btn'>
                                 <PencilIcon />
                             </ActionButton>
                         )}
-                        <ActionButton onClick={() => handleDeleteSensor(plant, settingType)} className='delete-btn'>
+                        <ActionButton onClick={(e) => { e.stopPropagation(); handleDeleteSensor(plant, settingType); }} className='delete-btn'>
                             <CloseIcon />
                         </ActionButton>
                     </CardButtons>

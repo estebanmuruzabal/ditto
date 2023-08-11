@@ -94,3 +94,18 @@ query GetUser{
 }
 `;
 
+export const GET_LOGGED_IN_USER_SETTINGS = gql`
+query GetUser{
+  getUser{
+    id
+    name
+    plants {
+      plantId
+      sensors {
+        reading
+      }
+    }
+  }
+}
+`;
+

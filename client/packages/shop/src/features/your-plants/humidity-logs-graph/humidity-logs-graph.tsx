@@ -11,7 +11,7 @@ interface Props {
 }
 
 const HumidityLogsGraph: React.FC<Props> = ({ data, ...props  }) => {
-  // console.log(data)
+  console.log(data)
   JSON.stringify(data)
   let humidities = [];
   let times = [];

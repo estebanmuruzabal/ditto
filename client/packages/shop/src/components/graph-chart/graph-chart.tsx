@@ -117,7 +117,7 @@ const GrpahChart = ({
     },
     series: [
       {
-        name: '',
+        name: 'Humedad %',
         data: series,
       },
     ],

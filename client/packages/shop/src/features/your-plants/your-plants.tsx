@@ -22,7 +22,7 @@ import {
   CardButtons
 } from './your-plants.style';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { GET_LOGGED_IN_USER } from 'graphql/query/customer.query';
+import { GET_LOGGED_IN_USER, GET_LOGGED_IN_USER_SETTINGS } from 'graphql/query/customer.query';
 import { Button } from 'components/button/button';
 import { ADD_PLANT, DELETE_SETTING, UPDATE_SETTING } from 'graphql/query/plants.query';
 import { Input } from 'components/forms/input';
@@ -57,9 +57,15 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
   const { loading, error, data = {} } = useQuery(GET_LOGGED_IN_USER, {
     notifyOnNetworkStatusChange: true,
-    fetchPolicy: "no-cache",
+    fetchPolicy: "network-only",
     // pollInterval: 5000,
   });
+
+  // const { loading1, error1, data1 = {} } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
+  //   notifyOnNetworkStatusChange: true,
+  //   fetchPolicy: "network-only",
+  //   // pollInterval: 5000,
+  // });
   
   // const router = useRouter();
   const intl = useIntl();
@@ -107,11 +113,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
   const defaultSettingValuesIfModeChanges = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     const mode = 'mode';
-    const relayOneIdRelated = 'relayOneIdRelated';
-    const relayTwoIdRelated = 'relayTwoIdRelated';
-
     if (field !== mode) return plant;
-    // if (value !== CommonMode.NONE) return plant;
 
     const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
     plant.sensors[settingIndex] = getDefaultSetting(settingType, plant.sensors[settingIndex].name, plant.sensors[settingIndex].logs);
@@ -314,7 +316,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           { plants?.length < 1 && (<Text>{intl.formatMessage({ id: 'noDittoBotsTextId', defaultMessage: 'noDittoBotsTextId' })}</Text>) }
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
-            console.log('plant.timestamp:::', plant.timestamp);
               return (
                 <PlantsWrapper key={i + '-orderList'}>
                   <Row1>
@@ -346,14 +347,44 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                       <ListItem>
                         <ListTitle>
                           <Text bold>
+                                                 {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}{/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
                             <FormattedMessage
                               id="statusId"
                               defaultMessage="statusId"
                             />
+                                                 {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}{/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
+                        {/* <Reading> */}
                           </Text>
                         </ListTitle>
                         <ListDes>
-                          <Text>{moment(plant.timestamp).format('hh:mm A - DD MMM')} {hasDittoBotUpdatedInLastMinute(plant.timestamp) ? '[ONLINE]' : '[OFFLINE]'}</Text>
+                          <Text>{plant.timestamp?.length > 0 ? moment(plant.timestamp).format('hh:mm A - DD MMM') : ''} {hasDittoBotUpdatedInLastMinute(plant.timestamp) ? '[ONLINE]' : '[OFFLINE]'}</Text>
                         </ListDes>
                       </ListItem>
 
