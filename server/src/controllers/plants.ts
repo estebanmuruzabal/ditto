@@ -173,7 +173,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 break;
             } else if (relayTwoAsocciatedActionComplete) {
                 const whatsappMsg = `Aviso: tu semillero: ${setting.name} mantiene ${reading}% de humedad, y ya se termino de evacuar el agua en ${timeToIrrigateInMins} minutos.`;
-                if (phoneNumber) await sendMessage(phoneNumber, whatsappMsg, undefined, undefined);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, whatsappMsg, undefined, undefined);
 
                 // we turn the exit watering relay OFF, and reset relayOneAutomatedTimeToRun (that has the start time of the relay)
                 // @ts-ignore
@@ -344,7 +344,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 setting.relayTwoAutomatedStartedTime = '';
                 
                 setting = logTimeStampWithTimeFilter(setting, reading);
-                if (phoneNumber) await sendMessage(phoneNumber, whatsappMsg, undefined, undefined);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, whatsappMsg, undefined, undefined);
                 break;
             }
             setting = logTimeStampWithTimeFilter(setting, reading);
