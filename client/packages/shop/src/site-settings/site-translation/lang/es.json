@@ -86,7 +86,7 @@
   "deleteSettingId": "Eliminar",
   "changeModeButton": "Cambiar modo",
   "plantNameField": "Ingresar nombre",
-  "addSensorId": "Agregar sensor",
+  "addSensorId": "Agregar modulo",
   "plantNamePlaceholderId": "Plantas del balcón",
   "serialNumberPlaceholderId": "Mira atrás del Ditto Bot",
   "distanceId": "Capacidad",

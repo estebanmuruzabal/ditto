@@ -2,18 +2,18 @@ import { RelaysIds, SensorsTypes } from "./constant";
 
 export const getSettingTypeText = (settingType: SensorsTypes) => {
     switch (settingType) {
-        case `${SensorsTypes.SOIL_HUMIDITY}_1`: return 'SENSOR HUMEDAD EN TIERRA 1';
-        case `${SensorsTypes.SOIL_HUMIDITY}_2`: return 'SENSOR HUMEDAD EN TIERRA 2';
-        case `${SensorsTypes.SOIL_HUMIDITY}_3`: return 'SENSOR HUMEDAD EN TIERRA 3';
-        case `${SensorsTypes.LIGHT}_1`: return 'SENSOR DE LUZ 1';
-        case `${SensorsTypes.LIGHT}_2`: return 'SENSOR DE LUZ 2';
+        case `${SensorsTypes.SOIL_HUMIDITY}_1`: return 'MODULE HUMEDAD EN TIERRA 1';
+        case `${SensorsTypes.SOIL_HUMIDITY}_2`: return 'MODULE HUMEDAD EN TIERRA 2';
+        case `${SensorsTypes.SOIL_HUMIDITY}_3`: return 'MODULE HUMEDAD EN TIERRA 3';
+        case `${SensorsTypes.LIGHT}_1`: return 'MODULE DE LUZ 1';
+        case `${SensorsTypes.LIGHT}_2`: return 'MODULE DE LUZ 2';
         case `${SensorsTypes.PLUG}_1`: return 'ENCHUFE INTELIGENTE 1';
         case `${SensorsTypes.PLUG}_2`: return 'ENCHUFE INTELIGENTE 2';
         case `${SensorsTypes.PLUG}_3`: return 'ENCHUFE INTELIGENTE 3';
         case `${SensorsTypes.PLUG}_4`: return 'ENCHUFE INTELIGENTE 4';
-        case `${SensorsTypes.DISTANCE}_1`: return 'SENSOR DE DISTANCIA 1';
-        case `${SensorsTypes.DISTANCE}_2`: return 'SENSOR DE DISTANCIA 2';
-        case `${SensorsTypes.DISTANCE}_3`: return 'SENSOR DE DISTANCIA 3';
+        case `${SensorsTypes.DISTANCE}_1`: return 'MODULE DE DISTANCIA 1';
+        case `${SensorsTypes.DISTANCE}_2`: return 'MODULE DE DISTANCIA 2';
+        case `${SensorsTypes.DISTANCE}_3`: return 'MODULE DE DISTANCIA 3';
         default:
             break;
     }

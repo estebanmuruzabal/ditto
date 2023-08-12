@@ -38,7 +38,7 @@ interface Props {
 }
 
 const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor  }) => {
-    const setting = plant.sensors.find((sensor: ISetting) => sensor.settingType === settingType);
+    const setting = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const intl = useIntl();
     const [editIsOn, setEditIsOn] = useState(false);
     const selectedMode = humidityModeOptions.find((option) => option.value === setting.mode);
@@ -451,7 +451,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                     height='34.5px'
                                 />
                             ) : (
-                                <Text bold>{setting?.relayTwoAutomatedTimeToRun?.length > 1 ? setting.relayTwoAutomatedTimeToRun + ' mins' : '-'}</Text>
+                                <Text bold>{setting?.relayTwoAutomatedTimeToRun?.length > 0 ? setting.relayTwoAutomatedTimeToRun + ' mins' : '-'}</Text>
                             )}
                         </ListDes>
                     </ListItem>

@@ -32,7 +32,7 @@ interface Props {
 }
 
 const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor, errorId  }) => {
-    const setting = plant.sensors.find((sensor: ISetting) => sensor.settingType === settingType);
+    const setting = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const intl = useIntl();
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);

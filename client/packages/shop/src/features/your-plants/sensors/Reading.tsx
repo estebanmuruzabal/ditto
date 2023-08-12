@@ -34,7 +34,7 @@ interface Props {
 }
 
 const Reading: React.FC<Props> = ({ errorId, plant: plantSelected, settingType, handleSettingsChange, onDeleteSchedule, data: data1, openTab, setOpenTab, handleDeleteSensor  }) => {
-    const setting = plantSelected.sensors.find((sensor: ISetting) => sensor.settingType === settingType);
+    const setting = plantSelected.sensors.find((module: ISetting) => module.settingType === settingType);
 
     const { loading, error, data } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
         notifyOnNetworkStatusChange: true,

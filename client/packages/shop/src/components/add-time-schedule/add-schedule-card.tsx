@@ -62,7 +62,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     info: values.info,
   };
   
-  const settingIndex = item.plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === item.settingType);
+  const settingIndex = item.plant.sensors.findIndex((module: ISetting) => module.settingType === item.settingType);
   const currentSchedule = item.plant.sensors[settingIndex].scheduledOnTimes[item?.schedulePosition];
 
     
@@ -97,7 +97,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
 
     setLoading(true);
     // here we just check and make it an array in case its not
-    const settingIndex = item.plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === item.settingType);
+    const settingIndex = item.plant.sensors.findIndex((module: ISetting) => module.settingType === item.settingType);
     const setting = item.plant.sensors[settingIndex];
     // setting.scheduledOnTimes = setting?.scheduledOnTimes?.length >= 0 ? setting?.scheduledOnTimes : [];
 
@@ -107,7 +107,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
       setting.scheduledOnTimes.push(newSchedule)
     }
     
-    dispatch({ type: 'UPDATE_SENSOR', payload: { setting, plantId: item.plant.plantId, settingIndex } });
+    dispatch({ type: 'UPDATE_MODULE', payload: { setting, plantId: item.plant.plantId, settingIndex } });
     dispatchSettingSave(item.plant, setting, item.settingType);
 
     closeModal();

@@ -1,5 +1,5 @@
 import { Box } from 'components/box';
-import { BoxContent, BoxTitle, BoxTitleWrapper } from 'components/box/box';
+import { BoxTitleWrapper, BoxTitle, BoxContent } from 'components/box/Box';
 import Chart from 'components/charts/chart';
 import moment from 'moment';
 import React from 'react';
@@ -44,18 +44,12 @@ const GrpahChart = ({
           offsetX: -25,
           style: {
             colors: '#161F6A',
-            fontSize: '10px',
+            fontSize: '14px',
             fontFamily: "'Lato', sans-serif",
           },
-          // format: 'HH:mm'
-          // formatter: function(value, timestamp, index) {
-          //   return moment(new Date(timestamp)).format("DD/MM hh:mm")
-          // }
-          // datetimeFormatter: {
-          //   // month: 'MMM \'yy',
-          //   // day: 'dd MMM',
-          //   hour: 'HH:mm'
-          // }
+          formatter: function(value, timestamp, index) {
+            return moment(new Date(timestamp)).format("DD/MM HH:MM")
+          }
         },
         axisBorder: {
           show: false,
@@ -85,8 +79,6 @@ const GrpahChart = ({
       },
       yaxis: {
         show: true,
-        min: 0,
-        max: 100,
         labels: {
           show: true,
           style: {
@@ -117,7 +109,7 @@ const GrpahChart = ({
     },
     series: [
       {
-        name: 'Humedad %',
+        name: '',
         data: series,
       },
     ],
@@ -134,7 +126,6 @@ const GrpahChart = ({
           options={options.options}
           series={options.series}
           width='100%'
-          height="300px"
           type='area'
         />
       </BoxContent>

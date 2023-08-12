@@ -31,7 +31,7 @@ interface Props {
 }
 
 const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor }) => {
-    const setting = plant.sensors.find((sensor: ISetting) => sensor.settingType === settingType);
+    const setting = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
     const intl = useIntl();
@@ -197,13 +197,13 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
                   </Text>
                 </ListTitle>
                 <ListDes>
-                  <Select 
-                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneWorking', e.value, settingType)}
-                    value={selectedManualState}
-                    options={manualModeOptions}
-                    styles={selectStyle}
-                    menuPosition={'fixed'}
-                  />
+                    <Switch 
+                        disabled={false}
+                        checked={setting.relayOneWorking}
+                        labelPosition={'right'}
+                        // className,
+                        onUpdate={(e: any) => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
+                    />
                 </ListDes>
               </ListItem>
             </>

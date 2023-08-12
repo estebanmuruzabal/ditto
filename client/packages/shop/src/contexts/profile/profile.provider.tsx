@@ -4,9 +4,9 @@ import { SensorsTypes } from 'utils/constant';
 
 type Action =
   | { type: 'HANDLE_ON_INPUT_CHANGE'; payload: any }
-  | { type: 'ADD_SENSOR'; payload: any }
-  | { type: 'DELETE_SENSOR'; payload: any }
-  | { type: 'UPDATE_SENSOR'; payload: any }
+  | { type: 'ADD_MODULE'; payload: any }
+  | { type: 'DELETE_MODULE'; payload: any }
+  | { type: 'UPDATE_MODULE'; payload: any }
   | { type: 'HANDLE_PASSWORD_CLEAR'; payload: any }
   | { type: 'ADD_CONTACT'; payload: any }
   | { type: 'UPDATE_CONTACT'; payload: any }
@@ -25,16 +25,16 @@ function reducer(state: any, action: Action): any {
     case 'HANDLE_ON_INPUT_CHANGE':
       return { ...state, [action.payload.field]: action.payload.value };
 
-    case 'ADD_SENSOR':
+    case 'ADD_MODULE':
         state.plants[action.payload.plantIndex].sensors.push(action.payload.setting);
       
         return { ...state};
-    case 'UPDATE_SENSOR':
+    case 'UPDATE_MODULE':
         const plantIndex = state.plants.findIndex((plant: any) => plant.plantId === action.payload.plantId);            
         state.plants[plantIndex].sensors[action.payload.settingIndex] = action.payload.setting;
       
         return { ...state};
-    case 'DELETE_SENSOR':
+    case 'DELETE_MODULE':
         state.plants[action.payload.plantIndex].sensors.splice(action.payload.settingIndex, 1);
       
         return { ...state};

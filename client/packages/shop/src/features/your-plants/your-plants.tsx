@@ -99,11 +99,11 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
     let relayAlreadyAssigned = false;
 
-    plant.sensors.map((sensor) => {
-      if ((sensor[relayOneIdRelated] === value || sensor[relayTwoIdRelated] === value ) && value !== '') {
+    plant.sensors.map((module) => {
+      if ((module[relayOneIdRelated] === value || module[relayTwoIdRelated] === value ) && value !== '') {
         const texto1 = intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' });
         const texto2 = intl.formatMessage({ id: 'relayAlreadyAssinged2', defaultMessage: 'desigagned  ' });
-          alert(texto1 + sensor.name + texto2);
+          alert(texto1 + module.name + texto2);
           relayAlreadyAssigned = true;
       }
     })
@@ -115,8 +115,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     const mode = 'mode';
     if (field !== mode) return plant;
 
-    const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
-    plant.sensors[settingIndex] = getDefaultSetting(settingType, plant.sensors[settingIndex].name, plant.sensors[settingIndex].logs);
+    const settingIndex = plant.sensors.findIndex((module: ISetting) => module.settingType === settingType);            
+    plant.sensors[settingIndex] = getDefaultSetting(settingType, plant.sensors[settingIndex].name, value === CommonMode.NONE ? [] : plant.sensors[settingIndex].logs);
     
    return plant;
   };
@@ -196,9 +196,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     });
 
     const plantIndex = plants.findIndex((plant: any) => plant.plantId === plantSelected.plantId);            
-    const settingIndex = plants[plantIndex].sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
+    const settingIndex = plants[plantIndex].sensors.findIndex((module: ISetting) => module.settingType === settingType);            
 
-    dispatch({ type: 'DELETE_SENSOR', payload: {plantIndex, settingIndex }});
+    dispatch({ type: 'DELETE_MODULE', payload: {plantIndex, settingIndex }});
 
     setUserinfoMsg('deleted setting successfully');
     setTimeout(function () {
@@ -207,7 +207,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   };
 
   const onDeleteSchedule = (plant: any, settingType: SensorsTypes, scheduleIndex: number) => {
-    const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);            
+    const settingIndex = plant.sensors.findIndex((module: ISetting) => module.settingType === settingType);            
     plant.sensors[settingIndex]?.scheduledOnTimes.splice(scheduleIndex, 1);
     
     updateSetting({
@@ -246,7 +246,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 }
     
   const dispatchSettingSave = (plant: any, fieldName: string, fieldValue: string | boolean, settingType: SensorsTypes) => {
-    const settingIndex = plant.sensors.findIndex((sensor: ISetting) => sensor.settingType === settingType);
+    const settingIndex = plant.sensors.findIndex((module: ISetting) => module.settingType === settingType);
     plant.sensors[settingIndex][fieldName] = fieldValue;
 
     updateSetting({
@@ -261,9 +261,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   const getSensorCompleteName = (plant, settingType: SensorsTypes) => {
     let sensorNewNumber = 1;
 
-    plant?.sensors?.map((sensor: ISetting) => {
-      let lastSensorNum = getLastNumOfSensor(sensor.settingType);
-      const rawSensorTypeName = getSensorWithoutNumber(sensor?.settingType);
+    plant?.sensors?.map((module: ISetting) => {
+      let lastSensorNum = getLastNumOfSensor(module.settingType);
+      const rawSensorTypeName = getSensorWithoutNumber(module?.settingType);
 
       if (!isNaN(lastSensorNum) && rawSensorTypeName === settingType) {
         sensorNewNumber = lastSensorNum + 1;
@@ -284,7 +284,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
       },
     });
 
-    dispatch({ type: 'ADD_SENSOR', payload: {plantIndex, setting: getDefaultSetting(completeSensorTypeName) }});
+    dispatch({ type: 'ADD_MODULE', payload: {plantIndex, setting: getDefaultSetting(completeSensorTypeName) }});
   };
 
   const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left' }) };
@@ -412,22 +412,22 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                     </Column1>
                   </Row1>
 
-                    { sensors?.map((sensor: ISetting) => {
-                      switch (sensor?.settingType) {
+                    { sensors?.map((module: ISetting) => {
+                      switch (module?.settingType) {
                         case `${SensorsTypes.SOIL_HUMIDITY}_1`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_2`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_3`:
                           // check the number of same setting to send
                           return (
                             <SoilHumiditySensor 
-                              key={i + sensor.settingType}
+                              key={i + module.settingType}
                               data={data}
                               plant={plant}
                               errorId={errorId}
                               openTab={openTab}
                               handleDeleteSensor={handleDeleteSensor}
                               setOpenTab={setOpenTab}
-                              settingType={sensor.settingType}
+                              settingType={module.settingType}
                               handleSettingsChange={handleSettingsChange}
                               onDeleteSchedule={onDeleteSchedule} 
                             />
@@ -435,13 +435,13 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         case `${SensorsTypes.LIGHT}_1`:
                           return (
                             <LightSensor 
-                              key={i + sensor.settingType}
+                              key={i + module.settingType}
                               data={data}
                               plant={plant}
                               handleDeleteSensor={handleDeleteSensor}
                               openTab={openTab}
                               setOpenTab={setOpenTab}
-                              settingType={sensor.settingType}
+                              settingType={module.settingType}
                               handleSettingsChange={handleSettingsChange}
                               onDeleteSchedule={onDeleteSchedule} 
                             />
@@ -449,14 +449,14 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         case `${SensorsTypes.DISTANCE}_1`:
                           return (
                             <DistanceSensor
-                              key={i + sensor.settingType}
+                              key={i + module.settingType}
                               data={data}
                               plant={plant}
                               errorId={errorId}
                               handleDeleteSensor={handleDeleteSensor}
                               openTab={openTab}
                               setOpenTab={setOpenTab}
-                              settingType={sensor.settingType}
+                              settingType={module.settingType}
                               handleSettingsChange={handleSettingsChange}
                               onDeleteSchedule={onDeleteSchedule} 
                             />
@@ -464,13 +464,13 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         case `${SensorsTypes.PLUG}_1`:
                           return (
                             <Plug
-                              key={i + sensor.settingType}
+                              key={i + module.settingType}
                               data={data}
                               plant={plant}
                               handleDeleteSensor={handleDeleteSensor}
                               openTab={openTab}
                               setOpenTab={setOpenTab}
-                              settingType={sensor.settingType}
+                              settingType={module.settingType}
                               handleSettingsChange={handleSettingsChange}
                               onDeleteSchedule={onDeleteSchedule} 
                             />
