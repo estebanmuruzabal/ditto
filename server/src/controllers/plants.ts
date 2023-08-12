@@ -5,9 +5,10 @@ import { DistanceSensorMode, HumiditySensorMode, ISensorSetting, ISetting, Light
 import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
 import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
+import { Console } from "console";
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string) => {
-    if (!plant?.sensors[sensorIndex]) { console.log('NO SENSOR FOUND', plant?.sensors[sensorIndex]); return plant; }
+    if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
 
@@ -30,14 +31,14 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
     const startedIrrigationTime = moment(relayOneAutomatedStartedTime);
     const startedEvacuationTime = moment(relayTwoAutomatedStartedTime);
-    const currentIrrigationMins = currentTime?.diff(startedIrrigationTime, 'minutes');
-    const currentEvacuationMins = currentTime?.diff(startedEvacuationTime, 'minutes');
+    const currentIrrigationSeconds = currentTime?.diff(startedIrrigationTime, 'minutes');
+    const currentEvacuationSeconds = currentTime?.diff(startedEvacuationTime, 'minutes');
 
     const irrigationShouldStart = reading < minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
-    const irrigationInProgress = currentIrrigationMins >= 0 && currentIrrigationMins < timeToIrrigateInMins;
-    const irrigationComplete = currentIrrigationMins >= timeToIrrigateInMins && relayOneWorking;
+    const irrigationInProgress = currentIrrigationSeconds >= 0 && currentIrrigationSeconds < timeToIrrigateInMins;
+    const irrigationComplete = currentIrrigationSeconds >= timeToIrrigateInMins && relayOneWorking;
     const relayTwoAsocciatedActionShouldStart = reading >= maxReading && !relayTwoWorking && relayOneAutomatedStartedTime.length > 0;
-    const relayTwoAsocciatedActionComplete = currentEvacuationMins >= timeToEvacuateInMins && !!relayTwoAutomatedStartedTime.length;
+    const relayTwoAsocciatedActionComplete = currentEvacuationSeconds >= timeToEvacuateInMins && !!relayTwoAutomatedStartedTime.length;
     
     moment.locale('es');
     const today = moment(new Date(), 'MM/D/YYYY').day();
@@ -49,7 +50,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
     console.log('setting BF process:', plant);
 
-    // WE SHOULD ADD A SWITH FOR SENSOR TYPE, AND FROM THERE A SWITCH FOR MODE
+    // WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE
 
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -87,8 +88,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
             if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
-            console.log('irrigationComplete', irrigationComplete)
-            console.log('currentEvacuationMins', currentEvacuationMins)
             if (irrigationInProgress) {
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
                 return plant;
@@ -127,8 +126,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             if (!minReading || !relayOneIdRelated || !maxReading || !relayTwoIdRelated || !relayOneAutomatedTimeToRun || !relayTwoAutomatedTimeToRun)  { console.log('No relayOneIdRelated, or no minWarning setted: ', setting); break; }
             if (timeToEvacuateInMins <=0) { console.log('relayTwoAutomatedTimeToRun SHOULD CONTAIN THE NUMBER OF MINUTES TO BE THE RELAY ON ', setting); break; }
 
-            console.log('irrigationComplete', irrigationComplete)
-            console.log('currentEvacuationMins', currentEvacuationMins)
             if (irrigationInProgress) {
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 return plant;
@@ -181,9 +178,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 // we turn the exit watering relay OFF, and reset relayOneAutomatedTimeToRun (that has the start time of the relay)
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
-                relayTwoWorking = false;
-                relayOneAutomatedStartedTime = '';
-                relayTwoAutomatedStartedTime = '';
+                setting.relayTwoWorking = false;
+                setting.relayOneAutomatedStartedTime = '';
+                setting.relayTwoAutomatedStartedTime = '';
                 
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 break;
@@ -242,8 +239,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case DistanceSensorMode.WHEN_EMPTY_ACTION_CUSTOM:
             if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
-            console.log('irrigationComplete', irrigationComplete)
-            console.log('currentEvacuationMins', currentEvacuationMins)
             if (irrigationInProgress) {
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 return plant;
@@ -273,13 +268,10 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
-        case DistanceSensorMode.WHEN_EMPTY_ACTION_AUTOMATED:
-                
+        case DistanceSensorMode.WHEN_EMPTY_ACTION_AUTOMATED:                
             if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
-
             const maxCapacityReached = reading >= maxReading && relayOneAutomatedStartedTime.length > 0;
-            console.log('irrigationComplete', irrigationComplete)
-            console.log('currentEvacuationMins', currentEvacuationMins)
+
             if (irrigationInProgress) {
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 return plant;
@@ -312,8 +304,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case DistanceSensorMode.WHEN_FULL_ACTION_CUSTOM:
             if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
             
-            console.log('irrigationComplete', irrigationComplete)
-            console.log('currentEvacuationMins', currentEvacuationMins)
             if (irrigationInProgress) {
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 return plant;
@@ -349,9 +339,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 // we turn the exit watering relay OFF, and reset relayOneAutomatedTimeToRun (that has the start time of the relay)
                 // @ts-ignore
                 plant[relayTwoIdRelated] = false;
-                relayTwoWorking = false;
-                relayOneAutomatedStartedTime = '';
-                relayTwoAutomatedStartedTime = '';
+                setting.relayTwoWorking = false;
+                setting.relayOneAutomatedStartedTime = '';
+                setting.relayTwoAutomatedStartedTime = '';
                 
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 if (phoneNumber) await sendMessage(phoneNumber, whatsappMsg, undefined, undefined);
@@ -362,8 +352,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case DistanceSensorMode.WHEN_FULL_ACTION_AUTOMATED:
             if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
             
-            console.log('irrigationComplete', irrigationComplete)
-            console.log('currentEvacuationMins', currentEvacuationMins)
             if (irrigationInProgress) {
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 return plant;

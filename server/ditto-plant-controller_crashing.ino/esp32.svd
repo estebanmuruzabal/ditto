@@ -26783,14 +26783,14 @@
           <fields>
             <field>
               <name>HALL_PHASE</name>
-              <description>Reverse phase of hall sensor</description>
+              <description>Reverse phase of hall module</description>
               <bitOffset>30</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>XPD_HALL</name>
-              <description>Power on hall sensor and connect to VP and VN</description>
+              <description>Power on hall module and connect to VP and VN</description>
               <bitOffset>31</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
@@ -26798,7 +26798,7 @@
           </fields>
         </register>
         <register>
-          <name>SENSOR_PADS</name>
+          <name>MODULE_PADS</name>
           <addressOffset>0x7C</addressOffset>
           <size>0x20</size>
           <fields>
@@ -27445,35 +27445,35 @@
           <fields>
             <field>
               <name>TOUCH_DCUR</name>
-              <description>touch sensor bias current. Should have option to tie with BIAS_SLEEP(When BIAS_SLEEP  this setting is available</description>
+              <description>touch module bias current. Should have option to tie with BIAS_SLEEP(When BIAS_SLEEP  this setting is available</description>
               <bitOffset>23</bitOffset>
               <bitWidth>2</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TOUCH_DRANGE</name>
-              <description>touch sensor saw wave voltage range.</description>
+              <description>touch module saw wave voltage range.</description>
               <bitOffset>25</bitOffset>
               <bitWidth>2</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TOUCH_DREFL</name>
-              <description>touch sensor saw wave bottom voltage.</description>
+              <description>touch module saw wave bottom voltage.</description>
               <bitOffset>27</bitOffset>
               <bitWidth>2</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TOUCH_DREFH</name>
-              <description>touch sensor saw wave top voltage.</description>
+              <description>touch module saw wave top voltage.</description>
               <bitOffset>29</bitOffset>
               <bitWidth>2</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TOUCH_XPD_BIAS</name>
-              <description>touch sensor bias power on.</description>
+              <description>touch module bias power on.</description>
               <bitOffset>31</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
@@ -27537,28 +27537,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -27650,28 +27650,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -27762,28 +27762,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -27875,28 +27875,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -27988,28 +27988,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -28101,28 +28101,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -28214,28 +28214,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -28327,28 +28327,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -28398,28 +28398,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -28441,28 +28441,28 @@
             </field>
             <field>
               <name>XPD</name>
-              <description>touch sensor power on.</description>
+              <description>touch module power on.</description>
               <bitOffset>20</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TIE_OPT</name>
-              <description>default touch sensor tie option. 0: tie low  1: tie high.</description>
+              <description>default touch module tie option. 0: tie low  1: tie high.</description>
               <bitOffset>21</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>START</name>
-              <description>start touch sensor.</description>
+              <description>start touch module.</description>
               <bitOffset>22</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>DAC</name>
-              <description>touch sensor slope control. 3-bit for each touch panel  default 100.</description>
+              <description>touch module slope control. 3-bit for each touch panel  default 100.</description>
               <bitOffset>23</bitOffset>
               <bitWidth>3</bitWidth>
               <access>read-write</access>
@@ -30738,14 +30738,14 @@ IDINTEN[4]: DU Interrupt.</description>
             </field>
             <field>
               <name>TSENS_OUT</name>
-              <description>temperature sensor data out</description>
+              <description>temperature module data out</description>
               <bitOffset>22</bitOffset>
               <bitWidth>8</bitWidth>
               <access>read-only</access>
             </field>
             <field>
               <name>TSENS_RDY_OUT</name>
-              <description>indicate temperature sensor out ready</description>
+              <description>indicate temperature module out ready</description>
               <bitOffset>30</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-only</access>
@@ -30817,21 +30817,21 @@ IDINTEN[4]: DU Interrupt.</description>
             </field>
             <field>
               <name>TSENS_IN_INV</name>
-              <description>invert temperature sensor data</description>
+              <description>invert temperature module data</description>
               <bitOffset>15</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TSENS_CLK_DIV</name>
-              <description>temperature sensor clock divider</description>
+              <description>temperature module clock divider</description>
               <bitOffset>16</bitOffset>
               <bitWidth>8</bitWidth>
               <access>read-write</access>
             </field>
             <field>
               <name>TSENS_POWER_UP</name>
-              <description>temperature sensor power up</description>
+              <description>temperature module power up</description>
               <bitOffset>24</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
@@ -30845,7 +30845,7 @@ IDINTEN[4]: DU Interrupt.</description>
             </field>
             <field>
               <name>TSENS_DUMP_OUT</name>
-              <description>temperature sensor dump out  only active when reg_tsens_power_up_force = 1</description>
+              <description>temperature module dump out  only active when reg_tsens_power_up_force = 1</description>
               <bitOffset>26</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
