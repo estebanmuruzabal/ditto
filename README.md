@@ -41,34 +41,41 @@ poner  numeros
  - Ver listado con precios mayorista de frutas/verduras.
 
 
-# ----- DITTOBOT ---------------------
+# ----- Ditto controller ---------------------
 
 # ONGOING
+- Arreglar y testear distancia
 
 # BUGS
-- if you add a sensor when its already conected, it shows disconeccted/no reading, (we should ?)
+- Arregglar el enchufe 4 qu no arranca el relay cuando esta bien setteado en el arduino
+- if you add a module when its already conected, it shows disconeccted/no reading, (we should ?)
 - make check to not colapse when no whatsapp is linked when shuting a warning for instance.
+- Arreglar logs un poco
 
-# Improvements
+# Improvements/features todo
+- agregar UI y logica de backend para enchufe inteligente
+- agregar UI y logica de backend para humedad y temperatura
 - Add wifi password ip address improvement.
+- testear cuanta agua para en 1 minuto de la manguera y poner metodo aca para en plants.ts decir cuanta agua utilizo.
+- para hacer mi sistema de agua de casa, voy a tener que agregar una logica a los sensores para que tengan un array con modos para ir saltando de modo en modo (stack).
 - agregar a que numbero avisar. al del user o otro
 - hacer super dinamico el campo: encendido/apagado y el reading!!
 - Arreglar wording de whatsapp para plants.ts
-- Distance sensor: add logic to start something on max or min with the two relays, or nothing just notification
 - agregar warnings en el front a soil: No relayOneIdRelated, or no minWarning setted: [please set one]  
 
 
 
 # Tests
-- Humidity sensor modes: MANUAL, SCHEDULE, SEEDS_POOL_IRRIGATION, 
-- Distance sensor: 
-- Light sensor 
+- Test: 
+- Distance module: 
+- Light module 
 
 # DONE
 
 
 # PRODUCTS
 - arduino box (esp32), cable usb, cargador/enchufe.
+
 - zapatilla (con 1, 2, 3, 4 enchufes/relays), una entrada usb para arduino y con su debida cantidad de cables hasta el arduino (todos unidos) (metros a seleccionar). 
 - Sensor de humedad (mts, cms de cable a seleccionar) (add on: mas metros)
 - Sensor de luz y mts, cm de cable a seleccionar (add on: palito para sujetarlo)
@@ -78,12 +85,24 @@ poner  numeros
 # TO PRINT:
 - arduino box (esp32) --- 
 - box for 1 releay, 2 , 3 or 4 or 8 (tienen que ser zapatillas, con 1 usb)
-- cajitas para sensor de humedad
-- palito para sensor de luz y cajita
-- palito para sensor de movimiento y cajita
-- cajita para sensor de distancia, con tornillitos
+- cajitas para module de humedad
+- distribuidor de agua para maceta(ver cuanto sale de china)
+- palito para module de luz y cajita
+- palito para module de movimiento y cajita
+- cajita para module de distancia, con tornillitos
 
+# Features: 
+ - Sensor distancia: 
+   Modos:
+   - Quizas agregar 5 medidas (tiempos de agua para imersion) para el pool irrigation, ya que dependiendo de la cantidad de trays que pongas, va a variar, y agregar en el front un input de esas cantidades (pensar como serian las pruebas del usuario para que sea sensillo saber que cantidades usar)
+  - Accion vacio custom: avisa cuando esta vacio y activa relay asociado x cantidad de tiempo
+  - Accion vacio automatico: avisa cuando esta vacio y activa relay asociado hasta llegar al maximo
+  - Accion lleno custom: avisa cuando esta lleno y activa relay asociado x cantidad de tiempo
+  - Accion lleno automatico: avisa cuando esta lleno y activa relay asociado hasta llegar al minimo
+  - Aviso vacio: avisa cuando esta vacio.
+  - Aviso lleno: avisa cuando esta lleno.
 
+  Sensor humedad suelo:
 # Improvements: 
 - add delete user func in staffmembers.tsx
 - add comment on tasks for feedback.

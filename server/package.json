@@ -36,7 +36,7 @@
     "stormdb": "^0.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3",
-    "whatsapp-web.js": "1.20.0",
+    "whatsapp-web.js": "^1.21.1-alpha.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
