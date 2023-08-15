@@ -14,6 +14,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
 
     // we assign the reading with the settingType name by only lower casing it!
+    // ERROR light_1 comes in sensorReadingName so it doesnt find plant[sensorReadingName], we should change variable to have light_1, temp_1, distance_1
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     console.log('sensorReadingName::', sensorReadingName)
     // @ts-ignore
@@ -41,7 +42,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const relayTwoAsocciatedActionComplete = currentEvacuationSeconds >= timeToEvacuateInMins && !!relayTwoAutomatedStartedTime.length;
     
     moment.locale('es');
-    const today = moment(new Date(), 'MM/D/YYYY').day();
+    const today = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), 'MM/D/YYYY').day();
     
     const maxLevelReached = reading >= maxReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
     const minLevelReached = reading <= minReading && relayOneAutomatedStartedTime.length > 0;
@@ -201,18 +202,24 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             plant[relayOneIdRelated] = setting.relayOneWorking;
             break;
         case HumiditySensorMode.SCHEDULE:
-
+            console.log('IN SCHEDULE CASE')
             scheduledOnTimes?.map((schedule: any, i: number) => {
+                    console.log(today.toString(), schedule.daysToRepeat, schedule.daysToRepeat.includes(today.toString().toUpperCase()))
                 if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                    
+                    console.log(startTime, endTime)
                     // @ts-ignore
                     plant[relayOneIdRelated] = currentTime1.isBetween(startTime, endTime);
+                    // @ts-ignore
+                console.log('currentTime1', currentTime1)
+                // @ts-ignore
+                console.log('currentTime1.isBetween(startTime, endTime)', currentTime1.isBetween(startTime, endTime))
                 }
             })
             break;
+
         case HumiditySensorMode.MANUAL:
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
             // @ts-ignore
