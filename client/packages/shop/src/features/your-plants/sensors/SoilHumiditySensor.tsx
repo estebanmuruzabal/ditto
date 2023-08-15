@@ -660,7 +660,6 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 disabled={false}
                                 checked={setting.relayOneWorking}
                                 labelPosition={'right'}
-                                label={setting?.relayOneWorking ? 'Prendido' : 'Apagadao'}
                                 // className,
                                 onUpdate={() => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
                             />

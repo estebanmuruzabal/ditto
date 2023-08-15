@@ -33,10 +33,11 @@ export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
     IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND = 'IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
-    MANUAL = 'MANUAL',
-    SCHEDULE = 'SCHEDULE',
+    MANUAL = 'HUMIDITY_MANUAL',
+    SCHEDULE = 'HUMIDITY_SCHEDULE',
     NONE = 'NONE'
 }
+
 
 // - Accion vacio custom: avisa cuando esta vacio y activa relay asociado x cantidad de tiempo
 // - Accion vacio automatico: avisa cuando esta vacio y activa relay asociado hasta llegar al maximo
@@ -71,21 +72,20 @@ export enum CommonMode {
     NONE = 'NONE'
 }
 
-export enum LightSensorModes {
+export enum LightSensorMode {
     MANUAL = 'MANUAL',
-    SCHEDULE = 'SCHEDULE',
-    SMART_SCHEDULE = 'SMART_SCHEDULE',
+    SCHEDULE = 'LIGHT_SCHEDULE',
+    SMART_SCHEDULE = 'LIGHT_SMART_SCHEDULE',
     NONE = 'NONE'
 }
-
 export enum WeekDays {
-    MONDAY = 'LUNES',
-    TUESDAY = 'MARTES',
-    WEDNESDAY = 'MIERCOLES',
-    THURSDAY = 'JUEVES',
-    FRIDAY = 'VIERNES',
-    SATURDAY = 'SABADO',
-    SUNDAY = 'DOMINGO'
+    MONDAY = 1,
+    TUESDAY = 2,
+    WEDNESDAY = 3,
+    THURSDAY = 4,
+    FRIDAY = 5,
+    SATURDAY = 6,
+    SUNDAY = 7
 }
 
     // - Accion vacio custom: activa relay asociado x cantidad de tiempo
@@ -115,10 +115,10 @@ export const humidityModeOptions = [
 ];
 
 export const lightModeOptions = [
-    { value: LightSensorModes.MANUAL, label: 'Manual' },
-    { value: LightSensorModes.SCHEDULE, label: 'Calendario' },
-    { value: LightSensorModes.SMART_SCHEDULE, label: 'Calendario inteligente' },
-    { value: LightSensorModes.NONE, label: 'Ninguno' }
+    { value: LightSensorMode.MANUAL, label: 'Manual' },
+    { value: LightSensorMode.SCHEDULE, label: 'Calendario' },
+    { value: LightSensorMode.SMART_SCHEDULE, label: 'Calendario inteligente' },
+    { value: LightSensorMode.NONE, label: 'Ninguno' }
 ];
 
 export const manualModeOptions = [

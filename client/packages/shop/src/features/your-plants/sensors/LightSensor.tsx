@@ -10,7 +10,7 @@ import Switch from 'components/switch/switch';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Select from 'react-select';
 import { Input } from 'components/forms/input';
-import { SensorsTypes, HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions, lightModeOptions, LightSensorModes } from 'utils/constant';
+import { SensorsTypes, HumiditySensorMode, WeekDays, fourRelaysOptions, humidityModeOptions, manualModeOptions, lightModeOptions, LightSensorMode } from 'utils/constant';
 import HumidityLogsGraph from '../humidity-logs-graph/humidity-logs-graph';
 import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekContainer, DayContainer, ScheduleTime, TextSpaced, CardButtons, ActionButton, Text, ButtonText, Type, Status, ScheduleTimeContainer, ActionsButtons } from '../your-plants.style';
 import { openModal } from '@redq/reuse-modal';
@@ -159,7 +159,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
             </ListDes>
           </ListItem>
   
-          { (setting?.mode === LightSensorModes.MANUAL || setting?.mode === LightSensorModes.SCHEDULE || setting?.mode === LightSensorModes.SMART_SCHEDULE) && (
+          { (setting?.mode === LightSensorMode.MANUAL || setting?.mode === LightSensorMode.SCHEDULE || setting?.mode === LightSensorMode.SMART_SCHEDULE) && (
             <ListItem>
               <ListTitle>
                 <Text bold>
@@ -185,7 +185,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
             </ListItem>
           )}
           
-          { setting.mode === LightSensorModes.MANUAL && (
+          { setting.mode === LightSensorMode.MANUAL && (
             <>
               <ListItem>
                 <ListTitle>
@@ -209,7 +209,7 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
             </>
           )}
 
-          { (setting.mode === LightSensorModes.SCHEDULE || setting.mode === LightSensorModes.SMART_SCHEDULE) && (
+          { (setting.mode === LightSensorMode.SCHEDULE || setting.mode === LightSensorMode.SMART_SCHEDULE) && (
             <>
               <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
