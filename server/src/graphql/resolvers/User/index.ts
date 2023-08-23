@@ -421,10 +421,10 @@ export const usersResolvers: IResolvers = {
                     plantId,
                     soil_humidity_1: 0,
                     soil_humidity_2: 0,
-                    airHumidity: 0,
-                    tempeture: 0,
+                    humidity_sensor_1: 0,
+                    tempeture_1: 0,
                     distance_cm: 0,
-                    light: 0,
+                    light_1: 0,
                     isRelayOneOn: false,
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
@@ -485,10 +485,10 @@ export const usersResolvers: IResolvers = {
             } else {
                 plants[index].soil_humidity_1 = hum1;
                 plants[index].soil_humidity_2 = hum2;
-                plants[index].airHumidity = airHum;
-                plants[index].tempeture = temp;
-                plants[index].distance_cm = dist;
-                plants[index].light = light;
+                plants[index].humidity_sensor_1 = airHum;
+                plants[index].tempeture_1 = temp;
+                plants[index].distance_1 = dist;
+                plants[index].light_1 = light;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;

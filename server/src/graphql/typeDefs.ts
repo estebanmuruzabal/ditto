@@ -51,7 +51,7 @@ export const typeDefs = gql`
     }
 
     type ScheduledOnTimes {
-        daysToRepeat: [String]
+        daysToRepeat: [Int]
         startTime: String
         endTime: String
         enabled: Boolean
@@ -259,7 +259,7 @@ export const typeDefs = gql`
     }
 
     input ScheduleInput {
-        daysToRepeat: [String]
+        daysToRepeat: [Int]
         startTime: String
         endTime: String
         enabled: Boolean

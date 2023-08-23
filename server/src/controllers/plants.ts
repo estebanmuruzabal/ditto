@@ -204,8 +204,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case HumiditySensorMode.SCHEDULE:
             console.log('IN SCHEDULE CASE')
             scheduledOnTimes?.map((schedule: any, i: number) => {
-                    console.log(today.toString(), schedule.daysToRepeat, schedule.daysToRepeat.includes(today.toString().toUpperCase()))
-                if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
+                    console.log(today, schedule.daysToRepeat, schedule.daysToRepeat.includes(today))
+                if (schedule.daysToRepeat.includes(today)) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
@@ -230,7 +230,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case LightSensorMode.SMART_SCHEDULE:
             const currentTimee = moment(new Date()).format('hh:mm:ss');
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-                if (schedule.daysToRepeat.includes(today.toString().toUpperCase())) {
+                if (schedule.daysToRepeat.includes(today)) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
                     

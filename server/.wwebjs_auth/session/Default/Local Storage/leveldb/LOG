@@ -1,3 +1,3 @@
-2023/08/14-22:47:02.361 8503 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000002
-2023/08/14-22:47:02.370 8503 Recovering log #29
-2023/08/14-22:47:02.372 8503 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Local Storage/leveldb/000029.log 
+2023/08/23-19:20:39.891 a503 Reusing MANIFEST /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000002
+2023/08/23-19:20:39.891 a503 Recovering log #37
+2023/08/23-19:20:39.891 a503 Reusing old log /Users/estebanmuruzabal/work/ditto/server/.wwebjs_auth/session/Default/Local Storage/leveldb/000037.log 
