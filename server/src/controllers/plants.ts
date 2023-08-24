@@ -50,6 +50,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
 
     console.log('setting BF process:', plant);
+    console.log('relayOneIdRelated', relayOneIdRelated)
+// @ts-ignore
+console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
 
     // WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE
 
@@ -220,10 +223,15 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             })
             break;
 
-        case HumiditySensorMode.MANUAL:
+        case LightSensorMode.MANUAL:
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
+            console.log('relayOneIdRelated', relayOneIdRelated)
+            // @ts-ignore
+            console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
+
+
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case LightSensorMode.SCHEDULE:
