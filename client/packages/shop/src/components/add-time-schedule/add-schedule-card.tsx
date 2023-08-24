@@ -16,6 +16,7 @@ import { SensorsTypes, WeekDays } from 'utils/constant';
 import Checkbox from '../../components/checkbox/checkbox';
 import { UPDATE_SETTING } from 'graphql/query/plants.query';
 import { ISetting } from 'utils/types';
+import { getDayShortName } from 'utils/sensorUtils';
 
 
 // Shape of form values
@@ -115,7 +116,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
   };
 
 
-  const handleDaysAddition = (day: WeekDays) => {
+  const handleDaysAddition = (day: number) => {
     const dayIndex = daysSelected.indexOf(day);
     let newDaysSelectedArray: any = daysSelected;
 
@@ -166,14 +167,15 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
         </ListItem>
 
       <WeekContainer>
-        {Object.keys(WeekDays).map((day: WeekDays, i: number) => {
+        {WeekDays.map((day: any) => {
+          console.log('DATT', day)
             return (
               <DayContainer
-                key={i + '-day-container'}
+                key={day + '-day-container'}
                 style={{ backgroundColor: daysSelected.indexOf(day) >= 0 ? '#b99c9c' : 'transparent' }}
                 onClick={() => handleDaysAddition(day)}
               >
-                {day.substring(0,3)}
+                {getDayShortName(day)}
               </DayContainer>
             )
           })

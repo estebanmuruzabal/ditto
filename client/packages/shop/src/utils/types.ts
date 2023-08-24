@@ -28,12 +28,10 @@ export interface ISetting {
 }
 
 export interface IScheduleInput {
-    product_id: string;
-    name?: string;
-    image?: string;
-    quantity: number;
-    recicledQuantity: number;
-    unit?: string;
-    price: number;
+    daysToRepeat: Array<number>;
+    startTime: string;
+    endTime: string;
+    enabled: boolean;
+    smartLight: boolean;
 }
 

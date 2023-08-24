@@ -17,7 +17,7 @@ import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
 import { CheckMark } from 'assets/icons/CheckMark';
-import { getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
+import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import Reading from './Reading';
 // import { useQuery } from '@apollo/react-hooks';
 // const { loading, error, data = {} } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
@@ -173,7 +173,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         menuPosition={'fixed'}
                     />
                     ) : (
-                        <Text  bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
+                        <Text  bold>{selectedMode?.value.length > 1 ? selectedMode.label : '-'}</Text>
                     )}
                 </ListDes>
             </ListItem>
@@ -580,14 +580,14 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     return (
                         <WeekContainer>
                             <ListDes style={{ flexDirection: 'row', display: 'flex', paddingBottom: '10px' }} >
-                                {Object.keys(WeekDays).map((day, i: number) => {
+                                {Object.keys(WeekDays).map((day: any, i: number) => {
                                     return (
                                         <DayContainer
                                             key={i + '-day--humidity-1container'}
                                             style={{ backgroundColor: schedule.daysToRepeat.includes(day) ? '#c2b0b0' : 'transparent' }}
                                             // onClick={() => setDay(day)}
                                         >
-                                            {day.substring(0,2)}
+                                            {getDayShortName(day)}
                                         </DayContainer>
                                         )
                                     })

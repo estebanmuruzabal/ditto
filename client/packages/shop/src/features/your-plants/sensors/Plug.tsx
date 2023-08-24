@@ -16,7 +16,7 @@ import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekCo
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
-import { getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
+import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import { CheckMark } from 'assets/icons/CheckMark';
 
 interface Props {
@@ -298,15 +298,15 @@ const Plug: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDel
             { setting.mode === HumiditySensorMode.SCHEDULE && (
             <>
                 <WeekContainer>
-                {Object.keys(WeekDays).map((day, i: number) => {
-                    return (
-                        <DayContainer
-                            key={i + '-day--humidity-1container'}
-                            style={{ backgroundColor: daySelected === day ? '#c2b0b0' : 'transparent' }}
-                            onClick={() => setDay(day)}
-                        >
-                            {day.substring(0,3)}
-                        </DayContainer>
+                    {Object.keys(WeekDays).map((day: any, i: number) => {
+                        return (
+                            <DayContainer
+                                key={i + '-day--humidity-1container'}
+                                style={{ backgroundColor: daySelected === day ? '#c2b0b0' : 'transparent' }}
+                                onClick={() => setDay(day)}
+                            >
+                                {getDayShortName(day)}
+                            </DayContainer>
                         )
                     })
                 }

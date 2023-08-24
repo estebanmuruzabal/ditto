@@ -16,7 +16,7 @@ import { PlantsSensorContainer, ListItem, ListTitle, ListDes, InputUpper, WeekCo
 import { openModal } from '@redq/reuse-modal';
 import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';  
 import { ISetting } from 'utils/types';
-import { getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
+import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import { CheckMark } from 'assets/icons/CheckMark';
 
 interface Props {
@@ -254,14 +254,14 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
                     return (
                         <WeekContainer>
                             <ListDes style={{ flexDirection: 'row', display: 'flex', paddingBottom: '10px' }} >
-                                {Object.keys(WeekDays).map((day, i: number) => {
+                                {Object.keys(WeekDays).map((day: any, i: number) => {
                                     return (
                                         <DayContainer
                                             key={i + '-day-light-1-container'}
                                             style={{ backgroundColor: schedule.daysToRepeat.includes(day) ? '#c2b0b0' : 'transparent' }}
                                             // onClick={() => setDay(day)}
                                         >
-                                            {day.substring(0,2)}
+                                            {getDayShortName(day)}
                                         </DayContainer>
                                         )
                                     })

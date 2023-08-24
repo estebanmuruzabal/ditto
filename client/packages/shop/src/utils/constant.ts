@@ -73,20 +73,12 @@ export enum CommonMode {
 }
 
 export enum LightSensorMode {
-    MANUAL = 'MANUAL',
+    MANUAL = 'LIGHT_MANUAL',
     SCHEDULE = 'LIGHT_SCHEDULE',
     SMART_SCHEDULE = 'LIGHT_SMART_SCHEDULE',
     NONE = 'NONE'
 }
-export enum WeekDays {
-    MONDAY = 1,
-    TUESDAY = 2,
-    WEDNESDAY = 3,
-    THURSDAY = 4,
-    FRIDAY = 5,
-    SATURDAY = 6,
-    SUNDAY = 7
-}
+export const WeekDays = [1, 2, 3, 4, 5, 6, 7];
 
     // - Accion vacio custom: activa relay asociado x cantidad de tiempo
     // - Accion vacio automatico: avisa cuando esta vacio y activa relay asociado hasta llegar al maximo
