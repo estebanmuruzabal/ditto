@@ -21,10 +21,11 @@ export const SEO: React.FC<SeoProps> = ({
   <Head>
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta
+    {/* <meta
       name="viewport"
       content="width=device-width,minimum-scale=1,initial-scale=1"
-    />
+    /> */}
+       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <meta property="og:type" content="website" />
     <meta name="og:title" property="og:title" content={title} />
     <meta

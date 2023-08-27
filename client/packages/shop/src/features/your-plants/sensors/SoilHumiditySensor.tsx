@@ -18,7 +18,8 @@ import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';
 import { ISetting } from 'utils/types';
 import { CheckMark } from 'assets/icons/CheckMark';
 import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
-import Reading from './Reading';
+import HumidityReading from './HumidityReading';
+
 // import { useQuery } from '@apollo/react-hooks';
 // const { loading, error, data = {} } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
 //     notifyOnNetworkStatusChange: true,
@@ -68,7 +69,6 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
             componentProps: { item: modalProps },
         });
     };
-    const reading = (setting?.reading >= -5 && setting?.reading < 0) ? 0 + ' % 💧' : (setting?.reading >= 0 && setting?.reading <= 100 && setting?.reading) ? setting?.reading + ' % 💧' : 'Disconected';
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -106,25 +106,13 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                 <ListTitle>
                     <Text>
                         <FormattedMessage
-                        id="soilHumidityId"
-                        defaultMessage="soilHumidityId"
+                            id="soilHumidityId"
+                            defaultMessage="soilHumidityId"
                         />
                     </Text>
                 </ListTitle>
                 <ListDes>
-                    <Reading
-                        key={'1-' + settingType}
-                        data={data}
-                        plant={plant}
-                        errorId={errorId}
-                        openTab={openTab}
-                        handleDeleteSensor={handleDeleteSensor}
-                        setOpenTab={setOpenTab}
-                        settingType={settingType}
-                        handleSettingsChange={handleSettingsChange}
-                        onDeleteSchedule={onDeleteSchedule} 
-                    />
-                    {/* <Text bold>{reading} </Text> */}
+                    <HumidityReading settingType={settingType} plant={plant} />
                 </ListDes>
             </ListItem>
             <ListItem style={{ justifyContent: 'flex-start' }}>

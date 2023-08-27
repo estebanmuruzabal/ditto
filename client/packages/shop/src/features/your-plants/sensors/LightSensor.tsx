@@ -18,19 +18,22 @@ import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';
 import { ISetting } from 'utils/types';
 import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import { CheckMark } from 'assets/icons/CheckMark';
+import Reading from './HumidityReading';
+import LightReading from './LightReading';
 
 interface Props {
   data?: any;
   plant: any;
   settingType: SensorsTypes;
   openTab: string;
+  errorId: string;
   setOpenTab: (settingType: string) => void;
   handleSettingsChange: (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => void;
   onDeleteSchedule: (plant: any, settingType: SensorsTypes, position: number) => void;
   handleDeleteSensor: (plant: any, settingType: string) => void;
 }
 
-const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor }) => {
+const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor }) => {
     const setting = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
@@ -104,7 +107,11 @@ const LightSensor: React.FC<Props> = ({ plant, settingType, handleSettingsChange
               </Text>
             </ListTitle>
             <ListDes>
-              <Text bold>{plant?.light} % {plant?.light < 40 ? '🌙' : '💡'}</Text>
+                <LightReading
+                    settingType={settingType}
+                    plant={plant}
+                />
+              {/* <Text bold>{setting?.reading} % {setting?.reading < 40 ? '🌙' : '💡'}</Text> */}
             </ListDes>
           </ListItem>
   

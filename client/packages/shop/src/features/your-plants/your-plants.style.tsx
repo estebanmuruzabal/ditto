@@ -15,6 +15,10 @@ const OrderReceivedWrapper = styled.div`
 `;
 
 export const PlantPageWrapper = styled.div`
+  .dropdown-select__control.dropdown-select__control--is-focused {
+    font-size: 16px !important;
+  }
+
   background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
   position: relative;
   // padding: 100px 0 60px 0;

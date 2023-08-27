@@ -388,6 +388,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         </ListDes>
                       </ListItem>
 
+                      {/* <Reading> */}{/* <Reading> */}
+
                       <ListItem style={{ justifyContent: 'flex-start' }}>
                         <ListTitle>
                         <Text bold>
@@ -437,6 +439,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             <LightSensor 
                               key={i + module.settingType}
                               data={data}
+                              errorId={errorId}
                               plant={plant}
                               handleDeleteSensor={handleDeleteSensor}
                               openTab={openTab}

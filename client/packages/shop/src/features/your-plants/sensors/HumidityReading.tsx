@@ -22,19 +22,12 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_LOGGED_IN_USER_SETTINGS } from 'graphql/query/customer.query';
 
 interface Props {
-  data?: any;
   plant: any;
-  openTab: string;
-  errorId: string;
-  setOpenTab: (settingType: string) => void;
-  handleDeleteSensor: (plant: any, settingType: string) => void;
   settingType: SensorsTypes;
-  handleSettingsChange: (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => void;
-  onDeleteSchedule: (plant: any, settingType: SensorsTypes, position: number) => void;
 }
 
-const Reading: React.FC<Props> = ({ errorId, plant: plantSelected, settingType, handleSettingsChange, onDeleteSchedule, data: data1, openTab, setOpenTab, handleDeleteSensor  }) => {
-    const setting = plantSelected.sensors.find((module: ISetting) => module.settingType === settingType);
+const HumidityReading: React.FC<Props> = ({ plant, settingType  }) => {
+    const setting = plant.sensors.find((module: ISetting) => module.settingType === settingType);
 
     const { loading, error, data } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
         notifyOnNetworkStatusChange: true,
@@ -42,13 +35,13 @@ const Reading: React.FC<Props> = ({ errorId, plant: plantSelected, settingType, 
         pollInterval: 10000,
       });
     
-    const sensorIndex = Number(setting?.settingType[setting?.settingType.length - 1]) - 1;
-    const plantIndex = data?.getUser?.plants?.findIndex((plant: any) => plant.plantId === plantSelected.plantId);            
+    const sensorIndex = Number(setting?.settingType[setting?.settingType.length - 1]);
+    const plantIndex = data?.getUser?.plants?.findIndex((plant: any) => plant.plantId === plant.plantId);            
     const reading = data?.getUser.plants[plantIndex]?.sensors[sensorIndex]?.reading;
-    const readingFormatted = (reading >= -5 && reading < 0) ? 0 + ' % 💧' : (reading >= 0 && reading <= 100 && reading) ? reading + ' % 💧' : 'Disconected';
+    const readingFormatted = (reading >= -10 && reading < 0) ? 0 + ' % 💧' : (reading >= 0 && reading <= 100 && reading) ? reading + ' % 💧' : 'Disconected';
     return (
         <Text bold>{readingFormatted}</Text>
     );
 };
 
-export default Reading;
+export default HumidityReading;
