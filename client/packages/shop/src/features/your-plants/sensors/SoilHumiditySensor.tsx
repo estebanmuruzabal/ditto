@@ -239,6 +239,9 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
                                 value={relayOneSelected}
                                 options={fourRelaysOptions}
+                                // inputFocusOnClick={false}
+                                // focusInputOnMenuOpen={false}
+                                isSearchable={false}
                                 styles={selectStyle}
                                 menuPosition={'fixed'}
                             />
