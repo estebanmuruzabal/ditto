@@ -37,8 +37,16 @@ const HumidityReading: React.FC<Props> = ({ plant, settingType  }) => {
     
     const sensorIndex = Number(setting?.settingType[setting?.settingType.length - 1]);
     const plantIndex = data?.getUser?.plants?.findIndex((plant: any) => plant.plantId === plant.plantId);            
-    const reading = data?.getUser.plants[plantIndex]?.sensors[sensorIndex]?.reading;
-    const readingFormatted = (reading >= -10 && reading < 0) ? 0 + ' % 💧' : (reading >= 0 && reading <= 100 && reading) ? reading + ' % 💧' : 'Disconected';
+    let reading = data?.getUser.plants[plantIndex]?.sensors[sensorIndex]?.reading;
+    console.log('setting?.settingType', setting?.settingType)
+    console.log('plantIndex', plantIndex)
+    console.log('reading', reading)
+    // if (reading > -5 && reading <= 0) reading = 0;
+    // if (reading >= 100 && reading < 110) reading = 100;
+
+
+    // const readingFormatted = (reading >= -10 && reading < 0) ? 0 + ' % 💧' : (reading >= 0 && reading <= 100 && reading) ? reading + ' % 💧' : 'Disconected';
+    const readingFormatted = (reading >= 0 && reading <= 110) ? `${reading} % 💧` : 'Disconected';  
     return (
         <Text bold>{readingFormatted}</Text>
     );
