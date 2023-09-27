@@ -1,11 +1,10 @@
-import { playintegrity } from "googleapis/build/src/apis/playintegrity";
+// import { playintegrity } from "googleapis/build/src/apis/playintegrity";
 import moment from "moment";
 
 import { DistanceSensorMode, HumiditySensorMode, ISensorSetting, ISetting, LightSensorMode, Plant } from "../lib/types";
 import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
 import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
-import { Console } from "console";
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string) => {
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }

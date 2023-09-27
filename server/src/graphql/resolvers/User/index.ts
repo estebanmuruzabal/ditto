@@ -421,7 +421,7 @@ export const usersResolvers: IResolvers = {
                     plantId,
                     soil_humidity_1: 0,
                     soil_humidity_2: 0,
-                    humidity_sensor_1: 0,
+                    humidity_1: 0,
                     tempeture_1: 0,
                     distance_cm: 0,
                     light_1: 0,
@@ -485,7 +485,7 @@ export const usersResolvers: IResolvers = {
             } else {
                 plants[index].soil_humidity_1 = hum1;
                 plants[index].soil_humidity_2 = hum2;
-                plants[index].humidity_sensor_1 = airHum;
+                plants[index].humidity_1 = airHum;
                 plants[index].tempeture_1 = temp;
                 plants[index].distance_1 = dist;
                 plants[index].light_1 = light;

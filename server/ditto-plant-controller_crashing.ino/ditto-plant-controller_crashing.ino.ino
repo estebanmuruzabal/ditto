@@ -15,7 +15,7 @@ using namespace std;
 const char* ssid = "dittofarm";
 const char* password = "guemes765";
 const char* userId = "630d325b4872db758bb808b9";
-const char* serverName = "http://54.232.137.175/api";
+const char* serverName = "http://3.15.129.60/api";
 //const char* serverName = "http://0.0.0.0/api";
 const int dry = 3705;
 const int wet = 1357;

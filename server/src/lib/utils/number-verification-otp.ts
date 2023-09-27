@@ -9,9 +9,9 @@ import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD, READ_MAIL_CONFIG } from "./const
 const fromNumber = process.env.OTP_FROM_NUMBER
 const apiToken = process.env.OTP_API_TOKEN
 
-const path = require('path');
-const {google} = require('googleapis');
-const {authenticate} = require('@google-cloud/local-auth');
+// const path = require('path');
+// const {google} = require('googleapis');
+// const {authenticate} = require('@google-cloud/local-auth');
 
 
 export const sendOtp = (sendToNumber: string, otpCode: string) => {
@@ -163,17 +163,17 @@ const getAccesToken = async () => {
       
     // };
 
-    let accessToken = "";
+//     let accessToken = "";
 
-    // Obtain user credentials to use for the request
-  const auth = await authenticate({
-    keyfilePath: path.join(__dirname, '../oauth2.keys.json'),
-    scopes: 'https://www.googleapis.com/auth/gmail.readonly',
-  });
-  google.options({auth});
-const gmail = google.gmail('v1');
-  const res = await gmail.users.messages.list({userId: 'me'});
-  console.log(res.data);
+//     // Obtain user credentials to use for the request
+//   const auth = await authenticate({
+//     keyfilePath: path.join(__dirname, '../oauth2.keys.json'),
+//     scopes: 'https://www.googleapis.com/auth/gmail.readonly',
+//   });
+//   google.options({auth});
+// const gmail = google.gmail('v1');
+//   const res = await gmail.users.messages.list({userId: 'me'});
+//   console.log(res.data);
     //   // @ts-ignore
     // await axios(config)
     //   .then(async function (response) {
@@ -185,7 +185,8 @@ const gmail = google.gmail('v1');
     //     console.log(error);
     //   });
 
-    return res.data;
+    // return res.data;
+    return;
   };
 
   

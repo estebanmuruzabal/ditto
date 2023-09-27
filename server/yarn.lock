@@ -4537,10 +4537,10 @@ websocket-stream@~5.2.0:
     ws "^6.1.2"
     xtend "^4.0.0"
 
-whatsapp-web.js@1.20.0:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/whatsapp-web.js/-/whatsapp-web.js-1.20.0.tgz#25584ff7edac61bee09b00bb6fb396714a172434"
-  integrity sha512-YaiXyr44D+mLC+zqMV+Jd2E97OXCeUf18nqcIkS+M/SGQ11bPpe8MhQXF/OZ3eIuOnDsZVu30qb+K5YI+tSCZg==
+whatsapp-web.js@^1.21.1-alpha.1:
+  version "1.22.1"
+  resolved "https://registry.yarnpkg.com/whatsapp-web.js/-/whatsapp-web.js-1.22.1.tgz#40fc8362558650cf06e8ed9df13f35d407ae5e6c"
+  integrity sha512-KaGxREc5x3LJmSae0RDIGJRLV+GYl9oy9WL6+MqlLrA2Bi34TGfmCrxb2voUM7RdpCdUp49UkQN/zdEygt4GxA==
   dependencies:
     "@pedroslopez/moduleraid" "^5.0.2"
     fluent-ffmpeg "^2.1.2"

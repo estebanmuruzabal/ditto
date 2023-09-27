@@ -6,7 +6,7 @@ import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQu
 const { createApolloFetch } = require('apollo-fetch');
 
 
-// const uri = 'http://54.232.137.175/api';
+// const uri = 'http://3.15.129.60/api';
 const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 
