@@ -31,6 +31,10 @@ export interface deleteSettingsArgs {
     settingName: string;
 }
 
+export interface deleteShopArgs {
+    id: string;
+}
+
 export interface ILogsInput {
     product_id: string;
     name?: string;

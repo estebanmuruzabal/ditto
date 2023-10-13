@@ -19,6 +19,16 @@ export interface Plant {
     isRelayFourthOn: boolean;
 }
 
+export interface Shop {
+    id?: string;
+    shopPublicName: string;
+    shopUrl: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    shopIsOnline: boolean;
+}
+
 export interface Phone {
     id: string
     number: string,
@@ -99,6 +109,7 @@ export interface IUser {
     email?: string;
     password: string;
     phones?: Array<Phone>;
+    shop?: Shop | null;
     plants: Array<Plant>;
     delivery_address?: Array<Address>;
     otp?: string;
@@ -434,6 +445,21 @@ export interface ICommonMessageReturnType {
     status: boolean;
     access_token?: string;
 }
+
+export interface ShopInput {
+    shopPublicName: string;
+    shopUrl: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    shopIsOnline: boolean;
+}
+
+export interface IShopInputArgs {
+    id?: string;
+    input: ShopInput;
+}
+
 
 export interface IPlantReturnType {
     isRelayOneOn: string;

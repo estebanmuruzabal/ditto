@@ -573,7 +573,37 @@ export const typeDefs = gql`
         hasMore: Boolean
     }
     
+    input BoundsInput {
+        ne: CoordinatesInput!
+        sw: CoordinatesInput!
+    }
+    
+    input CoordinatesInput {
+        latitude: Float!
+        longitude: Float!
+    }
+    
+    type Shop {
+        id: ID!
+        userId: String!
+        shopPublicName: String!
+        shopUrl: String!
+        address: String!
+        latitude: Float!
+        longitude: Float!
+    }
+    
+    input ShopInput {
+        shopPublicName: String!
+        shopUrl: String!
+        address: String!
+        coordinates: CoordinatesInput!
+    }
+      
     type Query {
+        shop(id: String!): Shop
+        shops(bounds: BoundsInput!): [Shop!]!
+
         getUsers: [User!]!
         types(limit: Int = 12, offset: Int = 0, searchText: String): MainTypePaginationType!
         categories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
@@ -600,6 +630,9 @@ export const typeDefs = gql`
     }
     
     type Mutation {
+        deleteShop(id: String!): Boolean!
+        updateShop(id: String, input: ShopInput!): Shop
+
         login(phone: String!, password: String!): UserAuthPayload!
         signUp(phone: String!, password: String!, name: String!): DefaultMessageType!
         staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!

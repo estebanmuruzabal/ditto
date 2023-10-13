@@ -15,7 +15,7 @@ import {IOrderInputArgs, IOrderProductInput, IOrderQuickInput, IOrderQuickInputA
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
 import { sendCompanyConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
-import { client } from '../../../index';
+// import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
 import { orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
 import { COMPANY_EMAIL } from '../../../lib/utils/constant';

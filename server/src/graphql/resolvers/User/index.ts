@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, DistanceSensorMode, HumiditySensorMode, ICommonMessageReturnType, IPlantReturnType, IProduct, ISensorSetting, ISetting, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
+import {Address, Database, DistanceSensorMode, HumiditySensorMode, ICommonMessageReturnType, IPlantReturnType, IProduct, ISensorSetting, ISetting, IShopInputArgs, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, ShopInput, TriggerSteps} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize, takeNineOutIfItHasIt} from "../../../lib/utils";
@@ -10,7 +10,7 @@ import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
 import { checkSensor } from '../../../controllers/plants';
-import { ISettingsInputArgs, deleteSettingsArgs } from './types';
+import { ISettingsInputArgs, deleteSettingsArgs, deleteShopArgs } from './types';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -76,7 +76,62 @@ export const usersResolvers: IResolvers = {
             // @ts-ignore
             return await authorize(req, db);
         },
-         getCustomer: async (
+        updateShop: async (
+            _root: undefined,
+            {id, input}: IShopInputArgs,
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+
+            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
+
+            const shop = {
+                id: id || shortid.generate(),
+                shopPublicName: input.shopPublicName,
+                shopUrl: input.shopUrl,
+                shopIsOnline: input.shopIsOnline,
+                address: input.address,
+                latitude: input.latitude,
+                longitude: input.longitude,
+            }
+        
+            
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$set: {shop}}
+            );
+
+            return {
+                status: true,
+                message: `Updated ${input.shopPublicName} successfully`
+            };
+        },
+        deleteShop: async (
+            _root: undefined,
+            {id}: deleteShopArgs,
+            {db, req}: { db: Database, req: Request }
+        ): Promise<ICommonMessageReturnType> => {
+            // await authorize(req, db);
+
+            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+            if (!userResult) {
+                throw new Error("User does not exits.");
+            }
+            const shop = null;
+            await db.users.updateOne(
+                {_id: new ObjectId(id)},
+                {$set: {shop}}
+            );
+
+            return {
+                status: true,
+                message: `${id} deleted successfully`
+            };
+        },
+        getCustomer: async (
             _root: undefined,
             {phone}: { phone: string},
             {db, req}: { db: Database, req: Request }
