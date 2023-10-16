@@ -630,8 +630,6 @@ export const typeDefs = gql`
     }
     
     type Mutation {
-        deleteShop(id: String!): Boolean!
-        updateShop(id: String, input: ShopInput!): Shop
 
         login(phone: String!, password: String!): UserAuthPayload!
         signUp(phone: String!, password: String!, name: String!): DefaultMessageType!

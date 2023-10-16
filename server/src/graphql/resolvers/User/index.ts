@@ -76,61 +76,64 @@ export const usersResolvers: IResolvers = {
             // @ts-ignore
             return await authorize(req, db);
         },
-        updateShop: async (
-            _root: undefined,
-            {id, input}: IShopInputArgs,
-            {db, req}: { db: Database, req: Request }
-        ): Promise<ICommonMessageReturnType> => {
-            // await authorize(req, db);
+        // deleteShop(id: String!): Boolean!
+        // updateShop(id: String, input: ShopInput!): Shop
+        // in typeDefs.ts
+        // updateShop: async (
+        //     _root: undefined,
+        //     {id, input}: IShopInputArgs,
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     // await authorize(req, db);
 
-            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
-            if (!userResult) {
-                throw new Error("User does not exits.");
-            }
+        //     const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
 
-            const shop = {
-                id: id || shortid.generate(),
-                shopPublicName: input.shopPublicName,
-                shopUrl: input.shopUrl,
-                shopIsOnline: input.shopIsOnline,
-                address: input.address,
-                latitude: input.latitude,
-                longitude: input.longitude,
-            }
+        //     const shop = {
+        //         id: id || shortid.generate(),
+        //         shopPublicName: input.shopPublicName,
+        //         shopUrl: input.shopUrl,
+        //         shopIsOnline: input.shopIsOnline,
+        //         address: input.address,
+        //         latitude: input.latitude,
+        //         longitude: input.longitude,
+        //     }
         
             
-            await db.users.updateOne(
-                {_id: new ObjectId(id)},
-                {$set: {shop}}
-            );
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {shop}}
+        //     );
 
-            return {
-                status: true,
-                message: `Updated ${input.shopPublicName} successfully`
-            };
-        },
-        deleteShop: async (
-            _root: undefined,
-            {id}: deleteShopArgs,
-            {db, req}: { db: Database, req: Request }
-        ): Promise<ICommonMessageReturnType> => {
-            // await authorize(req, db);
+        //     return {
+        //         status: true,
+        //         message: `Updated ${input.shopPublicName} successfully`
+        //     };
+        // },
+        // deleteShop: async (
+        //     _root: undefined,
+        //     {id}: deleteShopArgs,
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     // await authorize(req, db);
 
-            const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
-            if (!userResult) {
-                throw new Error("User does not exits.");
-            }
-            const shop = null;
-            await db.users.updateOne(
-                {_id: new ObjectId(id)},
-                {$set: {shop}}
-            );
+        //     const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+        //     const shop = null;
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {shop}}
+        //     );
 
-            return {
-                status: true,
-                message: `${id} deleted successfully`
-            };
-        },
+        //     return {
+        //         status: true,
+        //         message: `${id} deleted successfully`
+        //     };
+        // },
         getCustomer: async (
             _root: undefined,
             {phone}: { phone: string},
