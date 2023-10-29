@@ -76,9 +76,6 @@ export const usersResolvers: IResolvers = {
             // @ts-ignore
             return await authorize(req, db);
         },
-        // deleteShop(id: String!): Boolean!
-        // updateShop(id: String, input: ShopInput!): Shop
-        // in typeDefs.ts
         // updateShop: async (
         //     _root: undefined,
         //     {id, input}: IShopInputArgs,

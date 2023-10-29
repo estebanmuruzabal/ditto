@@ -10,11 +10,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
-
-
-    // we assign the reading with the settingType name by only lower casing it!
-    // ERROR light_1 comes in sensorReadingName so it doesnt find plant[sensorReadingName], we should change variable to have light_1, temp_1, distance_1
+    const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
+
     console.log('sensorReadingName::', sensorReadingName)
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
@@ -27,7 +25,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const timeToEvacuateInMins = Number(relayTwoAutomatedTimeToRun);
     const timeToIrrigateInMins = Number(relayOneAutomatedTimeToRun);
 
-    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
+    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
 
     const startedIrrigationTime = moment(relayOneAutomatedStartedTime);
     const startedEvacuationTime = moment(relayTwoAutomatedStartedTime);
@@ -41,13 +39,12 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const relayTwoAsocciatedActionComplete = currentEvacuationSeconds >= timeToEvacuateInMins && !!relayTwoAutomatedStartedTime.length;
     
     moment.locale('es');
-    const today = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }), 'MM/D/YYYY').day();
+    const today = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }), 'MM/D/YYYY').day();
     
     const maxLevelReached = reading >= maxReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
     const minLevelReached = reading <= minReading && relayOneAutomatedStartedTime.length > 0;
     const currentTimeWithoutNotifing = currentTime?.diff(startedIrrigationTime, 'minutes');
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
-
     console.log('setting BF process:', plant);
     console.log('relayOneIdRelated', relayOneIdRelated)
 // @ts-ignore
@@ -102,7 +99,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting?.name} llego a ${reading}% de humedad, ya estamos llenando la pileta con agua.`);
@@ -142,7 +139,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true, false);
                 // we turn evacuation watering relay OFF just in case
                 // @ts-ignore
@@ -170,7 +167,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 setting.relayTwoWorking = true;
 
                 // we set the start time of the relay
-                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
 
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 break;
@@ -208,9 +205,9 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
             scheduledOnTimes?.map((schedule: any, i: number) => {
                     console.log(today, schedule.daysToRepeat, schedule.daysToRepeat.includes(today))
                 if (schedule.daysToRepeat.includes(today)) {
-                    const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                    const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
+                    const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
+                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
                     console.log(startTime, endTime)
                     // @ts-ignore
                     plant[relayOneIdRelated] = currentTime1.isBetween(startTime, endTime);
@@ -238,8 +235,8 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
             const currentTimee = moment(new Date()).format('hh:mm:ss');
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today)) {
-                    const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
-                    const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })).format('hh:mm:ss');
+                    const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
+                    const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
                     
                     // @ts-ignore
                     if (currentTimee.isBetween(startTime, endTime)) {
@@ -264,7 +261,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true, false);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad, ya estamos activando la acción asociada.`);
@@ -297,7 +294,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true, false);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad, ya estamos activando la acción asociada.`);
@@ -329,7 +326,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} acaba de llegar a la capacidad máxima con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
@@ -342,7 +339,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 setting.relayTwoWorking = true;
 
                 // we set the start time of the relay
-                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
 
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad, ya estamos activando la acción asociada.`);
@@ -377,7 +374,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad. Activamos el dispositivo asociado`);
@@ -399,7 +396,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
             setting = logTimeStampWithTimeFilter(setting, reading);
 
             if (maxLevelReached && !setting.relayOneAutomatedStartedTime.length) {
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
                 break;
@@ -407,14 +404,14 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
             
             if (timeInMinutesThatShouldntNotify > currentTimeWithoutNotifing) {
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 break;
             }
         case DistanceSensorMode.MIN_WARNING:            
             setting = logTimeStampWithTimeFilter(setting, reading);
 
             if (minLevelReached && !setting.relayOneAutomatedStartedTime.length) {
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
                 break;
@@ -422,7 +419,7 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
             
             if (timeInMinutesThatShouldntNotify > currentTimeWithoutNotifing) {
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
                 break;
             }
         default:

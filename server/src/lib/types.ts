@@ -301,6 +301,17 @@ export interface IProductType {
     name: string;
     slug: string;
 }
+
+export interface IShop {
+    userId: ObjectId;
+    shopPublicName: string;
+    shopUrl: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    shopIsOnline: boolean;
+}
+
 export interface IProduct {
     _id?: ObjectId;
     type: IProductType;
@@ -495,6 +506,7 @@ export interface Database {
     types: Collection<IType>;
     categories: Collection<ICategory>;
     products: Collection<IProduct>;
+    shops: Collection<IShop>;
     delivery_methods: Collection<IDeliveryMethod>;
     payment_options: Collection<IPaymentOption>;
     orders: Collection<IOrder | IQuickOrder>;
