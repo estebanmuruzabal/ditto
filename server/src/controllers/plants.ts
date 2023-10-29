@@ -228,8 +228,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             break;
         case LightSensorMode.SCHEDULE:
         case LightSensorMode.SMART_SCHEDULE:
-            const currentTimee = moment(new Date()).format('hh:mm:ss');
-            console.log('currentTimee:', currentTimee)
+            console.log('currentTime:', currentTime)
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 console.log('schedule:', schedule)
                 console.log('schedule.daysToRepeat.includes(today):', schedule.daysToRepeat.includes(today))
@@ -241,9 +240,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                     console.log('startTime', startTime)
                     console.log('endTime', endTime)
                     // @ts-ignore
-                    console.log('currentTimee.isBetween(startTime, endTime):', currentTimee.isBetween(startTime, endTime))
+                    console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
                     // @ts-ignore
-                    if (currentTimee.isBetween(startTime, endTime)) {
+                    if (currentTime.isBetween(startTime, endTime)) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
                         // @ts-ignore
