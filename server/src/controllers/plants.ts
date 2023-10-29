@@ -235,8 +235,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 console.log('schedule.daysToRepeat', schedule.daysToRepeat)
                 console.log('today', today)
                 if (schedule.daysToRepeat.includes(today)) {
-                    const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
-                    const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
+                    const format = 'hh:mm:ss';
+                    const startTime = moment(schedule.startTime, format);
+                    const endTime = moment(schedule.endTime, format);
                     console.log('startTime', startTime)
                     console.log('endTime', endTime)
                     // @ts-ignore
@@ -246,7 +247,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
                         // @ts-ignore
-                        console.log('plant[relayOneIdRelated]:', plant[relayOneIdRelated])
+                        console.log('plant[relayOneIdRelated]::', plant[relayOneIdRelated])
                     }
                 }
             })
