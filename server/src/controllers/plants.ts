@@ -197,9 +197,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             plant[relayOneIdRelated] = setting.relayOneWorking;
             break;
         case HumiditySensorMode.SCHEDULE:
-            console.log('IN SCHEDULE CASE')
             scheduledOnTimes?.map((schedule: any, i: number) => {
-                    console.log(today, schedule.daysToRepeat, schedule.daysToRepeat.includes(today))
                 if (schedule.daysToRepeat.includes(today)) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
@@ -207,6 +205,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                     console.log(startTime, endTime)
                     // @ts-ignore
                     plant[relayOneIdRelated] = currentTime1.isBetween(startTime, endTime);
+                    setting.relayOneWorking = true;
                     // @ts-ignore
                 console.log('currentTime1', currentTime1)
                 // @ts-ignore
@@ -230,24 +229,17 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case LightSensorMode.SMART_SCHEDULE:
             console.log('currentTime:', currentTime)
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-                console.log('schedule:', schedule)
-                console.log('schedule.daysToRepeat.includes(today):', schedule.daysToRepeat.includes(today))
-                console.log('schedule.daysToRepeat', schedule.daysToRepeat)
-                console.log('today', today)
                 if (schedule.daysToRepeat.includes(today)) {
                     const format = 'hh:mm:ss';
                     const startTime = moment(schedule.startTime, format);
                     const endTime = moment(schedule.endTime, format);
-                    console.log('startTime', startTime)
-                    console.log('endTime', endTime)
                     // @ts-ignore
                     console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
                     // @ts-ignore
                     if (currentTime.isBetween(startTime, endTime)) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
-                        // @ts-ignore
-                        console.log('plant[relayOneIdRelated]::', plant[relayOneIdRelated])
+                        setting.relayOneWorking = schedule.smartLight ? false : true;
                     }
                 }
             })
