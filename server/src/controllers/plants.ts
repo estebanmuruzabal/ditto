@@ -13,12 +13,12 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
 
-    console.log('sensorReadingName::', sensorReadingName)
+    // console.log('sensorReadingName::', sensorReadingName)
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
 
-    // @ts-ignore
-    console.log('plant[sensorReadingName]::', plant[sensorReadingName])
+    // // @ts-ignore
+    // console.log('plant[sensorReadingName]::', plant[sensorReadingName])
 
     const minReading = Number(minWarning);
     const maxReading = Number(maxWarning);
@@ -45,10 +45,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const minLevelReached = reading <= minReading && relayOneAutomatedStartedTime.length > 0;
     const currentTimeWithoutNotifing = currentTime?.diff(startedIrrigationTime, 'minutes');
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
-    console.log('setting BF process:', plant);
-    console.log('relayOneIdRelated', relayOneIdRelated)
-// @ts-ignore
-console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
 
     // WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE
 
@@ -233,15 +229,25 @@ console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
         case LightSensorMode.SCHEDULE:
         case LightSensorMode.SMART_SCHEDULE:
             const currentTimee = moment(new Date()).format('hh:mm:ss');
+            console.log('currentTimee:', currentTimee)
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                console.log('schedule:', schedule)
+                console.log('schedule.daysToRepeat.includes(today):', schedule.daysToRepeat.includes(today))
+                console.log('schedule.daysToRepeat', schedule.daysToRepeat)
+                console.log('today', today)
                 if (schedule.daysToRepeat.includes(today)) {
                     const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
                     const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
-                    
+                    console.log('startTime', startTime)
+                    console.log('endTime', endTime)
+                    // @ts-ignore
+                    console.log('currentTimee.isBetween(startTime, endTime):', currentTimee.isBetween(startTime, endTime))
                     // @ts-ignore
                     if (currentTimee.isBetween(startTime, endTime)) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
+                        // @ts-ignore
+                        console.log('plant[relayOneIdRelated]:', plant[relayOneIdRelated])
                     }
                 }
             })
