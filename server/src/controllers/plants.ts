@@ -5,6 +5,7 @@ import { DistanceSensorMode, HumiditySensorMode, ISensorSetting, ISetting, Light
 import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
 import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
+import 'moment-timezone';
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string) => {
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
@@ -231,8 +232,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today)) {
                     const format = 'hh:mm:ss';
-                    const startTime = moment(schedule.startTime, format);
-                    const endTime = moment(schedule.endTime, format);
+                    const startTime = moment.tz(schedule.startTime, format, currentTimeZone);
+                    const endTime = moment.tz(schedule.endTime, format, currentTimeZone);
                     // @ts-ignore
                     console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
                     console.log('startTime', startTime)
