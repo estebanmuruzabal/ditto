@@ -235,11 +235,17 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                     const endTime = moment(schedule.endTime, format);
                     // @ts-ignore
                     console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
+                    console.log('startTime', startTime)
+                    console.log('endTime', endTime)
                     // @ts-ignore
                     if (currentTime.isBetween(startTime, endTime)) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
                         setting.relayOneWorking = schedule.smartLight ? false : true;
+                    } else {
+                        // @ts-ignore
+                        plant[relayOneIdRelated] = false;
+                        setting.relayOneWorking = false;
                     }
                 }
             })
