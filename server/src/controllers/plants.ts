@@ -10,7 +10,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
-    const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const currentTimeZone = 'America/Denver';
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
 
     // console.log('sensorReadingName::', sensorReadingName)

@@ -2,7 +2,7 @@ import moment from "moment";
 import { ISensorSetting } from "../lib/types";
 
 export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: number, started?: boolean, finished?: boolean) => {
-    const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const currentTimeZone = 'America/Denver';
     if (reading < -5 || reading > 105) return setting;
     if (setting?.logs?.length > 0) {
         const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
