@@ -47,8 +47,10 @@ poner  numeros
 - Arreglar y testear distancia
 
 # BUGS
-- Arregglar el enchufe 4 qu no arranca el relay cuando esta bien setteado en el arduino
-- if you add a module when its already conected, it shows disconeccted/no reading, (we should ?)
+- la hora del calendar de currentTime is la hora del servidor, tiene que ser la hora del cliente!!!
+- Arregglar el enchufe 2,3,4 qu no arranca el relay cuando esta bien setteado en el arduino
+- if you add a module (like light or soil) when its already conected, it shows disconeccted/no reading, (we should refresh with the actual value). and make sure it updates if the value changes
+- fix timestamp from general values in plant object: timestamp: '10/29/2023, 5:50:56 PM',
 - make check to not colapse when no whatsapp is linked when shuting a warning for instance.
 - Arreglar logs un poco
 
