@@ -397,7 +397,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                         <ListTitle>
                             <Text>
                             <FormattedMessage
-                                id='asociateRelayTwoId'
+                                id={relayTwoSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayToId'}
                                 defaultMessage='asociateRelayTwoId'
                             />
                             </Text>
@@ -527,7 +527,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                         <ListTitle>
                             <Text>
                             <FormattedMessage
-                                id='asociateRelayOneId'
+                                id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayToId'}
                                 defaultMessage='asociateRelayOneId'
                             />
                             </Text>

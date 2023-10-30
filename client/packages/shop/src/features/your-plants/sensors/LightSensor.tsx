@@ -45,7 +45,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
     const selectStyle = { control: styles => ({ ...styles, width: '160px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
-
+    const hasRelayAsociated = setting.relayOneIdRelated?.length > 0;
     const handleModal = (
         modalComponent: any,
         modalProps = {},
@@ -71,6 +71,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
                     <Type bold>{getSettingTypeText(setting?.settingType)}</Type>
+                    { !hasRelayAsociated && (<Type>{<FormattedMessage id="fillModeAndRelayToWork" defaultMessage="fillModeAndRelayToWork" />}</Type>)}
                 </ListTitle>
                 <ListDes style={{ marginLeft: '-10px' }}>
                     <CardButtons className='button-wrapper'>
@@ -169,7 +170,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
           { (setting?.mode === LightSensorMode.MANUAL || setting?.mode === LightSensorMode.SCHEDULE || setting?.mode === LightSensorMode.SMART_SCHEDULE) && (
             <ListItem>
               <ListTitle>
-                <Text bold>
+                <Text>
                   <FormattedMessage
                     id={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
                     defaultMessage={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
@@ -192,11 +193,11 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             </ListItem>
           )}
           
-          { setting.mode === LightSensorMode.MANUAL && (
+          { (setting.mode === LightSensorMode.MANUAL && hasRelayAsociated) && (
             <>
               <ListItem>
                 <ListTitle>
-                  <Text bold>
+                  <Text>
                     <FormattedMessage
                       id='manualModeStateId'
                       defaultMessage='manualModeStateId'
@@ -216,7 +217,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             </>
           )}
 
-          { (setting.mode === LightSensorMode.SCHEDULE || setting.mode === LightSensorMode.SMART_SCHEDULE) && (
+          { ((setting.mode === LightSensorMode.SCHEDULE || setting.mode === LightSensorMode.SMART_SCHEDULE) && hasRelayAsociated) && (
             <>
               <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
@@ -261,10 +262,10 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                     return (
                         <WeekContainer>
                             <ListDes style={{ flexDirection: 'row', display: 'flex', paddingBottom: '10px' }} >
-                                {Object.keys(WeekDays).map((day: any, i: number) => {
+                                {WeekDays.map((day: any) => {
                                     return (
                                         <DayContainer
-                                            key={i + '-day-light-1-container'}
+                                            key={day + '-day-light-1-container'}
                                             style={{ backgroundColor: schedule.daysToRepeat.includes(day) ? '#c2b0b0' : 'transparent' }}
                                             // onClick={() => setDay(day)}
                                         >
@@ -297,6 +298,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                     size='small'
                     variant='outlined'
                     type='button'
+                    style={{marginLeft: '10px'}}
                     className='add-button'
                     onClick={() => handleModal(
                         AddTimeSchedule,  { name: 'add-humidity-1-schedule', plant, id: data?.getUser?.id, settingType } )}
@@ -306,7 +308,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             </>
             )}
 
-            { setting?.logs?.length > 0 && ( <HumidityLogsGraph data={setting.logs} /> )}
+            { (setting?.logs?.length > 0 && hasRelayAsociated) && ( <HumidityLogsGraph data={setting.logs} /> )}
         </PlantsSensorContainer>
       )
 };

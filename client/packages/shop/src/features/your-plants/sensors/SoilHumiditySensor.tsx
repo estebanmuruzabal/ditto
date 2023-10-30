@@ -228,8 +228,8 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     <ListTitle>
                         <Text>
                         <FormattedMessage
-                            id='asociateCalendarRelayOneId'
-                            defaultMessage='asociateCalendarRelayOneId'
+                            id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayToId'}
+                            defaultMessage='asociateRelayToId'
                         />
                         </Text>
                     </ListTitle>
@@ -256,7 +256,6 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         {/* <Reading> */}
                         {/* <Reading> */}
                                 <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
-                                <Text bold>{setting?.relayOneWorking ? 'Prendido' : 'Apagado'}</Text>
                                 {/* <Reading> */}
                         {/* <Reading> */}
                         {/* <Reading> */}
@@ -353,7 +352,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         <ListTitle>
                             <Text>
                             <FormattedMessage
-                                id='asociateRelayOneId'
+                                id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayOneId'}
                                 defaultMessage='asociateRelayOneId'
                             />
                             </Text>
@@ -489,7 +488,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         <ListTitle>
                             <Text>
                             <FormattedMessage
-                                id='asociateRelayOneId'
+                                id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayOneId'}
                                 defaultMessage='asociateRelayOneId'
                             />
                             </Text>
@@ -506,7 +505,6 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                             ) : (
                                 <>
                                     <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
-                                    <Text bold>{setting?.relayOneWorking ? 'Prendido' : 'Apagado'}</Text>
                                 </>
                             )}
                         </ListDes>
@@ -546,8 +544,8 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     <ListTitle>
                         <Text>
                         <FormattedMessage
-                            id='asociateCalendarRelayOneId'
-                            defaultMessage='asociateCalendarRelayOneId'
+                            id='asociateRelayToId'
+                            defaultMessage='asociateRelayToId'
                         />
                         </Text>
                     </ListTitle>
@@ -606,6 +604,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                 <Button
                     size='small'
                     variant='outlined'
+                    style={{marginLeft: '10px'}}
                     type='button'
                     className='add-button'
                     onClick={() => handleModal(
@@ -662,8 +661,8 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         <ListTitle>
                             <Text>
                             <FormattedMessage
-                                id='asociateCalendarRelayOneId'
-                                defaultMessage='asociateCalendarRelayOneId'
+                                id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayToId'}
+                                defaultMessage='asociateRelayToId'
                             />
                             </Text>
                         </ListTitle>
@@ -679,7 +678,6 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                             ) : (
                                 <>
                                     <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
-                                    <Text bold>{setting?.relayOneWorking ? 'Prendido' : 'Apagado'}</Text>
                                 </>
                             )}
                         </ListDes>

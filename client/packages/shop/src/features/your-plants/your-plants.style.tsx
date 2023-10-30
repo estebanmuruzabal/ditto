@@ -168,7 +168,7 @@ export const PlantsWrapper = styled.div`
   border: 1px solid ${themeGet('colors.gray.900', '#c3b2b2')};
   border-radius: 5px;
   box-shadow: 0.5px 0.5px;
-  margin: 5px;
+  margin: 5px 0 5px 0;
   padding: 10px;
 
   @media only screen and (max-width: 1199px) {
@@ -200,9 +200,9 @@ export const PlantsSensorContainer = styled.button`
   overflow: hidden;
   position: relative;
   // width: calc(100% - 30px);
-  margin: 5px;
+  margin: 5px 0 5px 0;
   width: fit-content;
-  padding: 10px 5px;
+  padding: 10px 0px;
   box-shaddow: 0.5px 0.5px;
   
   .delete-setting-btn {
@@ -596,9 +596,9 @@ export const DayContainer = styled.button`
   align-items: center;
   justify-content: center;
   margin-right: 3px;
-  width: 30px;
+  width: 40px;
   height: 30px;
-  border: 1px solid #c3b2b2;
+  border: 1px solid ${themeGet('colors.gray.700', '#c3b2b2')};
   border-radius: 5px;
   fontFamily: $theme.typography.primaryFontFamily,
   color: $theme.colors.red400,

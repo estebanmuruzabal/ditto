@@ -38,9 +38,9 @@ const HumidityReading: React.FC<Props> = ({ plant, settingType  }) => {
     const sensorIndex = Number(setting?.settingType[setting?.settingType.length - 1]);
     const plantIndex = data?.getUser?.plants?.findIndex((plant: any) => plant.plantId === plant.plantId);            
     let reading = data?.getUser.plants[plantIndex]?.sensors[sensorIndex]?.reading;
-    console.log('setting?.settingType', setting?.settingType)
-    console.log('plantIndex', plantIndex)
-    console.log('reading', reading)
+    // console.log('setting?.settingType', setting?.settingType)
+    // console.log('plantIndex', plantIndex)
+    // console.log('reading', reading)
     // if (reading > -5 && reading <= 0) reading = 0;
     // if (reading >= 100 && reading < 110) reading = 100;
 

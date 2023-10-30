@@ -168,7 +168,6 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
 
       <WeekContainer>
         {WeekDays.map((day: any) => {
-          console.log('DATT', day)
             return (
               <DayContainer
                 key={day + '-day-container'}

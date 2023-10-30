@@ -32,7 +32,7 @@ const LightReading: React.FC<Props> = ({ plant, settingType  }) => {
     const { loading, error, data } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
         notifyOnNetworkStatusChange: true,
         fetchPolicy: "network-only",
-        pollInterval: 10000,
+        pollInterval: 1000,
       });
     
     const sensorIndex = Number(setting?.settingType[setting?.settingType.length - 1]);
