@@ -232,8 +232,19 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today)) {
                     const format = 'hh:mm:ss';
-                    const startTime = moment.tz(schedule.startTime, format, currentTimeZone);
-                    const endTime = moment.tz(schedule.endTime, format, currentTimeZone);
+                    // const startTime = moment.tz(schedule.startTime, format, currentTimeZone);
+                    // const endTime = moment.tz(schedule.endTime, format, currentTimeZone);
+
+                    //
+                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                    // const schedule = { startTime: '10:00', endTime: '17:00' };
+
+                    let startTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                    let endTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                    startTime = moment(schedule.startTime, format);
+                    endTime = moment(schedule.endTime, format);
+                    //  
+
                     // @ts-ignore
                     console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
                     console.log('startTime', startTime)
