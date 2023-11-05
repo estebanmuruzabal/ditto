@@ -153,7 +153,6 @@ export enum HumiditySensorMode {
 export enum LightSensorMode {
     MANUAL = 'LIGHT_MANUAL',
     SCHEDULE = 'LIGHT_SCHEDULE',
-    SMART_SCHEDULE = 'LIGHT_SMART_SCHEDULE',
     NONE = 'NONE'
 }
 

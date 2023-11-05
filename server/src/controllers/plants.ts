@@ -203,15 +203,28 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case HumiditySensorMode.SCHEDULE:
             scheduledOnTimes?.map((schedule: any, i: number) => {
-                if (schedule.daysToRepeat.includes(today)) {
-                    const startTime = moment(new Date(schedule.startTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
-                    const endTime = moment(new Date(schedule.endTime).toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
-                    // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
-                    console.log(startTime, endTime)
-                    // @ts-ignore
-                    plant[relayOneIdRelated] = currentTime.isBetween(startTime, endTime);
-                    setting.relayOneWorking = true;
-                }
+                console.log('currentTime:', currentTime)
+                setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                    if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                        const format = 'hh:mm:ss';
+                        const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+    
+                        let startTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                        let endTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                        startTime = moment(schedule.startTime, format);
+                        endTime = moment(schedule.endTime, format);
+    
+                        console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
+                        console.log('startTime', startTime)
+                        console.log('endTime', endTime)
+
+                        const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+
+                        // @ts-ignore
+                        plant[relayOneIdRelated] = isInsideTimeFrame;
+                        setting.relayOneWorking = isInsideTimeFrame;
+                    }
+                })
             })
             break;
 
@@ -227,29 +240,21 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case LightSensorMode.SCHEDULE:
-        case LightSensorMode.SMART_SCHEDULE:
             console.log('currentTime:', currentTime)
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-                if (schedule.daysToRepeat.includes(today)) {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const format = 'hh:mm:ss';
-                    // const startTime = moment.tz(schedule.startTime, format, currentTimeZone);
-                    // const endTime = moment.tz(schedule.endTime, format, currentTimeZone);
-
-                    //
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
-                    // const schedule = { startTime: '10:00', endTime: '17:00' };
 
                     let startTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
                     let endTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
                     startTime = moment(schedule.startTime, format);
                     endTime = moment(schedule.endTime, format);
-                    //  
 
-                    // @ts-ignore
                     console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
                     console.log('startTime', startTime)
                     console.log('endTime', endTime)
-                    // @ts-ignore
+
                     if (currentTime.isBetween(startTime, endTime)) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = schedule.smartLight ? false : true;
