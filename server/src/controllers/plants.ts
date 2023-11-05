@@ -77,6 +77,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
             break;
+        // @todo 
+        case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION:
         case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND:
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
             // must have minWarning and relayIdRelated variables setted!!!
@@ -197,6 +199,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
             break;
+        // @todo 
+        case HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case HumiditySensorMode.SCHEDULE:
             scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today)) {
@@ -205,12 +209,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                     // const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone })).format('hh:mm:ss');
                     console.log(startTime, endTime)
                     // @ts-ignore
-                    plant[relayOneIdRelated] = currentTime1.isBetween(startTime, endTime);
+                    plant[relayOneIdRelated] = currentTime.isBetween(startTime, endTime);
                     setting.relayOneWorking = true;
-                    // @ts-ignore
-                console.log('currentTime1', currentTime1)
-                // @ts-ignore
-                console.log('currentTime1.isBetween(startTime, endTime)', currentTime1.isBetween(startTime, endTime))
                 }
             })
             break;
