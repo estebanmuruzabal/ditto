@@ -13,13 +13,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
     const currentTimeZone = 'America/Denver';
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
-
-    // console.log('sensorReadingName::', sensorReadingName)
+    
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
-
-    // // @ts-ignore
-    // console.log('plant[sensorReadingName]::', plant[sensorReadingName])
 
     const minReading = Number(minWarning);
     const maxReading = Number(maxWarning);
@@ -47,7 +43,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const currentTimeWithoutNotifing = currentTime?.diff(startedIrrigationTime, 'minutes');
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
 
-    // WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE
+    // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
 
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -447,7 +443,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             console.log('defaulted!!! papa')
             break;
     }
-    console.log('setting AF process:', plant);
     return plant;
 };
 
