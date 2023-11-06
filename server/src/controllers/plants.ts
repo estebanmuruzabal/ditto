@@ -74,7 +74,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
             break;
         case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION:
-
             if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime || !relayTwoIdRelated)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             if (irrigationInProgress) {
@@ -236,7 +235,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
             break;
-        // @todo 
         case HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case HumiditySensorMode.SCHEDULE:
             scheduledOnTimes?.map((schedule: any, i: number) => {
@@ -260,6 +258,11 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                         // @ts-ignore
                         plant[relayOneIdRelated] = isInsideTimeFrame;
                         setting.relayOneWorking = isInsideTimeFrame;
+                        if (mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
+                            // @ts-ignore
+                            plant[relayTwoIdRelated] = isInsideTimeFrame;
+                            setting.relayTwoWorking = isInsideTimeFrame;
+                        }
                     }
                 })
             })
