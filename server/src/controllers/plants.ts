@@ -73,8 +73,49 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
             break;
-        // @todo 
         case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION:
+
+            if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime || !relayTwoIdRelated)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
+
+            if (irrigationInProgress) {
+                plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
+                return plant;
+            }
+
+            if (irrigationShouldStart) {
+                // we turn the filling in watering relay ON
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+                // @ts-ignore
+                plant[relayTwoIdRelated] = true;
+                setting.relayTwoWorking = true;
+
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
+
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting?.name} llego a ${reading}% de humedad, accionamos las 2 acciones.`);
+                break;
+            } else if (irrigationComplete) {
+                // we just turn off the filling in watter system
+                setting = logTimeStampWithTimeFilter(setting, reading, false, true);
+
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                // @ts-ignore
+                plant[relayTwoIdRelated] = false;
+                setting.relayTwoWorking = false;
+                setting.relayOneAutomatedStartedTime = '';
+                setting.relayTwoAutomatedStartedTime = '';
+
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} termino sus acciones en ${Number(relayOneAutomatedTimeToRun)} minutos.`);
+                break;
+            }
+
+            setting = logTimeStampWithTimeFilter(setting, reading);
+            break;
         case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND:
             // modo semillero: detecta seco, abre reley 1 y cierra el reley 2, detecta humedad y cierra reley 1 y abre reley 2. // detecta seco, abre 1 y cierra 2  
             // must have minWarning and relayIdRelated variables setted!!!
