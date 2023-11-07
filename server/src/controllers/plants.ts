@@ -44,7 +44,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
 
     // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
-
+    console.log('MODE: ', mode);
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
@@ -74,7 +74,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
             break;
         case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION:
-            if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime || !relayTwoIdRelated)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
+            if (!minReading || !relayOneIdRelated || !relayTwoIdRelated)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             if (irrigationInProgress) {
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
@@ -272,10 +272,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
-            console.log('relayOneIdRelated', relayOneIdRelated)
-            // @ts-ignore
-            console.log('plant[relayOneIdRelated]', plant[relayOneIdRelated])
-
 
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
@@ -309,7 +305,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case DistanceSensorMode.WHEN_EMPTY_ACTION_CUSTOM:
-            const actionShouldStart = reading > minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
+            const actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
             if (!minReading || !relayOneIdRelated )  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             if (irrigationInProgress) {
