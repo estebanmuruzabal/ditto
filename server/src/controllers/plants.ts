@@ -486,7 +486,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 break;
             }
         default:
-            console.log('defaulted!!! papa')
             break;
     }
     return plant;
