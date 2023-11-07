@@ -47,16 +47,24 @@ poner  numeros
 - Arreglar y testear distancia
 
 # BUGS
-- la hora del calendar de currentTime is la hora del servidor, tiene que ser la hora del cliente!!!
-- Arregglar el enchufe 2,3,4 qu no arranca el relay cuando esta bien setteado en el arduino
+- hacemos fetch cada 2 seg 
+- la hora del calendar de currentTime is la hora del servidor, tiene que ser la hora del cliente!!! (fixed creo, testear)
+- agregar cable del 4to enchufe
 - if you add a module (like light or soil) when its already conected, it shows disconeccted/no reading, (we should refresh with the actual value). and make sure it updates if the value changes
 - fix timestamp from general values in plant object: timestamp: '10/29/2023, 5:50:56 PM',
 - make check to not colapse when no whatsapp is linked when shuting a warning for instance.
 - Arreglar logs un poco
 
+
 # Improvements/features todo
+- pensar y mejorar
+- calendario modal para soil moister muestra smart lighting, hay que sacarlo
+- calendario modal nuevo, sale con el toogle disabled en on, deberia ser off
+- Agregar DittoBot SHOULD BE A MODAL, ADD BUTTON ON TOP
 - agregar UI y logica de backend para enchufe inteligente
 - agregar UI y logica de backend para humedad y temperatura
+- mover las fotos a otro lugar, no en el server
+- arreglar alertas (en un nuevo server?)
 - Add wifi password ip address improvement.
 - testear cuanta agua para en 1 minuto de la manguera y poner metodo aca para en plants.ts decir cuanta agua utilizo.
 - para hacer mi sistema de agua de casa, voy a tener que agregar una logica a los sensores para que tengan un array con modos para ir saltando de modo en modo (stack).
@@ -68,9 +76,16 @@ poner  numeros
 
 
 # Tests
-- Test: 
+- Soil Moist module:
+  calendar (done)
+  calendar double action (done)
+  demanda cantidad exacta (done)
+  demanda cantidad exacta double (done) 
 - Distance module: 
-- Light module 
+- Light module :
+  calendar (done)
+  calendar, smart (done)
+  manual (done)
 
 # DONE
 

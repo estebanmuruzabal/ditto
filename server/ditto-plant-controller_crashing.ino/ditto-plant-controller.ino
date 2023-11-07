@@ -1,6 +1,6 @@
-//#include <WiFi.h>
+#include <WiFiManager.h> // https://github.com/tzapu/WiFiManager
 #include <HTTPClient.h>
-#include "DHT.h"
+ #include "DHT.h"
 #include <string>
 #include <sstream>
 #include <string.h>
@@ -12,18 +12,27 @@
 long ultrason_duration;
 
 using namespace std;
-const char* ssid = "dittofarm";
-const char* password = "guemes765";
-const char* userId = "630d325b4872db758bb808b9";
+const char* ssid = "iPhone de Esteban";
+const char* password = "Delta123";
+// const char* ssid = "PARAM99";
+// const char* password = "Athithi1403";
+const char* userId = "64558a8356b560e1c8172407";
 const char* serverName = "http://3.15.129.60/api";
-//const char* serverName = "http://0.0.0.0/api";
-const int dry = 3705;
-const int wet = 1357;
+// const char* serverName = "http://0.0.0.0/api";
+const int dry1 = 2960;
+const int wet1 = 1105;
+const int dry2 = 2896;
+const int wet2 = 1110;
+const int dark = 4095;
+const int bright = 280;
+
+// we set one as default
+int minHumiditySetted = 40;
 
 // variables of the plant
 int tempeture = 0;
-int soil_humidity_1 = 0;
-int soil_humidity_2 = 0;
+int soilHumidity1 = 0;
+int soilHumidity2 = 0;
 int airHumidity = 0;
 int light = 0;
 bool isRelayOneOn = false; 
@@ -35,11 +44,14 @@ float duration_us, distance_cm;
 // pin sensors
 #define sensor_pin_for_soil_humidity1 36
 #define sensor_pin_for_soil_humidity2 39
+#define light_sensor_ping 34
 
 const int relayOnePin = 26; //P26
 const int relayTwoPin = 25; // P25
 const int relayThreePin = 33; //P33
 const int relayFourPin = 32;  //P32
+
+const int motionSensorPin = 35; //P35
 
 const int distanceSensorOneTriggerPin = 27;  
 const int distanceSensorOneEchoPin  = 14;  
@@ -65,6 +77,20 @@ void handleRaleyActions() {
 //    return char_type;
 //}
 
+void updateRelaysStateWithLastConfig() {
+  // if (oldConfig)
+    isRelayOneOn = soilHumidity1 > minHumiditySetted ? false : true;
+    isRelayTwoOn = soilHumidity2 > minHumiditySetted ? false : true;
+    // isRelayThirdOn = soilHumidity1 > minHumiditySetted ? false : true;
+    // isRelayFourthOn = soilHumidity1 > minHumiditySetted ? false : true;
+
+    Serial.print("raleys state after OFFLINE local update:");
+    Serial.print("isRelayOneOn:");Serial.println(isRelayOneOn);
+    Serial.print("isRelayTwoOn:");Serial.println(isRelayTwoOn);
+    Serial.print("isRelayThirdOn:");Serial.println(isRelayThirdOn);
+    Serial.print("isRelayFourthOn:");Serial.println(isRelayFourthOn);
+}
+
 void updateServerAndRelaysState() {
     WiFiClient client;
     HTTPClient http;    
@@ -79,11 +105,11 @@ void updateServerAndRelaysState() {
     stringstream strs4;
     stringstream strs5;
     stringstream strs6;
-    strs1 << soil_humidity_1;
+    strs1 << soilHumidity1;
     strs2 << airHumidity;
     strs3 << tempeture;
     strs4 << distance;
-    strs5 << soil_humidity_2;
+    strs5 << soilHumidity2;
     strs6 << light;
     string temp_str1 = strs1.str();
     string temp_str2 = strs2.str();
@@ -102,17 +128,17 @@ void updateServerAndRelaysState() {
 
     // now we put everything together
     char queryString[950];
-    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"630d325b4872db758bb808b9\", \"plantId\": 20, \"soil_humidity_1\": ";
-    const char *secon = ", \"airHumidity\": ";
-    const char *third = ", \"tempeture\": ";
-    const char *thirdAndAHalf = ", \"distance_cm\": ";
-    const char *thirdAndThirdHalf = ", \"soil_humidity_2\": ";
-    const char *thirdAndThirdHalfOfHalf = ", \"light\": ";
-    const char *fourth = isRelayOneOn ? ", \"isRelayOneOn\": true" : ", \"isRelayOneOn\": false";
-    const char *fifth = isRelayTwoOn ? ", \"isRelayTwoOn\": true" : ", \"isRelayTwoOn\": false";
-    const char *sixth = isRelayThirdOn ? ", \"isRelayThirdOn\": true" : ", \"isRelayThirdOn\": false";
-    const char *seventh = isRelayFourthOn ? ", \"isRelayFourthOn\": true" : ", \"isRelayFourthOn\": false";
-    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $plantId: Int!, $soil_humidity_1: Int, $airHumidity: Int, $tempeture: Int, $distance_cm: Int, $soil_humidity_2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, plantId: $plantId, soil_humidity_1: $soil_humidity_1, airHumidity: $airHumidity, tempeture: $tempeture, distance_cm: $distance_cm, soil_humidity_2: $soil_humidity_2, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
+    const char *first = "{\"operationName\": \"UpdatePlant\",\"variables\":{\"id\": \"64558a8356b560e1c8172407\", \"contrId\": 30, \"hum1\": ";
+    const char *secon = ", \"airHum\": ";
+    const char *third = ", \"temp\": ";
+    const char *fourth = ", \"dist\": ";
+    const char *fifth = ", \"hum2\": ";
+    const char *sixth = ", \"light\": ";
+    const char *seventh = isRelayOneOn ? ", \"isRelayOneOn\": true" : ", \"isRelayOneOn\": false";
+    const char *eighth = isRelayTwoOn ? ", \"isRelayTwoOn\": true" : ", \"isRelayTwoOn\": false";
+    const char *nineth = isRelayThirdOn ? ", \"isRelayThirdOn\": true" : ", \"isRelayThirdOn\": false";
+    const char *tenth = isRelayFourthOn ? ", \"isRelayFourthOn\": true" : ", \"isRelayFourthOn\": false";
+    const char *last= "},\"query\":\"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}\"}";
     
     strcpy(queryString,first);
     strcat(queryString,addSoilHumidity1);
@@ -120,22 +146,22 @@ void updateServerAndRelaysState() {
     strcat(queryString,addAirHumidity);
     strcat(queryString,third);
     strcat(queryString,addTempeture);
-    strcat(queryString,thirdAndAHalf);
-    strcat(queryString,addDistance);
-    strcat(queryString,thirdAndThirdHalf);
-    strcat(queryString,addSoilHumidity2);
-    strcat(queryString,thirdAndThirdHalfOfHalf);
-    strcat(queryString,addLight);
     strcat(queryString,fourth);
+    strcat(queryString,addDistance);
     strcat(queryString,fifth);
+    strcat(queryString,addSoilHumidity2);
     strcat(queryString,sixth);
+    strcat(queryString,addLight);
     strcat(queryString,seventh);
+    strcat(queryString,eighth);
+    strcat(queryString,nineth);
+    strcat(queryString,tenth);
     strcat(queryString,last);
     
     Serial.println(queryString);
 
     // this is how the body looks like
-    // {"operationName": "UpdatePlant","variables":{"id": "630d325b4872db758bb808b9", "plantId": 20, "soilHumidity": 42, "airHumidity": 0, "tempeture": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $plantId: Int!, $soilHumidity: Int, $airHumidity: Int, $tempeture: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, plantId: $plantId, soilHumidity: $soilHumidity, airHumidity: $airHumidity, tempeture: $tempeture, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
+    // {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "controllerId": 20, "soilHumidity": 42, "airHumidity": 0, "tempeture": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $controllerId: Int!, $soilHumidity: Int, $airHumidity: Int, $tempeture: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, controllerId: $controllerId, soilHumidity: $soilHumidity, airHumidity: $airHumidity, tempeture: $tempeture, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
     const char* body = queryString;
 
     int httpResponseCode = http.POST(body);
@@ -149,8 +175,14 @@ void updateServerAndRelaysState() {
     
     Serial.print("payload");
     Serial.println(payload);
-
-// change this again as positions will change
+  Serial.print("payload2");
+    // if (payload.substring(40, 42) == "ON") { 
+    //   isRelayOneOn = true;
+    //   minHumiditySetted = soilHumidity1;
+    // } else { 
+    //   isRelayOneOn = false;
+    //   maxHumiditySetted = soilHumidity1;
+    // };
     if (payload.substring(40, 42) == "ON") { isRelayOneOn = true;} else { isRelayOneOn = false; };
     if (payload.substring(60, 62) == "ON") { isRelayTwoOn = true;} else { isRelayTwoOn = false; };
     if (payload.substring(82, 84) == "ON") { isRelayThirdOn = true; } else { isRelayThirdOn = false; };
@@ -169,27 +201,29 @@ void updateServerAndRelaysState() {
 
 void readSoilHumidity1() {
     int rawHumidity = analogRead(sensor_pin_for_soil_humidity1);
-    soil_humidity_1 = map(rawHumidity, wet, dry, 100, 0);
+    soilHumidity1 = map(rawHumidity, wet1, dry1, 100, 0);
     Serial.print("SoilHumidity 1 = ");
-    Serial.print(soil_humidity_1);  /* Print Temperature on the serial window */
+    Serial.print(soilHumidity1);  /* Print Temperature on the serial window */
     Serial.println("%");
-}
 
-void readLight() {
-   
+    Serial.print("rawHumidity 1 = ");
+    Serial.print(rawHumidity);  /* Print Temperature on the serial window */
 }
 
 void readSoilHumidity2() {
     int rawHumidity2 = analogRead(sensor_pin_for_soil_humidity2);
-    soil_humidity_2 = map(rawHumidity2, wet, dry, 100, 0);
+    soilHumidity2 = map(rawHumidity2, wet2, dry2, 100, 0);
     Serial.print("SoilHumidity 2 = ");
-    Serial.print(soil_humidity_2);  /* Print Temperature on the serial window */
+    Serial.print(soilHumidity2);  /* Print Temperature on the serial window */
     Serial.println("%");
+
+    Serial.print("rawHumidity 2 = ");
+    Serial.print(rawHumidity2);  /* Print Temperature on the serial window */
 }
 
 void readDistanceSensorOne() {
   
-digitalWrite(distanceSensorOneTriggerPin, LOW);
+  digitalWrite(distanceSensorOneTriggerPin, LOW);
   delayMicroseconds(2);
  // Create a 10 µs impulse
   digitalWrite(distanceSensorOneTriggerPin, HIGH);
@@ -236,6 +270,16 @@ void readAirHumidity() {
 }
 
 void wifiSetupStuff() {
+    // WiFiManager wm;
+
+    // bool res;
+    // // res = wm.autoConnect(); // auto generated AP name from chipid
+    // // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
+    // res = wm.autoConnect(ssid, password); // password protected ap
+
+    // if(!res) { Serial.println("Failed to connect"); // ESP.restart(); } 
+    // else { Serial.println("connected...yeey :)"); }
+
     WiFi.mode(WIFI_STA); //Optional
     WiFi.begin(ssid, password);
     Serial.println("\nConnecting");
@@ -262,22 +306,33 @@ void setup() {
     pinMode(distanceSensorOneEchoPin, INPUT);
 }
 
+void readLight() {
+   int rawLightValue = analogRead(light_sensor_ping);
+   light = map(rawLightValue, bright, dark, 100, 0);
+    Serial.print("Light reading = ");
+    Serial.print(light);
+    Serial.print("rawLightValue reading = ");
+    Serial.print(rawLightValue);
+}
 
 void loop() { 
-    //Check WiFi connection status, if no conection, we do NOTHING
-    if(WiFi.status() != WL_CONNECTED) return;
 
     readSoilHumidity1();
     readSoilHumidity2();
-    // readLight();
+    readLight();
+    readDistanceSensorOne();
 //    readTempeture();
 //    readAirHumidity();
-//    readDistanceSensorOne();
-//
-    updateServerAndRelaysState();
+
+    // Check WiFi connection status, if no conection, we do NOTHING
+    if(WiFi.status() != WL_CONNECTED) {
+      updateRelaysStateWithLastConfig();
+    } else {
+      updateServerAndRelaysState();
+    }
     handleRaleyActions();
 
-    // we update every 30 secs just for now
+    // we update every 5 secs just for now
     delay(5000);
 
 }
