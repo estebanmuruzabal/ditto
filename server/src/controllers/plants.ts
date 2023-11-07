@@ -309,6 +309,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case DistanceSensorMode.WHEN_EMPTY_ACTION_CUSTOM:
+            const actionShouldStart = reading > minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
             if (!minReading || !relayOneIdRelated )  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             if (irrigationInProgress) {
@@ -316,7 +317,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 return plant;
             }
 
-            if (irrigationShouldStart) {
+            if (actionShouldStart) {
                 // we turn the filling in watering relay ON
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
