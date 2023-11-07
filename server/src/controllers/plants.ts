@@ -309,7 +309,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case DistanceSensorMode.WHEN_EMPTY_ACTION_CUSTOM:
-            if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
+            if (!minReading || !relayOneIdRelated )  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             if (irrigationInProgress) {
                 setting = logTimeStampWithTimeFilter(setting, reading);
@@ -334,6 +334,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 setting.relayOneWorking = false;
+
+                setting.relayOneAutomatedStartedTime = '';
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} acaba de llegar a la capacidad máxima con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
                 break;
             }
