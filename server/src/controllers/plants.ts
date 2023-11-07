@@ -121,7 +121,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
 
             // relayTwoAutomatedTimeToRun SHOULD CONTAIN THE MINUTES TIME
 
-            if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
+            if (!minReading || !relayOneIdRelated)  { console.log('No relayOneIdRelated or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             if (irrigationInProgress) {
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
@@ -340,7 +340,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case DistanceSensorMode.WHEN_EMPTY_ACTION_AUTOMATED:                
-            if (!minReading || !relayOneIdRelated || !relayOneAutomatedStartedTime)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
+            if (!minReading || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
             
             actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
 
