@@ -42,6 +42,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const minLevelReached = reading <= minReading && relayOneAutomatedStartedTime.length > 0;
     const currentTimeWithoutNotifing = currentTime?.diff(actionStartedTime, 'minutes');
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
+    const actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
 
     // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
     console.log('MODE: ', mode);
@@ -305,7 +306,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case DistanceSensorMode.WHEN_EMPTY_ACTION_CUSTOM:
-            let actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
             if (!minReading || !relayOneIdRelated )  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
             if (irrigationInProgress) {
@@ -342,7 +342,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case DistanceSensorMode.WHEN_EMPTY_ACTION_AUTOMATED:                
             if (!minReading || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
             
-            actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
 
             const maxCapacityReached = reading <= maxReading && relayOneAutomatedStartedTime.length > 0;
 
