@@ -40,7 +40,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    const selectStyle = { control: styles => ({ ...styles, width: '179.88px', textAlign: 'left' }) };
+    const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
     
@@ -64,7 +64,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
         });
     };
 
-
+    console.log('setting?.relayOneWorking', plant.sensors);
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -108,7 +108,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                     </Text>
                 </ListTitle>
                 <ListDes>
-                    <Text bold>{(setting?.reading > 0 && setting?.reading < 100) ? setting?.reading + 'cm.'  : '-' } </Text>
+                    <Text bold>{(setting?.reading > 0 && setting?.reading < 100) ? setting?.reading + 'cm. 📏'  : '-' } </Text>
                 </ListDes>
             
             </ListItem>
@@ -160,7 +160,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                         menuPosition={'fixed'}
                     />
                     ) : (
-                        <Text  bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
+                        <Text style={{ width: 'max-content' }} bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
                     )}
                 </ListDes>
             </ListItem>
@@ -209,10 +209,10 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                     height='34.5px'
                                     width='45px'
                                 />
-                                <Porcentage>%</Porcentage>
+                                <Porcentage>cm.</Porcentage>
                             </Row>
                         ) : (
-                            <Text bold>{setting.minWarning}</Text>
+                            <Text bold>{setting.minWarning} cm.</Text>
                         )}
                     </ListDes>
                     {errorId === 'minWarning' && (
@@ -245,10 +245,10 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                     height='34.5px'
                                     width='45px'
                                 />
-                                <Porcentage>%</Porcentage>
+                                <Porcentage>cm.</Porcentage>
                             </Row>
                         ) : (
-                            <Text bold>{setting.maxWarning}</Text>
+                            <Text bold>{setting.maxWarning} cm.</Text>
                         )}
                         {errorId === 'maxWarning' && (
                             <ErrorMsg>
@@ -314,10 +314,10 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                             height='34.5px'
                                             width='45px'
                                         />
-                                        <Porcentage>%</Porcentage>
+                                        <Porcentage>cm.</Porcentage>
                                     </Row>
                                 ) : (
-                                    <Text bold>{setting.minWarning}</Text>
+                                    <Text bold>{setting.minWarning} cm.</Text>
                                 )}
                             </ListDes>
                             {errorId === 'minWarning' && (
@@ -349,10 +349,10 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                         height='34.5px'
                                         width='45px'
                                     />
-                                    <Porcentage>%</Porcentage>
+                                    <Porcentage>cm.</Porcentage>
                                 </Row>
                             ) : (
-                                <Text bold>{setting.maxWarning}</Text>
+                                <Text bold>{setting.maxWarning} cm.</Text>
                             )}
                             {errorId === 'maxWarning' && (
                                 <ErrorMsg>
@@ -443,10 +443,10 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                         height='34.5px'
                                         width='45px'
                                     />
-                                    <Porcentage>%</Porcentage>
+                                    <Porcentage>cm.</Porcentage>
                                 </Row>
                             ) : (
-                                <Text bold>{setting.minWarning}</Text>
+                                <Text bold>{setting.minWarning} cm.</Text>
                             )}
                         </ListDes>
                         {errorId === 'minWarning' && (
@@ -478,10 +478,10 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                              height='34.5px'
                                              width='45px'
                                          />
-                                         <Porcentage>%</Porcentage>
+                                         <Porcentage>cm.</Porcentage>
                                      </Row>
                                  ) : (
-                                     <Text bold>{setting.maxWarning}</Text>
+                                     <Text bold>{setting.maxWarning} cm.</Text>
                                  )}
                                  {errorId === 'maxWarning' && (
                                      <ErrorMsg>
@@ -517,7 +517,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                         <Porcentage>mins.</Porcentage>
                                     </Row>
                                 ) : (
-                                    <Text bold>{setting.relayOneAutomatedTimeToRun}</Text>
+                                    <Text bold>{setting.relayOneAutomatedTimeToRun} mins.</Text>
                                 )}
                             </ListDes>
                         </ListItem>
@@ -542,7 +542,10 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
                                     menuPosition={'fixed'}
                                 />
                             ) : (
-                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                <>
+                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'} {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
+                                    <Text></Text>
+                                </>
                             )}
                         </ListDes>
                     </ListItem>

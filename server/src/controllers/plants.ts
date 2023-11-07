@@ -342,7 +342,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case DistanceSensorMode.WHEN_EMPTY_ACTION_AUTOMATED:                
             if (!minReading || !relayOneIdRelated)  { console.log('No relayOneIdRelated, or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
             
-
             const maxCapacityReached = reading <= maxReading && relayOneAutomatedStartedTime.length > 0;
 
             if (irrigationInProgress) {

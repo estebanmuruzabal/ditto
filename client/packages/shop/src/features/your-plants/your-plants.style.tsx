@@ -183,11 +183,10 @@ export const SensorsWrapper = styled.div`
   flex-direction: row;
   flex-shrink: 0;
   overflow: hidden;
-  border: 1px solid ${themeGet('colors.gray.900', '#c3b2b2')};
   border-radius: 5px;
-  box-shadow: 0.5px 0.5px;
   margin: 5px 0 5px 0;
   padding: 10px;
+  flex-wrap: wrap;
 
   @media only screen and (max-width: 1199px) {
     margin-right: 20px;
@@ -220,7 +219,7 @@ export const PlantsSensorContainer = styled.button`
   position: relative;
   // width: calc(100% - 30px);
   margin: 5px 10px 5px 0;
-  width: fit-content;
+  width: 280px;
   padding: 10px 0px;
   box-shaddow: 0.5px 0.5px;
   
@@ -373,10 +372,9 @@ export const BlockTitle = styled.h2`
 
 
 export const CardButtons = styled.span`
-
   display: flex;
-  width: 330px;
-  margin-left: 100px;
+  // width: 330px;
+  padding-left: 40px;
   align-items: center;
   transition: 0.2s ease-in-out;
 `;

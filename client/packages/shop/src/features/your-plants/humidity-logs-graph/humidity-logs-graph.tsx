@@ -12,7 +12,7 @@ interface Props {
 
 const HumidityLogsGraph: React.FC<Props> = ({ data, ...props  }) => {
   JSON.stringify(data)
-  let humidities = [];
+  let humidities = [0];
   let times = [];
   Object.keys(data).forEach(function (key, index) {
     if (data[key].reading >= 0 || data[key].reading <= 100) {

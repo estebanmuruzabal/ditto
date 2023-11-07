@@ -4,7 +4,7 @@ import { compose, layout, space, color, border } from 'styled-system';
 export const Input = styled.input<any>(
   css({
     display: 'block',
-    width: '100%',
+    width: '120px',
 
     padding:'0px 8px',
     appearance: 'none',

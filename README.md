@@ -48,6 +48,9 @@ poner  numeros
 
 # BUGS
 - hacemos fetch cada 2 seg 
+- agregar warning de vuelta para enchufes ya usados, pero poner confirmar o cancelar.
+- calendario modal para soil moister muestra smart lighting, hay que sacarlo
+- calendario modal nuevo, sale con el toogle disabled en on, deberia ser off
 - la hora del calendar de currentTime is la hora del servidor, tiene que ser la hora del cliente!!! (fixed creo, testear)
 - agregar cable del 4to enchufe
 - if you add a module (like light or soil) when its already conected, it shows disconeccted/no reading, (we should refresh with the actual value). and make sure it updates if the value changes
@@ -57,15 +60,13 @@ poner  numeros
 
 
 # Improvements/features todo
-- pensar y mejorar
-- calendario modal para soil moister muestra smart lighting, hay que sacarlo
-- calendario modal nuevo, sale con el toogle disabled en on, deberia ser off
+- agregar textbox para ingresar user id y controller id
+- agregar boton y logica para reiniciar wifi config
 - Agregar DittoBot SHOULD BE A MODAL, ADD BUTTON ON TOP
 - agregar UI y logica de backend para enchufe inteligente
 - agregar UI y logica de backend para humedad y temperatura
 - mover las fotos a otro lugar, no en el server
 - arreglar alertas (en un nuevo server?)
-- Add wifi password ip address improvement.
 - testear cuanta agua para en 1 minuto de la manguera y poner metodo aca para en plants.ts decir cuanta agua utilizo.
 - para hacer mi sistema de agua de casa, voy a tener que agregar una logica a los sensores para que tengan un array con modos para ir saltando de modo en modo (stack).
 - agregar a que numbero avisar. al del user o otro
@@ -82,6 +83,8 @@ poner  numeros
   demanda cantidad exacta (done)
   demanda cantidad exacta double (done) 
 - Distance module: 
+ accion custom en minimos (done)
+ accion automatico en minimos (done)
 - Light module :
   calendar (done)
   calendar, smart (done)

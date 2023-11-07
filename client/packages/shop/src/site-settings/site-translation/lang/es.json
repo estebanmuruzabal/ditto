@@ -198,7 +198,7 @@
   "manualModeStateOnId": "Prendido",
   "manualModeStateOffId": "Apagado",
   "relayAlreadyAssinged": "Enchufe ya asignado en ",
-  "relayAlreadyAssinged2": ". Desasignalo para usarlo aqui!",
+  "relayAlreadyAssinged2": ". Seguro querés utilizarlo aquí también? (Puede generar conflictos)",
   "humidityModeId": "Modo de riego",
   "lightModeId": "Modo",
   "distanceModeId": "Modo",

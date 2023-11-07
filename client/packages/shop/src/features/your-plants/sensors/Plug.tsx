@@ -39,7 +39,7 @@ const Plug: React.FC<Props> = ({ plant, settingType, handleSettingsChange, onDel
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    const selectStyle = { control: styles => ({ ...styles, width: '160px', textAlign: 'left' }) };
+    const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
     

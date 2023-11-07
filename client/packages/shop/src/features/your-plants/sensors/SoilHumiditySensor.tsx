@@ -46,7 +46,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    const selectStyle = { control: styles => ({ ...styles, width: '179.88px', textAlign: 'left' }) };
+    const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
 
@@ -162,7 +162,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         menuPosition={'fixed'}
                     />
                     ) : (
-                        <Text  bold>{selectedMode?.value.length > 1 ? selectedMode.label : '-'}</Text>
+                        <Text style={{ width: 'max-content', textOverflow: 'ellipsis' }} bold>{selectedMode?.value.length > 1 ? selectedMode.label : '-'}</Text>
                     )}
                 </ListDes>
             </ListItem>
@@ -248,29 +248,10 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                             />
                         ) : (
                             <>
-                            {/* <Reading> */}
                         {/* <Reading> */}
                         {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
                                 {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}{/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
                         {/* <Reading> */}
                             </>
                         )}
@@ -368,7 +349,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                     menuPosition={'fixed'}
                                 />
                             ) : (
-                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
                             )}
                         </ListDes>
                     </ListItem>
@@ -505,7 +486,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 />
                             ) : (
                                 <>
-                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
                                 </>
                             )}
                         </ListDes>
@@ -556,7 +537,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                     menuPosition={'fixed'}
                                 />
                             ) : (
-                                <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
+                                <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}  {setting?.relayTwoWorking ? '[ON]' : '[OFF]'}</Text>
                             )}
                             </ListDes>
                         </ListItem>
@@ -585,7 +566,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 menuPosition={'fixed'}
                             />
                         ) : (
-                            <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                            <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
                         )}
                     </ListDes>
                 </ListItem>
@@ -610,7 +591,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 menuPosition={'fixed'}
                             />
                         ) : (
-                            <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
+                            <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}  {setting?.relayTwoWorking ? '[ON]' : '[OFF]'}</Text>
                         )}
                         </ListDes>
                     </ListItem>
@@ -730,7 +711,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 />
                             ) : (
                                 <>
-                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
                                 </>
                             )}
                         </ListDes>

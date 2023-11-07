@@ -42,7 +42,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    const selectStyle = { control: styles => ({ ...styles, width: '160px', textAlign: 'left' }) };
+    const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
     const hasRelayAsociated = setting.relayOneIdRelated?.length > 0;
@@ -162,7 +162,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                         menuPosition={'fixed'}
                     />
                 ) : (
-                    <Text  bold>{selectedMode?.value.length > 1 ? selectedMode.label : '-'}</Text>
+                    <Text style={{ width: 'max-content' }} bold>{selectedMode?.value.length > 1 ? selectedMode.label : '-'}</Text>
                 )}
             </ListDes>
           </ListItem>
@@ -187,7 +187,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                         menuPosition={'fixed'}
                     />
                 ) : (
-                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
+                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
                 )}
               </ListDes>
             </ListItem>

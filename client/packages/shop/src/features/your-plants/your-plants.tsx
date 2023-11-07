@@ -93,24 +93,24 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     );
   };
 
-  const isRelayIdAlreadyAssigend = (plant: any, field: string, value: string | boolean) => {
+  const shouldNotAssignRelay = (plant: any, field: string, value: string | boolean) => {
     const relayOneIdRelated = 'relayOneIdRelated';
     const relayTwoIdRelated = 'relayTwoIdRelated';
 
     if (field !== relayOneIdRelated && field !== relayTwoIdRelated) return false;
 
-    let relayAlreadyAssigned = false;
-
     plant.sensors.map((module) => {
       if ((module[relayOneIdRelated] === value || module[relayTwoIdRelated] === value ) && value !== '') {
         const texto1 = intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' });
         const texto2 = intl.formatMessage({ id: 'relayAlreadyAssinged2', defaultMessage: 'desigagned  ' });
-          alert(texto1 + module.name + texto2);
-          relayAlreadyAssigned = true;
+        const b = confirm(texto1 + module.name + texto2);
+        console.log('asdasd', b)
+        if (b) return false;
+        return false;
       }
     })
 
-   return relayAlreadyAssigned;
+   return false;
   };
 
   const defaultSettingValuesIfModeChanges = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
@@ -144,7 +144,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     // if we want to stop user to reuse plugs, uncomment line bellow
-    // if (isRelayIdAlreadyAssigend(plant, field, value)) return;
+    const a = shouldNotAssignRelay(plant, field, value);
+    // console.log('asdsadas', a)
+    if (a) return;
     plant = defaultSettingValuesIfModeChanges(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
@@ -290,7 +292,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     dispatch({ type: 'ADD_MODULE', payload: {plantIndex, setting: getDefaultSetting(completeSensorTypeName) }});
   };
 
-  const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left' }) };
+  const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
   const sensorsOptions = [
     { value: SensorsTypes.DISTANCE, label: intl.formatMessage({ id: 'distanceId', defaultMessage: 'distanceId' }) },
     { value: SensorsTypes.SOIL_HUMIDITY, label: intl.formatMessage({ id: 'moistHumidityId', defaultMessage: 'moistHumidityId' }) },
@@ -414,7 +416,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         </ListDes>
                       </ListItem>
 
-                      <ListItem style={{ justifyContent: 'flex-start' }}>
+                      {/* <ListItem style={{ justifyContent: 'flex-start' }}>
                         <ListTitle>
                         <Text bold>
                             <FormattedMessage
@@ -433,7 +435,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             menuPosition={'fixed'}
                         />
                         </ListDes>
-                      </ListItem>
+                      </ListItem> */}
 
                     </Column1>
                   </Row1>
