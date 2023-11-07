@@ -162,12 +162,12 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                         menuPosition={'fixed'}
                     />
                 ) : (
-                    <Text  bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
+                    <Text  bold>{selectedMode?.value.length > 1 ? selectedMode.label : '-'}</Text>
                 )}
             </ListDes>
           </ListItem>
   
-          { (setting?.mode === LightSensorMode.MANUAL || setting?.mode === LightSensorMode.SCHEDULE || setting?.mode === LightSensorMode.SMART_SCHEDULE) && (
+          { (setting?.mode === LightSensorMode.MANUAL || setting?.mode === LightSensorMode.SCHEDULE) && (
             <ListItem>
               <ListTitle>
                 <Text>
@@ -217,7 +217,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             </>
           )}
 
-          { ((setting.mode === LightSensorMode.SCHEDULE || setting.mode === LightSensorMode.SMART_SCHEDULE) && hasRelayAsociated) && (
+          { ((setting.mode === LightSensorMode.SCHEDULE) && hasRelayAsociated) && (
             <>
               <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
@@ -289,6 +289,9 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                                         <CloseIcon />
                                     </ActionButton>
                                 </ActionsButtons>
+                                {/* 💤🤖 ❌🚫⛔️✅🔆⏹️ */}
+                                <TextSpaced bold>{schedule.enabled ? '' : '⏹️'}</TextSpaced>
+                                <TextSpaced bold>{schedule.smartLight ? '🔆' : ''}</TextSpaced>
                             </ScheduleTimeContainer>
                         </WeekContainer>
                     )

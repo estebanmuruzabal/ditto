@@ -157,7 +157,7 @@ export const ContentBox = styled.div`
   }
 `;
 
-export const PlantsWrapper = styled.div`
+export const DashboardContainer = styled.div`
   width: 100%;
   padding-left: 5px;
   height: auto;
@@ -168,11 +168,30 @@ export const PlantsWrapper = styled.div`
   border: 1px solid ${themeGet('colors.gray.900', '#c3b2b2')};
   border-radius: 5px;
   box-shadow: 0.5px 0.5px;
+  padding: 10px;
+
+  @media only screen and (max-width: 1199px) {
+    margin-right: 20px;
+  }
+`;
+
+export const SensorsWrapper = styled.div`
+  width: 100%;
+  padding-left: 5px;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid ${themeGet('colors.gray.900', '#c3b2b2')};
+  border-radius: 5px;
+  box-shadow: 0.5px 0.5px;
   margin: 5px 0 5px 0;
   padding: 10px;
 
   @media only screen and (max-width: 1199px) {
     margin-right: 20px;
+    flex-direction: column;
   }
 `;
 
@@ -200,7 +219,7 @@ export const PlantsSensorContainer = styled.button`
   overflow: hidden;
   position: relative;
   // width: calc(100% - 30px);
-  margin: 5px 0 5px 0;
+  margin: 5px 10px 5px 0;
   width: fit-content;
   padding: 10px 0px;
   box-shaddow: 0.5px 0.5px;
@@ -232,7 +251,7 @@ export const PlantsSensorContainer = styled.button`
 export const PlantsPageContainer = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
   border: 1px solid ${themeGet('colors.gray.500', '#f1f1f1')};
-  padding: 60px;
+  padding: 15px;
   border-radius: ${themeGet('radii.base', '6px')};
   overflow: hidden;
   position: relative;
@@ -371,7 +390,7 @@ export const ActionsButtons = styled.span`
 
 export const Type = styled.p<TextProps>`
   font-family: ${themeGet('fonts.body', 'Lato')};
-  font-size: 10px;
+  font-size: 12px;
   color: ${themeGet('colors.text.bold', '#0D1136')};
   // text-align: right;
   // padding: 0px 0px 0px 10px;

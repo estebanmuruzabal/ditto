@@ -69,6 +69,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
             componentProps: { item: modalProps },
         });
     };
+
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -448,7 +449,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                 </>
             )}
 
-            {   setting.mode === HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND && (
+            {   (setting.mode === HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND || setting.mode === HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION) && (
                 <>
                     <ListItem>
                         <ListTitle>
@@ -488,8 +489,8 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                         <ListTitle>
                             <Text>
                             <FormattedMessage
-                                id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayOneId'}
-                                defaultMessage='asociateRelayOneId'
+                                id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelay1Id'}
+                                defaultMessage='asociateRelay1Id'
                             />
                             </Text>
                         </ListTitle>
@@ -534,18 +535,43 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                             )}
                         </ListDes>
                     </ListItem>
-
+                    
+                    {   setting.mode === HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION && (                        
+                        <ListItem>
+                            <ListTitle>
+                                <Text>
+                                <FormattedMessage
+                                    id={relayTwoSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelay2Id'}
+                                    defaultMessage='asociateRelay2Id'
+                                />
+                                </Text>
+                            </ListTitle>
+                            <ListDes>
+                            { editIsOn ? (
+                                <Select 
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingType)}
+                                    value={relayTwoSelected}
+                                    options={fourRelaysOptions}
+                                    styles={selectStyle}
+                                    menuPosition={'fixed'}
+                                />
+                            ) : (
+                                <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
+                            )}
+                            </ListDes>
+                        </ListItem>
+                    )}
                 </>
             )}
 
-            { setting.mode === HumiditySensorMode.SCHEDULE && (
+            { (setting.mode === HumiditySensorMode.SCHEDULE || setting.mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) && (
             <>
                 <ListItem>
                     <ListTitle>
                         <Text>
                         <FormattedMessage
-                            id='asociateRelayToId'
-                            defaultMessage='asociateRelayToId'
+                            id={relayTwoSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelay1Id'}
+                            defaultMessage='asociateRelay1Id'
                         />
                         </Text>
                     </ListTitle>
@@ -564,12 +590,37 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     </ListDes>
                 </ListItem>
 
+                {   setting.mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION && (                        
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id={relayTwoSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelay2Id'}
+                                defaultMessage='asociateRelay2Id'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                        { editIsOn ? (
+                            <Select 
+                                onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingType)}
+                                value={relayTwoSelected}
+                                options={fourRelaysOptions}
+                                styles={selectStyle}
+                                menuPosition={'fixed'}
+                            />
+                        ) : (
+                            <Text bold>{setting?.relayTwoIdRelated.length > 1 ? getRelayNameText(setting?.relayTwoIdRelated) : '-'}</Text>
+                        )}
+                        </ListDes>
+                    </ListItem>
+                )}
 
                 { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                     return (
                         <WeekContainer>
                             <ListDes style={{ flexDirection: 'row', display: 'flex', paddingBottom: '10px' }} >
-                                {Object.keys(WeekDays).map((day: any, i: number) => {
+                            {WeekDays.map((day: any) => {
                                     return (
                                         <DayContainer
                                             key={i + '-day--humidity-1container'}
@@ -595,6 +646,8 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                     <ActionButton onClick={() => onDeleteSchedule(plant, settingType, i)} className='delete-btn'>
                                         <CloseIcon />
                                     </ActionButton>
+                                    {/* 💤🤖 ❌🚫⛔️✅🔆⏹️ */}
+                                    <TextSpaced bold>{schedule.enabled ? '' : '⏹️'}</TextSpaced>
                                 </ActionsButtons>
                             </ScheduleTimeContainer>
                         </WeekContainer>

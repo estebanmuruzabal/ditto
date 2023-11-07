@@ -32,9 +32,11 @@ export enum RelaysIds {
 export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
     IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND = 'IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND',
+    IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION = 'IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
     MANUAL = 'HUMIDITY_MANUAL',
     SCHEDULE = 'HUMIDITY_SCHEDULE',
+    SCHEDULE_DOUBLE_ACTION = 'HUMIDITY_SCHEDULE_DOUBLE_ACTION',
     NONE = 'NONE'
 }
 
@@ -75,7 +77,6 @@ export enum CommonMode {
 export enum LightSensorMode {
     MANUAL = 'LIGHT_MANUAL',
     SCHEDULE = 'LIGHT_SCHEDULE',
-    SMART_SCHEDULE = 'LIGHT_SMART_SCHEDULE',
     NONE = 'NONE'
 }
 export const WeekDays = [0, 1, 2, 3, 4, 5, 6];
@@ -101,15 +102,16 @@ export const humidityModeOptions = [
     { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
     { value: HumiditySensorMode.MANUAL, label: 'Manual' },
     { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND, label: 'A demanda cant. exacta' },
+    { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION, label: 'A demanda cant. exacta, doble acción' },
     { value: HumiditySensorMode.IRRIGATE_ON_DEMAND, label: 'A demanda' },
     { value: HumiditySensorMode.SCHEDULE, label: 'Calendario de riego' },
+    { value: HumiditySensorMode.SCHEDULE_DOUBLE_ACTION, label: 'Calendario de riego, doble acción' },
     { value: HumiditySensorMode.NONE, label: 'Ninguno' }
 ];
 
 export const lightModeOptions = [
     { value: LightSensorMode.MANUAL, label: 'Manual' },
     { value: LightSensorMode.SCHEDULE, label: 'Calendario' },
-    { value: LightSensorMode.SMART_SCHEDULE, label: 'Calendario inteligente' },
     { value: LightSensorMode.NONE, label: 'Ninguno' }
 ];
 

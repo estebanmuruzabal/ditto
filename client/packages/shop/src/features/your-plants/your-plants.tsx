@@ -19,7 +19,9 @@ import {
   PlantsSensorContainer,
   Column1,
   Row1,
-  CardButtons
+  CardButtons,
+  DashboardContainer,
+  SensorsWrapper
 } from './your-plants.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GET_LOGGED_IN_USER, GET_LOGGED_IN_USER_SETTINGS } from 'graphql/query/customer.query';
@@ -141,7 +143,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   };
 
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
-    if (isRelayIdAlreadyAssigend(plant, field, value)) return;
+    // if we want to stop user to reuse plugs, uncomment line bellow
+    // if (isRelayIdAlreadyAssigend(plant, field, value)) return;
     plant = defaultSettingValuesIfModeChanges(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
@@ -317,7 +320,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
               return (
-                <PlantsWrapper key={i + '-orderList'}>
+                <DashboardContainer key={i + '-orderList'}>
                   <Row1>
                     <Column1>
                       <ListItem>
@@ -411,10 +414,31 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         </ListDes>
                       </ListItem>
 
+                      <ListItem style={{ justifyContent: 'flex-start' }}>
+                        <ListTitle>
+                        <Text bold>
+                            <FormattedMessage
+                            id="changePlantTypeId"
+                            defaultMessage="changePlantTypeId"
+                            />
+                        </Text>
+                        </ListTitle>
+                        <ListDes>
+                        <Select 
+                            onChange={(e: any) => dispatchNewSettingSave(plant, e.value, i)}
+                            value={sensorSelected}
+                            // @ts-ignore
+                            options={sensorsOptions}
+                            styles={selectStyle}
+                            menuPosition={'fixed'}
+                        />
+                        </ListDes>
+                      </ListItem>
+
                     </Column1>
                   </Row1>
-
-                    { sensors?.map((module: ISetting) => {
+                  <SensorsWrapper>
+                  { sensors?.map((module: ISetting) => {
                       switch (module?.settingType) {
                         case `${SensorsTypes.SOIL_HUMIDITY}_1`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_2`:
@@ -483,7 +507,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                           break;
                       }
                     })}
-                </PlantsWrapper>
+                  </SensorsWrapper>
+                   
+                </DashboardContainer>
               )
             })
           }
