@@ -8,6 +8,9 @@ export const HABLAR_CON_UN_REPRESENTANTE_OPT = 2;
 export const TECNICAS_DE_CULTIVO_OPT = 3;
 export const CHECKOUT_OPTION_SELECTED = 99;
 
+// ditto bot personal variables (change in front and back):
+export const timeZone = 'America/Denver';
+
 // COMPANY RELATED CONSTANTS TO FILL OUT
 export const BANK_TRANSFER_ALIAS = 'ditto.farm.rcia';
 export const BANK_TRANSFER_CBU = '0000168300000003376935';

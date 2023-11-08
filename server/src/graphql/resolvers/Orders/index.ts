@@ -18,7 +18,7 @@ import { sendCompanyConfirmationMail, sendClientConfirmationMail } from '../../.
 // import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
 import { orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
-import { COMPANY_EMAIL } from '../../../lib/utils/constant';
+import { COMPANY_EMAIL, timeZone } from '../../../lib/utils/constant';
 import { getOrderConfirmationMsgText, getCleanNumber } from '../../../lib/utils/shoppingUtils';
 const oderTracker: Array<IOrderTracker> = [
     {
@@ -158,7 +158,7 @@ export const ordersResolvers: IResolvers = {
             const customer = await db.users.findOne({ _id: new ObjectId(input.customer_id) });
             if (!customer) throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
-            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone });
             
             // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {
@@ -256,7 +256,7 @@ export const ordersResolvers: IResolvers = {
             const customer = await db.users.findOne({ _id: new ObjectId(input.customer_id) });
             if (!customer) throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
-            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone });
             
             // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {

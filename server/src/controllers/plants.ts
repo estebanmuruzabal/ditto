@@ -11,7 +11,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
-    const currentTimeZone = 'America/Denver';
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     
     // @ts-ignore
@@ -45,7 +44,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
 
     // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
-    console.log('MODE: ', mode);
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
             // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,

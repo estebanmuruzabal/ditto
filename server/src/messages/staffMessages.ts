@@ -2,6 +2,7 @@ import moment from "moment";
 import { IUser, TriggerStaffSteps } from "../lib/types";
 import { updateUserWorkInfoMutation } from "../api";
 import { getEmojiNumber } from "../lib/utils/whatsAppUtils";
+import { timeZone } from "../lib/utils/constant";
 
 export const getStuffMainMenuOptions = (resData: any, user: IUser, showSuccessChanged?: boolean) => {
     
@@ -94,7 +95,7 @@ Salario adelantado: $${user.workInfo?.advancedSalaryPaid}
 export const stopWorking = async (user: any) => {
 
     user.workInfo.isWorking = false;
-    user.workInfo.stoppedWorkTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+    user.workInfo.stoppedWorkTime = new Date().toLocaleString('en-US', { timeZone });
 
     const startedWorkTime = moment(new Date(user.workInfo.startedWorkTime));
     const stoppedWorkTime = moment(new Date(user.workInfo.stoppedWorkTime));
@@ -119,7 +120,7 @@ export const stopWorking = async (user: any) => {
         taskRelated: null
     };
     user.workInfo.isWorking = true;
-    user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+    user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone });
     user.workInfo.stoppedWorkTime = null;
 
     user.workInfo.ratePerHour = 375;

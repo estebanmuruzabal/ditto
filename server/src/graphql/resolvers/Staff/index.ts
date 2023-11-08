@@ -15,6 +15,7 @@ import {authorize} from "../../../lib/utils";
 import {search} from "../../../lib/utils/search";
 import { generateOTPCode, hashPassword } from '../User';
 import shortid from "shortid";
+import { timeZone } from '../../../lib/utils/constant';
 
 export const staffMethodsResolvers: IResolvers = {
     Query: {
@@ -101,7 +102,7 @@ export const staffMethodsResolvers: IResolvers = {
             const logs = userResult.logs || [];
             logs.push({
                 logDescription: logDescription,
-                timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                timestamp: new Date().toLocaleString('en-US', { timeZone })
             });
 
             const workInfo: IWorkInfo = {

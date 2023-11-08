@@ -1,6 +1,8 @@
 /************ CONSTANTS ***********/
 export const CURRENCY = '$';
 
+// ditto bot personal variables (change in front and back):
+export const timeZone = 'America/Denver';
 
 export const PICKUP_GUEMES_DELIVERY_METHOD = 'Lo busco en el centro';
 export const PICKUP_GRANJA_DELIVERY_METHOD = 'Lo busco en la granja';

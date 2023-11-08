@@ -60,6 +60,7 @@ poner  numeros
 
 
 # Improvements/features todo
+- timeZone should be stored in user info (somewhere), so we pull it from the front client where the users is, so we reflect every timezone with the right information and also it works well
 - agregar textbox para ingresar user id y controller id
 - agregar boton y logica para reiniciar wifi config
 - Agregar DittoBot SHOULD BE A MODAL, ADD BUTTON ON TOP

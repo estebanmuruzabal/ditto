@@ -11,6 +11,7 @@ import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
 import { checkSensor } from '../../../controllers/plants';
 import { ISettingsInputArgs, deleteSettingsArgs, deleteShopArgs } from './types';
+import { timeZone } from '../../../lib/utils/constant';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -184,7 +185,7 @@ export const usersResolvers: IResolvers = {
 
             if (!userResult) throw new Error("User not found");
 
-            const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const datetime = new Date().toLocaleString('en-US', { timeZone });
             let chatHistory = userResult.chatHistory?.length > 0 ? userResult.chatHistory : [];
             let shoppingCart: any = undefined;
 
@@ -548,7 +549,7 @@ export const usersResolvers: IResolvers = {
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;
                 plants[index].isRelayFourthOn = isRelayFourthOn;
-                plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone });
             }
             // const a = {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "contrId": 30, "hum1": 109, "airHum": 0, "temp": 0, "dist": 1, "hum2": 85, "light": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)

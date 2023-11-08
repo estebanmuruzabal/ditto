@@ -3,7 +3,7 @@ import qs from "qs";
 import nodemailer from "nodemailer";
 import { IOrderInputArgs } from "../../graphql/resolvers/Orders/types";
 import { IProduct, IUser } from "../types";
-import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD, READ_MAIL_CONFIG } from "./constant";
+import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD, READ_MAIL_CONFIG, timeZone } from "./constant";
 // const imaps = require('imap-simple');
 
 const fromNumber = process.env.OTP_FROM_NUMBER
@@ -73,7 +73,7 @@ export const sendCompanyConfirmationMail = (email: string, customer: any, input:
     const template = `
             <div>
                 <div>${customer.name}</div>
-                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })}</div>
+                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone })}</div>
                 <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
                 <div>Metodo de envio: ${deliveryMethod}</div>
                 <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
@@ -108,7 +108,7 @@ export const sendClientConfirmationMail = (email: string, customer: any, input: 
             <div>
                 <div>Pedido Confirmado!</div>
                 <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
-                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })}</div>
+                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone })}</div>
                 <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
                 <div>Metodo de envio: ${deliveryMethod}</div>
                 <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
