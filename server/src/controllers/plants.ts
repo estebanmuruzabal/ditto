@@ -6,6 +6,7 @@ import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
 import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
 import 'moment-timezone';
+import { timeZone } from "../lib/utils/constant";
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string) => {
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
@@ -21,7 +22,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const secondActionTimeInMins = Number(relayTwoAutomatedTimeToRun);
     const firstActionTimeInMins = Number(relayOneAutomatedTimeToRun);
 
-    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
 
     const actionStartedTime = moment(relayOneAutomatedStartedTime);
     const startedSecondActionTime = moment(relayTwoAutomatedStartedTime);
@@ -35,7 +36,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     const relayTwoAsocciatedActionComplete = secondActionInSeconds >= secondActionTimeInMins && !!relayTwoAutomatedStartedTime.length;
     
     moment.locale('es');
-    const today = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }), 'MM/D/YYYY').day();
+    const today = moment(new Date().toLocaleString('en-US', { timeZone }), 'MM/D/YYYY').day();
     
     const maxLevelReached = reading >= maxReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
     const minLevelReached = reading <= minReading && relayOneAutomatedStartedTime.length > 0;
@@ -89,8 +90,8 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayTwoIdRelated] = true;
                 setting.relayTwoWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
-                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
+                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting?.name} llego a ${reading}% de humedad, accionamos las 2 acciones.`);
@@ -133,7 +134,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting?.name} llego a ${reading}% de humedad, ya estamos llenando la pileta con agua.`);
@@ -173,7 +174,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true, false);
                 // we turn evacuation watering relay OFF just in case
                 // @ts-ignore
@@ -201,7 +202,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 setting.relayTwoWorking = true;
 
                 // we set the start time of the relay
-                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
 
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 break;
@@ -241,10 +242,10 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                     if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                         const format = 'hh:mm:ss';
-                        const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                        const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
     
-                        let startTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
-                        let endTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                        let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                        let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
                         startTime = moment(schedule.startTime, format);
                         endTime = moment(schedule.endTime, format);
     
@@ -279,10 +280,10 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const format = 'hh:mm:ss';
-                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
 
-                    let startTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
-                    let endTime = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+                    let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
                     startTime = moment(schedule.startTime, format);
                     endTime = moment(schedule.endTime, format);
 
@@ -317,7 +318,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true, false);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad, ya estamos activando la acción asociada.`);
@@ -353,7 +354,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true, false);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad, ya estamos activando la acción asociada.`);
@@ -385,7 +386,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} acaba de llegar a la capacidad máxima con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
@@ -398,7 +399,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 setting.relayTwoWorking = true;
 
                 // we set the start time of the relay
-                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayTwoAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
 
                 setting = logTimeStampWithTimeFilter(setting, reading);
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad, ya estamos activando la acción asociada.`);
@@ -433,7 +434,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 setting = logTimeStampWithTimeFilter(setting, reading, true);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad. Activamos el dispositivo asociado`);
@@ -455,7 +456,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
 
             if (maxLevelReached && !setting.relayOneAutomatedStartedTime.length) {
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
                 break;
@@ -463,14 +464,14 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             
             if (timeInMinutesThatShouldntNotify > currentTimeWithoutNotifing) {
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 break;
             }
         case DistanceSensorMode.MIN_WARNING:            
             setting = logTimeStampWithTimeFilter(setting, reading);
 
             if (minLevelReached && !setting.relayOneAutomatedStartedTime.length) {
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
                 break;
@@ -478,7 +479,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             
             if (timeInMinutesThatShouldntNotify > currentTimeWithoutNotifing) {
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad.`);
-                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+                setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 break;
             }
         default:
