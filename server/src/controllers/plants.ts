@@ -238,7 +238,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
         case HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case HumiditySensorMode.SCHEDULE:
             scheduledOnTimes?.map((schedule: any, i: number) => {
-                console.log('currentTime:', currentTime)
                 setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                     if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                         const format = 'hh:mm:ss';
@@ -248,10 +247,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                         let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
                         startTime = moment(schedule.startTime, format);
                         endTime = moment(schedule.endTime, format);
-    
-                        console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
-                        console.log('startTime', startTime)
-                        console.log('endTime', endTime)
 
                         const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
 
@@ -264,6 +259,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                             setting.relayTwoWorking = isInsideTimeFrame;
                         }
                     }
+                    setting = logTimeStampWithTimeFilter(setting, reading);
                 })
             })
             break;
@@ -276,7 +272,6 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
             setting = logTimeStampWithTimeFilter(setting, reading);
             break;
         case LightSensorMode.SCHEDULE:
-            console.log('currentTime:', currentTime)
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const format = 'hh:mm:ss';
@@ -287,9 +282,9 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                     startTime = moment(schedule.startTime, format);
                     endTime = moment(schedule.endTime, format);
 
-                    console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
-                    console.log('startTime', startTime)
-                    console.log('endTime', endTime)
+                    // console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
+                    // console.log('startTime', startTime)
+                    // console.log('endTime', endTime)
 
                     if (currentTime.isBetween(startTime, endTime)) {
                         // @ts-ignore

@@ -394,6 +394,29 @@ export const usersResolvers: IResolvers = {
                 message: "Updated successfully."
             };
         },
+        // updateUserTimeZone: async (
+        //     _root: undefined,
+        //     {id, name, email}: { id: string, name: string, email: string },
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     await authorize(req, db);
+            
+        //     const re = /\S+@\S+\.\S+/;
+        //     const userResult = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {timeZone: timeZone}}
+        //     );
+
+        //     return {
+        //         status: true,
+        //         message: "Updated successfully."
+        //     };
+        // },
         updateUserShoppingCart: async (
             _root: undefined,
             {input}: IOrderInputArgs,
@@ -558,7 +581,7 @@ export const usersResolvers: IResolvers = {
                 plants[index] = await checkSensor(plants[index], i, userResult?.phones[0]?.number) 
             })
             // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
-
+            if (plants[index].isRelayOneOn?.length > 0) {console.log('isRelayOneOn', plants[index].isRelayOneOn, plants[index].timestamp, plants[index].humidity_1)} if (plants[index].isRelayTwoOn?.length > 0) {console.log('isRelayTwoOn', plants[index].isRelayTwoOn, plants[index].timestamp, plants[index].distance_1)}
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}
