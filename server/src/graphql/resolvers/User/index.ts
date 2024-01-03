@@ -488,13 +488,10 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User does not exits.");
             }
 
-            if (userResult.plants.length === 3) {
-                throw new Error("Already added three plants. You are not allowed to add more than three.");
-            }
-
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
             
             if (index < 0) {
+                if (userResult.plants.length === 3) throw new Error("Already added three plants. You are not allowed to add more than three.");    
                 const plantObject = {
                     id: shortid.generate(),
                     name,
