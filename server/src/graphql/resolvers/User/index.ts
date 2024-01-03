@@ -519,6 +519,7 @@ export const usersResolvers: IResolvers = {
             } else {
                 const plants = userResult.plants;
                 plants[index].name = name;
+                if (timeZone) plants[index].timeZone = timeZone;
 
                 await db.users.updateOne(
                     {_id: new ObjectId(id)},
