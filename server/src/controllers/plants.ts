@@ -319,7 +319,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 break;
             } else if (irrigationComplete) {
                 // we just turn off the filling in watter system
-                setting = logTimeStampWithTimeFilter(setting, reading, false, true);
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
@@ -355,7 +355,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 break;
             } else if (maxCapacityReached) {
                 // we just turn off the filling in watter system
-                setting = logTimeStampWithTimeFilter(setting, reading, false, true);
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
@@ -381,7 +381,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 setting.relayOneWorking = true;
 
                 setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
-                setting = logTimeStampWithTimeFilter(setting, reading, true);
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, true);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} acaba de llegar a la capacidad máxima con ${Number(relayOneAutomatedTimeToRun) * 2} litros agua.`);
                 break;
@@ -429,13 +429,13 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
                 setting.relayOneWorking = true;
 
                 setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
-                setting = logTimeStampWithTimeFilter(setting, reading, true);
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, true);
 
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu ${setting.name} llego a ${reading}% de capacidad. Activamos el dispositivo asociado`);
                 break;
             }  else if (minLevelReached) {
                 // we just turn off the filling in watter system
-                setting = logTimeStampWithTimeFilter(setting, reading, false, true);
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
