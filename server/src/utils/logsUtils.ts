@@ -1,11 +1,10 @@
 import moment from "moment";
 import { ISensorSetting } from "../lib/types";
 
-export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: number, started?: boolean, finished?: boolean) => {
-    const currentTimeZone = 'America/Denver';
+export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: number, timeZone: string, started?: boolean, finished?: boolean) => {
     if (reading < -5 || reading > 105) return setting;
     if (setting?.logs?.length > 0) {
-        const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone: currentTimeZone }));
+        const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone }));
         const lastTimeStamp = setting?.logs[setting?.logs?.length - 1]?.timestamp;
         const lastTimeStampMoment = moment(new Date(lastTimeStamp));
         const lastTimestampInMins = currentTimeMoment?.diff(lastTimeStampMoment, 'minutes');
@@ -14,9 +13,9 @@ export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: num
         if (lastTimestampInMins < 30) return setting;
     }
 
-    if (started) setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: currentTimeZone }), started: true });
-    else if (finished) setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: currentTimeZone }), finished: true});
-    else setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone: currentTimeZone }) });
+    if (started) setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone }), started: true });
+    else if (finished) setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone }), finished: true});
+    else setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone }) });
 
     return setting;
 }

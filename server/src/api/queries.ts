@@ -66,6 +66,7 @@ export const getCustomerQuery = `
                     isRelayThirdOn
                     isRelayFourthOn
                     timestamp
+                    timezone
                     sensors {
                         name
                         whatsappWarningsOn
