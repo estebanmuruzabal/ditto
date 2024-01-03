@@ -663,7 +663,7 @@ export const typeDefs = gql`
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, plantId: Int!): DefaultMessageType!
+        addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
         deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!

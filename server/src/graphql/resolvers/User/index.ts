@@ -475,8 +475,9 @@ export const usersResolvers: IResolvers = {
             _root: undefined,
             {   id, 
                 name,
-                plantId
-            }: { id: string, name: string, plantId: number },
+                plantId,
+                timeZone
+            }: { id: string, name: string, plantId: number, timeZone?: string },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -509,7 +510,7 @@ export const usersResolvers: IResolvers = {
                     isRelayThirdOn: false,
                     isRelayFourthOn: false,
                     timestamp: null,
-                    timeZone: '',
+                    timeZone,
                     sensors: []
                 };
     

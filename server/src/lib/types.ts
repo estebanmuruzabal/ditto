@@ -17,6 +17,7 @@ export interface Plant {
     isRelayTwoOn: boolean;
     isRelayThirdOn: boolean;
     isRelayFourthOn: boolean;
+    timeZone: string;
 }
 
 export interface Shop {
