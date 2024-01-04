@@ -96,5 +96,5 @@
     "imagemin-svgo": "^8.0.0",
     "typescript": "^3.9.5"
   },
-  "proxy": "http://3.15.129.60/api"
+  "proxy": "http://52.67.123.15/api"
 }
