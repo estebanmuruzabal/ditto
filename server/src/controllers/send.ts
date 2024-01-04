@@ -4,12 +4,12 @@ import { getSettings, saveUserChatHistory, signUpUser } from "../api";
 import { IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
 import { endConversationKeys, getCleanNumber, initialConversationKeys, isGrower, isUserStaff, normalizeText } from "../lib/utils/shoppingUtils";
-// import { client } from "..";
+import { client } from "..";
 
 const ExcelJS = require('exceljs');
 const fs = require('fs');
 
-// const { MessageMedia, Buttons } = require('whatsapp-web.js');
+const { MessageMedia, Buttons } = require('whatsapp-web.js');
 const { cleanNumber } = require('./handle')
 const DELAY_TIME = 170; //ms
 const DIR_MEDIA = `${__dirname}/../mediaSend`;
@@ -103,7 +103,7 @@ export const sendMessage = async (number: string, text: string, trigger?: Trigge
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
         if (!number.endsWith('@c.us')) number += '@c.us';
-        // client.sendMessage(number, message);
+        client.sendMessage(number, message);
         console.log(`⚡⚡⚡ Enviando mensaje:`, message);
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )
