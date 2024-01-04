@@ -47,6 +47,9 @@ poner  numeros
 - Arreglar y testear distancia
 
 # BUGS
+- los soil moister sensor 1 y 2 del [0] arduino, se esta copiando al [1] arduino sensores moiister 1 y 2 tmb
+- arreglar fecha si o si , que sea la del front, y un bug que dejas el browsser quieto 2 min, el online se vuelve offline, y das f5 y realmente esta online
+- jugar con el agregado de SOIL_HUMIDITY_3, se agregan mal entonces las lecturas son erroneas
 - hacemos fetch cada 2 seg 
 - agregar warning de vuelta para enchufes ya usados, pero poner confirmar o cancelar.
 - calendario modal para soil moister muestra smart lighting, hay que sacarlo
@@ -60,6 +63,7 @@ poner  numeros
 
 
 # Improvements/features todo
+- agregar funcion pausar (disabled/enabled) para soil al menos y bot, luz y dist. todos
 - timeZone should be stored in user info (somewhere), so we pull it from the front client where the users is, so we reflect every timezone with the right information and also it works well
 - agregar textbox para ingresar user id y controller id
 - agregar boton y logica para reiniciar wifi config
