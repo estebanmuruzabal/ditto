@@ -33,13 +33,13 @@ export const getRelayNameText = (relay: RelaysIds) => {
 
 export const getDayShortName = (day: number) => {
     switch (day) {
-        case 1: return 'LUN';
-        case 2: return 'MAR';
-        case 3: return 'MIE';
-        case 4: return 'JUE';
-        case 5: return 'VIE';
-        case 6: return 'SAB';
-        case 0: return 'DOM';
+        case 1: return 'L';
+        case 2: return 'M';
+        case 3: return 'M';
+        case 4: return 'J';
+        case 5: return 'V';
+        case 6: return 'S';
+        case 0: return 'D';
         default:
             break;
     }

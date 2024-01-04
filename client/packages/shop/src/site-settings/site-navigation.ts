@@ -218,15 +218,15 @@ export const LANGUAGE_MENU = [
   //   icon: 'CNFlag',
   // },
   {
-    id: 'es',
-    defaultMessage: 'Spanish',
-    icon: 'ESFlag',
-  },
-  {
     id: 'en',
     defaultMessage: 'English',
     icon: 'USFlag',
   },
+  {
+    id: 'es',
+    defaultMessage: 'Spanish',
+    icon: 'ESFlag',
+  }
   // {
   //   id: 'de',
   //   defaultMessage: 'German',

@@ -64,7 +64,7 @@ const DistanceSensor: React.FC<Props> = ({ plant, settingType, handleSettingsCha
         });
     };
 
-    console.log('setting?.relayOneWorking', plant.sensors);
+
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '82px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>

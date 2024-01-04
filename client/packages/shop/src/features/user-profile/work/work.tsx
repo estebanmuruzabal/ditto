@@ -37,7 +37,6 @@ import { Label } from 'components/forms/label';
 import { ItemCount } from 'components/cart-popup/cart-popup.style';
 import Switch from 'components/switch/switch';
 import moment from 'moment';
-import { timeZone } from 'utils/constant';
 
 type WorkContentProps = {
   deviceType?: {

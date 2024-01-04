@@ -613,7 +613,7 @@ export const DayContainer = styled.button`
   align-items: center;
   justify-content: center;
   margin-right: 3px;
-  width: 40px;
+  width: 33px;
   height: 30px;
   border: 1px solid ${themeGet('colors.gray.700', '#c3b2b2')};
   border-radius: 5px;

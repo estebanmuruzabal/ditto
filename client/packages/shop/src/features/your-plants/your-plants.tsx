@@ -2,7 +2,7 @@ import React,  { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { openModal } from '@redq/reuse-modal';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { CommonMode, RelaysIds, SensorsTypes } from 'utils/constant';
+import { CommonMode, RelaysIds, SensorsTypes, timezones } from 'utils/constant';
 import ErrorMessage from 'components/error-message/error-message';
 
 import {
@@ -15,8 +15,6 @@ import {
   ListDes,
   ButtonText,
   PlantPageWrapper,
-  PlantsWrapper,
-  PlantsSensorContainer,
   Column1,
   Row1,
   CardButtons,
@@ -26,7 +24,7 @@ import {
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GET_LOGGED_IN_USER, GET_LOGGED_IN_USER_SETTINGS } from 'graphql/query/customer.query';
 import { Button } from 'components/button/button';
-import { ADD_PLANT, DELETE_SETTING, UPDATE_SETTING } from 'graphql/query/plants.query';
+import { CREATE_UPDATE_PLANT, DELETE_SETTING, UPDATE_SETTING } from 'graphql/query/plants.query';
 import { Input } from 'components/forms/input';
 import { ProfileContext } from 'contexts/profile/profile.context';
 import { SuccessMsg } from 'features/user-profile/settings/settings.style';
@@ -77,7 +75,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   const [plantId, setControllerID] = useState('');
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [sensorSelected, setSensor] = useState('');
-  const [addPlant] = useMutation(ADD_PLANT);
+  const [timezoneSelected, setTimezone] = useState('');
+  const [addPlant] = useMutation(CREATE_UPDATE_PLANT);
   
   const [updateSetting] = useMutation(UPDATE_SETTING);
   const [deleteSetting] = useMutation(DELETE_SETTING);
@@ -103,9 +102,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
       if ((module[relayOneIdRelated] === value || module[relayTwoIdRelated] === value ) && value !== '') {
         const texto1 = intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' });
         const texto2 = intl.formatMessage({ id: 'relayAlreadyAssinged2', defaultMessage: 'desigagned  ' });
-        const b = confirm(texto1 + module.name + texto2);
-        console.log('asdasd', b)
-        if (b) return false;
+        const hasConfirmed = confirm(texto1 + module.name + texto2);
+        if (hasConfirmed) return false;
         return false;
       }
     })
@@ -144,48 +142,33 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     // if we want to stop user to reuse plugs, uncomment line bellow
-    const a = shouldNotAssignRelay(plant, field, value);
-    // console.log('asdsadas', a)
-    if (a) return;
+    if (shouldNotAssignRelay(plant, field, value)) return;
     plant = defaultSettingValuesIfModeChanges(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
 
-    isClean(plant, field, value) && dispatchSettingSave(plant, field, value, settingType);
+    if(isClean(plant, field, value)) dispatchSettingSave(plant, field, value, settingType);
 
     setUserinfoMsg('Update user info successfully');
     setTimeout(function () {
       setUserinfoMsg('');
     }, 8000)
   };
-  
-  const handleAddDittoBotClick = () => {
-    addPlant({
-      variables: {
-        id: data?.getUser?.id,
-        name,
-        plantId: Number(plantId)
-      },
-    });
 
-    setUserinfoMsg('added plany successfully');
-    setTimeout(function () {
-      setUserinfoMsg('');
-    }, 2000)  
-  };
-
-  const handleUpdateDittoControllerName = (plant, name: string) => {
+  const handleCreateUpdatePlantOnClick = (plant, name: string, newPlant: boolean, timeZone?: string) => {
+    setTimezone(timeZone);
     setTimeout(function () {
       addPlant({
         variables: {
           id: data?.getUser?.id,
           name,
-          plantId: plant.plantId
+          plantId: newPlant ? Number(plantId) : plant.plantId,
+          ...(timeZone && {timeZone})
         },
       });
   
     }, 2000)
-    setUserinfoMsg('added plany successfully');
+    setUserinfoMsg(newPlant ? 'added plant successfully' : 'updated plant successfully');
     setTimeout(function () {
       setUserinfoMsg('');
     }, 2000)  
@@ -292,7 +275,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     dispatch({ type: 'ADD_MODULE', payload: {plantIndex, setting: getDefaultSetting(completeSensorTypeName) }});
   };
 
-  const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
+  const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left' }) };
   const sensorsOptions = [
     { value: SensorsTypes.DISTANCE, label: intl.formatMessage({ id: 'distanceId', defaultMessage: 'distanceId' }) },
     { value: SensorsTypes.SOIL_HUMIDITY, label: intl.formatMessage({ id: 'moistHumidityId', defaultMessage: 'moistHumidityId' }) },
@@ -301,6 +284,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     { value: SensorsTypes.PLUG, label: intl.formatMessage({ id: 'intelligentPlugId', defaultMessage: 'intelligentPlugId' }) },
   ];
 
+  const timezonesList = timezones.map((timezone: string) => ({ value: timezone, label: timezone  }))
+  console.log('plants', plants)
   return (
     <PlantPageWrapper>
       <PlantsPageContainer style={{ width: '100%' }}>
@@ -341,7 +326,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             disabled={true}
                             value={plant?.name}
                             // we have to change the onChange because the is no one for the controller name actualy
-                            onChange={(e: any) => handleUpdateDittoControllerName(plant, e.target.value)}
+                            onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, e.target.value, false)}
                             backgroundColor='#F7F7F7'
                             width='197px'
                             height='34.5px'
@@ -352,17 +337,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                       <ListItem>
                         <ListTitle>
                           <Text bold>
-                                                 {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}{/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
                         {/* <Reading> */}
                         {/* <Reading> */}
                         {/* <Reading> */}
@@ -371,76 +345,62 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                               id="statusId"
                               defaultMessage="statusId"
                             />
-                                                 {/* <Reading> */}
+                          {/* <Reading> */}
                         {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}{/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
+
                           </Text>
                         </ListTitle>
                         <ListDes>
-                          <Text>{plant.timestamp?.length > 0 ? moment(plant.timestamp).format('hh:mm A - DD MMM') : ''} {hasDittoBotUpdatedInLastMinute(plant.timestamp) ? '[ONLINE]' : '[OFFLINE]'}</Text>
+                          <Text>{plant.timestamp?.length > 0 ? moment(plant.timestamp).format('hh:mm A - DD MMM') : ''} {hasDittoBotUpdatedInLastMinute(plant.timestamp, plant.timeZone) ? '[ONLINE]' : '[OFFLINE]'}</Text>
                         </ListDes>
+                        {/* <Reading> */}{/* <Reading> */}
                       </ListItem>
-
-                      {/* <Reading> */}{/* <Reading> */}
 
                       <ListItem style={{ justifyContent: 'flex-start' }}>
-                        <ListTitle>
-                        <Text bold>
-                            <FormattedMessage
-                            id="addSensorId"
-                            defaultMessage="addSensorId"
-                            />
-                        </Text>
-                        </ListTitle>
-                        <ListDes>
-                        <Select 
-                            onChange={(e: any) => dispatchNewSettingSave(plant, e.value, i)}
-                            value={sensorSelected}
-                            // @ts-ignore
-                            options={sensorsOptions}
-                            styles={selectStyle}
-                            menuPosition={'fixed'}
-                        />
-                        </ListDes>
-                      </ListItem>
+                          <ListTitle>
+                          <Text bold>
+                              <FormattedMessage
+                              id="addSensorId"
+                              defaultMessage="addSensorId"
+                              />
+                          </Text>
+                          </ListTitle>
+                          <ListDes>
+                          <Select 
+                              onChange={(e: any) => dispatchNewSettingSave(plant, e.value, i)}
+                              value={sensorSelected}
+                              // @ts-ignore
+                              options={sensorsOptions}
+                              styles={selectStyle}
+                              menuPosition={'fixed'}
+                          />
+                          </ListDes>
+                        </ListItem>
 
-                      {/* <ListItem style={{ justifyContent: 'flex-start' }}>
-                        <ListTitle>
-                        <Text bold>
-                            <FormattedMessage
-                            id="changePlantTypeId"
-                            defaultMessage="changePlantTypeId"
-                            />
-                        </Text>
-                        </ListTitle>
-                        <ListDes>
-                        <Select 
-                            onChange={(e: any) => dispatchNewSettingSave(plant, e.value, i)}
-                            value={sensorSelected}
-                            // @ts-ignore
-                            options={sensorsOptions}
-                            styles={selectStyle}
-                            menuPosition={'fixed'}
-                        />
-                        </ListDes>
-                      </ListItem> */}
-
+                        <ListItem style={{ justifyContent: 'flex-start' }}>
+                            <ListTitle>
+                              <Text bold>
+                                  <FormattedMessage
+                                  id="timezone"
+                                  defaultMessage="timezone"
+                                  />
+                              </Text>
+                            </ListTitle>
+                            <ListDes>
+                              <Select 
+                                  onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, plant.name, false, e.value)}
+                                  value={timezoneSelected}
+                                  // @ts-ignore
+                                  options={timezonesList}
+                                  styles={selectStyle}
+                                  menuPosition={'fixed'}
+                              />
+                            </ListDes>
+                          </ListItem>
                     </Column1>
                   </Row1>
                   <SensorsWrapper>
-                  { sensors?.map((module: ISetting) => {
+                  { sensors?.map((module: ISetting, index: number) => {
                       switch (module?.settingType) {
                         case `${SensorsTypes.SOIL_HUMIDITY}_1`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_2`:
@@ -580,7 +540,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           </ListDes>
         </ListItem>
 
-        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddDittoBotClick}>
+        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={() => handleCreateUpdatePlantOnClick(plants, name, true)}>
           <ButtonText>
             <FormattedMessage id={"addDittoBotButton"} defaultMessage="Add plant" />
           </ButtonText>

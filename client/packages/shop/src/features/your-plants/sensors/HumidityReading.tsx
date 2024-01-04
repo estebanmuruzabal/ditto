@@ -22,12 +22,11 @@ import { useQuery } from '@apollo/react-hooks';
 import { GET_LOGGED_IN_USER_SETTINGS } from 'graphql/query/customer.query';
 
 interface Props {
-  plant: any;
-  settingType: SensorsTypes;
+  module: any;
+  moduleIndex: any;
 }
 
-const HumidityReading: React.FC<Props> = ({ plant, settingType  }) => {
-    const setting = plant.sensors.find((module: ISetting) => module.settingType === settingType);
+const HumidityReading: React.FC<Props> = ({ module, moduleIndex  }) => {
 
     const { loading, error, data } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
         notifyOnNetworkStatusChange: true,
@@ -35,20 +34,22 @@ const HumidityReading: React.FC<Props> = ({ plant, settingType  }) => {
         pollInterval: 10000,
       });
     
-    const sensorIndex = Number(setting?.settingType[setting?.settingType.length - 1]);
-    const plantIndex = data?.getUser?.plants?.findIndex((plant: any) => plant.plantId === plant.plantId);            
+    
+      const sensorIndex = Number(module?.settingType[module?.settingType.length - 1]);
+    const plantIndex = data?.getUser?.plants?.findIndex((plant: any) => plant.plantId === module.plantId);            
     let reading = data?.getUser.plants[plantIndex]?.sensors[sensorIndex]?.reading;
-    // console.log('setting?.settingType', setting?.settingType)
+    // console.log('module', module)
     // console.log('plantIndex', plantIndex)
     // console.log('reading', reading)
+    
     // if (reading > -5 && reading <= 0) reading = 0;
     // if (reading >= 100 && reading < 110) reading = 100;
 
 
     // const readingFormatted = (reading >= -10 && reading < 0) ? 0 + ' % 💧' : (reading >= 0 && reading <= 100 && reading) ? reading + ' % 💧' : 'Disconected';
-    const readingFormatted = (reading >= 0 && reading <= 110) ? `${reading} % 💧` : 'Disconected';  
+    // const readingFormatted = (module.reading >= 0 && module.reading <= 110) ? `${module.reading} % 💧` : 'Disconected';  
     return (
-        <Text bold>{readingFormatted}</Text>
+        <Text bold>{`${module.reading} % 💧`}</Text>
     );
 };
 

@@ -87,6 +87,7 @@
   "changeModeButton": "Cambiar modo",
   "plantNameField": "Ingresar nombre",
   "addSensorId": "Agregar módulo",
+  "timezone": "Timezone",
   "changePlantTypeId": "Cambiar tipo de planta",
   "plantModeId": "Config planta",
   "fillModeAndRelayToWork": "(Seleccioná un Módo y asociá un enchufe para funcionar)",

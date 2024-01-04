@@ -2,7 +2,6 @@
 export const CURRENCY = '$';
 
 // ditto bot personal variables (change in front and back):
-export const timeZone = 'America/Denver';
 
 export const PICKUP_GUEMES_DELIVERY_METHOD = 'Lo busco en el centro';
 export const PICKUP_GRANJA_DELIVERY_METHOD = 'Lo busco en la granja';
@@ -23,6 +22,24 @@ export enum SensorsTypes {
     PLUG = 'PLUG',
     HUMIDITY_TEMPETURE = 'HUMIDITY_TEMPETURE',
 }
+
+export const timezones = [
+    'America/Argentina/Buenos_Aires',
+    'America/Port_of_Spain',
+    'America/Eirunepe',
+    'America/Rio_Branco',
+    'America/Nassau',
+    'America/Belize',
+    'America/New_York',
+    'America/Detroit',
+    'America/North_Dakota/Center',
+    'America/North_Dakota/New_Salem',
+    'America/North_Dakota/Beulah',
+    'America/Denver',
+    'America/Boise',
+    'America/Phoenix',
+    'America/Los_Angeles',
+] 
 
 export enum RelaysIds {
     RELAY_ONE = 'isRelayOneOn',
