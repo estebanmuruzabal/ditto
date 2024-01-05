@@ -30,6 +30,7 @@ type DittoMarketProps = {
 const DittoMarket: React.FC<DittoMarketProps> = ({ deviceType, userRefetch }) => {
   const { state, dispatch } = useContext(ProfileContext);
   const {authDispatch} = useContext<any>(AuthContext);
+  const intl = useIntl();
 
   const { loading, error, data = {} } = useQuery(GET_LOGGED_IN_USER, {
     notifyOnNetworkStatusChange: true,
@@ -44,7 +45,7 @@ const DittoMarket: React.FC<DittoMarketProps> = ({ deviceType, userRefetch }) =>
   }, [geoControlRef.current]);
 
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error) {

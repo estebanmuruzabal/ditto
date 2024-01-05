@@ -27,6 +27,7 @@ import { GET_TYPE_HOMECARDS } from 'graphql/query/type.homecards.query';
 import { CATEGORY_MENU_ITEMS } from 'site-settings/site-navigation';
 import ErrorMessage from 'components/error-message/error-message';
 import { SHOP_IMAGE_HOST } from 'utils/images-path';
+import { useIntl } from 'react-intl';
 const Sidebar = dynamic(() => import('layouts/sidebar/sidebar'));
 const Products = dynamic(() =>
   import('components/product-grid/product-list/product-list')
@@ -38,7 +39,7 @@ const CartPopUp = dynamic(() => import('features/carts/cart-popup'), {
 const CategoryPage: React.FC<any> = ({ deviceType }) => {
   const { query } = useRouter();
   const router = useRouter();
-
+  const intl = useIntl();
   const { data: categoriesData, loading: categoriesLoading } = useQuery(GET_CATEGORIES, {
     variables: { 
      type: router.query.type
@@ -73,7 +74,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
 
 
   if (loading || homeCardsLoading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error || homeCardsError) {

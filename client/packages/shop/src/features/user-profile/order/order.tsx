@@ -25,7 +25,7 @@ import OrderDetails from './order-details/order-details';
 import OrderCard from './order-card/order-card';
 import OrderCardMobile from './order-card/order-card-mobile';
 import useComponentSize from 'utils/useComponentSize';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {SHOP_IMAGE_HOST} from "../../../utils/images-path";
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
 
@@ -93,7 +93,7 @@ const OrdersContent: React.FC<{}> = () => {
   const [targetRef, size] = useComponentSize();
   const orderListHeight = size.height - 79;
   const {data: deliverData} = useQuery(DELIVERY_METHOD)
-
+  const intl = useIntl();
   const { data, error, loading } = useQuery(GET_ORDERS);
     useEffect( () => {
       if (data && data.getUserOrders.length !== 0) {
@@ -103,7 +103,7 @@ const OrdersContent: React.FC<{}> = () => {
     }, [data]);
 
     if (loading) {
-      return <ErrorMessage message={'Cargando...'} />
+      return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
     };
 
     if (error) {

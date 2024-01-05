@@ -99,7 +99,7 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
         userRefetch();
     }
     if (loading || deliveryLoading || paymentLoading) {
-        return <ErrorMessage message={'Cargando...'}/>
+        return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}/>
     }
 
     if (error?.toString()?.includes('no token sent')) {

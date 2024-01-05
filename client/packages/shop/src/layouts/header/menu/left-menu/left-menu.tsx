@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Router, { useRouter } from 'next/router';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import Popover from 'components/popover/popover';
 import { useQuery } from '@apollo/react-hooks';
 import Logo from 'layouts/logo/logo';
@@ -26,7 +26,7 @@ const CategoryIcon = ({ name }) => {
 const CategoryMenu = (props: any) => {
 
   const [typeMenu, setTypeMenu] = useState([]);
-
+  const intl = useIntl();
   const handleOnClick = (item) => {
     if (item.dynamic) {
       Router.push('/[type]', `${item.href}`);
@@ -63,6 +63,7 @@ type Props = {
 
 export const LeftMenu: React.FC<Props> = ({ logo }) => {
   const router = useRouter();
+  const intl = useIntl();
   const { data, error, loading } = useQuery(
     GET_TYPE,
     {
@@ -72,7 +73,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
     }
   );
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error) {

@@ -704,6 +704,8 @@ export const ProductCartBtn = styled.div`
     
     @media (max-width: 767px) {
       min-width: 0px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     .btn-icon {

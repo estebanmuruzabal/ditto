@@ -88,6 +88,7 @@
   "plantNameField": "Ingresar nombre",
   "addSensorId": "Agregar módulo",
   "timezone": "Timezone",
+  "loading": "Loading...",
   "changePlantTypeId": "Cambiar tipo de planta",
   "plantModeId": "Config planta",
   "fillModeAndRelayToWork": "(Seleccioná un Módo y asociá un enchufe para funcionar)",

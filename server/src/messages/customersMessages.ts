@@ -28,7 +28,7 @@ ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
 `;
 
 const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>
@@ -55,7 +55,7 @@ ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
 `;
 
 const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
@@ -82,7 +82,7 @@ ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
 `;
 
 const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
@@ -108,7 +108,7 @@ ${CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
 `;
 
 const orderPaidConfirmation = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
@@ -373,7 +373,7 @@ const thanksMsg = () =>
 
 const thanksMsgNoPurchase = () =>  
 `Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra pagina web!
-Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.sd
 
 Gracias por tu tiempo, te invitamos a que vuelvas en el momento que desees.
 `;

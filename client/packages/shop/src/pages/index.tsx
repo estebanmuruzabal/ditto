@@ -24,11 +24,13 @@ import Router from 'next/router';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_TYPE } from 'graphql/query/type.query';
 import ErrorMessage from 'components/error-message/error-message';
+import { useIntl } from 'react-intl';
 
 // the redirect will only happen on the client-side. This is by design,
 const IndexPage: React.FC<{}> = () => {
   let selectedMenu = null;
   let defaultMenu = null;
+  const intl = useIntl();
   const { data, error, loading } = useQuery(
     GET_TYPE,
     {
@@ -38,7 +40,7 @@ const IndexPage: React.FC<{}> = () => {
     }
   );
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error) {

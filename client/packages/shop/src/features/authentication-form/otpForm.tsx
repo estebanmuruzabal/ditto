@@ -105,7 +105,7 @@ export default function OtpModal() {
         </form>
         {loading && <p style={{
           marginTop: "15px"
-        }}>Cargando...</p>}
+        }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>}
         {error && <p style={{
           marginTop: "15px",
           color: "red"

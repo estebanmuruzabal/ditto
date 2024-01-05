@@ -9,6 +9,7 @@ import { LayoutWrapper } from './layout.style';
 import { isCategoryPage } from './is-home-page';
 import { GET_TYPE } from 'graphql/query/type.query';
 import ErrorMessage from 'components/error-message/error-message';
+import { useIntl } from 'react-intl';
 const MobileHeader = dynamic(() => import('./header/mobile-header'), {
   ssr: false,
 });
@@ -24,7 +25,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
   // deviceType: { mobile, tablet, desktop },
   token,
 }) => {
-
+  const intl = useIntl();
   const isSticky = useAppState('isSticky');
   const { pathname, query } = useRouter();
   const type = pathname === '/restaurant' ? 'restaurant' : query.type;
@@ -41,7 +42,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
 
 
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error) {

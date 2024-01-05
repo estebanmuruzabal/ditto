@@ -17,7 +17,7 @@
   "nav.order_received": "Order Invoice",
   "nav.logout": "Logout",
   "nav.login": "Login",
-  "nav.order": "Your Order",
+  "nav.order": "Your Orders",
   "nav.plants": "Your plants",
   "groceriesTitle": "Groceries Delivered in {minute} Minute",
   "groceriesSubTitle": "Get your healthy foods & snacks delivered at your doorsteps all day everyday",
@@ -53,7 +53,7 @@
   "rmMedicineQuantity": "Quantity",
   "rmPrescripttionUpload": "Upload your prescription",
   "rmUploadText": "Drag/Upload your file here.",
-  "cartTitle": "Your Order",
+  "cartTitle": "Your Orders",
   "discountText": "Discount",
   "vatText": "Incl. VAT",
 
@@ -63,7 +63,7 @@
   "navlinkAccountSettings": "Your Account Settings",
   "cartItems": "Items",
   "cartItem": "Item",
-  "addEcoToCartButton": "Cart",
+  "addEcoToCartButton": "Buy",
   "addToCartButton": "Add to cart",
   "backBtn": "Back",
   "noProductFound": "No products found",
@@ -145,6 +145,7 @@
   "sendResetPassText": "We'll send you a link to reset your password",
   "resetPasswordBtn": "Reset Password",
 
+  "loading": "Loading...",
   "intlCopyBtnId": "Copy",
   "intlCopySuccessId": "Copied",
 

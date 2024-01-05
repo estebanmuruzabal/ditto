@@ -14,7 +14,7 @@ export const timeZone = 'America/Denver';
 // COMPANY RELATED CONSTANTS TO FILL OUT
 export const BANK_TRANSFER_ALIAS = 'ditto.farm.rcia';
 export const BANK_TRANSFER_CBU = '0000168300000003376935';
-export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
+export const COMPANY_EMAIL = 'dittofarm.sd@gmail.com';
 export const COMPANY_DESCRIPTION_TEXT = 'Ditto Farm es un proyecto frutihorticola a solo 8km de Rcia. Chaco producimos frutas, verduras y fertilizantes orgánicos con tecnicas de agricultura sustentable y cosechados en el dia!';
 export const COMPANY_EMAIL_PASSWORD = 'glbequknuqtduxxc';
 export const INITIAL_USER_USERNAME = 'nonamed';

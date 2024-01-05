@@ -18,7 +18,8 @@ import {PHONE_VERIFICATION_MUTATION} from "../../graphql/mutation/signup";
 export default function PhoneVerificationModal(props: FormikProps<FormValues> & MyFormProps) {
   const { authDispatch } = useContext<any>(AuthContext);
   const [phone, setPhone] = React.useState('');
-
+  const intl = useIntl();
+  
   const toggleSignInForm = () => {
     authDispatch({
       type: 'SIGNIN',
@@ -100,7 +101,7 @@ export default function PhoneVerificationModal(props: FormikProps<FormValues> & 
         </form>
         {loading && <p style={{
           marginTop: "15px"
-        }}>Cargando...</p>}
+        }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>}
         {error && <p style={{
           marginTop: "15px",
           color: "red"

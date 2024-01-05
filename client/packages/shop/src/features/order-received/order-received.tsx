@@ -41,7 +41,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const { data: deliverData, error: deliveryError, loading: deliveryLoading, refetch: deliveryRefetch } = useQuery(DELIVERY_METHOD)
   
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   const components = {

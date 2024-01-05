@@ -143,7 +143,7 @@ export default function SignInModal() {
         
         {loading && <p style={{
           marginTop: "15px"
-        }}>Cargando...</p>}
+        }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>}
         
         {authError && <p style={{
           marginTop: "15px", fontSize: '16px'

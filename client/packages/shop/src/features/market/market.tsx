@@ -49,6 +49,7 @@ const Market: React.FC<MarketProps> = ({ deviceType, userRefetch }) => {
   
   const {data, error, loading} = useQuery(GET_SETTING);
   const [ siteSettingData, setSiteSettingData ] = useState<any | null>();
+  const intl = useIntl();
 
   useEffect( () => {
     if(data){
@@ -57,7 +58,7 @@ const Market: React.FC<MarketProps> = ({ deviceType, userRefetch }) => {
   }, [data])
 
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error) {
