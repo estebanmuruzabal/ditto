@@ -101,15 +101,16 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
           imageUrl={SHOP_IMAGE_HOST+image}
         />
         <MobileCarouselDropdown>
-          {/* if wanna show categories, fix the component to display them <StoreNav items={categoriesData.shopCategories.items} /> */}
-          <Sidebar type={PAGE_TYPE} deviceType={deviceType} />
+          {/* if wanna show categories, fix the component to display them */}
+          {/* <StoreNav items={categoriesData.shopCategories.items} />  */}
+          {/* <Sidebar type={PAGE_TYPE} deviceType={deviceType} /> */}
         </MobileCarouselDropdown>
-        {homeCardsData.getHomeCards.length > 0 ? (<OfferSection>
+        {/* {homeCardsData.getHomeCards.length > 0 ? (<OfferSection>
           <div style={{margin: '0 -10px'}}>
             <HomeCardsCarousel deviceType={deviceType} data={homeCardsData.getHomeCards}/>
           </div>
         </OfferSection>) : (<div></div>)
-        }
+        } */}
         <MainContentArea>
           <SidebarSection>
             <Sidebar type={PAGE_TYPE} deviceType={deviceType} />

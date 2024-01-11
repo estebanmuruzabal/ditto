@@ -50,10 +50,11 @@ export default function OtpModal() {
         // Router.push('/[type]', router.asPath);
         // currently sending to profile instead of really checking otp
         // Router.push('/checkout', router.asPath);
-        Router.push({
-          pathname: '/checkout',
-          query: { shouldRefresh: true }
-        })
+        if (router.asPath === '/checkout') {
+          Router.push({ pathname: '/checkout', query: { shouldRefresh: true } })
+        } else {
+          Router.push({ pathname: '/home' })
+        }
       }
     },
     onError: (error) => {
@@ -101,7 +102,10 @@ export default function OtpModal() {
             size='big'
             style={{ width: '100%' }}
             type='submit'
-          >Continuar</Button>
+          ><FormattedMessage
+          id='continueBtn'
+          defaultMessage='Continuar'
+        /></Button>
         </form>
         {loading && <p style={{
           marginTop: "15px"

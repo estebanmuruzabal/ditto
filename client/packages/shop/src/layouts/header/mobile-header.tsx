@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { openModal, closeModal } from '@redq/reuse-modal';
 import MobileDrawer from './mobile-drawer';
@@ -24,6 +24,9 @@ import useDimensions from 'utils/useComponentSize';
 import { GET_TYPE } from 'graphql/query/type.query';
 import { useQuery } from '@apollo/react-hooks';
 import { CATEGORY_MENU_ITEMS } from 'site-settings/site-navigation';
+import { AuthContext } from 'contexts/auth/auth.context';
+import { Button } from 'components/button/button';
+import { FormattedMessage } from 'react-intl';
 
 type MobileHeaderProps = {
   className?: string;
@@ -50,7 +53,8 @@ const SearchModal: React.FC<{}> = () => {
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
   const { pathname, query } = useRouter();
-
+  const { authState: { isAuthenticated } } = useContext<any>(AuthContext);
+  
   const [mobileHeaderRef, dimensions] = useDimensions();
   const router = useRouter();
   const { data, error, loading } = useQuery(
@@ -106,6 +110,14 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
     <MobileHeaderWrapper>
       <MobileHeaderInnerWrapper className={className} ref={mobileHeaderRef}>
         <DrawerWrapper>
+          {/* { !isAuthenticated ? (
+              <Button variant="primary" onClick={null}>
+                <FormattedMessage id="joinButton" defaultMessage="join" />
+              </Button>
+            ) : (
+              <MobileDrawer />
+            )
+          } */}
           <MobileDrawer />
         </DrawerWrapper>
 

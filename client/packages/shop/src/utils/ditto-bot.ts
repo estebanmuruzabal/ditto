@@ -17,6 +17,7 @@ export const getLastNumOfSensor = (settingType: SensorsTypes) : number => {
 
 
 export const hasDittoBotUpdatedInLastMinute = (lastTimeStamp: string, timeZone: string) => {
+    console.log('timeZone', timeZone)
     const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone }));
     console.log('currentTimeMoment', currentTimeMoment)
     const lastTimeStampMoment = moment(new Date(lastTimeStamp));

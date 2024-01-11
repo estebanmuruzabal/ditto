@@ -67,7 +67,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({
     }
   }
 
- 
+
   return (
     <LayoutWrapper className={`layoutWrapper ${className}`}>
       <Sticky enabled={isSticky} innerZ={1001}>

@@ -140,7 +140,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                 ) : (
                   <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddClick}>
                     <ButtonText>
-                      <FormattedMessage id={"addCartButton"} defaultMessage="Cart" />
+                      <FormattedMessage id={"addToCartButton"} defaultMessage="Cart" />
                     </ButtonText>
                   </Button>
                 )}

@@ -4,7 +4,7 @@ import { themeGet } from '@styled-system/theme-get';
 const CheckoutWrapper = styled.div`
   width: 100%;
   display: flex;
-  padding: 130px 60px 60px;
+  padding: 90px 60px 60px;
   position: relative;
 
   @media (max-width: 1100px) {

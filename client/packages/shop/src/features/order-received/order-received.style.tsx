@@ -91,7 +91,7 @@ export const OrderReceivedContainer = styled.div`
     font-size: ${themeGet('fontSizes.base', '15')}px;
     font-weight: ${themeGet('fontWeights.regular', '400')};
     color: ${themeGet('colors.text.regular', '#77798c')};
-    padding: 5px 15px;
+    padding: 5px 5px;
     height: 36px;
     border: 1px solid ${themeGet('colors.gray.700', '#e6e6e6')};
     border-radius: ${themeGet('radii.base', '6px')};

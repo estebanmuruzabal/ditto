@@ -50,7 +50,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [passwordChangeMsg, setPasswordChangeMsg] = useState('');
   const {
-    authState: { isAuthenticated },
+    authState: { isStaff },
     authDispatch,
   } = React.useContext<any>(AuthContext);
   const [updateMeMutation] = useMutation(UPDATE_ME);
@@ -72,9 +72,10 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
     email,
     id,
     phones,
-    plants
+    plants,
+    role
   } = state;
-
+  
   const handleChange = (e) => {
     const { value, name } = e.target;
     dispatch({
@@ -213,7 +214,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
   };
 
   const hasEmptyFields = state.oldPassword?.length === 0 || state.newPassword?.length === 0 || state.confirmPassword?.length === 0;
-
+  console.log('isStaff', isStaff)
   return (
     <SettingsForm>
       <SettingsFormContent>
@@ -224,6 +225,9 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               defaultMessage='Your Profile'
             />
           </Title>
+          { isStaff && (
+              <Title>[{role}]</Title>
+          )}
         </HeadingSection>
         <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
           <Col xs={12} sm={5} md={5} lg={5}>

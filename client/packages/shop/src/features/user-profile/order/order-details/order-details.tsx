@@ -20,6 +20,7 @@ import { CURRENCY } from 'utils/constant';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {Title} from "../order.style";
 import moment from 'moment';
+import { calculateDeliveryCharge, getDeliverySchedule } from 'utils/shop-helper';
 
 type OrderDetailsProps = {
   id?: any;
@@ -65,23 +66,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     return false
   }
 
-  const calculateDeliveryCharge = () => {
-    if (!deliveryMethod?.name) return 0;
-    const charge = deliveryMethod?.name?.split("$");
-    const chargeFormatted = charge[charge?.length -1]?.replace(/\D/g,'');
-    return Number(chargeFormatted);
-  }
-
-  const getDeliverySchedule = (details) => {
-    if (!details) return '';
-    const word = 'Horario';
-
-    const index = details.indexOf(word);   // 8
-    const length = word.length;			// 7
-
-    return details.slice(index + length);
-  }
-  const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethod?.details)} - ${moment(deliveryDate).format('DD MMM')}`
+  const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethod?.details, intl.locale)} - ${moment(deliveryDate).format('DD MMM')}`
 
   return (
     <>
@@ -163,7 +148,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
             />
             <Price>
               {CURRENCY}
-              {calculateDeliveryCharge()}
+              {calculateDeliveryCharge(deliveryMethod?.name)}
             </Price>
           </PriceRow>
           <PriceRow className="grandTotal">

@@ -22,7 +22,7 @@ import { SIGNIN_MUTATION } from 'graphql/mutation/signin';
 import Router, { useRouter } from 'next/router';
 import PhoneInput from 'react-phone-input-2'
 import startsWith from 'lodash.startswith';
-import es from 'react-phone-input-2/lang/es.json'
+import us from 'react-phone-input-2/lang/es.json'
 
 export default function SignInModal() {
   const router = useRouter();
@@ -70,7 +70,7 @@ export default function SignInModal() {
       }
     },
     onError: (error) => {
-      setPhone('54');
+      setPhone('');
       setPassword('');
     }
   });
@@ -109,10 +109,10 @@ export default function SignInModal() {
               }}
               containerStyle={{textAlign: "left"}}
               inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
-              onlyCountries={['ar']}
-              localization={es}
-              country={'ar'}
-              masks={{ar: '(...) ...-....'}}
+              onlyCountries={['us']}
+              localization={us}
+              country={'us'}
+              masks={{us: '(...) ...-....'}}
               value={phone}
               onChange={handlePhoneChange}
           />
@@ -121,13 +121,14 @@ export default function SignInModal() {
             type='password'
             placeholder={intl.formatMessage({
               id: 'passwordPlaceholder',
-              defaultMessage: 'Password (min 6 characters)',
+              defaultMessage: 'Password',
             })}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             height='48px'
             backgroundColor='#F7F7F7'
+            width='100%'
             mb='10px'
           />
 
@@ -156,7 +157,7 @@ export default function SignInModal() {
         <Offer style={{ padding: '20px 0', fontSize: '20px' }}>
           <FormattedMessage
             id='dontHaveAccount'
-            defaultMessage="Don't have any account?"
+            defaultMessage="Don't have an account?"
           />{' '}
           <LinkButton onClick={toggleSignUpForm}>
             <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />

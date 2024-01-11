@@ -120,7 +120,7 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
                     <Offer style={{ padding: '20px 20px', fontSize: '20px' }}>
                         <FormattedMessage
                             id='dontHaveAccount'
-                            defaultMessage="Don't have any account?"
+                            defaultMessage="Don't have an account?"
                         />{' '}
                         <LinkButton onClick={toggleSignUpForm}>
                             <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
@@ -149,7 +149,7 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
                     <Offer style={{ padding: '20px 20px', fontSize: '20px' }}>
                         <FormattedMessage
                             id='dontHaveAccount'
-                            defaultMessage="Don't have any account?"
+                            defaultMessage="Don't have an account?"
                         />{' '}
                         <LinkButton onClick={toggleSignUpForm}>
                             <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
@@ -166,8 +166,6 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
     deliveryRefetch();
     paymentRefetch();
 
-    console.dir(deliverData.deliveryMethods)
-    console.dir(paymentData.paymentOptions)
 
     const checkoutData = {
         ...data.getUser,
@@ -175,9 +173,6 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
         paymentMethods: [],
     }
 
-
-    console.dir(deliverData)
-    console.dir(paymentData)
 
     if (checkoutData.deliveryMethods.length == 0 && (deliverData || deliverData.deliveryMethods)) {
         checkoutData.deliveryMethods = [...deliverData.deliveryMethods.items];

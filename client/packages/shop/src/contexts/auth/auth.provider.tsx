@@ -29,6 +29,7 @@ function reducer(state: any, action: any) {
         currentForm: 'signIn',
       };
     case 'SIGNIN_SUCCESS':
+      console.log('user: action.user,', action.user)
         return {
           ...state,
           isAuthenticated: true,

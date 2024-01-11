@@ -155,7 +155,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     }, 8000)
   };
 
-  const handleCreateUpdatePlantOnClick = (plant, name: string, newPlant: boolean, timeZone?: string) => {
+  const handleCreateUpdatePlantOnClick = (plant, name: string, newPlant: boolean, timeZone: string) => {
     setTimezone(timeZone);
     setTimeout(function () {
       addPlant({
@@ -326,7 +326,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             disabled={true}
                             value={plant?.name}
                             // we have to change the onChange because the is no one for the controller name actualy
-                            onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, e.target.value, false)}
+                            onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, e.target.value, false, intl.locale)}
                             backgroundColor='#F7F7F7'
                             width='197px'
                             height='34.5px'
@@ -388,7 +388,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             </ListTitle>
                             <ListDes>
                               <Select 
-                                  onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, plant.name, false, e.value)}
+                                  onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, plant.name, false, e.value, intl.locale)}
                                   value={timezoneSelected}
                                   // @ts-ignore
                                   options={timezonesList}
@@ -540,7 +540,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           </ListDes>
         </ListItem>
 
-        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={() => handleCreateUpdatePlantOnClick(plants, name, true)}>
+        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={() => handleCreateUpdatePlantOnClick(plants, name, true, intl.locale)}>
           <ButtonText>
             <FormattedMessage id={"addDittoBotButton"} defaultMessage="Add plant" />
           </ButtonText>

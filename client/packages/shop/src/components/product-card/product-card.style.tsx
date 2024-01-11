@@ -613,7 +613,7 @@ export const PriceContainerRow = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 15px;
-  min-width: 210px;
+  // min-width: 210px;
   justify-content: space-between;
   @media (max-width: 767px) {
     min-width: 0px;
@@ -631,9 +631,9 @@ export const ProductPriceWrapper = styled.div`
   // margin-right: 15px;
   line-height: 31px;
   min-width: 45px;
-
+  padding-left: 15px;
   @media (max-width: 767px) {
-    margin-left: 0px;
+    // margin-left: 0px;
     min-width: 50px;
   }
 `;

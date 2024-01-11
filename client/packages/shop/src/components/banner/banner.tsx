@@ -40,7 +40,6 @@ export const Banner: React.FC<Props> = ({
       <Content>
         <Title>
           <FormattedMessage
-            /* istanbul ignore next line */
             id="set your Title through Language File in the Admin UI"
             defaultMessage={intlTitleId}
             values={{ minute: 90 }}
@@ -48,7 +47,6 @@ export const Banner: React.FC<Props> = ({
         </Title>
         <Description>
           <FormattedMessage
-            /* istanbul ignore next line */
              id="set your description through Language File in the Admin UI"
             defaultMessage={intlDescriptionId}
           />

@@ -71,6 +71,7 @@ import { useWindowSize } from 'utils/useWindowSize';
 
 import UpdateAddressTwo from 'components/address-card/address-card-two';
 import moment from 'moment';
+import { calculateDeliveryCharge, capitalizeFirstLetter } from 'utils/shop-helper';
 
 
 // The type of props Checkout Form receives
@@ -219,32 +220,19 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     return submitResult.delivery_method_id === deliveryMethod.id;
   })?.pickUpAddress;
 
-  const calculateDeliveryCharge = () => {
-    const deliveryTitle = deliveryMethods.find(deliveryMethod => {
-      return submitResult.delivery_method_id === deliveryMethod.id;
-    });
-
-    if (!deliveryTitle) return 0;
-    const charge = deliveryTitle?.name?.split("$");
-    const chargeFormatted = charge[charge?.length -1]?.replace(/\D/g,'');
-    return Number(chargeFormatted);
-  }
-
   const calculateCCCharge = () => {
     const paymentOptionSelected = paymentMethods.find(paymentMethod => {
       return submitResult?.payment_option_id === paymentMethod?.id;
     });
+
     const total = Number(calculateSubTotalPrice());
 
-    if (paymentOptionSelected?.name?.toLowerCase().includes('tarjeta')) {
+    if (paymentOptionSelected?.name?.toLowerCase().includes('tarjeta') || paymentOptionSelected?.name?.toLowerCase().includes('card')) {
       const ccCharge = paymentOptionSelected?.name?.replace(/\D/g, '');
-      return total * (ccCharge / 100);
+      const result = total * (ccCharge / 100);
+      return result;
     }
     return 0;
-  }
-
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && capitalizeFirstLetter(selectedAddress.address)}, ${selectedAddress && selectedAddress.instructions}` : null;
@@ -252,12 +240,12 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   useEffect(() => {
     removeCoupon();
     setHasCoupon(false);
-    deliveryCharge = calculateDeliveryCharge();
+    
+    const deliveryTitle = deliveryMethods.find(deliveryMethod => { return submitResult.delivery_method_id === deliveryMethod.id; });
+    
+    deliveryCharge = calculateDeliveryCharge(deliveryTitle);
     const deliveryAddress = pickUpOptionSelected ? pickUpAddress : deliveryOptionSelected ? selectedAddressText : '';
 
-    //     if (router.query.shouldRefresh) {
-    //         userRefetch();
-    //     }
     setSubmitResult({
       ...submitResult,
       delivery_address: deliveryAddress,
@@ -502,6 +490,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   products,
                   payment_option_type,
                   isWhatsappPurchase: false,
+                  lenguageLocale: intl.locale
               }
             }
         });
@@ -947,7 +936,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                         <FormattedMessage id='ccrChargeText' defaultMessage='Card charge' />
                       </Text>
                       <Text>
-                        {CURRENCY} {calculateCCCharge()}
+                        {CURRENCY} {calculateCCCharge()?.toFixed(2)}
                       </Text>
                     </TextWrapper>
                   )}

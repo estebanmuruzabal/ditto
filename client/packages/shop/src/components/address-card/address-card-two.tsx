@@ -130,6 +130,7 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
         <TextField
           id="title"
           type="text"
+          width='100%'
           placeholder={intl.formatMessage({ id: 'addressRefId', defaultMessage: 'Address name' })}
           error={touched.title && errors.title}
           value={values.title}
@@ -141,6 +142,7 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
         <TextField
           id="address"
           type="text"
+          width='100%'
           placeholder={intl.formatMessage({ id: 'addressId', defaultMessage: 'Address' })}
           error={touched.address && errors.address}
           value={values.address}
@@ -153,6 +155,7 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
           id="location"
           type="text"
           placeholder={intl.formatMessage({ id: 'locationId', defaultMessage: 'Localidad' })}
+          width='100%'
           error={touched.location && errors.location}
           value={values.location}
           onChange={handleChange}
@@ -163,6 +166,7 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
         <TextField
           id="instructions"
           as="textarea"
+          width='100%'
           placeholder={intl.formatMessage({ id: 'instructionsId', defaultMessage: 'Delivery instructions' })}
           error={touched.instructions && errors.instructions}
           value={values.instructions}

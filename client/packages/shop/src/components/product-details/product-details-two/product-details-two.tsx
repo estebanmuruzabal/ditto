@@ -189,7 +189,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                   <CartIcon />
                   <ButtonText>
                     <FormattedMessage
-                      id="addCartButton"
+                      id="addToCartButton"
                       defaultMessage="Cart"
                     />
                   </ButtonText>

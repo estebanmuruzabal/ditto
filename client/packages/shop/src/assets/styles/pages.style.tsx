@@ -39,7 +39,7 @@ const MainContentArea = styled.main`
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
+  background-color: ${themeGet('colors.white', '#ffffff')};
   padding-right: 0;
   transition: padding-right 0.35s ease-in-out;
 `;
@@ -131,7 +131,7 @@ export const ProductsRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-top: 30px;
-  background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
+  background-color: ${themeGet('colors.white', '#ffffff')};
 
   @media (max-width: 768px) {
     margin-left: -7.5px;

@@ -111,6 +111,9 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
         alt={'Shop Logo'}
         onClick={initialMenu ? initialMenu: JSON.parse(localStorage.getItem('myMenu'))}
       />
+
+      {/* 
+      BY NOW WE DONT WANT CATEGORIES CHANGES
       <MainMenu>
         <Popover
           className="right"
@@ -134,7 +137,7 @@ export const LeftMenu: React.FC<Props> = ({ logo }) => {
           }
           content={<CategoryMenu onClick={setActiveMenu} />}
         />
-      </MainMenu>
+      </MainMenu> */}
     </LeftMenuBox>
   );
 };

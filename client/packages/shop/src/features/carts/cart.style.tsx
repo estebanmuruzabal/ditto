@@ -351,7 +351,7 @@ const ErrorMsg = styled.span`
 `;
 
 const CartSlidePopup = styled.div`
-  width: 420px;
+  // width: 420px;
   height: 100vh;
   background-color: ${themeGet('colors.white', '#ffffff')};
   position: fixed;

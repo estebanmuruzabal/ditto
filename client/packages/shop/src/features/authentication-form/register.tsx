@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@apollo/react-hooks';
-import es from 'react-phone-input-2/lang/es.json'
+import us from 'react-phone-input-2/lang/es.json'
 import { Input } from 'components/forms/input';
 
 import {
@@ -130,10 +130,10 @@ export default function SignOutModal() {
           <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
         </Heading>
         <SubHeading>
-          {/* <FormattedMessage
+          <FormattedMessage
             id='signUpText'
-            defaultMessage='Every fill is required in sign up'
-          /> */}
+            defaultMessage='Every fill is required except for email in sign up. We promess no spam, only purchases confirmation details.'
+          />
         </SubHeading>
           <form method="post" onSubmit={
             async (e) => {
@@ -149,6 +149,7 @@ export default function SignOutModal() {
             <Input
               type="text"
               name="name"
+              width='100%'
               value={upperCaseEverything(name)}
               onChange={(e) => setName(upperCaseEverything(e.target.value))}
               placeholder={intl.formatMessage({
@@ -165,6 +166,7 @@ export default function SignOutModal() {
            <Input
               type='email'
               name='email'
+              width='100%'
               placeholder={intl.formatMessage({ id: 'emailSignUpPlaceholder', defaultMessage: 'Email address' })}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -196,10 +198,10 @@ export default function SignOutModal() {
               }}
               containerStyle={{textAlign: "left"}}
               inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
-              onlyCountries={['ar']}
-              localization={es}
-              country={'ar'}
-              masks={{ar: '(...) ...-....'}}
+              onlyCountries={['us']}
+              localization={us}
+              country={'us'}
+              masks={{us: '(...) ...-....'}}
               value={phone}
               onChange={handlePhoneChange}
             />
@@ -209,10 +211,11 @@ export default function SignOutModal() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={intl.formatMessage({
-                id: 'passwordPlaceholder',
+                id: 'passwordPlaceholderRegister',
                 defaultMessage: 'Password (min 6 characters)',
               })}
               height='48px'
+              width='100%'
               backgroundColor='#F7F7F7'
               mb='10px'
               required
@@ -220,6 +223,7 @@ export default function SignOutModal() {
             <Input
               type="text"
               name="password"
+              width='100%'
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}
               placeholder={intl.formatMessage({
@@ -283,11 +287,11 @@ export default function SignOutModal() {
                 defaultMessage="By signing up, you agree to Ditto's"
               />
               &nbsp;
-              <Link href='/'>
+              <Link href='/terms'>
                 <a>
                   <FormattedMessage
                     id='termsConditionText'
-                    defaultMessage='Terms &amp; Condition'
+                    defaultMessage='Terms &amp; Conditions'
                   />
                 </a>
               </Link>
