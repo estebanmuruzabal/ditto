@@ -41,6 +41,7 @@ export const Content = styled.div(
   {
     position: 'relative',
     zIndex: 2,
+    maxWidth: '600px'
   }
 );
 export const Title = styled.h2(
@@ -48,9 +49,10 @@ export const Title = styled.h2(
     fontSize: [17, '2xl', 38],
     color: 'text.bold',
     fontWeight: 'bold',
-    backgroundColor: '#89b4f787',
-    '@media (max-width: 990px) ': {
+    // backgroundColor: '#89b4f787',
+    '@media (max-width: 768px) ': {
       fontSize: [12, '2xl', 38],
+      maxWidth: '250px'
     },
   }),
   {
@@ -62,7 +64,7 @@ export const Description = styled.p(
   css({
 
     fontWeight: 'bold',
-    backgroundColor: '#89b4f787',
+    // backgroundColor: '#89b4f787',
 
     fontSize: ['base', 'md'],
     color: 'text.bold',
