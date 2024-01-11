@@ -23,6 +23,7 @@ const send_1 = require("../../../controllers/send");
 const customersMessages_1 = require("../../../messages/customersMessages");
 const constant_1 = require("../../../lib/utils/constant");
 const shoppingUtils_1 = require("../../../lib/utils/shoppingUtils");
+const lenguageLocale = 'en';
 const oderTracker = [
     {
         status: "Pendiente",
@@ -130,7 +131,7 @@ exports.ordersResolvers = {
             if (!customer)
                 throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
-            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
             // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {
                 // @ts-ignore
@@ -185,13 +186,13 @@ exports.ordersResolvers = {
             }
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-                yield (0, number_verification_otp_1.sendCompanyConfirmationMail)(constant_1.COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
+                yield (0, number_verification_otp_1.sendCompanyConfirmationMail)(constant_1.COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
                 if (customerEmail === null || customerEmail === void 0 ? void 0 : customerEmail.length)
-                    yield (0, number_verification_otp_1.sendClientConfirmationMail)(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                    yield (0, number_verification_otp_1.sendClientConfirmationMail)(customerEmail, customer, input, deliveryMethodName, paymentOptionName, input === null || input === void 0 ? void 0 : input.lenguageLocale);
                 // whatsapp confirmation whatsapp is handled in another logic
-                if (!input.isWhatsappPurchase) {
+                if (input.isWhatsappPurchase) {
                     const input2 = { delivery_method_name: deliveryMethodName, payment_option_type: paymentOptionType, delivery_address: input.delivery_address, payment_method_name: paymentOptionName, products: input.products, delivery_date: input.delivery_date, total: input.total };
-                    const message = (0, shoppingUtils_1.getOrderConfirmationMsgText)(input2, customer);
+                    const message = (0, shoppingUtils_1.getOrderConfirmationMsgText)(input2, customer, input.lenguageLocale);
                     // @ts-ignore
                     (0, send_1.sendMessage)(index_1.client, input.contact_number, message, null);
                 }
@@ -206,15 +207,15 @@ exports.ordersResolvers = {
             // const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
             const products = yield db.products.find({ _id: { $in: (0, exports.makeObjectIds)(input.products) } }).toArray();
             // @ts-ignore
-            // const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
+            const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
             // const deliveryMethod = await db.delivery_methods.findOne({ _id: new ObjectId(input.delivery_method_id) });
             // @ts-ignore
-            // const { name: deliveryMethodName } = deliveryMethod;
+            const { name: deliveryMethodName } = deliveryMethod;
             const customer = yield db.users.findOne({ _id: new mongodb_1.ObjectId(input.customer_id) });
             if (!customer)
                 throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
-            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
             // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {
                 // @ts-ignore
@@ -264,7 +265,8 @@ exports.ordersResolvers = {
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
                 yield (0, number_verification_otp_1.sendCompanyConfirmationMail)(constant_1.COMPANY_EMAIL, customer, input, '', '');
-                // if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                if (customerEmail === null || customerEmail === void 0 ? void 0 : customerEmail.length)
+                    yield (0, number_verification_otp_1.sendClientConfirmationMail)(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
                 // whatsapp confirmation whatsapp is handled in another logic
                 // if (!input.isWhatsappPurchase) {
                 //     const input2 = { delivery_method_name: deliveryMethodName, payment_option_type: paymentOptionType, delivery_address: input.delivery_address, payment_method_name: paymentOptionName, products: input.products, delivery_date: input.delivery_date, total: input.total }
@@ -337,7 +339,7 @@ exports.ordersResolvers = {
                     return item;
             })[0];
             if (currentStatus.status === 'Entregado') {
-                const message = (0, customersMessages_1.orderDeliveredAndFeedBack)(customer_name);
+                const message = (0, customersMessages_1.orderDeliveredAndFeedBack)(customer_name, lenguageLocale);
                 // @ts-ignore
                 (0, send_1.sendMessage)(index_1.client, contact_number, message, null);
             }

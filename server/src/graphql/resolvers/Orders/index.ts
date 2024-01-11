@@ -15,55 +15,13 @@ import {IOrderInputArgs, IOrderProductInput, IOrderQuickInput, IOrderQuickInputA
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
 import { sendCompanyConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
-// import { client } from '../../../index';
+import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
 import { orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
-import { COMPANY_EMAIL, timeZone } from '../../../lib/utils/constant';
+import { COMPANY_EMAIL, Locales, timeZone } from '../../../lib/utils/constant';
 import { getOrderConfirmationMsgText, getCleanNumber } from '../../../lib/utils/shoppingUtils';
-const oderTracker: Array<IOrderTracker> = [
-    {
-        status: "Pendiente",
-        ordering: 1,
-        is_current: true,
-        step_competed: true,
-    },
-    {
-        status: "Recibido",
-        ordering: 2,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Procesando",
-        ordering: 3,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "EnTransito",
-        ordering: 4,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Entregado",
-        ordering: 5,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Cancelado",
-        ordering: 6,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Fallado",
-        ordering: 7,
-        is_current: false,
-        step_competed: false,
-    }
-];
+import { englishOrderTracker, spanishOrderTracker } from '../../../lib/utils/localesTexts';
+import { EnglishOrderStatus, EnglishPaymentStatus, SpanishOrderStatus, SpanishPaymentStatus } from '../../../utils/constants';
 
 
 export const makeObjectIds =  (productsInput: IOrderProductInput[]) =>  {
@@ -179,6 +137,15 @@ export const ordersResolvers: IResolvers = {
             } else {
                 paymentStatus = "Paid";
             }*/
+            let orderTracker;
+            let payment_status;
+            let status;
+            
+            switch (input?.lenguageLocale) {
+                case Locales.ES: { orderTracker = spanishOrderTracker; payment_status = SpanishPaymentStatus.UNPAID; status = SpanishOrderStatus.PENDING } break;
+                case Locales.EN: { orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING } break;
+                default: { console.log('createOrder. no locale found ', input?.lenguageLocale); orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING } break;
+            }
 
             const insertData: IOrder = {
                 _id: new ObjectId(),
@@ -198,9 +165,9 @@ export const ordersResolvers: IResolvers = {
                 discount_amount: input.discount_amount,
                 payment_id: input.payment_id,
                 payment_method: paymentOptionName,
-                payment_status: "Sin pagar",
-                status: "Pendiente",
-                order_tracking: oderTracker,
+                payment_status,
+                status,
+                order_tracking: orderTracker,
                 order_products: input.products,
                 created_at: purchasedDate,
             };
@@ -223,13 +190,14 @@ export const ordersResolvers: IResolvers = {
             
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
-                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
+
+                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName, input?.lenguageLocale);
 
                 // whatsapp confirmation whatsapp is handled in another logic
-                if (!input.isWhatsappPurchase) {
+                if (input.isWhatsappPurchase) {
                     const input2 = { delivery_method_name: deliveryMethodName, payment_option_type: paymentOptionType, delivery_address: input.delivery_address, payment_method_name: paymentOptionName, products: input.products, delivery_date: input.delivery_date, total: input.total }
-                    const message = getOrderConfirmationMsgText(input2, customer);
+                    const message = getOrderConfirmationMsgText(input2, customer, input.lenguageLocale);
                     // @ts-ignore
                     sendMessage(client, input.contact_number, message, null);
                 }
@@ -249,10 +217,10 @@ export const ordersResolvers: IResolvers = {
             // const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
             const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
             // @ts-ignore
-            // const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
+            const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
             // const deliveryMethod = await db.delivery_methods.findOne({ _id: new ObjectId(input.delivery_method_id) });
             // @ts-ignore
-            // const { name: deliveryMethodName } = deliveryMethod;
+            const { name: deliveryMethodName } = deliveryMethod;
             const customer = await db.users.findOne({ _id: new ObjectId(input.customer_id) });
             if (!customer) throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
@@ -292,7 +260,7 @@ export const ordersResolvers: IResolvers = {
                 payment_id: input.payment_id,
                 payment_status: "Pagado",
                 status: "Pendiente",
-                order_tracking: oderTracker,
+                order_tracking: englishOrderTracker,
                 order_products: input.products,
                 created_at: purchasedDate,
             };
@@ -316,7 +284,7 @@ export const ordersResolvers: IResolvers = {
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
                 await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, '', '');
-                // if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
 
                 // whatsapp confirmation whatsapp is handled in another logic
                 // if (!input.isWhatsappPurchase) {
@@ -397,6 +365,7 @@ export const ordersResolvers: IResolvers = {
             })[0];
 
             if (currentStatus.status === 'Entregado') {
+                // @ts-ignore
                 const message: string = orderDeliveredAndFeedBack(customer_name);
                 // @ts-ignore
                 sendMessage(client, contact_number, message, null);

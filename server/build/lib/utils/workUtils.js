@@ -40,13 +40,13 @@ const whatsAppUtils_1 = require("./whatsAppUtils");
 //          Sensor temperatura de ambiente: 
 //          Modo: Ninguno
 //          Editar configuracion
-//          Editar sensor 1
+//          Editar module 1
 //          Code: 1Z
-//          Editar sensor 2
+//          Editar module 2
 //          Code: 2Z
-//          Agregar sensor temperatura
+//          Agregar module temperatura
 //          Code: 3Z
-//          Agregar sensor de humedad de ambiente
+//          Agregar module de humedad de ambiente
 //          Code: 4Z
 //          ------
 //          Cambiar modo: SEMILLERO.
@@ -104,8 +104,8 @@ const whatsAppUtils_1 = require("./whatsAppUtils");
 //         }];
 //     const listSections = getSectionWith('Configuracion', menuRows);
 //      resData.replyMessage = getListButtons(
-//          `Humedad sensor 1: ${plant.soil_humidity_1}
-// Humedad sensor 2: ${plant.soil_humidity_2}
+//          `Humedad module 1: ${plant.soil_humidity_1}
+// Humedad module 2: ${plant.soil_humidity_2}
 // Relay 1 is: ${plant.isRelayOneOn ? 'ON' : 'OFF'}
 // Relay 2 is: ${plant.isRelayTwoOn ? 'ON' : 'OFF'}
 // Relay 3 is: ${plant.isRelayThirdOn ? 'ON' : 'OFF'}
@@ -129,7 +129,7 @@ const whatsAppUtils_1 = require("./whatsAppUtils");
 //     return resData;
 // };
 const getGrowerMainMenuButtons = (resData, user, plant, trigger, title, buttonText) => {
-    const buttons = [{ body: '1 - Editar configuración' }, { body: '2 - Agregar sensor' }];
+    const buttons = [{ body: '1 - Editar configuración' }, { body: '2 - Agregar module' }];
     const bodyContent = `Controller ID: ${plant.plantId}
 Humedad del suelo: ${plant.soil_humidity_1}
 Humedad del aire: ${plant.airHumidity}

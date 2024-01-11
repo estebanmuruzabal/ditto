@@ -3,7 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.noAvailableCategories = exports.noAvailableDeliveryMethods = exports.noAvailableProducts = exports.reEnterValidName = exports.manualInput = exports.unknownInputDefault = exports.listCategories = exports.hablarConUnRepMsg = exports.invalidProductQuantity = exports.thereWasAProblemWaitForAssistance2 = exports.purchaseErrorMsg = exports.thanksMsgNoPurchase = exports.thanksMsgNoDevelopedFunction = exports.thanksMsg = exports.enterValidAddress = exports.paymentMethodSelectedAndOrderConfirmationMsj = exports.unknownPaymentOptInput = exports.thereWasAProblemWaitForAssistance = exports.unknownDeliPickUpOptInput = exports.getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = exports.getDeliveryAddress = exports.deliveryOptions = exports.unknownUserInput = exports.reListingAvailableProducts = exports.invalidNumberInput = exports.getQuantityOfProduct = exports.tecnicasDeCultivoInfo = exports.listAvailableProducts = exports.enterValidName = exports.mainMenuAuthenticatedUser = exports.welcomeMsgNameRequired = exports.userSignedUp = exports.orderDeliveredAndFeedBack = exports.orderPaidConfirmation = exports.pickUpPurchaseWithCashPayment = exports.pickUpPurchaseWithTransferPayment = exports.deliveryPurchaseWithCashPayment = exports.deliveryPurchaseWithTransferPayment = exports.getPickUpAddress = exports.getAddressLinkText = exports.getPrelinkText = exports.getLinkOnly = exports.mainMenuUnauthenticatedUser = exports.welcomeTextAndCategoriesOpts = void 0;
 const constant_1 = require("../lib/utils/constant");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
-const pickUpPurchaseWithTransferPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date) => `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
+const whatsAppUtils_1 = require("../lib/utils/whatsAppUtils");
+const pickUpPurchaseWithTransferPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date, lenguageLocale) => {
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            return (`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
  - Te recordamos llevar bolsas para retirar tus productos!
@@ -27,13 +31,45 @@ ${constant_1.CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
-`;
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
+`);
+        case constant_1.Locales.EN:
+            return (`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
+
+📢 *Important* 📢
+ - If you can bring your own bags to carry the produce, the better!!
+ - In order to pay, send us a bank/digital bank transfer for *${constant_1.CURRENCY}${total}* to the following zelle account: *${constant_1.BANK_TRANSFER_ALIAS}* and please share it us in this conversation before picking up your order. 
+
+*Detail:*
+*Purchase date:*
+${purchasedDate}
+*Delivery/pickup method selected:*
+${deliveryMethod}
+*Date and time of pickup/delivery:*
+${delivery_pickup_date}
+*Address of delivery/Pickup Address:*
+${address}
+*Payment method:*
+${paymentMethod}
+*Products list:*
+${products.map((product) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Final price:*
+${constant_1.CURRENCY}${total}
+
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`);
+        default: console.log('pickUpPurchaseWithTransferPayment defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.pickUpPurchaseWithTransferPayment = pickUpPurchaseWithTransferPayment;
-const pickUpPurchaseWithCashPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date) => `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
+const pickUpPurchaseWithCashPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date, lenguageLocale) => {
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            return (`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
- - Te recordamos llevar bolsas para retirar tus productos!
+    - Te recordamos llevar bolsas para retirar tus productos!
 
 *Detalle:*
 *Fecha de compra:*
@@ -53,38 +89,45 @@ ${constant_1.CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
-`;
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
+`);
+        case constant_1.Locales.EN:
+            return (`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
+
+📢 *Important* 📢
+    - If you can bring your own bags to carry the produce, the better!!
+
+*Detail:*
+*Purchase date:*
+${purchasedDate}
+*Delivery/pickup method selected:*
+${deliveryMethod}
+*Date and time of pickup/delivery:*
+${delivery_pickup_date}
+*Address of delivery/Pickup Address:*
+${address}
+*Payment method:*
+${paymentMethod}
+*Products list:*
+${products.map((product) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Final price:*
+${constant_1.CURRENCY}${total}
+
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`);
+        default: console.log('pickUpPurchaseWithCashPayment defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.pickUpPurchaseWithCashPayment = pickUpPurchaseWithCashPayment;
-const deliveryPurchaseWithTransferPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date) => `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
-📢 Importante 📢
- - Te vamos a escribir una hora antes de llevar tu pedido.
- - Para pagar, enviános una transfercia por ${constant_1.CURRENCY}${total} al alias *${constant_1.BANK_TRANSFER_ALIAS}* o cbu ${constant_1.BANK_TRANSFER_CBU} y compartinos el comprobante aquí antes de retirar tu pedido 🙏.
- 
-*Detalle:*
-*Fecha de compra:*
-${purchasedDate}
-*Método de envío o retiro seleccionado:*
-${deliveryMethod}
-*Fecha y horario del envío o retiro en tienda:*
-${delivery_pickup_date}
-*Dirección de envío o donde retirar:*
-${address}
-*Método de pago:*
-${paymentMethod}
-*Productos comprados:*
-${products.map((product) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
-*Monton total:*
-${constant_1.CURRENCY}${total}
+const deliveryPurchaseWithTransferPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date, lenguageLocale) => {
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            return (`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
 
-Muchas gracias por su compra eco-sustentable!💚
-También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
-`;
-exports.deliveryPurchaseWithTransferPayment = deliveryPurchaseWithTransferPayment;
-const deliveryPurchaseWithCashPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date) => `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
 📢 *Importante* 📢
- - Te vamos a escribir una hora antes de llevar tu pedido.
+    - Te vamos a escribir una hora antes de llevar tu pedido.
+    - Para pagar, enviános una transferencia por *${constant_1.CURRENCY}${total}* al alias *${constant_1.BANK_TRANSFER_ALIAS}* o cbu ${constant_1.BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Detalle:*
 *Fecha de compra:*
@@ -104,34 +147,169 @@ ${constant_1.CURRENCY}${total}
 
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.rcia
-`;
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
+`);
+        case constant_1.Locales.EN:
+            return (`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
+
+📢 *Important* 📢
+    - We will send you a text message one hour before being at the delivery address.
+    - In order to pay, send us a bank/digital bank transfer for *${constant_1.CURRENCY}${total}* to the following zelle account: *${constant_1.BANK_TRANSFER_ALIAS}* and please share it us in this conversation before picking up your order. 
+
+*Detail:*
+*Purchase date:*
+${purchasedDate}
+*Delivery/pickup method selected:*
+${deliveryMethod}
+*Date and time of pickup/delivery:*
+${delivery_pickup_date}
+*Address of delivery/Pickup Address:*
+${address}
+*Payment method:*
+${paymentMethod}
+*Products list:*
+${products.map((product) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Final price:*
+${constant_1.CURRENCY}${total}
+
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`);
+        default: console.log('deliveryPurchaseWithTransferPayment defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
+exports.deliveryPurchaseWithTransferPayment = deliveryPurchaseWithTransferPayment;
+const deliveryPurchaseWithCashPayment = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, delivery_pickup_date, lenguageLocale) => {
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            return (`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
+
+📢 *Importante* 📢
+    - Te vamos a escribir una hora antes de llevar tu pedido.
+
+*Detalle:*
+*Fecha de compra:*
+${purchasedDate}
+*Método de envío o retiro seleccionado:*
+${deliveryMethod}
+*Fecha y horario del envío o retiro en tienda:*
+${delivery_pickup_date}
+*Dirección de envío o donde retirar:*
+${address}
+*Método de pago:*
+${paymentMethod}
+*Productos comprados:*
+${products.map((product) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Monton total:*
+${constant_1.CURRENCY}${total}
+
+Muchas gracias por su compra eco-sustentable!💚
+También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
+`);
+        case constant_1.Locales.EN:
+            return (`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
+
+📢 *Important* 📢
+    - We will send you a text message one hour before being at the delivery address.
+
+*Detail:*
+*Purchase date:*
+${purchasedDate}
+*Delivery/pickup method selected:*
+${deliveryMethod}
+*Date and time of pickup/delivery:*
+${delivery_pickup_date}
+*Address of delivery/Pickup Address:*
+${address}
+*Payment method:*
+${paymentMethod}
+*Products list:*
+${products.map((product) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Final price:*
+${constant_1.CURRENCY}${total}
+
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`);
+        default: console.log('deliveryPurchaseWithCashPayment defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.deliveryPurchaseWithCashPayment = deliveryPurchaseWithCashPayment;
-const orderPaidConfirmation = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products) => `Hola ${customerName}, hemos recibido tu pago con exito!
+const orderPaidConfirmation = (purchasedDate, address, total, customerName, deliveryMethod, paymentMethod, products, lenguageLocale) => {
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            return (`Hola ${customerName}, hemos recibido tu pago con exito!
 
 Muchas gracias por su compra eco-sustentable!
-Juntos transformamos el mundo ♻️ Ditto Farm.
-`;
+Juntos transformamos el mundo ♻️ Ditto Farm.`);
+        case constant_1.Locales.EN:
+            return (`Hello ${customerName}, we have received your order!
+
+Thank you! Your help is very much appreciated it!
+Together we'll change the future ♻️ Ditto Farm SD.`);
+        default: console.log('orderPaidConfirmation defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.orderPaidConfirmation = orderPaidConfirmation;
-const orderDeliveredAndFeedBack = (customerName) => `Hola ${customerName}, has recibido tu pedido con exito!
+const orderDeliveredAndFeedBack = (customerName) => {
+    // @ts-ignore
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            return (`Hola ${customerName}, has recibido tu pedido con exito!
 
 Sabemos que errar es humano, y tu opinion nos importa!
 Ganate un cupón de 10% de descuento con tan solo contarnos como llegó tu pedido y si de paso, tenés alguna recomendación/consejo 🙌
 
 Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.
-`;
+`);
+        case constant_1.Locales.EN:
+            return (`Hello ${customerName}, you have received your order successfully!
+
+We know that to fail is human, so we want your feedback!
+Get a 10% discount coupon only by telling us how your order arrived, and if you have any improvements/advices for us.🙌
+
+Thank you! Your help is very much appreciated it!
+Together we'll change the future ♻️ Ditto Farm SD.`);
+        default: console.log('orderDeliveredAndFeedBack defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.orderDeliveredAndFeedBack = orderDeliveredAndFeedBack;
-const userSignedUp = (customerName) => `Hola ${customerName}, creaste tu cuenta!
-`;
+const userSignedUp = (customerName) => {
+    // @ts-ignore
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES: return (`Hola ${customerName}, creaste tu cuenta!`);
+        case constant_1.Locales.EN: return (`Hello ${customerName}, you have just created your account!`);
+        default: console.log('userSignedUp defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.userSignedUp = userSignedUp;
-const enterValidName = () => `Falta poco! Necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
-solamente eso (Por ejemplo: Sofia Martinez)
-`;
+const enterValidName = (lenguageLocale) => {
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            return (`Falta poco! Necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
+solamente eso (Por ejemplo: Sofia Martinez)`);
+        case constant_1.Locales.EN:
+            return (`Almost there! I will need to to write complete name (name, last name) please 🙂, 
+just that (Like: Joe Smith)`);
+        default: console.log('enterValidName defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.enterValidName = enterValidName;
-const reEnterValidName = () => `Nombre invalido, necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
-solamente eso (Por ejemplo: Sofia Martinez)
-`;
+const reEnterValidName = () => {
+    const lenguageLocale = constant_1.Locales.EN;
+    switch (lenguageLocale) {
+        // @ts-ignore
+        case constant_1.Locales.ES:
+            return (`Nombre invalido, necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
+solamente eso (Por ejemplo: Sofia Martinez)`);
+        case constant_1.Locales.EN:
+            return (`Invalid name! Please write your complete name (name, last name) please 🙂, 
+just that (Like: Joe Smith)`);
+        default: console.log('reEnterValidName defaulted. lenguageLocale not found:', lenguageLocale);
+    }
+};
 exports.reEnterValidName = reEnterValidName;
 const thereWasAProblemWaitForAssistance = () => `Algo salío mal, pero revisaremos pronto este chat para corregirlo, 
 mientras tanto tenés las siguientes opciones:
@@ -164,7 +342,7 @@ const mainMenuUnauthenticatedUser = (categories) => `Hola! 🙋🏻 Soy un asist
 
 Seleccioná una categoría para ver/comprar nuestros productos:
 
-${categories.map((product, i) => (`${i + 1} - ${product.name}\n`)).join('')}${categories.length + 1} - Ayuda! Necesito hablar con una persona física.
+${categories.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${product.name}\n`)).join('')}${categories.length + 1} - Ayuda! Necesito hablar con una persona física.
 
 *Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
 `;
@@ -172,40 +350,34 @@ exports.mainMenuUnauthenticatedUser = mainMenuUnauthenticatedUser;
 // 2 - Ver listado con precios mayorista de frutas/verduras.
 const mainMenuAuthenticatedUser = (customerName, categories) => `Hola ${customerName},
 
-Seleccioná una categoría para ver/comprar nuestras productos:
+*Seleccioná una categoría para ver/comprar nuestras productos:*
 
-${categories.map((product, i) => (`${i + 1} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
+${categories.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${product.name}\n`)).join('')} ${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
 
 *Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
 `;
 exports.mainMenuAuthenticatedUser = mainMenuAuthenticatedUser;
-const listAvailableProducts = (products) => `*Tenemos disponibles los siguientes productos:*
+const listAvailableProducts = (products) => `*Ingresá el número del producto para agregarlo a tu carrito:*
 
-${products.map((product, i) => (`${i + 1} - ${product.name} - $${product.price}\n`)).join('')}
-*Por favor ingresá un número entre el 1 y el ${products.length} para agregarlo a tu carrito*
+${products.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${product.name} - $${product.price}\n`)).join('')}
 `;
 exports.listAvailableProducts = listAvailableProducts;
-const listCategories = (categories) => `*Seleccione una categoría:*
+const listCategories = (categories) => `*Seleccione una categoría ingresando su número:*
 
-${categories.map((product, i) => (`${i + 1} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
-
-*Por favor ingresá un número entre el 1 y el ${categories.length + 1}*
+${categories.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${product.name}\n`)).join('')}${categories.length + 1} - Hablar con un encargado para ayudarte con alguna opción fuera de este menú
 `;
 exports.listCategories = listCategories;
 const reListingAvailableProducts = (productsAdded, availableProducts) => {
     const totalItemsAmount = (0, shoppingUtils_1.getTotalAmount)(productsAdded);
-    return (`*Producto agregado al carrito correctamente!*
+    return (`*Agregado correctamente*
 
-*Su carrito:*
+Su carrito:
 ${productsAdded.map((product, i) => (`- ${product.name} - Cantidad: ${product.quantity}\n`)).join('')}
 Total: $${totalItemsAmount}
 
 *Puedes seguir agregando productos:*
 
-${availableProducts.map((product, i) => (`${i + 1} - ${product.name} - $${product.price}\n`)).join('')}
-*${availableProducts.length + 1} - Ir a pagar*
-
-(Por favor ingresá un numero entre el 1 y el ${availableProducts.length + 1})
+${availableProducts.map((product, i) => (`${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${product.name} - $${product.price}\n`)).join('')}*${availableProducts.length + 1} - Ir a pagar*
 `);
 };
 exports.reListingAvailableProducts = reListingAvailableProducts;
@@ -238,14 +410,8 @@ const invalidNumberInput = (maxInputNumber) => `Por favor ingrese un número ent
 exports.invalidNumberInput = invalidNumberInput;
 const manualInput = () => `Que cantidad necesita? Por favor ingrese un número. Ejemplo: "2"`;
 exports.manualInput = manualInput;
-const getQuantityOfProduct = (productName, quantity) => `Cuántas unidades de 
-
-*- ${productName}*
-
- querés agregar a tu pedido?
-`;
+const getQuantityOfProduct = (productName, quantity) => `Ingresá la cantidad de ${productName} querés agregar a tu pedido. Por favor ingrese un número. Ejemplo: "2"`;
 exports.getQuantityOfProduct = getQuantityOfProduct;
-//  Ingresa un numero entre el 1 y el ${quantity})
 const unknownUserInput = () => `Disculpe no reconocimos su respuesta, por favor elija una opción
 entre las siguientes:
 
@@ -301,41 +467,36 @@ const getPickUpAddress = (pickUpAddress) => {
 };
 exports.getPickUpAddress = getPickUpAddress;
 const deliveryOptions = (deliveryOptions) => {
-    return (`*Por favor seleccione día y opción de envío o retiro de su compra:*
+    return (`*Seleccioná día y opción de envío/retiro:*
 ${deliveryOptions.map((deliOption, i) => (`
 *${i + 1} - ${deliOption.name}*
 Dirección: ${deliOption.pickUpAddress}
 ¿Cuándo?: ${(0, shoppingUtils_1.getDeliveryOrPickUpDatetime)(deliOption.details)}
 ${(0, exports.getPrelinkText)(deliOption.details)}: ${(0, exports.getAddressLinkText)(deliOption.details)}`)).join('')}
-
-- *Responda escribiendo un núm. entre el 1 y el ${deliveryOptions.length} para elegir una opción.*`);
+`);
 };
 exports.deliveryOptions = deliveryOptions;
 const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption, paymentMethods, delivery_address) => {
     const hasDeliveryAddress = (deliOption === null || deliOption === void 0 ? void 0 : deliOption.pickUpAddress) || delivery_address;
-    return hasDeliveryAddress ? (`*Método seleccionado con éxito!*
+    return hasDeliveryAddress ? (
+    //         *Método seleccionado con éxito!*
+    // *- Tipo de envío:* ${deliOption.name} 
+    // *- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
+    // ${getPickUpAddress(deliOption?.pickUpAddress || delivery_address)}
+    // *- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
+    `
+*Seleccione su forma de pago:*
 
-*- Tipo de envío:* ${deliOption.name} 
-*- ¿Cuándo?:* ${(0, shoppingUtils_1.getDeliveryOrPickUpDatetime)(deliOption.details)}
-${(0, exports.getPickUpAddress)((deliOption === null || deliOption === void 0 ? void 0 : deliOption.pickUpAddress) || delivery_address)}
-*- ${(0, exports.getPrelinkText)(deliOption.details)}:* ${(0, exports.getAddressLinkText)(deliOption.details)}
-
+${paymentMethods.map((method, i) => (`*${(0, whatsAppUtils_1.getEmojiNumber)(i + 1)} - ${method.name}* \n${method.details}\n`)).join('')}
+`) : (
+    //     *Método seleccionado con éxito!*
+    // *- Tipo de envío:* ${deliOption.name} 
+    // *- ¿Cuándo?:* ${getDeliveryOrPickUpDatetime(deliOption.details)}
+    // *- ${getPrelinkText(deliOption.details)}:* ${getAddressLinkText(deliOption.details)}
+    `
 *Por favor seleccione su forma de pago:*
 
 ${paymentMethods.map((method, i) => (`*${i + 1} - ${method.name}* \n${method.details}\n`)).join('')}
-
-- Responda escribiendo un núm. entre el 1 y el ${paymentMethods.length}.
-`) : (`*Método seleccionado con éxito!*
-
-*- Tipo de envío:* ${deliOption.name} 
-*- ¿Cuándo?:* ${(0, shoppingUtils_1.getDeliveryOrPickUpDatetime)(deliOption.details)}
-*- ${(0, exports.getPrelinkText)(deliOption.details)}:* ${(0, exports.getAddressLinkText)(deliOption.details)}
-
-*Por favor seleccione su forma de pago:*
-
-${paymentMethods.map((method, i) => (`*${i + 1} - ${method.name}* \n${method.details}\n`)).join('')}
-
-- Responda escribiendo un núm. entre el 1 y el ${paymentMethods.length}.
 `);
 };
 exports.getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = getDeliveryOrPickupOptSelectedAndGetPaymentMethodText;
@@ -343,7 +504,7 @@ const thanksMsg = () => `Muchas gracias por tu compra!!
 `;
 exports.thanksMsg = thanksMsg;
 const thanksMsgNoPurchase = () => `Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra pagina web!
-Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.rcia
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarm.sd
 
 Gracias por tu tiempo, te invitamos a que vuelvas en el momento que desees.
 `;
@@ -368,21 +529,20 @@ const paymentMethodSelectedAndOrderConfirmationMsj = (shoppingCart) => {
     const total = shoppingCart.ccCharge + shoppingCart.deliveryFee + shoppingCart.total;
     return `*Por favor verifique que su orden sea correcta.*
 
-*Método de pago:* ${shoppingCart.payment_method_name}
-*Método de envío:* ${shoppingCart.delivery_method_name}
-*Dirección:* ${shoppingCart.delivery_address}
+Mét. de pago: *${shoppingCart.payment_method_name}*
+Mét. de envío: *${shoppingCart.delivery_method_name}*
+Dir. *${shoppingCart.delivery_address}*
 
 *Su carrito:*
-${shoppingCart.products.map((product, i) => (`- ${product.name} $${product.price}. *Cantidad:* ${product.quantity}\n`)).join('')}
+${shoppingCart.products.map((product, i) => (`- ${product.name} $${product.price}. *Unidades:* ${product.quantity}\n`)).join('')}
 Subtotal productos: $${(shoppingCart.total).toFixed(2)}${shoppingCart.ccCharge > 0 ? `\n${ccString}\n` : ''}${shoppingCart.deliveryFee > 0 ? `\n${deliveryFeeString}` : ''}
 *Total a Pagar: $${(total).toFixed(2)}*
 
-*Por favor ingresa un número del 1 al 5 para elegir una opción*
-1 - Para confirmar tu compra
-2 - Para cambiar forma de pago
-3 - Para cambiar método de envio
-4 - Cambiar productos de tu carrito
-5 - Para desistir de tu compra :(
+1️⃣ - Confirmar tu compra
+2️⃣ - Cambiar forma de pago
+3️⃣ - Cambiar método de envio
+4️⃣ - Cambiar productos de tu carrito
+5️⃣ - Desistir de tu compra
 `;
 };
 exports.paymentMethodSelectedAndOrderConfirmationMsj = paymentMethodSelectedAndOrderConfirmationMsj;

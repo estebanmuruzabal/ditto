@@ -28,6 +28,7 @@ export interface IOrderInput {
     deliveryFee?: number;
     products: Array<IOrderProductInput>;
     payment_id?:  string;
+    lenguageLocale: string;
 }
 
 export interface IOrderInputArgs {

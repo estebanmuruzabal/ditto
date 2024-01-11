@@ -19,9 +19,9 @@ const constant_1 = require("./constant");
 // const imaps = require('imap-simple');
 const fromNumber = process.env.OTP_FROM_NUMBER;
 const apiToken = process.env.OTP_API_TOKEN;
-const path = require('path');
-const { google } = require('googleapis');
-const { authenticate } = require('@google-cloud/local-auth');
+// const path = require('path');
+// const {google} = require('googleapis');
+// const {authenticate} = require('@google-cloud/local-auth');
 const sendOtp = (sendToNumber, otpCode) => {
     const postData = {
         from: fromNumber,
@@ -61,7 +61,7 @@ exports.sendOtp = sendOtp;
 //     console.log(error);
 //   }
 // };
-const sendCompanyConfirmationMail = (email, customer, input, deliveryMethod, paymentMethod) => {
+const sendCompanyConfirmationMail = (email, customer, input, deliveryMethod, paymentMethod, lenguageLocale) => {
     var _a, _b;
     const transporter = nodemailer_1.default.createTransport({
         service: 'Gmail',
@@ -73,7 +73,7 @@ const sendCompanyConfirmationMail = (email, customer, input, deliveryMethod, pay
     const template = `
             <div>
                 <div>${customer.name}</div>
-                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })}</div>
+                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
                 <div>Telefono:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
                 <div>Metodo de envio: ${deliveryMethod}</div>
                 <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
@@ -93,34 +93,73 @@ const sendCompanyConfirmationMail = (email, customer, input, deliveryMethod, pay
     });
 };
 exports.sendCompanyConfirmationMail = sendCompanyConfirmationMail;
-const sendClientConfirmationMail = (email, customer, input, deliveryMethod, paymentMethod) => {
-    var _a, _b;
+const sendClientConfirmationMail = (email, customer, input, deliveryMethod, paymentMethod, lenguageLocale) => {
+    var _a, _b, _c, _d;
     const transporter = nodemailer_1.default.createTransport({
-        service: 'Gmail',
+        host: "live.smtp.mailtrap.io",
+        port: 587,
         auth: {
-            user: constant_1.COMPANY_EMAIL,
-            pass: constant_1.COMPANY_EMAIL_PASSWORD
+            user: "api",
+            pass: "fa6003645f3677f052161a6140ee5df3"
         }
     });
-    const template = `
-            <div>
-                <div>Pedido Confirmado!</div>
-                <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
-                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })}</div>
-                <div>Telefono:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
-                <div>Metodo de envio: ${deliveryMethod}</div>
-                <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
-                <div>Fecha de envio/pickup: ${input.delivery_date}</div>
-                <div>Metodo de pago: ${paymentMethod}</div>
-                <div>Productos comprados</div>
-                ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
-                <div>Monto total ${input.total}</div>
-            </div>
-        `;
+    let template;
+    let emailTitle;
+    const englishConfirmationTemplate = `
+        <>
+            <div>Pedido Confirmado!</div>
+            <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
+            <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+            <div>Telefono:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
+            <div>Metodo de envio: ${deliveryMethod}</div>
+            <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+            <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+            <div>Metodo de pago: ${paymentMethod}</div>
+            <div>Productos comprados</div>
+            ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+            <div>Monto total ${input.total}</div>
+        </>
+    `;
+    const spanishConfirmationTemplate = `
+        <>
+            <div>Pedido Confirmado!</div>
+            <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
+            <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+            <div>Telefono:${((_c = customer.phones) === null || _c === void 0 ? void 0 : _c.length) > 0 ? (_d = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _d === void 0 ? void 0 : _d.number : ''}</div>
+            <div>Metodo de envio: ${deliveryMethod}</div>
+            <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+            <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+            <div>Metodo de pago: ${paymentMethod}</div>
+            <div>Productos comprados</div>
+            ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+            <div>Monto total ${input.total}</div>
+        </>
+    `;
+    const spanishTitle = 'Confirmación de compra';
+    const englishTitle = 'Purchase Confirmation';
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            {
+                template = spanishConfirmationTemplate;
+                emailTitle = spanishTitle;
+            }
+            break;
+        case constant_1.Locales.EN:
+            {
+                template = englishConfirmationTemplate;
+                emailTitle = englishTitle;
+            }
+            break;
+        default:
+            {
+                console.log('no locale found at sendind confirmation email');
+            }
+            break;
+    }
     return transporter.sendMail({
-        from: constant_1.COMPANY_EMAIL,
+        from: 'mailtrap@dittofarm.com',
         to: email,
-        subject: 'Confirmación de compra',
+        subject: emailTitle,
         text: template,
         html: template
     });
@@ -156,16 +195,16 @@ const getAccesToken = () => __awaiter(void 0, void 0, void 0, function* () {
     //   },
     //   data: data,
     // };
-    let accessToken = "";
-    // Obtain user credentials to use for the request
-    const auth = yield authenticate({
-        keyfilePath: path.join(__dirname, '../oauth2.keys.json'),
-        scopes: 'https://www.googleapis.com/auth/gmail.readonly',
-    });
-    google.options({ auth });
-    const gmail = google.gmail('v1');
-    const res = yield gmail.users.messages.list({ userId: 'me' });
-    console.log(res.data);
+    //     let accessToken = "";
+    //     // Obtain user credentials to use for the request
+    //   const auth = await authenticate({
+    //     keyfilePath: path.join(__dirname, '../oauth2.keys.json'),
+    //     scopes: 'https://www.googleapis.com/auth/gmail.readonly',
+    //   });
+    //   google.options({auth});
+    // const gmail = google.gmail('v1');
+    //   const res = await gmail.users.messages.list({userId: 'me'});
+    //   console.log(res.data);
     //   // @ts-ignore
     // await axios(config)
     //   .then(async function (response) {
@@ -175,7 +214,8 @@ const getAccesToken = () => __awaiter(void 0, void 0, void 0, function* () {
     //   .catch(function (error) {
     //     console.log(error);
     //   });
-    return res.data;
+    // return res.data;
+    return;
 });
 // export const searchGmail = async (searchItem: string, accessToken: string) => {
 //     var config1 = {

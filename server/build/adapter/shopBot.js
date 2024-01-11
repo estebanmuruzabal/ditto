@@ -16,6 +16,7 @@ const types_1 = require("../lib/types");
 const constant_1 = require("../lib/utils/constant");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
 const customersMessages_1 = require("../messages/customersMessages");
+const lenguageLocale = 'en';
 const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32;
@@ -365,7 +366,8 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                     case 1:
                         const res = yield (0, api_1.createOrder)(shoppingCart);
                         if ((_32 = (_31 = res === null || res === void 0 ? void 0 : res.data) === null || _31 === void 0 ? void 0 : _31.createOrder) === null || _32 === void 0 ? void 0 : _32.customer_id) {
-                            resData.replyMessage = (0, shoppingUtils_1.getOrderConfirmationMsgText)(shoppingCart);
+                            // @ts-ignore
+                            resData.replyMessage = (0, shoppingUtils_1.getOrderConfirmationMsgText)(shoppingCart, user === null || user === void 0 ? void 0 : user.name, lenguageLocale);
                             resData.trigger = types_1.TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;
                             yield (0, api_1.updateUserShoppingCart)(shoppingCart);
                             resolve(resData);

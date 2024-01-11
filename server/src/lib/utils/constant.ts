@@ -9,14 +9,14 @@ export const TECNICAS_DE_CULTIVO_OPT = 3;
 export const CHECKOUT_OPTION_SELECTED = 99;
 
 // ditto bot personal variables (change in front and back):
-export const timeZone = 'America/Denver';
+export const timeZone = 'America/Los_Angeles';
 
 // COMPANY RELATED CONSTANTS TO FILL OUT
 export const BANK_TRANSFER_ALIAS = 'ditto.farm.rcia';
-export const BANK_TRANSFER_CBU = '0000168300000003376935';
+export const BANK_TRANSFER_CBU = 'estebannmuruzabal@gmail.com';
 export const COMPANY_EMAIL = 'dittofarm.sd@gmail.com';
 export const COMPANY_DESCRIPTION_TEXT = 'Ditto Farm es un proyecto frutihorticola a solo 8km de Rcia. Chaco producimos frutas, verduras y fertilizantes orgánicos con tecnicas de agricultura sustentable y cosechados en el dia!';
-export const COMPANY_EMAIL_PASSWORD = 'glbequknuqtduxxc';
+export const COMPANY_EMAIL_PASSWORD = 'SanDiego765!';
 export const INITIAL_USER_USERNAME = 'nonamed';
 export const INTRODUCE_NEW_NAME_KEY_WORDS = 'No, cambiar nombre';
 export const KEEP_USER_NAME_KEY_WORD = 'Si';
@@ -34,6 +34,11 @@ export const BANK_TRANSFER_PAYMENT_OPTION = 'bank_transfer';
 // representative opt
 export const TALK_TO_A_REPRESENTATIVE_MODE = true;
 export const INTRODUCE_QUANTITY_OPT_TEXT = 'Ingresar otra cantidad';
+
+export enum Locales {
+  ES = 'es',
+  EN = 'en',
+}
 
 export const READ_MAIL_CONFIG = {
   imap: {

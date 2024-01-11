@@ -45,6 +45,7 @@ const shortid_1 = __importDefault(require("shortid"));
 const number_verification_otp_1 = require("../../../lib/utils/number-verification-otp");
 const Orders_1 = require("../Orders");
 const plants_1 = require("../../../controllers/plants");
+const constant_1 = require("../../../lib/utils/constant");
 const hashPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
     return yield bcrypt.hash(password, 10);
 });
@@ -96,6 +97,54 @@ exports.usersResolvers = {
             // @ts-ignore
             return yield (0, utils_1.authorize)(req, db);
         }),
+        // updateShop: async (
+        //     _root: undefined,
+        //     {id, input}: IShopInputArgs,
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     // await authorize(req, db);
+        //     const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+        //     const shop = {
+        //         id: id || shortid.generate(),
+        //         shopPublicName: input.shopPublicName,
+        //         shopUrl: input.shopUrl,
+        //         shopIsOnline: input.shopIsOnline,
+        //         address: input.address,
+        //         latitude: input.latitude,
+        //         longitude: input.longitude,
+        //     }
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {shop}}
+        //     );
+        //     return {
+        //         status: true,
+        //         message: `Updated ${input.shopPublicName} successfully`
+        //     };
+        // },
+        // deleteShop: async (
+        //     _root: undefined,
+        //     {id}: deleteShopArgs,
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     // await authorize(req, db);
+        //     const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+        //     const shop = null;
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {shop}}
+        //     );
+        //     return {
+        //         status: true,
+        //         message: `${id} deleted successfully`
+        //     };
+        // },
         getCustomer: (_root, { phone }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // when comming from whatsapp, numbers has 9, like 549blabla, so we take it off to match web signups users.
             const phoneFormatted = (0, utils_1.takeNineOutIfItHasIt)(phone);
@@ -132,7 +181,7 @@ exports.usersResolvers = {
             const userResult = yield db.users.findOne({ "phones.number": phoneFormatted });
             if (!userResult)
                 throw new Error("User not found");
-            const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const datetime = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
             let chatHistory = ((_a = userResult.chatHistory) === null || _a === void 0 ? void 0 : _a.length) > 0 ? userResult.chatHistory : [];
             let shoppingCart = undefined;
             chatHistory.push({ message, trigger, datetime });
@@ -266,7 +315,7 @@ exports.usersResolvers = {
                 access_token: (0, exports.accessToken)(userResult._id),
             };
         }),
-        updateUserNameAndEmail: (_root, { id, name, email }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        updateUserNameEmailAndLenguage: (_root, { id, name, email, lenguage }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             yield (0, utils_1.authorize)(req, db);
             const re = /\S+@\S+\.\S+/;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
@@ -274,16 +323,36 @@ exports.usersResolvers = {
                 throw new Error("User does not exits.");
             }
             if (re.test(email)) {
-                yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { name: name, email: email } });
+                yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { name: name, email: email, lenguage: lenguage } });
             }
             else {
-                yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { name: name } });
+                yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { name: name, lenguage: lenguage } });
             }
             return {
                 status: true,
                 message: "Updated successfully."
             };
         }),
+        // updateUserTimeZone: async (
+        //     _root: undefined,
+        //     {id, name, email}: { id: string, name: string, email: string },
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     await authorize(req, db);
+        //     const re = /\S+@\S+\.\S+/;
+        //     const userResult = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {timeZone: timeZone}}
+        //     );
+        //     return {
+        //         status: true,
+        //         message: "Updated successfully."
+        //     };
+        // },
         updateUserShoppingCart: (_root, { input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
             // const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
@@ -317,7 +386,8 @@ exports.usersResolvers = {
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
-                products: input.products
+                products: input.products,
+                lenguageLocale: input.lenguageLocale
             };
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(input.customer_id) }, { $set: { shoppingCart } });
             return {
@@ -325,7 +395,7 @@ exports.usersResolvers = {
                 message: "updated successfully."
             };
         }),
-        addPlant: (_root, { id, name, plantId }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        addPlant: (_root, { id, name, plantId, timeZone }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             var _b;
             // await authorize(req, db);
             // we use this very same method to update the ditto bot name!
@@ -333,25 +403,26 @@ exports.usersResolvers = {
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
-            if (userResult.plants.length === 3) {
-                throw new Error("Already added three plants. You are not allowed to add more than three.");
-            }
             const index = (_b = userResult.plants) === null || _b === void 0 ? void 0 : _b.findIndex((plant) => (plant.plantId == plantId));
             if (index < 0) {
+                if (userResult.plants.length === 3)
+                    throw new Error("Already added three plants. You are not allowed to add more than three.");
                 const plantObject = {
                     id: shortid_1.default.generate(),
                     name,
                     plantId,
                     soil_humidity_1: 0,
                     soil_humidity_2: 0,
-                    airHumidity: 0,
-                    tempeture: 0,
+                    humidity_1: 0,
+                    tempeture_1: 0,
                     distance_cm: 0,
-                    light: 0,
+                    light_1: 0,
                     isRelayOneOn: false,
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
                     isRelayFourthOn: false,
+                    timestamp: null,
+                    timeZone,
                     sensors: []
                 };
                 yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, 
@@ -361,6 +432,8 @@ exports.usersResolvers = {
             else {
                 const plants = userResult.plants;
                 plants[index].name = name;
+                if (timeZone)
+                    plants[index].timeZone = timeZone;
                 yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
             }
             return {
@@ -370,7 +443,7 @@ exports.usersResolvers = {
         }),
         updatePlant: (_root, { id, contrId, hum1, airHum, temp, dist, hum2, light, isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
-            var _c, _d;
+            var _c, _d, _e, _f;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
                 throw new Error("User does not exits.");
@@ -383,22 +456,29 @@ exports.usersResolvers = {
             else {
                 plants[index].soil_humidity_1 = hum1;
                 plants[index].soil_humidity_2 = hum2;
-                plants[index].airHumidity = airHum;
-                plants[index].tempeture = temp;
-                plants[index].distance_cm = dist;
-                plants[index].light = light;
+                plants[index].humidity_1 = airHum;
+                plants[index].tempeture_1 = temp;
+                plants[index].distance_1 = dist;
+                plants[index].light_1 = light;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;
                 plants[index].isRelayFourthOn = isRelayFourthOn;
+                plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone: plants[index].timeZone });
             }
             // const a = {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "contrId": 30, "hum1": 109, "airHum": 0, "temp": 0, "dist": 1, "hum2": 85, "light": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
-            // console.log('Arduino', plants[index].name)
-            // console.log('Humedad sensor 1', plants[index].soil_humidity_1)
-            // console.log('Humedad sensor 2', plants[index].soil_humidity_2)
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
-            (_d = plants[index].sensors) === null || _d === void 0 ? void 0 : _d.map((sensorSetting) => __awaiter(void 0, void 0, void 0, function* () { var _e; return yield (0, plants_1.checkSensor)(plants[index], sensorSetting, (_e = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _e === void 0 ? void 0 : _e.number); }));
-            console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`);
+            (_d = plants[index].sensors) === null || _d === void 0 ? void 0 : _d.map((module, i) => __awaiter(void 0, void 0, void 0, function* () {
+                var _g;
+                plants[index] = yield (0, plants_1.checkSensor)(plants[index], i, (_g = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _g === void 0 ? void 0 : _g.number, plants[index].timeZone);
+            }));
+            // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
+            if (((_e = plants[index].isRelayOneOn) === null || _e === void 0 ? void 0 : _e.length) > 0) {
+                console.log('isRelayOneOn', plants[index].isRelayOneOn, plants[index].timestamp, plants[index].humidity_1);
+            }
+            if (((_f = plants[index].isRelayTwoOn) === null || _f === void 0 ? void 0 : _f.length) > 0) {
+                console.log('isRelayTwoOn', plants[index].isRelayTwoOn, plants[index].timestamp, plants[index].distance_1);
+            }
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
             return {
                 isRelayOneOn: plants[index].isRelayOneOn ? "ON" : "OF",
@@ -409,14 +489,14 @@ exports.usersResolvers = {
         }),
         updateSetting: (_root, { id, plantId, input }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
-            var _f, _g;
+            var _h, _j;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
             const plants = userResult.plants;
-            const index = (_f = userResult.plants) === null || _f === void 0 ? void 0 : _f.findIndex((plant) => (plant.plantId == plantId));
-            const replaceIndex = (_g = plants[index].sensors) === null || _g === void 0 ? void 0 : _g.findIndex((plant) => (plant.settingType == input.settingType));
+            const index = (_h = userResult.plants) === null || _h === void 0 ? void 0 : _h.findIndex((plant) => (plant.plantId == plantId));
+            const replaceIndex = (_j = plants[index].sensors) === null || _j === void 0 ? void 0 : _j.findIndex((plant) => (plant.settingType == input.settingType));
             if (index < 0) {
                 throw new Error("plant Id not found.");
             }
@@ -470,17 +550,17 @@ exports.usersResolvers = {
         }),
         deleteSetting: (_root, { id, plantId, settingName }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
-            var _h;
+            var _k;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
             const plants = userResult.plants;
-            const index = (_h = userResult.plants) === null || _h === void 0 ? void 0 : _h.findIndex((plant) => (plant.plantId == plantId));
+            const index = (_k = userResult.plants) === null || _k === void 0 ? void 0 : _k.findIndex((plant) => (plant.plantId == plantId));
             if (index < 0) {
                 throw new Error("plant Id not found.");
             }
-            const settingIndex = plants[index].sensors.findIndex((sensor) => sensor.settingType === settingName);
+            const settingIndex = plants[index].sensors.findIndex((module) => module.settingType === settingName);
             plants[index].sensors.splice(settingIndex, 1);
             yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
             return {

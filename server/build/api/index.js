@@ -4,7 +4,7 @@ exports.addAddressToUser = exports.createQuickOrder = exports.createOrder = expo
 const handle_1 = require("../controllers/handle");
 const queries_1 = require("./queries");
 const { createApolloFetch } = require('apollo-fetch');
-// const uri = 'http://54.232.137.175/api';
+// const uri = 'http://52.67.123.15/api';
 const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 const getSettings = () => new Promise((resolve, reject) => {

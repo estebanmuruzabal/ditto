@@ -62,6 +62,10 @@ exports.settingsResolvers = {
                         site_keyword: settingValues.site_keyword,
                         site_description: settingValues.site_description,
                         whatsapp_bot_is_on: false,
+                        shopIsOnline: false,
+                        address: settingValues.address,
+                        latitude: settingValues.latitude,
+                        longitude: settingValues.longitude
                     }
                 };
                 const insertResult = yield db.settings.insertOne(settingData);
@@ -94,6 +98,10 @@ exports.settingsResolvers = {
                     site_keyword: settingValues.site_keyword,
                     site_description: settingValues.site_description,
                     whatsapp_bot_is_on: settingValues.whatsapp_bot_is_on,
+                    shopIsOnline: settingValues.shopIsOnline,
+                    address: settingValues.address,
+                    latitude: settingValues.latitude,
+                    longitude: settingValues.longitude
                 }
             };
             yield db.settings.updateOne({ _id: siteSetting._id }, { $set: settingData });

@@ -50,6 +50,7 @@ const EmailTemplate = {
     }
 };
 
+
 /**
  * Send an email
  */

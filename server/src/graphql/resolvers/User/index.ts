@@ -365,9 +365,9 @@ export const usersResolvers: IResolvers = {
                 access_token: accessToken(userResult._id),
             }
         },
-        updateUserNameAndEmail: async (
+        updateUserNameEmailAndLenguage: async (
             _root: undefined,
-            {id, name, email}: { id: string, name: string, email: string },
+            {id, name, email, lenguage}: { id: string, name: string, email: string, lenguage: string},
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             await authorize(req, db);
@@ -381,12 +381,12 @@ export const usersResolvers: IResolvers = {
             if (re.test(email)) {
                await db.users.updateOne(
                     {_id: new ObjectId(id)},
-                    {$set: {name: name, email: email}}
+                    {$set: {name: name, email: email, lenguage: lenguage}}
                 );
             } else {
                 await db.users.updateOne(
                     {_id: new ObjectId(id)},
-                    {$set: {name: name}}
+                    {$set: {name: name, lenguage: lenguage}}
                 );
             }
             return {
@@ -458,7 +458,8 @@ export const usersResolvers: IResolvers = {
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
-                products: input.products
+                products: input.products,
+                lenguageLocale: input.lenguageLocale
             };
 
             await db.users.updateOne(

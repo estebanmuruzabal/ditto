@@ -414,6 +414,7 @@ export const typeDefs = gql`
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale:  String
     }
 
     input OrderQuickInput {
@@ -661,7 +662,7 @@ export const typeDefs = gql`
         createQuickOrder(input: OrderQuickInput): Order!
         updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
-        updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
+        updateUserNameEmailAndLenguage(id: ID!, name: String!, email: String, lenguage: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!

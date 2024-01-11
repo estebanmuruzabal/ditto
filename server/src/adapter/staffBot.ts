@@ -1,4 +1,4 @@
-import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts, updateProductStock, createQuickOrder } from "../api"
+import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, addAddressToUser, getCategories, getProducts, updateProductStock, createQuickOrder } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IUser, TriggerStaffSteps } from "../lib/types"
 import { getEmptyShoppingCart, getQuickSaleShoppingCart, getTotalAmount, isUserInputInvalid } from "../lib/utils/shoppingUtils"

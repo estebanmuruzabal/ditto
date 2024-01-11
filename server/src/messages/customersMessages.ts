@@ -1,9 +1,12 @@
 import { ICategory, IDeliveryMethod, IPaymentOption, IProduct } from "../lib/types";
-import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, COMPANY_DESCRIPTION_TEXT, CURRENCY } from "../lib/utils/constant";
+import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, COMPANY_DESCRIPTION_TEXT, CURRENCY, Locales } from "../lib/utils/constant";
 import { getDeliveryOrPickUpDatetime, getTotalAmount } from "../lib/utils/shoppingUtils";
 import { getEmojiNumber } from "../lib/utils/whatsAppUtils";
 
-const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>
+const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string, lenguageLocale: string) => {
+switch (lenguageLocale) {
+case Locales.ES:
+return (
 `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
@@ -29,13 +32,45 @@ ${CURRENCY}${total}
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
 Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
-`;
+`)
+case Locales.EN:
+return (
+`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
 
-const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>
+📢 *Important* 📢
+ - If you can bring your own bags to carry the produce, the better!!
+ - In order to pay, send us a bank/digital bank transfer for *${CURRENCY}${total}* to the following zelle account: *${BANK_TRANSFER_ALIAS}* and please share it us in this conversation before picking up your order. 
+
+*Detail:*
+*Purchase date:*
+${purchasedDate}
+*Delivery/pickup method selected:*
+${deliveryMethod}
+*Date and time of pickup/delivery:*
+${delivery_pickup_date}
+*Address of delivery/Pickup Address:*
+${address}
+*Payment method:*
+${paymentMethod}
+*Products list:*
+${products.map((product: any) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Final price:*
+${CURRENCY}${total}
+
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`)
+default: console.log('pickUpPurchaseWithTransferPayment defaulted. lenguageLocale not found:', lenguageLocale)
+}};
+
+const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string, lenguageLocale: string) => {
+switch (lenguageLocale) {
+case Locales.ES:
+return (
 `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
 
 📢 *Importante* 📢
- - Te recordamos llevar bolsas para retirar tus productos!
+    - Te recordamos llevar bolsas para retirar tus productos!
 
 *Detalle:*
 *Fecha de compra:*
@@ -56,39 +91,45 @@ ${CURRENCY}${total}
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
 Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
-`;
+`)
+case Locales.EN:
+return (
+`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
 
-const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
-`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
-📢 Importante 📢
- - Te vamos a escribir una hora antes de llevar tu pedido.
- - Para pagar, enviános una transfercia por ${CURRENCY}${total} al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante aquí antes de retirar tu pedido 🙏.
- 
-*Detalle:*
-*Fecha de compra:*
+📢 *Important* 📢
+    - If you can bring your own bags to carry the produce, the better!!
+
+*Detail:*
+*Purchase date:*
 ${purchasedDate}
-*Método de envío o retiro seleccionado:*
+*Delivery/pickup method selected:*
 ${deliveryMethod}
-*Fecha y horario del envío o retiro en tienda:*
+*Date and time of pickup/delivery:*
 ${delivery_pickup_date}
-*Dirección de envío o donde retirar:*
+*Address of delivery/Pickup Address:*
 ${address}
-*Método de pago:*
+*Payment method:*
 ${paymentMethod}
-*Productos comprados:*
+*Products list:*
 ${products.map((product: any) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
-*Monton total:*
+*Final price:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!💚
-También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
-Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
-`;
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`)
+default: console.log('pickUpPurchaseWithCashPayment defaulted. lenguageLocale not found:', lenguageLocale)
+}};
 
-const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string) =>  
+const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string, lenguageLocale: string) =>  {
+switch (lenguageLocale) {
+case Locales.ES:
+return (
 `${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
+
 📢 *Importante* 📢
- - Te vamos a escribir una hora antes de llevar tu pedido.
+    - Te vamos a escribir una hora antes de llevar tu pedido.
+    - Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Detalle:*
 *Fecha de compra:*
@@ -109,16 +150,117 @@ ${CURRENCY}${total}
 Muchas gracias por su compra eco-sustentable!💚
 También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
 Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
-`;
+`)
+case Locales.EN:
+return (
+`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
 
-const orderPaidConfirmation = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any) =>  
+📢 *Important* 📢
+    - We will send you a text message one hour before being at the delivery address.
+    - In order to pay, send us a bank/digital bank transfer for *${CURRENCY}${total}* to the following zelle account: *${BANK_TRANSFER_ALIAS}* and please share it us in this conversation before picking up your order. 
+
+*Detail:*
+*Purchase date:*
+${purchasedDate}
+*Delivery/pickup method selected:*
+${deliveryMethod}
+*Date and time of pickup/delivery:*
+${delivery_pickup_date}
+*Address of delivery/Pickup Address:*
+${address}
+*Payment method:*
+${paymentMethod}
+*Products list:*
+${products.map((product: any) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Final price:*
+${CURRENCY}${total}
+
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`)
+default: console.log('deliveryPurchaseWithTransferPayment defaulted. lenguageLocale not found:', lenguageLocale)
+}};
+
+const deliveryPurchaseWithCashPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string, lenguageLocale: string) => {
+switch (lenguageLocale) {
+case Locales.ES:
+return (
+`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
+
+📢 *Importante* 📢
+    - Te vamos a escribir una hora antes de llevar tu pedido.
+
+*Detalle:*
+*Fecha de compra:*
+${purchasedDate}
+*Método de envío o retiro seleccionado:*
+${deliveryMethod}
+*Fecha y horario del envío o retiro en tienda:*
+${delivery_pickup_date}
+*Dirección de envío o donde retirar:*
+${address}
+*Método de pago:*
+${paymentMethod}
+*Productos comprados:*
+${products.map((product: any) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Monton total:*
+${CURRENCY}${total}
+
+Muchas gracias por su compra eco-sustentable!💚
+También podes hacer tu pedido en nuestra página web http://www.dittofarm.com
+Para mas info seguinos en IG https://www.instagram.com/dittofarm.sd
+`)
+case Locales.EN:
+return (
+`${customerName ? `Hello ${customerName}, y` : 'Y'}our purchase has been completed successfully!
+
+📢 *Important* 📢
+    - We will send you a text message one hour before being at the delivery address.
+
+*Detail:*
+*Purchase date:*
+${purchasedDate}
+*Delivery/pickup method selected:*
+${deliveryMethod}
+*Date and time of pickup/delivery:*
+${delivery_pickup_date}
+*Address of delivery/Pickup Address:*
+${address}
+*Payment method:*
+${paymentMethod}
+*Products list:*
+${products.map((product: any) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
+*Final price:*
+${CURRENCY}${total}
+
+Thank you! Your help is very much appreciated it!
+You can also make your orders at http://www.dittofarm.com
+And keep yourself posted at our IG: https://www.instagram.com/dittofarm.sd`)
+default: console.log('deliveryPurchaseWithCashPayment defaulted. lenguageLocale not found:', lenguageLocale)
+}};
+
+const orderPaidConfirmation = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, lenguageLocale: string) =>  {
+switch (lenguageLocale) {
+case Locales.ES:
+return (
 `Hola ${customerName}, hemos recibido tu pago con exito!
 
 Muchas gracias por su compra eco-sustentable!
-Juntos transformamos el mundo ♻️ Ditto Farm.
-`;
+Juntos transformamos el mundo ♻️ Ditto Farm.`)
+case Locales.EN:
+return (
+`Hello ${customerName}, we have received your order!
 
-const orderDeliveredAndFeedBack = (customerName: string) =>  
+Thank you! Your help is very much appreciated it!
+Together we'll change the future ♻️ Ditto Farm SD.`)
+default: console.log('orderPaidConfirmation defaulted. lenguageLocale not found:', lenguageLocale)
+}};
+
+const orderDeliveredAndFeedBack = (customerName: string) => {
+    // @ts-ignore
+switch (lenguageLocale) {
+case Locales.ES:
+return (
 `Hola ${customerName}, has recibido tu pedido con exito!
 
 Sabemos que errar es humano, y tu opinion nos importa!
@@ -126,21 +268,54 @@ Ganate un cupón de 10% de descuento con tan solo contarnos como llegó tu pedid
 
 Muchas gracias por su compra eco-sustentable!
 Juntos transformamos el mundo ♻️ Ditto Farm.
-`;
+`)
+case Locales.EN:
+return (
+`Hello ${customerName}, you have received your order successfully!
 
-const userSignedUp = (customerName: string) =>  
-`Hola ${customerName}, creaste tu cuenta!
-`;
+We know that to fail is human, so we want your feedback!
+Get a 10% discount coupon only by telling us how your order arrived, and if you have any improvements/advices for us.🙌
 
-const enterValidName = () =>  
+Thank you! Your help is very much appreciated it!
+Together we'll change the future ♻️ Ditto Farm SD.`)
+default: console.log('orderDeliveredAndFeedBack defaulted. lenguageLocale not found:')   
+}};
+
+const userSignedUp = (customerName: string) => {
+    // @ts-ignore
+switch (lenguageLocale) {
+case Locales.ES: return (`Hola ${customerName}, creaste tu cuenta!`)
+case Locales.EN: return (`Hello ${customerName}, you have just created your account!`)
+default: console.log('userSignedUp defaulted. lenguageLocale not found:')   
+}};
+
+const enterValidName = (lenguageLocale?: string) =>  {
+switch (lenguageLocale) {
+case Locales.ES:
+return (
 `Falta poco! Necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
-solamente eso (Por ejemplo: Sofia Martinez)
-`;
+solamente eso (Por ejemplo: Sofia Martinez)`)
+case Locales.EN:
+return (
+`Almost there! I will need to to write complete name (name, last name) please 🙂, 
+just that (Like: Joe Smith)`)
+default: console.log('enterValidName defaulted. lenguageLocale not found:'); return ''   
+}};
 
-const reEnterValidName = () =>  
+const reEnterValidName = () => {
+const lenguageLocale = Locales.EN;
+switch (lenguageLocale) {
+    // @ts-ignore
+case Locales.ES:
+return (
 `Nombre invalido, necesitaría que me escribas tu 𝐧𝐨𝐦𝐛𝐫𝐞 𝐲 𝐚𝐩𝐞𝐥𝐥𝐢𝐝𝐨 completo por favor 🙂, 
-solamente eso (Por ejemplo: Sofia Martinez)
-`;
+solamente eso (Por ejemplo: Sofia Martinez)`)
+case Locales.EN:
+return (
+`Invalid name! Please write your complete name (name, last name) please 🙂, 
+just that (Like: Joe Smith)`)
+default: {console.log('reEnterValidName defaulted. lenguageLocale not found:', lenguageLocale); return '';}
+}};
 
 const thereWasAProblemWaitForAssistance = () =>  
 `Algo salío mal, pero revisaremos pronto este chat para corregirlo, 
@@ -337,8 +512,8 @@ ${deliveryOptions.map((deliOption: any, i: number) => (`
 Dirección: ${deliOption.pickUpAddress}
 ¿Cuándo?: ${getDeliveryOrPickUpDatetime(deliOption.details)}
 ${getPrelinkText(deliOption.details)}: ${getAddressLinkText(deliOption.details)}`)).join('')}
-`
-);};
+`);
+};
 
 const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption: IDeliveryMethod, paymentMethods: any, delivery_address: string) => {
     const hasDeliveryAddress = deliOption?.pickUpAddress || delivery_address;

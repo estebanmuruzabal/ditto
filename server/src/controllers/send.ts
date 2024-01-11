@@ -100,6 +100,7 @@ export const sendMessage = async (number: string, text: string, trigger?: Trigge
    setTimeout(async () => {
      const message: any = text
      
+     // @41252 arreglar numero aca
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
         if (!number.endsWith('@c.us')) number += '@c.us';

@@ -17,6 +17,7 @@ const moment_1 = __importDefault(require("moment"));
 const types_1 = require("../lib/types");
 const api_1 = require("../api");
 const whatsAppUtils_1 = require("../lib/utils/whatsAppUtils");
+const constant_1 = require("../lib/utils/constant");
 const getStuffMainMenuOptions = (resData, user, showSuccessChanged) => {
     resData.replyMessage = showSuccessChanged ?
         `Venta exitosa!
@@ -96,7 +97,7 @@ Salario adelantado: $${(_h = user.workInfo) === null || _h === void 0 ? void 0 :
 exports.getStuffWorkingInfo = getStuffWorkingInfo;
 const stopWorking = (user) => __awaiter(void 0, void 0, void 0, function* () {
     user.workInfo.isWorking = false;
-    user.workInfo.stoppedWorkTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+    user.workInfo.stoppedWorkTime = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
     const startedWorkTime = (0, moment_1.default)(new Date(user.workInfo.startedWorkTime));
     const stoppedWorkTime = (0, moment_1.default)(new Date(user.workInfo.stoppedWorkTime));
     const workedInMinutes = stoppedWorkTime.diff(startedWorkTime, 'minutes');
@@ -119,7 +120,7 @@ const startWorking = (user) => __awaiter(void 0, void 0, void 0, function* () {
             taskRelated: null
         };
     user.workInfo.isWorking = true;
-    user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+    user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
     user.workInfo.stoppedWorkTime = null;
     user.workInfo.ratePerHour = 375;
     yield (0, api_1.updateUserWorkInfoMutation)(user, `started working.`);
