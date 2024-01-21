@@ -8,7 +8,8 @@ import {
     IOrder,
     IOrderTracker,
     IProduct,
-    IQuickOrder
+    IQuickOrder,
+    TriggerSteps
 } from "../../../lib/types";
 import {authorize} from "../../../lib/utils";
 import {IOrderInputArgs, IOrderProductInput, IOrderQuickInput, IOrderQuickInputArgs} from "./types";
@@ -106,6 +107,7 @@ export const ordersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         )/*: Promise<IOrder>*/ => {
             // await authorize(req, db);
+            const token = <string>req.headers["x-access-token"];
             const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
             const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
             // @ts-ignore
@@ -140,11 +142,12 @@ export const ordersResolvers: IResolvers = {
             let orderTracker;
             let payment_status;
             let status;
-            
+            let lenguageLocale: Locales;
+            console.log('token',token)
             switch (input?.lenguageLocale) {
-                case Locales.ES: { orderTracker = spanishOrderTracker; payment_status = SpanishPaymentStatus.UNPAID; status = SpanishOrderStatus.PENDING } break;
-                case Locales.EN: { orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING } break;
-                default: { console.log('createOrder. no locale found ', input?.lenguageLocale); orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING } break;
+                case Locales.ES: { orderTracker = spanishOrderTracker; payment_status = SpanishPaymentStatus.UNPAID; status = SpanishOrderStatus.PENDING; lenguageLocale = Locales.ES } break;
+                case Locales.EN: { orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING; lenguageLocale = Locales.EN } break;
+                default: { console.log('createOrder. no locale found ', input?.lenguageLocale); orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING; lenguageLocale = Locales.EN } break;
             }
 
             const insertData: IOrder = {
@@ -170,6 +173,7 @@ export const ordersResolvers: IResolvers = {
                 order_tracking: orderTracker,
                 order_products: input.products,
                 created_at: purchasedDate,
+                lenguageLocale
             };
 
             const insertResult = await db.orders.insertOne(insertData);
@@ -194,12 +198,12 @@ export const ordersResolvers: IResolvers = {
 
                 if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName, input?.lenguageLocale);
 
-                // whatsapp confirmation whatsapp is handled in another logic
-                if (input.isWhatsappPurchase) {
+                // Whatsapp orders are handled at server/src/adapter/shopBot.ts. Here we send it to web purchases curstomers only
+                if (!input.isWhatsappPurchase) {
                     const input2 = { delivery_method_name: deliveryMethodName, payment_option_type: paymentOptionType, delivery_address: input.delivery_address, payment_method_name: paymentOptionName, products: input.products, delivery_date: input.delivery_date, total: input.total }
-                    const message = getOrderConfirmationMsgText(input2, customer, input.lenguageLocale);
-                    // @ts-ignore
-                    sendMessage(client, input.contact_number, message, null);
+                    const message: any = getOrderConfirmationMsgText(input2, customer, input.lenguageLocale);
+
+                    sendMessage(input.contact_number, message, TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART, token);
                 }
 
             } catch (error) {
@@ -263,6 +267,7 @@ export const ordersResolvers: IResolvers = {
                 order_tracking: englishOrderTracker,
                 order_products: input.products,
                 created_at: purchasedDate,
+                lenguageLocale: input.lenguageLocale
             };
 
             const insertResult = await db.orders.insertOne(insertData);
@@ -283,8 +288,8 @@ export const ordersResolvers: IResolvers = {
             
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, '', '');
-                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, '', '', input.lenguageLocale);
+                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
 
                 // whatsapp confirmation whatsapp is handled in another logic
                 // if (!input.isWhatsappPurchase) {
@@ -365,10 +370,10 @@ export const ordersResolvers: IResolvers = {
             })[0];
 
             if (currentStatus.status === 'Entregado') {
-                // @ts-ignore
-                const message: string = orderDeliveredAndFeedBack(customer_name);
-                // @ts-ignore
-                sendMessage(client, contact_number, message, null);
+
+                // const message: string = orderDeliveredAndFeedBack(customer_name);
+
+                // sendMessage(client, contact_number, message, null);
             }
 
             await db.orders.updateOne(

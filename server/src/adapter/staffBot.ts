@@ -13,7 +13,7 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
     let productSelected: any;
     let shoppingCart: any;
     const num = cleanNumber(number);
-
+    const englishUser = true;
     console.log('nextTriggerStep received in Switch Staff:', triggerStep)
     switch (triggerStep) {
         case TriggerStaffSteps.SUCCESS_SALE_AND_MAIN_MENU:
@@ -111,7 +111,7 @@ export const getReplyFromStaffBot = async (triggerStep: string, user: IUser | an
                 break;
             } 
 
-            shoppingCart = getEmptyShoppingCart(user);
+            shoppingCart = getEmptyShoppingCart(user, shoppingCart.lenguageLocale);
 
             shoppingCart.products.push({
                 product_id: productSelected.id

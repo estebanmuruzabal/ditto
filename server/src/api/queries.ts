@@ -66,7 +66,7 @@ export const getCustomerQuery = `
                     isRelayThirdOn
                     isRelayFourthOn
                     timestamp
-                    timezone
+                    timeZone
                     sensors {
                         name
                         whatsappWarningsOn
@@ -125,6 +125,7 @@ export const getCustomerQuery = `
                     coupon_code
                     discount_amount
                     payment_id
+                    lenguageLocale
                     products {
                         product_id
                         name
@@ -208,7 +209,7 @@ export const UPDATE_PRODUCT = `
 `;
 
 
-export const updateUserNameAndEmailQuery = `
+export const updateUserNameEmailAndLenguageQuery = `
     mutation UpdateUser(
         $id: ID!, 
         $name: String!,

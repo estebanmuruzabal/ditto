@@ -4,7 +4,7 @@ import moment from "moment";
 import { DistanceSensorMode, HumiditySensorMode, ISensorSetting, ISetting, LightSensorMode, Plant } from "../lib/types";
 import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
-import { logTimeStampWithTimeFilter } from "../utils/logsUtils";
+import { fireWhatappAlarmIfIsOn, logTimeStampWithTimeFilter } from "../utils/logsUtils";
 import 'moment-timezone';
 
 export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string, timeZone: string) => {
@@ -15,6 +15,10 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
+
+    await fireWhatappAlarmIfIsOn(plant, phoneNumber);
+
+    if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${setting.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
 
     const minReading = Number(minWarning);
     const maxReading = Number(maxWarning);

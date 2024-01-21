@@ -1,5 +1,6 @@
 import moment from "moment";
-import { ISensorSetting } from "../lib/types";
+import { ISensorSetting, Plant } from "../lib/types";
+import { sendMessage } from "../controllers/send";
 
 export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: number, timeZone: string, started?: boolean, finished?: boolean) => {
     if (reading < -5 || reading > 105) return setting;
@@ -18,4 +19,17 @@ export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: num
     else setting?.logs.push({ reading, timestamp: new Date().toLocaleString('en-US', { timeZone }) });
 
     return setting;
+}
+
+export const fireWhatappAlarmIfIsOn = async (plant: Plant, phoneNumber: string) => {
+    const { alarm, alarm_timestamp, timeZone } = plant;
+    if (!alarm || !alarm_timestamp) return;
+
+    const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone }));
+    const lastTimeStamp = alarm_timestamp;
+    const lastTimeStampMoment = moment(new Date(lastTimeStamp));
+    const lastAlarmNotificationInMins = currentTimeMoment?.diff(lastTimeStampMoment, 'minutes');
+
+    // if it hasnt pass more than 30 mins, we dont log anything basically
+    if (lastAlarmNotificationInMins <= 1) await sendMessage(phoneNumber, `Alarma Activada en ${plant.name}`);
 }

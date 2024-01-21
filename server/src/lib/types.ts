@@ -1,6 +1,8 @@
 import {Collection, ObjectId} from 'mongodb';
 import { IOrderInput, IOrderInputArgs } from '../graphql/resolvers/Orders/types';
 import { IScheduleInput } from '../graphql/resolvers/User/types';
+import { Locale } from 'moment';
+import { Locales } from './utils/constant';
 
 export interface Plant {
     id?: string;
@@ -12,6 +14,8 @@ export interface Plant {
     airHumidity: number;
     tempeture: number;
     light: number;
+    alarm: boolean;
+    alarm_timestamp: string;
     sensors: [ISensorSetting];
     isRelayOneOn: boolean;
     isRelayTwoOn: boolean;
@@ -425,6 +429,7 @@ export interface IOrder {
     customer_name: string;
     delivery_method_name: string;
     delivery_pickup_date: string;
+    lenguageLocale: Locales;
 }
 
 export interface IQuickOrder {
@@ -451,6 +456,7 @@ export interface IQuickOrder {
     customer_name: string;
     delivery_method_name?: string;
     delivery_pickup_date?: string;
+    lenguageLocale: Locales;
 }
 
 export interface ICommonMessageReturnType {

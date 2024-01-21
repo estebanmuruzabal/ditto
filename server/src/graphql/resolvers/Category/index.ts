@@ -54,7 +54,7 @@ export const categoriesResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonPaginationReturnType> => {
             let categories =  await db.categories.find({parent_id: null}).sort({_id: -1}).toArray();
-
+            console.log('categories:::', categories)
             if (type) {
                 const typeResult = await db.types.findOne({slug: type});
                 categories = categories.filter((category) => {

@@ -1,5 +1,5 @@
 import { ICategory, IDeliveryMethod, IPaymentOption, IUser, Roles, TriggerStaffSteps, TriggerSteps } from "../types";
-import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE, timeZone } from "./constant";
+import { BANK_TRANSFER_PAYMENT_OPTION, CASH_PAYMENT_OPTION, CC_PAYMENT_OPTION, COMPANY_DESCRIPTION_TEXT, CUSTOMER_ADDRESS_DELIVERY_METHOD, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, Locales, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, PICKUP_LAJOLLA_DELIVERY_METHOD, PICKUP_OB_DELIVERY_METHOD, TALK_TO_A_REPRESENTATIVE_MODE, timeZone } from "./constant";
 import { getButtons, getListButtons, getSectionWith } from "./whatsAppUtils";
 import { deliveryPurchaseWithTransferPayment, pickUpPurchaseWithCashPayment, deliveryPurchaseWithCashPayment, getDeliveryAddress, pickUpPurchaseWithTransferPayment } from "../../messages/customersMessages";
 export const isUserInputInvalid = (userInput: number, maxOptions: number) => { 
@@ -11,7 +11,7 @@ export const getDeliveryPickUpDate = (details: string) => details.split("|")[1]?
 const unusedCategories = ['hortalizas-de-hojas', 'remedios-naturales', 'plaguicida', 'repelente', 'bioestimulante', 'fertilizantes', 'todos-los-productos', 'insumos-para-cultivos'];
 export const harcodedFilterOfUnusedCategories = (categories: ICategory[]) => categories.filter((category: ICategory) => !unusedCategories.includes(category.slug))
 
-export const getEmptyShoppingCart = (user: any) => { 
+export const getEmptyShoppingCart = (user: any, lenguageLocale: string) => { 
     return {
         products: [],
         customer_id: user.id,
@@ -25,7 +25,8 @@ export const getEmptyShoppingCart = (user: any) => {
         total: null,
         coupon_code: null,
         discount_amount: null,
-        payment_id: null
+        payment_id: null,
+        lenguageLocale
     }
 }
 
@@ -73,21 +74,19 @@ export const getOrderConfirmationMsgText = (
 ) => { 
     /// aca papa metele codigo
     const purchasedDate = new Date().toLocaleString('en-US', { timeZone });
+    const pickupMethoSelected = lenguageLocale === 'en' ? (PICKUP_LAJOLLA_DELIVERY_METHOD === input.delivery_method_name || PICKUP_OB_DELIVERY_METHOD === input.delivery_method_name) : (PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name);
+    // const deliveryMethodSelected = lenguageLocale === 'en' ? normalizeText(input.delivery_method_name).includes(normalizeText(DELIVERY_METHOD_SELECTED)) : normalizeText(input.delivery_method_name).includes(normalizeText(CUSTOMER_ADDRESS_DELIVERY_METHOD));
     switch (input.payment_option_type) {
         case BANK_TRANSFER_PAYMENT_OPTION:
-            if (PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
-                return pickUpPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale);
-            } else if (normalizeText(input.delivery_method_name).includes(normalizeText(CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
-                return deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale);
-            }
+            return pickupMethoSelected
+                ? pickUpPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale)
+                : deliveryPurchaseWithTransferPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale);
             break;
         case CASH_PAYMENT_OPTION:
         case CC_PAYMENT_OPTION:
-            if (PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
-                return pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale); 
-            } else if (normalizeText(input.delivery_method_name).includes(normalizeText(CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
-                return deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale);
-            }         
+            return pickupMethoSelected
+                ? pickUpPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale)
+                : deliveryPurchaseWithCashPayment(purchasedDate, input?.delivery_address, input.total, user?.name, input.delivery_method_name, input.payment_method_name, input?.products, input.delivery_date, lenguageLocale);         
             break;
         default:
             console.log('no case found in: switch (input.payment_option_type)::', input.payment_option_type)
@@ -116,9 +115,9 @@ export const getCustomerPrimaryNumber = (customer: IUser) => customer?.phones?.l
 export const isUserStaff = (customer: IUser) => customer?.role === Roles.STAFF;
 export const isGrower = (customer: IUser) => customer?.role === Roles.GROWER;
 
-export const getDeliveryOrPickUpDatetime = (detailsText: string) => {
+export const getDeliveryOrPickUpDatetime = (detailsText: string, lenguageLocale: string) => {
     // if modify this, also modify server utils with these functions logic
-    const timeText = geTimeScheduleOnly(detailsText);
+    const timeText = getDeliverySchedule(detailsText, lenguageLocale);
     const dateText = geDateScheduleOnly(detailsText);
 
     return `${dateText} ${timeText}`;
@@ -334,15 +333,15 @@ const getProductRowsFrom = (items: any) => items.map((item: any, idx: number) =>
     }
 });
 
-const geTimeScheduleOnly = (details: string) => {
+export const getDeliverySchedule = (details: string, intLocale: string) => {
     if (!details) return '';
-    const word = 'Horario: ';
+    const word = intLocale === 'en' ? 'Time: ' : 'Horario: ';
 
     const index = details.indexOf(word);   // 8
     const length = word.length;			// 7
 
     return details.slice(index + length);
-};
+}
   
 const geDateScheduleOnly = (detailsText: string) => {
     const contentDivided = detailsText?.split(' | ');
@@ -367,11 +366,11 @@ export const calculateSubTotalPrice = (delivery_method: any) => {
 }
 
 
-export const calculateCCCharge = (paymentOptionSelected: any, totalAmount: number) => {
+export const calculateCCCharge = (paymentOptionSelected: { name : string }, totalAmount: number) => {
 
-    if (paymentOptionSelected?.name?.toLowerCase().includes('tarjeta')) {
+    if (    paymentOptionSelected?.name?.toLowerCase().includes('tarjeta') || paymentOptionSelected?.name?.toLowerCase().includes('card')) {
         const ccCharge = paymentOptionSelected?.name?.replace(/\D/g, '');
-        return totalAmount * (ccCharge / 100);
+        return totalAmount * (Number(ccCharge) / 100);
     }
     return 0;
 }

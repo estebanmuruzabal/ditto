@@ -439,7 +439,7 @@ export const usersResolvers: IResolvers = {
                     throw new Error(`'${input.products[i].name}', No hay suficiente cantidad de este producto. Cantidad disponible: ${products[i].product_quantity}`);
                 }
             }
-
+            console.log('input:::::::::::',input)
             const shoppingCart: IOrderInput = {
                 customer_id: input.customer_id,
                 contact_number: input.contact_number,
@@ -503,6 +503,7 @@ export const usersResolvers: IResolvers = {
                     tempeture_1: 0,
                     distance_cm: 0,
                     light_1: 0,
+                    alarm: false,
                     isRelayOneOn: false,
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
@@ -543,11 +544,12 @@ export const usersResolvers: IResolvers = {
                 dist,
                 hum2,
                 light,
+                alarm,
                 isRelayOneOn,
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, contrId: number, hum1: number, airHum: number, temp: number, dist: number, hum2: number, light: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
+            }: { id: string, contrId: number, hum1: number, airHum: number, temp: number, dist: number, hum2: number, light: number, alarm: boolean, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -559,7 +561,7 @@ export const usersResolvers: IResolvers = {
 
             const plants = userResult.plants;
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == contrId));
-
+            const alarmHasJustTurnOn = !plants[index].alarm && alarm;
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
             } else {
@@ -569,6 +571,8 @@ export const usersResolvers: IResolvers = {
                 plants[index].tempeture_1 = temp;
                 plants[index].distance_1 = dist;
                 plants[index].light_1 = light;
+                plants[index].alarm_timestamp = alarmHasJustTurnOn ? new Date().toLocaleString('en-US', { timeZone: plants[index].timeZone }) : plants[index].alarm_timestamp;
+                plants[index].alarm = alarm;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;

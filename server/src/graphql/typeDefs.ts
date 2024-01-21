@@ -137,6 +137,7 @@ export const typeDefs = gql`
         discount_amount: Int
         products: [ProductInputOrder!]!
         payment_id: String
+        lenguageLocale: String
     }
 
     type Chat {
@@ -432,6 +433,7 @@ export const typeDefs = gql`
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale: String
     }
     
     input OrderInputNotRequires {
@@ -453,6 +455,7 @@ export const typeDefs = gql`
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale: String
     }
     
     type OrderTracker {
@@ -665,7 +668,7 @@ export const typeDefs = gql`
         updateUserNameEmailAndLenguage(id: ID!, name: String!, email: String, lenguage: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
         addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String): DefaultMessageType!
-        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
+        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, alarm: Boolean, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
         deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!

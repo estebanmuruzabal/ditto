@@ -1,3 +1,5 @@
+import { Locales } from "../../../lib/utils/constant";
+
 export interface IOrderProductInput {
     product_id: string;
     name?: string;
@@ -61,4 +63,5 @@ export interface IOrderQuickInput {
     deliveryFee?: number;
     products: Array<IOrderProductInput>;
     payment_id?:  string;
+    lenguageLocale: Locales;
 }

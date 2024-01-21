@@ -60,7 +60,7 @@ export const sendOtp = (sendToNumber: string, otpCode: string) => {
 //   }
 // };
 
-export const sendCompanyConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale?: string) => {
+export const sendCompanyConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
     const transporter = nodemailer.createTransport({
         host: "live.smtp.mailtrap.io",
         port: 587,
@@ -108,7 +108,7 @@ export const sendCompanyConfirmationMail = (email: string, customer: any, input:
     }
 
     return transporter.sendMail({
-        from: 'dittofarm.sd@gmail.com',
+        from: 'mailtrap@dittofarm.com',
         to: email,
         subject: emailTitle,
         text: template,
@@ -116,7 +116,7 @@ export const sendCompanyConfirmationMail = (email: string, customer: any, input:
     });
 }
 
-export const sendClientConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale?: string) => {
+export const sendClientConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
 
     const transporter = nodemailer.createTransport({
         host: "live.smtp.mailtrap.io",

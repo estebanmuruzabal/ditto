@@ -1,4 +1,4 @@
-// import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts } from "../api"
+// import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameEmailAndLenguageQuery, addAddressToUser, getCategories, getProducts } from "../api"
 // import { cleanNumber } from "../controllers/handle"
 // import { IProduct, IUser, Plant, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types"
 // import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, INTRODUCE_NEW_NAME_KEY_WORDS, INTRODUCE_QUANTITY_OPT_TEXT, KEEP_USER_NAME_KEY_WORD, TECNICAS_DE_CULTIVO_OPT } from "../lib/utils/constant"
@@ -555,8 +555,8 @@
 //                         resData.trigger = TriggerSteps.USER_SHOULD_INPUT_HIS_NAME;
 //                         break;
 //                     }
-//                     const res: any = await updateUserNameAndEmail(user.id, userName, user.email, access_token);
-//                     if (!res?.data?.updateUserNameAndEmail?.status) console.log('coulnt updateUserNameAndEmail ', res);
+//                     const res: any = await updateUserNameEmailAndLenguageQuery(user.id, userName, user.email, access_token);
+//                     if (!res?.data?.updateUserNameEmailAndLenguageQuery?.status) console.log('coulnt updateUserNameEmailAndLenguageQuery ', res);
 //                     resData = getOrderConfirmationButtons(resData, shoppingCart, TriggerSteps.ORDER_CHECK_CONFIRMATION, userInput);
 //                     break;
 //             }

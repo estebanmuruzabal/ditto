@@ -1,15 +1,30 @@
-import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, updateUserNameAndEmail, addAddressToUser, getCategories, getProducts } from "../api"
+import { signUpUser, updateUserShoppingCart, getDeliveryMethods, getPaymentMethods, createOrder, addAddressToUser, getCategories, getProducts, updateUserNameEmailAndLenguage } from "../api"
 import { cleanNumber } from "../controllers/handle"
 import { IDeliveryMethod, IProduct, IUser, TriggerSteps } from "../lib/types"
-import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME } from "../lib/utils/constant"
+import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, Locales } from "../lib/utils/constant"
 import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText, containsValidName } from "../lib/utils/shoppingUtils"
-import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, mainMenuUnauthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
-const lenguageLocale = 'en'
+import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, mainMenuUnauthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, noProductsAvailableListCategoriesAgain, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
+const lenguageLocale = Locales.EN;
+
+const fetchCategories = async () => {
+    let categoriesRes: any = await getCategories();
+    categoriesRes = categoriesRes?.data?.categories?.items;
+    if (categoriesRes?.length <= 0 || !!!categoriesRes) throw new Error('Error fetchCategories: no available categories');
+    return harcodedFilterOfUnusedCategories(categoriesRes);
+}
+
+const fetchProducts = async (selectedCategorySlug: string, noLengthCheck?: boolean) => {
+    let availableProducts: any = await getProducts(selectedCategorySlug);
+    availableProducts = availableProducts?.data?.products?.items;
+    if (!noLengthCheck) if (availableProducts?.length <= 0 || !!!availableProducts) throw new Error('Error 1: no available products');
+    return availableProducts;
+}
+
 
 export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any, userInput: string, number: string, access_token: string) => new Promise(async (resolve, reject) => {
 
     let resData = { replyMessage: '', media: null, trigger: '' }
-    let availableProducts: any;
+    let products: any;
     let deliveryOpts: any;
     let userInputNumber: number;
     let productSelected: any;
@@ -18,7 +33,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
     let categories: any;
     let maxOptions: any;
     let productInShoppingCart: any;
-    let categoriesRes: any;
     const num = cleanNumber(number);
 
     console.log('step in SHOP BOT Switch:', triggerStep)
@@ -27,15 +41,15 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
             const registeredSuccessfully = res?.data?.signUp?.status;
 
+            // welcomeTextAndCategoriesOpts
+            // hereee
             if (!registeredSuccessfully) {
                 resData.replyMessage = thereWasAProblemWaitForAssistance();
                 resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
                 resolve(resData);
             }
         
-            categoriesRes = await getCategories();
-            categories = categoriesRes?.data?.categories?.items;
-            categories = harcodedFilterOfUnusedCategories(categories);
+            categories = await fetchCategories();
             resData.replyMessage = mainMenuUnauthenticatedUser(categories);
             resData.trigger = TriggerSteps.SELECT_CATEGORY;
             resolve(resData);
@@ -43,10 +57,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
         case TriggerSteps.UNBLOCK_CHAT:
         case TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES:
-            categoriesRes = await getCategories();
-            categories = categoriesRes?.data?.categories?.items;
-            categories = harcodedFilterOfUnusedCategories(categories);
-            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+            categories = await fetchCategories();
 
             if (user?.id && user?.name) {
                 resData.replyMessage = user.name !== INITIAL_USER_USERNAME ? mainMenuAuthenticatedUser(user?.name, categories) : mainMenuUnauthenticatedUser(categories);
@@ -62,10 +73,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
         case TriggerSteps.ALL_CATEGORIES:
             // el usuario esta autenticado y respondio al menu inicial
             userInputNumber = Number(userInput)
-            categoriesRes = await getCategories();
-            categories = categoriesRes?.data?.categories?.items;
-            categories = harcodedFilterOfUnusedCategories(categories);
-            if (categories?.length <= 0 || !!!categories) throw new Error('Error 2: no available categories');
+            categories = await fetchCategories();
 
             resData.replyMessage = listCategories(categories);
             resData.trigger = TriggerSteps.SELECT_CATEGORY;
@@ -77,12 +85,8 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             shoppingCart = user?.shoppingCart;
             
             // if it doestn have a shopping cart we create an empty one
-            shoppingCart = user?.shoppingCart ? user?.shoppingCart : getEmptyShoppingCart(user);
-            
-            categoriesRes = await getCategories();
-            categories = categoriesRes?.data?.categories?.items;
-            categories = harcodedFilterOfUnusedCategories(categories);
-
+            shoppingCart = user?.shoppingCart ? user?.shoppingCart : getEmptyShoppingCart(user, lenguageLocale);
+            categories = await fetchCategories();
             maxOptions = categories?.length + 1;
 
             // +1 because of the got to pay option
@@ -112,19 +116,20 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             } 
             shoppingCart.selectedCategorySlug = selectedCategory.slug;
             await updateUserShoppingCart(shoppingCart);
+            console.log('shoppingCart::::::::::::::::::::::1', shoppingCart)
+            const noLengthCheck = true;
+            products = await fetchProducts(shoppingCart.selectedCategorySlug, noLengthCheck);
 
-            availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
-            availableProducts = availableProducts?.data?.products?.items;
-
-            if (availableProducts?.length <= 0 || !!!availableProducts) {
-                resData.replyMessage = noAvailableProducts()
-                resData.trigger = TriggerSteps.ALL_CATEGORIES;
+            if (products?.length <= 0 || !!!products) {
+                categories = await fetchCategories();
+                resData.replyMessage = noProductsAvailableListCategoriesAgain(categories);
+                resData.trigger = TriggerSteps.SELECT_CATEGORY;
                 // do we trigger a msj to admin phone?
                 resolve(resData);
                 break;
             }
 
-            resData.replyMessage = listAvailableProducts(availableProducts)
+            resData.replyMessage = listAvailableProducts(products)
             resData.trigger = TriggerSteps.ADD_PRODUCT_TO_CART;
             resolve(resData);
             break;
@@ -134,12 +139,33 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             userInputNumber = Number(userInput);
             shoppingCart = user?.shoppingCart;
 
-            availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
-            availableProducts = availableProducts?.data?.products?.items;
-            if (availableProducts?.length <= 0 || !!!availableProducts) throw new Error('Error 1: no available products');
+            //////
+            console.log('shoppingCart:::::::::::::::::::;4.2', shoppingCart)
+            products = await fetchProducts(shoppingCart.selectedCategorySlug);
+            
+            const goBackToMainMenu = userInputNumber === products?.length + 1;
 
-            maxOptions = shoppingCart?.products?.length > 0 ? availableProducts?.length + 1 : availableProducts?.length;
+            if (goBackToMainMenu) {   
+                categories = await fetchCategories();
+                resData.replyMessage = listCategories(categories);
+                resData.trigger = TriggerSteps.SELECT_CATEGORY;
+                resolve(resData);
+                break;
+            } 
 
+            // go to checkout is the option but we first take them to set delivery method step!
+            const goToSetDeliveryStepSelected = userInputNumber === products?.length + 2;
+            if (goToSetDeliveryStepSelected) {   
+                deliveryOpts = await getDeliveryMethods();
+                if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !!!deliveryOpts?.data?.deliveryMethods?.items) { throw new Error('No delivery methods set'); };
+
+                resData.replyMessage = deliveryOptions(deliveryOpts?.data?.deliveryMethods?.items, lenguageLocale)
+                resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
+                resolve(resData);
+                break;
+            } 
+
+            maxOptions = shoppingCart?.products?.length > 0 ? products?.length + 1 : products?.length;
             // +1 because of the got to pay option
             if (isUserInputInvalid(userInputNumber, maxOptions)) {
                 resData.trigger = TriggerSteps.ADD_PRODUCT_TO_CART;
@@ -147,23 +173,12 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 resolve(resData);
                 break;
             } 
-            const goToSetDeliveryStepSelected = userInputNumber === availableProducts?.length + 1;
             
-            if (goToSetDeliveryStepSelected) {   
-                deliveryOpts = await getDeliveryMethods();
-                if (deliveryOpts?.data?.deliveryMethods?.items?.length <= 0 || !!!deliveryOpts?.data?.deliveryMethods?.items) { throw new Error('No delivery methods set'); };
-
-                resData.replyMessage = deliveryOptions(deliveryOpts?.data?.deliveryMethods?.items)
-                resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
-                resolve(resData);
-                break;
-            } 
-            
-            productSelected = availableProducts[userInputNumber - 1];
-
+            productSelected = products[userInputNumber - 1];
+            console.log('shoppingCart::::::::::::::::::::::2', shoppingCart)
             if (!productSelected) {
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
-                resData.replyMessage = invalidNumberInput(availableProducts?.length);
+                resData.replyMessage = invalidNumberInput(products?.length);
                 resolve(resData);
                 break;
             } 
@@ -196,21 +211,20 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
         case TriggerSteps.SELECT_QUANTITY_OF_PRODUCT:
             userInputNumber = Number(userInput)
             shoppingCart = user?.shoppingCart;
-            availableProducts = await getProducts(shoppingCart.selectedCategorySlug);
-            availableProducts = availableProducts?.data?.products?.items;
+            products = await fetchProducts(shoppingCart.selectedCategorySlug);
+
             const prodSelectedIndex = shoppingCart.products.length - 1;
-            if (availableProducts?.length <= 0 || !!!availableProducts) throw new Error('Error 3: no available products');
 
             productInShoppingCart = shoppingCart?.products?.length > 0 ? shoppingCart.products[prodSelectedIndex] : null; 
 
             if (!productInShoppingCart) {
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
-                resData.replyMessage = invalidNumberInput(availableProducts?.length);
+                resData.replyMessage = invalidNumberInput(products?.length);
                 resolve(resData);
                 break;
             } 
 
-            const product = availableProducts.find(((prod: any) => prod.id === productInShoppingCart.product_id))
+            const product = products.find(((prod: any) => prod.id === productInShoppingCart.product_id))
 
             if (!product) { resolve(resData); break; }
 
@@ -232,7 +246,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 resolve(resData);
             } else {
                 // added success case, we relist the products again
-                resData.replyMessage = reListingAvailableProducts(shoppingCart.products, availableProducts)
+                resData.replyMessage = reListingAvailableProducts(shoppingCart.products, products)
                 resData.trigger = TriggerSteps.ADD_MORE_PRODUCTS_STEP;
                 resolve(resData);
             }
@@ -260,7 +274,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 // encontramos que opcion eligio el usuario y setteamos en el shoppingCart con ese delivery method seleccionado
                 shoppingCart.delivery_method_id = delyOptSelected.id;
                 // arreglar aca abajo::
-                shoppingCart.delivery_date = getDeliveryOrPickUpDatetime(delyOptSelected.details);
+                shoppingCart.delivery_date = getDeliveryOrPickUpDatetime(delyOptSelected.details, lenguageLocale);
                 shoppingCart.delivery_method_name = delyOptSelected.name;
                 shoppingCart.delivery_address = delyOptSelected.pickUpAddress;
 
@@ -277,7 +291,8 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 resolve(resData)
                 break;
             }
-            resData.replyMessage = unknownDeliPickUpOptInput(deliveryOpts)
+            console.log('shoppingCart::::::::::::::::::::::3', shoppingCart)
+            resData.replyMessage = unknownDeliPickUpOptInput(deliveryOpts, lenguageLocale)
             resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
             resolve(resData)
             break;
@@ -361,11 +376,12 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 shoppingCart.total = totalItemsAmount + ccCharge + deliveryFee;
                 await updateUserShoppingCart(shoppingCart);
 
-                resData.replyMessage = user?.name !== INITIAL_USER_USERNAME ? paymentMethodSelectedAndOrderConfirmationMsj(shoppingCart) : enterValidName();
+                resData.replyMessage = user?.name !== INITIAL_USER_USERNAME ? paymentMethodSelectedAndOrderConfirmationMsj(shoppingCart) : enterValidName(lenguageLocale);
                 resData.trigger = user?.name !== INITIAL_USER_USERNAME ? TriggerSteps.ORDER_CHECK_CONFIRMATION : TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
                 resolve(resData);
                 break;
             }
+            console.log('shoppingCart::::::::::::::::::::::4', shoppingCart)
             resData.replyMessage = unknownPaymentOptInput(paymentMethodsOpts)
             resData.trigger = TriggerSteps.SELECT_PAYMENT_METHOD;
             resolve(resData)
@@ -378,9 +394,9 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 resolve(resData)
             }
 
-            const response: any = await updateUserNameAndEmail(user.id, userName, user.email, access_token);
-            if (!response?.data?.updateUserNameAndEmail?.status) {
-                console.log('coulnt updateUserNameAndEmail ', response);
+            const response: any = await updateUserNameEmailAndLenguage(user.id, userName, user.email, access_token);
+            if (!response?.data?.updateUserNameEmailAndLenguage?.status) {
+                console.log('Error at updateUserNameEmailAndLenguage ', response);
                 resData.replyMessage = purchaseErrorMsg();
                 resData.trigger = TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
                 resolve(resData)
@@ -394,6 +410,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
         case TriggerSteps.ORDER_CHECK_CONFIRMATION:
             userInputNumber = Number(userInput);
             shoppingCart = user?.shoppingCart;
+            console.log('shoppingCart::::2134432',shoppingCart)
             switch (userInputNumber) {
                 case 1:
                     const res: any = await createOrder(shoppingCart);

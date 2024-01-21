@@ -3,23 +3,39 @@ import { IUser, TriggerStaffSteps } from "../lib/types";
 import { updateUserWorkInfoMutation } from "../api";
 import { getEmojiNumber } from "../lib/utils/whatsAppUtils";
 import { timeZone } from "../lib/utils/constant";
+const isEnglish = true;
+export const getStuffMainMenuOptions = (resData: any, user: IUser, showSuccessChanged?: boolean) => {    
+    if (isEnglish) {
+        resData.replyMessage = showSuccessChanged ?
+        `Venta exitosa!
+        
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`
+        :
+        `Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
+        
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`;
+    } else {
+        resData.replyMessage = showSuccessChanged ?
+        `Venta exitosa!
 
-export const getStuffMainMenuOptions = (resData: any, user: IUser, showSuccessChanged?: boolean) => {
-    
-    resData.replyMessage = showSuccessChanged ?
-    `Venta exitosa!
-
-${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
-2️⃣ - Actualizar stock
-3️⃣ - Ver su informacion
-4️⃣ - Venta rapida`
-:
-`Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
-
-${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
-2️⃣ - Actualizar stock
-3️⃣ - Ver su informacion
-4️⃣ - Venta rapida`;
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`
+        :
+        `Hola ${user?.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
+        
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`;
+    }
 
     resData.trigger = TriggerStaffSteps.ALL_CATEGORIES_ANSWER;
     return resData;

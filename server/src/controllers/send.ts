@@ -99,8 +99,7 @@ export const sendMessage = async (number: string, text: string, trigger?: Trigge
   
    setTimeout(async () => {
      const message: any = text
-     
-     // @41252 arreglar numero aca
+
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
         if (!number.endsWith('@c.us')) number += '@c.us';
@@ -146,7 +145,7 @@ export const lastGrowerTrigger = async (customer: IUser, userMessage: string) =>
 
 export const lastClientTrigger = async (customer: IUser, userMessage: string) => {
   userMessage = normalizeText(userMessage);
-  // if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+  if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
   let lastDittoMessageSent: any = { trigger: undefined };
 
   if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]
