@@ -21,9 +21,9 @@ export const logTimeStampWithTimeFilter = (setting: ISensorSetting, reading: num
     return setting;
 }
 
-export const fireWhatappAlarmIfIsOn = async (plant: Plant, phoneNumber: string) => {
+export const fireWhatappAlarmIfIsOn = (plant: Plant) => {
     const { alarm, alarm_timestamp, timeZone } = plant;
-    if (!alarm || !alarm_timestamp) return;
+    if (!alarm) return false;
 
     const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone }));
     const lastTimeStamp = alarm_timestamp;
@@ -31,5 +31,5 @@ export const fireWhatappAlarmIfIsOn = async (plant: Plant, phoneNumber: string) 
     const lastAlarmNotificationInMins = currentTimeMoment?.diff(lastTimeStampMoment, 'minutes');
 
     // if it hasnt pass more than 30 mins, we dont log anything basically
-    if (lastAlarmNotificationInMins <= 1) await sendMessage(phoneNumber, `Alarma Activada en ${plant.name}`);
+    return lastAlarmNotificationInMins <= 1;
 }

@@ -16,7 +16,7 @@ export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
 
-    await fireWhatappAlarmIfIsOn(plant, phoneNumber);
+    if (fireWhatappAlarmIfIsOn) await sendMessage(phoneNumber, `Alarma Activada en ${plant.name}`)
 
     if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${setting.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
 
