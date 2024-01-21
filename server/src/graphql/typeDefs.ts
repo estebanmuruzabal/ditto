@@ -28,6 +28,8 @@ export const typeDefs = gql`
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
         timestamp: String
+        alarm: Boolean
+        alarm_timestamp: String
         timeZone: String
     }
 
