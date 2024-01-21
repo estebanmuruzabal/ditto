@@ -9,9 +9,11 @@ import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
-import { checkSensor } from '../../../controllers/plants';
+import { checkSensorAndUpdateSettings } from '../../../controllers/plants';
 import { ISettingsInputArgs, deleteSettingsArgs, deleteShopArgs } from './types';
 import { timeZone } from '../../../lib/utils/constant';
+import { sendMessage } from '../../../controllers/send';
+import { fireWhatappAlarmIfIsOn } from '../../../utils/logsUtils';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -583,8 +585,13 @@ export const usersResolvers: IResolvers = {
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
             plants[index].sensors?.map(async (module: any, i: number) => {
-                plants[index] = await checkSensor(plants[index], i, userResult?.phones[0]?.number, plants[index].timeZone) 
+                plants[index] = await checkSensorAndUpdateSettings(plants[index], i, userResult?.phones[0]?.number, plants[index].timeZone) 
             })
+
+            if (fireWhatappAlarmIfIsOn(plants[index])) {
+                await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
+                if (userResult?.phones[1]?.number) await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
+            }
             // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             if (plants[index].isRelayOneOn?.length > 0) {console.log('isRelayOneOn', plants[index].isRelayOneOn, plants[index].timestamp, plants[index].humidity_1)} if (plants[index].isRelayTwoOn?.length > 0) {console.log('isRelayTwoOn', plants[index].isRelayTwoOn, plants[index].timestamp, plants[index].distance_1)}
             await db.users.updateOne(

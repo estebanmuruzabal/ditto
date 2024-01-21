@@ -7,19 +7,13 @@ import { WeekDays } from "../utils/constants";
 import { fireWhatappAlarmIfIsOn, logTimeStampWithTimeFilter } from "../utils/logsUtils";
 import 'moment-timezone';
 
-export const checkSensor = async (plant: Plant, sensorIndex: number, phoneNumber: string, timeZone: string) => {
+export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: number, phoneNumber: string, timeZone: string) => {
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
-    
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
-
-    if (fireWhatappAlarmIfIsOn(plant)) await sendMessage(phoneNumber, `Alarma Activada en ${plant.name}`)
-
-    if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${setting.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
-
     const minReading = Number(minWarning);
     const maxReading = Number(maxWarning);
     const secondActionTimeInMins = Number(relayTwoAutomatedTimeToRun);
