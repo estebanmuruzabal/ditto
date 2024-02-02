@@ -237,7 +237,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
-                    const format = 'hh:mm:ss';
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
 
                     let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
@@ -272,27 +271,22 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
         case LightSensorMode.SCHEDULE:
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
-                    const format = 'hh:mm:ss';
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
 
                     let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
                     let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
-                    startTime = moment(schedule.startTime, format);
-                    endTime = moment(schedule.endTime, format);
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0])); 
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1])); 
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0])); 
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
 
-                    // console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
-                    // console.log('startTime', startTime)
-                    // console.log('endTime', endTime)
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    // if there is natural light we dont turn the lights on
+                    const thereIsNaturalLight = reading > 50 && schedule.smartLight;
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
 
-                    if (currentTime.isBetween(startTime, endTime)) {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = schedule.smartLight ? false : true;
-                        setting.relayOneWorking = schedule.smartLight ? false : true;
-                    } else {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = false;
-                        setting.relayOneWorking = false;
-                    }
                 }
             })
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
