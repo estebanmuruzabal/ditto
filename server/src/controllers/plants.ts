@@ -242,8 +242,10 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                     let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
                     let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
-                    startTime = moment(schedule.startTime, format);
-                    endTime = moment(schedule.endTime, format);
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0])); 
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1])); 
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0])); 
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
 
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
 
