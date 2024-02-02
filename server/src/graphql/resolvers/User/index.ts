@@ -492,7 +492,7 @@ export const usersResolvers: IResolvers = {
             }
 
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
-            
+            let message = "Created plant successfully.";
             if (index < 0) {
                 if (userResult.plants.length === 3) throw new Error("Already added three plants. You are not allowed to add more than three.");    
                 const plantObject = {
@@ -524,7 +524,7 @@ export const usersResolvers: IResolvers = {
                 const plants = userResult.plants;
                 plants[index].name = name;
                 if (timeZone) plants[index].timeZone = timeZone;
-
+                message = 'Updated plants name and timezone'
                 await db.users.updateOne(
                     {_id: new ObjectId(id)},
                     {$set: { plants }}
@@ -533,7 +533,7 @@ export const usersResolvers: IResolvers = {
             }
             return {
                 status: true,
-                message: "Created plant successfully."
+                message
             };
         },
         updatePlant: async (

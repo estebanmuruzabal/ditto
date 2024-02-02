@@ -234,31 +234,30 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
         case HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case HumiditySensorMode.SCHEDULE:
-            scheduledOnTimes?.map((schedule: any, i: number) => {
-                setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-                    if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
-                        const format = 'hh:mm:ss';
-                        const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
-    
-                        let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
-                        let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
-                        startTime = moment(schedule.startTime, format);
-                        endTime = moment(schedule.endTime, format);
 
-                        const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+            setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const format = 'hh:mm:ss';
+                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
 
+                    let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime = moment(schedule.startTime, format);
+                    endTime = moment(schedule.endTime, format);
+
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
+                    if (mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
                         // @ts-ignore
-                        plant[relayOneIdRelated] = isInsideTimeFrame;
-                        setting.relayOneWorking = isInsideTimeFrame;
-                        if (mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
-                            // @ts-ignore
-                            plant[relayTwoIdRelated] = isInsideTimeFrame;
-                            setting.relayTwoWorking = isInsideTimeFrame;
-                        }
+                        plant[relayTwoIdRelated] = isInsideTimeFrame;
+                        setting.relayTwoWorking = isInsideTimeFrame;
                     }
-                    setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
-                })
+                }  
             })
+            setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
 
         case LightSensorMode.MANUAL:
