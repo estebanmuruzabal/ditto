@@ -247,14 +247,15 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
 
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    const soilIsStillHumid = reading >= minReading && schedule.smartLight;
 
                     // @ts-ignore
                     plant[relayOneIdRelated] = isInsideTimeFrame;
                     setting.relayOneWorking = isInsideTimeFrame;
                     if (mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
                         // @ts-ignore
-                        plant[relayTwoIdRelated] = isInsideTimeFrame;
-                        setting.relayTwoWorking = isInsideTimeFrame;
+                        plant[relayTwoIdRelated] = soilIsStillHumid ? false : isInsideTimeFrame;
+                        setting.relayTwoWorking = soilIsStillHumid ? false : isInsideTimeFrame;
                     }
                 }  
             })
