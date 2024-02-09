@@ -84,6 +84,17 @@ export const HeadingWider = styled.h3`
   }
 `;
 
+export const DeliveryTypesOptions = styled.h3`
+  display: flex;
+  border-radius: 0.5rem;
+  align-items: center;
+
+  @media (max-width: 600px) {
+    font-size: ${themeGet('fontSizes.md', '19')}px;
+  }
+`;
+
+
 export const InformationBox = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
   padding: 30px;

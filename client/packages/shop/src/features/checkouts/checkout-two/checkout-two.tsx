@@ -54,6 +54,7 @@ import CheckoutWrapper, {
   NoProductMsg,
   NoProductImg,
   IconWrapper,
+  DeliveryTypesOptions,
 } from './checkout-two.style';
 import CouponBox from 'components/coupon-box/coupon-box';
 
@@ -83,15 +84,6 @@ interface MyFormProps {
 type CartItemProps = {
   product: any;
 };
-const getDeliverySchedule = (details: string) => {
-if (!details) return '';
-const word = 'Horario';
-
-const index = details.indexOf(word);   // 8
-const length = word.length;			// 7
-
-return details.slice(index + length);
-}
 
 const OrderItem: React.FC<CartItemProps> = ({ product }) => {
   const { name, images, price, salePrice, unit, quantity = 0, recicledQuantity = 0, packagePrice, id } = product;
@@ -173,7 +165,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   }
   const [loading, setLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
-
+  const [pickUpMethodsSelected, setPickUpMethodsSelected] = useState(false);
+  
   const [submitResult, setSubmitResult] = useState({
     contact_number: '',
     payment_option_id: '',
@@ -206,6 +199,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [deleteContactMutation] = useMutation(DELETE_CONTACT);
   const [deletePaymentCardMutation] = useMutation(DELETE_CARD);
   const size = useWindowSize();
+  const [deliveryMethodsSelected, setDeliveryMethodsSelected] = React.useState([]);
 
   const [appliedCoupon] = useMutation(GET_COUPON);
   let deliveryCharge = 0;
@@ -219,6 +213,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const pickUpAddress = deliveryMethods.find(deliveryMethod => {
     return submitResult.delivery_method_id === deliveryMethod.id;
   })?.pickUpAddress;
+
+  const deliveryMethodSelected = deliveryMethods.find(deliveryMethod => { return submitResult.delivery_method_id === deliveryMethod.id; });
 
   const calculateCCCharge = () => {
     const paymentOptionSelected = paymentMethods.find(paymentMethod => {
@@ -241,9 +237,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     removeCoupon();
     setHasCoupon(false);
     
-    const deliveryTitle = deliveryMethods.find(deliveryMethod => { return submitResult.delivery_method_id === deliveryMethod.id; });
-    
-    deliveryCharge = calculateDeliveryCharge(deliveryTitle);
+    deliveryCharge = calculateDeliveryCharge(deliveryMethodSelected?.name);
     const deliveryAddress = pickUpOptionSelected ? pickUpAddress : deliveryOptionSelected ? selectedAddressText : '';
 
     setSubmitResult({
@@ -400,7 +394,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
 
   const getDeliveryDate = () => {
-    moment.locale('es');
+    // moment.locale('es');
     let orderDay = moment(new Date(), 'MM/D/YYYY').day();
     const orderHour = moment(new Date(), 'MM/D/YYYY').hour();
     let deliveryDate = moment(new Date());
@@ -434,7 +428,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   }
 
   const handleSubmit = async () => {
-    const deliveryCharge: number = calculateDeliveryCharge();
+    const deliveryCharge: number = calculateDeliveryCharge(deliveryMethodSelected?.name);
     const ccCharge: number = calculateCCCharge();
     const otherSubmitResult = {
       customer_id: id,
@@ -510,7 +504,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
         }
 
         if (orderCreateError) {
-          setOrderError(orderCreateError[0]?.message || 'Somehting whent wrong')
+          setOrderError(orderCreateError[0]?.message || 'Somehting went wrong')
           setLoading(false);
         }
       } catch (error) {
@@ -543,7 +537,8 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const deliveryOptionSelected = deliveryMethods.find(deliveryMethod => {
     return deliveryMethod.id === submitResult.delivery_method_id;
   });
-
+  console.log('deliveryMethods',deliveryMethods)
+  const deliveryMethodsTypes = [{ name: intl.formatMessage({ id: 'deliveryId', defaultMessage: 'delivery' }) }, { name: intl.formatMessage({ id: 'pickUpId', defaultMessage: 'delivery' }) }]
   return (
     <form>
       <CheckoutWrapper>
@@ -553,22 +548,26 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             {/* DeliverySchedule */}
             <InformationBox>
               <DeliverySchedule>
-                <HeadingWider>
-                  <FormattedMessage
-                    id='deliverySchedule'
-                    defaultMessage='Select Your Delivery Schedule'
-                  />
-                </HeadingWider>
-                { deliveryMethods?.length ? (
+                <>
+                  <HeadingWider>
+                    <FormattedMessage
+                      id='deliverySchedule'
+                      defaultMessage='Select Your Delivery Schedule'
+                    />
+                    <DeliveryTypesOptions>
+                    </DeliveryTypesOptions>
+                  </HeadingWider>
+                </>
+
                   <RadioGroupTwo
-                    items={deliveryMethods}
+                    items={deliveryMethodsSelected}
                     component={(item: any, index: any) => (
                       <RadioCard
                         id={item.id}
                         key={item.id}
                         title={item.name}
-                        content={item.details}
-                        clickableText={item.isPickUp && item.pickUpAddress ? item.pickUpAddress : null}
+                        details={item.details}
+                        link={item.isPickUp && item.pickUpAddress ? item.pickUpAddress : null}
                         name='schedule'
                         checked={item.type === 'primary'}
                         withActionButtons={false}
@@ -587,12 +586,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       />
                     )}
                   />
-                ) : 
-                  (<FormattedMessage
-                    id='noDeliveryOptionsDefinedId'
-                    defaultMessage='No hay métodos de envios por el momento'
-                  />)
-                }
+               
               </DeliverySchedule>
             </InformationBox>
 
@@ -673,7 +667,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       id={index}
                       key={index}
                       title={item.is_primary ? intl.formatMessage({ id: 'primaryId', defaultMessage: 'Primary' }) : intl.formatMessage({ id: 'secundaryId', defaultMessage: 'Secondary' })}
-                      content={item.number}
+                      details={item.number}
                       checked={item.is_primary === true}
                       onChange={() =>handlePrimary(item, 'contact')}
                       onClick={() => setSubmitResult({
@@ -842,7 +836,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                     id={loading ? 'processesingCheckout' : 'processCheckout'}
                     defaultMessage='Proceed to Checkout'
                   />
-                   . ({CURRENCY}{calculatePrice(calculateDeliveryCharge()+calculateCCCharge())})
+                   . ({CURRENCY}{calculatePrice(calculateDeliveryCharge(deliveryMethodSelected?.name)+calculateCCCharge())})
                 </Button>
               </CheckoutSubmit>
                 <div>
@@ -946,7 +940,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       <FormattedMessage id='deliveryChargeText' defaultMessage='Delivery charge' />
                     </Text>
                     <Text>
-                      {CURRENCY} {calculateDeliveryCharge()}
+                      {CURRENCY} {calculateDeliveryCharge(deliveryMethodSelected?.name)}
                     </Text>
                   </TextWrapper>
 
@@ -955,7 +949,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       <FormattedMessage id='totalText' defaultMessage='Total' />{' '}
                     </Bold>
                     <Bold>
-                      {CURRENCY} {calculatePrice(calculateDeliveryCharge()+calculateCCCharge())}
+                      {CURRENCY} {calculatePrice(calculateDeliveryCharge(deliveryMethodSelected?.name)+calculateCCCharge())}
                     </Bold>
                   </TextWrapper>
                 </CalculationWrapper>

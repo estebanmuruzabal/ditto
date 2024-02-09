@@ -1,6 +1,7 @@
 
 import { initializeApollo } from 'utils/apollo';
 import { GET_TYPE } from 'graphql/query/type.query';
+import { Locales } from 'utils/constant';
 
 export const HOME_PAGE = '/';
 export const WORK_PAGE = '/work';
@@ -217,12 +218,12 @@ export const LANGUAGE_MENU = [
   //   icon: 'CNFlag',
   // },
   {
-    id: 'en',
+    id: Locales.EN,
     defaultMessage: 'English',
     icon: 'USFlag',
   },
   {
-    id: 'es',
+    id: Locales.ES,
     defaultMessage: 'Spanish',
     icon: 'ESFlag',
   }

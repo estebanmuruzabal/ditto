@@ -62,7 +62,7 @@ export const TreeMenu: React.FC<Props> = ({
   active,
 }) => {
   const handler = (children) => {
-      return children.map((subOption) => {
+      return children?.map((subOption) => {
         if (!subOption.children) {
           return (
             <Tree

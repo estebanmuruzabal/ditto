@@ -214,7 +214,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
   };
 
   const hasEmptyFields = state.oldPassword?.length === 0 || state.newPassword?.length === 0 || state.confirmPassword?.length === 0;
-  console.log('isStaff', isStaff)
+
   return (
     <SettingsForm>
       <SettingsFormContent>

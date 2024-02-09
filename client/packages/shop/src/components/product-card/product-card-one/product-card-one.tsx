@@ -177,7 +177,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </ProductCartWrapper>
       )
       : (<ProductCartWrapper>
-            <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p>
+        <ProductPriceWrapper>
+            {data.discountInPercent ? (<SalePrice>{CURRENCY} {data.sale_price}</SalePrice>) : null}
+            <ProductPrice>
+              {CURRENCY}
+              {finalPrice}
+            </ProductPrice>
+          </ProductPriceWrapper>
+            {/* <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p> */}
         </ProductCartWrapper>)
       }
       { showProductQuantityExceededMsg && (

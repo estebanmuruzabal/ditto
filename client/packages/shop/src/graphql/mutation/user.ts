@@ -5,7 +5,7 @@ export const UPDATE_USER = gql`
     $id: ID!, 
     $name: String!,
     $email: String,
-    $lenguage: String
+    $lenguage: String,
   ) { updateUserNameEmailAndLenguage(
       id: $id, 
       name: $name,

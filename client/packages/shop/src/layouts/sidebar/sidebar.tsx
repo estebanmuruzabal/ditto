@@ -111,7 +111,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
                 </Link>
               )}
               <TreeMenu
-                data={data.shopCategories.items}
+                data={data?.categories?.items}
                 onClick={onCategoryClick}
                 active={selectedQueries}
               />
@@ -151,7 +151,7 @@ const SidebarCategory: React.FC<SidebarCategoryProps> = ({
           >
             <TreeWrapper>
               <TreeMenu
-                data={data.shopCategories.items}
+                data={data?.categories?.items}
                 onClick={onCategoryClick}
                 active={selectedQueries}
               />

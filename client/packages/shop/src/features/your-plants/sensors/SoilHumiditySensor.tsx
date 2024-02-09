@@ -623,7 +623,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                                 <TextSpaced> <FormattedMessage id='aId' defaultMessage='aId' /> </TextSpaced> 
                                 <TextSpaced bold>{schedule.endTime}</TextSpaced>
                                 <ActionsButtons className='button-wrapper'>
-                                    <ActionButton onClick={(e) => { handleModal( AddTimeSchedule, { settingType: settingType, module, id: data?.getUser?.id, schedulePosition: i } ); e.stopPropagation(); } } className='edit-btn'>
+                                    <ActionButton onClick={(e) => { handleModal( AddTimeSchedule, { settingType: settingType, plant, id: data?.getUser?.id, schedulePosition: i } ); e.stopPropagation(); } } className='edit-btn'>
                                         <PencilIcon />
                                     </ActionButton>
 
@@ -645,7 +645,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     type='button'
                     className='add-button'
                     onClick={() => handleModal(
-                        AddTimeSchedule,  { name: 'add-humidity-1-schedule', module, id: data?.getUser?.id, settingType } )}
+                        AddTimeSchedule,  { name: 'add-humidity-1-schedule', plant, id: data?.getUser?.id, settingType } )}
                 >
                     <FormattedMessage id='addTimeScheduleId' defaultMessage='addTimeScheduleId' />
                 </Button>

@@ -41,7 +41,7 @@ export const SubHeading = styled.span`
   margin-bottom: 30px;
   font-family: ${themeGet('fonts.body', 'Lato')};
   font-size: ${themeGet('fontSizes.base', '15')}px;
-  font-weight: ${themeGet('fontWeights.regular', '400')};
+  font-weight: ${themeGet('fontWeights.bold', '400')};
   color: ${themeGet('colors.text.regular', '#77798c')};
   display: block;
 `;

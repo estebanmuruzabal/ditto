@@ -63,7 +63,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     name: values.name,
     info: values.info,
   };
-  
+
   const settingIndex = item.plant.sensors.findIndex((module: ISetting) => module.settingType === item.settingType);
   const currentSchedule = item.plant.sensors[settingIndex].scheduledOnTimes[item?.schedulePosition];
 
@@ -221,23 +221,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
         }
       </WeekContainer>
 
-      {/* <Checkbox
-        checked={isSmartLightingOn}
-        id='smart-lighting-id'
-        labelText='Luces'
-        onChange={() => setSmartLighting(!isSmartLightingOn) }
-        // inputRef={register({ required: true })}
-        name='isSmartLightingOn'
-        overrides={{
-          Label: {
-              style: ({ $theme }) => ({
-              color: $theme.colors.textNormal,
-              }),
-          },
-        }}
-      >
-        <FormattedMessage id="smartLightingId" defaultMessage="smartLightingId" />
-      </Checkbox> */}
+
       <ButtonsContainer>
         <Button
           onClick={handleSubmit}

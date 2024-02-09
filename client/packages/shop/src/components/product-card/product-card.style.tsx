@@ -628,7 +628,7 @@ export const ProductPriceWrapper = styled.div`
   align-items: center;
   flex-shrink: 0;
   // margin-left: 25px;
-  // margin-right: 15px;
+  margin-right: 15px;
   line-height: 31px;
   min-width: 45px;
   padding-left: 15px;

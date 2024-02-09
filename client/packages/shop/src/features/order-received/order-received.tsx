@@ -63,6 +63,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
 
 
   const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
+
   const deliveryMethods = deliverData?.deliveryMethods?.items;
   const orderDeliveryMethod = deliveryMethods?.filter(method => method.id === myOrder?.delivery_method_id)[0];
   const deliveryDateAndTime = `${myOrder?.delivery_pickup_date} ${getDeliverySchedule(orderDeliveryMethod?.details, intl.locale)}`;
@@ -118,12 +119,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                   defaultMessage="Payment Method"
                 />
               </Text>
-              <Text>
-                <FormattedMessage
-                  id="paymentMethodName"
-                  defaultMessage={myOrder?.payment_method}
-                />
-              </Text>
+              <Text>{myOrder?.payment_method}</Text>
             </InfoBlock>
           </InfoBlockWrapper>
         </OrderInfo>
@@ -131,38 +127,24 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
         <OrderDetails>
           <BlockTitle>
             <FormattedMessage
-              id="orderDetailsText"
+              id={orderDeliveryMethod?.isPickUp ? "pickupDetailsText" :  "deliveryDetailsText"}
               defaultMessage="Order Details"
             />
           </BlockTitle>
-
           <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="totalItemText"
-                  defaultMessage="Total Item"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Text>{myOrder?.order_products?.length} </Text>
-            </ListDes>
-          </ListItem>
-
-          <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="deliveryMethodTitle"
-                  defaultMessage="Order Method"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-           <Text>{orderDeliveryMethod?.name}</Text>
-            </ListDes>
-          </ListItem>
+              <ListTitle>
+                <Text>
+                  <FormattedMessage
+                    id="deliveryMethodTitle"
+                    defaultMessage="Order Method"
+                  />
+                </Text>
+              </ListTitle>
+              <ListDes>
+            <Text bold>{orderDeliveryMethod?.name}</Text>
+              </ListDes>
+            </ListItem>
+          
           {/* <ListItem>
             <ListTitle>
               <Text bold>
@@ -180,7 +162,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
             <>
               <ListItem>
                 <ListTitle>
-                  <Text bold>
+                  <Text>
                     <FormattedMessage
                       id="deliveryTime"
                       defaultMessage="Delivery Time"
@@ -188,25 +170,25 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                   </Text>
                 </ListTitle>
                 <ListDes>
-                <Text>{capitalizeFirstLetter(deliveryDateAndTime)}</Text>
+                <Text bold>{capitalizeFirstLetter(deliveryDateAndTime)}</Text>
                 </ListDes>
               </ListItem>
-             <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id="deliveryLocationText"
-                    defaultMessage="Delivery Location"
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-              { orderDeliveryMethod?.pickUpAddress.includes('http')
-                ? (<LinkPickUp href={orderDeliveryMethod?.pickUpAddress} target="_blank" rel="noopener noreferrer">Click/toque aquí</LinkPickUp>) 
-                : (<Text>{orderDeliveryMethod?.pickUpAddress}</Text>)
-              }
-              </ListDes>
-            </ListItem>
+
+              { orderDeliveryMethod?.pickUpAddress.includes('http') && (
+                <ListItem>
+                  <ListTitle>
+                    <Text bold>
+                      <FormattedMessage
+                        id="deliveryLocationText"
+                        defaultMessage="Delivery Location"
+                      />
+                    </Text>
+                  </ListTitle>
+                  <ListDes>
+                    <LinkPickUp href={orderDeliveryMethod?.pickUpAddress} target="_blank" rel="noopener noreferrer">Click/toque aquí</LinkPickUp>      
+                  </ListDes>
+                </ListItem>
+                )}
            </>
           ) : (
             <>

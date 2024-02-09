@@ -21,8 +21,6 @@ import { AuthContext } from 'contexts/auth/auth.context';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { SIGNUP_MUTATION } from 'graphql/mutation/signup';
 import PhoneInput from 'react-phone-input-2'
-import startsWith from 'lodash.startswith';
-import Router from 'next/router';
 
 export default function SignOutModal() {
   const intl = useIntl();
@@ -132,7 +130,7 @@ export default function SignOutModal() {
         <SubHeading>
           <FormattedMessage
             id='signUpText'
-            defaultMessage='Every fill is required except for email in sign up. We promess no spam, only purchases confirmation details.'
+            defaultMessage=''
           />
         </SubHeading>
           <form method="post" onSubmit={

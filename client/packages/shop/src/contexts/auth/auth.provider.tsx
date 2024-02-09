@@ -29,7 +29,6 @@ function reducer(state: any, action: any) {
         currentForm: 'signIn',
       };
     case 'SIGNIN_SUCCESS':
-      console.log('user: action.user,', action.user)
         return {
           ...state,
           isAuthenticated: true,
@@ -78,7 +77,7 @@ function reducer(state: any, action: any) {
 
 export const AuthProvider: React.FunctionComponent = ({ children }) => {
   const [authState, authDispatch] = useReducer(reducer, INITIAL_STATE);
-  //console.log(authState);
+
   return (
     <AuthContext.Provider value={{ authState, authDispatch }}>
       {children}

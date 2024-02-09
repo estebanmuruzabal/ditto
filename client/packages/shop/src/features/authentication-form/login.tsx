@@ -112,7 +112,7 @@ export default function SignInModal() {
               onlyCountries={['us']}
               localization={us}
               country={'us'}
-              masks={{us: '(...) ...-....'}}
+              masks={{us: '(...) ...-......'}}
               value={phone}
               onChange={handlePhoneChange}
           />

@@ -285,7 +285,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   ];
 
   const timezonesList = timezones.map((timezone: string) => ({ value: timezone, label: timezone  }))
-  console.log('plants', plants)
+
   return (
     <PlantPageWrapper>
       <PlantsPageContainer style={{ width: '100%' }}>
@@ -306,6 +306,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           { plants?.length < 1 && (<Text>{intl.formatMessage({ id: 'noDittoBotsTextId', defaultMessage: 'noDittoBotsTextId' })}</Text>) }
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
+            console.log(plant)
+            plant.timeZone = 'America/Los_Angeles';
               return (
                 <DashboardContainer key={i + '-orderList'}>
                   <Row1>

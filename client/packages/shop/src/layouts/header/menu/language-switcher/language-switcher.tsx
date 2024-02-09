@@ -56,7 +56,7 @@ const LanguageSwitcher: React.FC<{}> = () => {
     //   setUserinfoMsg('');
     // }, 8000)
   };
-  
+
   const selectedLanguage = LANGUAGE_MENU.find((x) => x.id === locale);
   const languageChangeHandler = (e) => {
     changeLanguage(e.target.value);
@@ -88,27 +88,3 @@ const LanguageSwitcher: React.FC<{}> = () => {
 };
 
 export default LanguageSwitcher;
-{/* <MainMenu>
-        <Popover
-          className="right"
-          handler={
-            <SelectedItem>
-              <span>
-                <Icon>
-                  <CategoryIcon name={activeMenu?.icon} />
-                </Icon>
-                <span>
-                  <FormattedMessage
-                    id={activeMenu?.id}
-                    defaultMessage={activeMenu?.defaultMessage}
-                  />
-                </span>
-              </span>
-              <Arrow>
-                <MenuDown />
-              </Arrow>
-            </SelectedItem>
-          }
-          content={<CategoryMenu onClick={setActiveMenu} />}
-        />
-      </MainMenu> */}

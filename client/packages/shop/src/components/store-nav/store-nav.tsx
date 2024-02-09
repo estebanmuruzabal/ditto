@@ -17,11 +17,11 @@ const StoreNav: React.FunctionComponent<StoreNavProps> = ({
         {items.map((item, index) => (
           <NavLink
             className="store-nav-link"
-            href={item.href}
-            label={item.defaultMessage}
-            intlId={item.id}
-            dynamic={item.dynamic}
-            key={index}
+            href={item.banner}
+            label={item.name}
+            // intlId={item.id}
+            // dynamic={item.dynamic}
+            // key={index}
           />
         ))}
       </StoreNavLinks>
@@ -30,3 +30,26 @@ const StoreNav: React.FunctionComponent<StoreNavProps> = ({
 };
 
 export default StoreNav;
+
+
+// banner
+// : 
+// "images/grocery-default-image.png"
+// children
+// : 
+// []
+// icon
+// : 
+// "FruitsVegetable"
+// id
+// : 
+// "65a358c8cc5db3c66b2512f4"
+// name
+// : 
+// "Fruits"
+// parent_id
+// : 
+// "6598d37092897810deee6725"
+// slug
+// : 
+// "fruits"

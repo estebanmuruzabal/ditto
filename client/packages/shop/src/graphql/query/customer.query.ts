@@ -22,6 +22,8 @@ query GetUser{
       isRelayFourthOn
       timestamp
       timeZone
+      alarm
+      alarm_timestamp
       sensors {
         reading
         name

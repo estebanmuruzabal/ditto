@@ -3,6 +3,7 @@ export const CURRENCY = '$';
 
 // ditto bot personal variables (change in front and back):
 
+
 export const PICKUP_GUEMES_DELIVERY_METHOD = 'Lo busco en el centro';
 export const PICKUP_GRANJA_DELIVERY_METHOD = 'Lo busco en la granja';
 export const CUSTOMER_ADDRESS_DELIVERY_METHOD = 'Enviámelo a casa. ($300)';
@@ -22,7 +23,10 @@ export enum SensorsTypes {
     PLUG = 'PLUG',
     HUMIDITY_TEMPETURE = 'HUMIDITY_TEMPETURE',
 }
-
+export enum Locales {
+    ES = 'es',
+    EN = 'en',
+}
 export const timezones = [
     'America/Argentina/Buenos_Aires',
     'America/Port_of_Spain',
