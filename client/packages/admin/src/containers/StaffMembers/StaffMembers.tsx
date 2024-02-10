@@ -26,6 +26,7 @@ import {
   StyledBodyCell,
 } from './StaffMembers.style';
 import NoResult from '../../components/NoResult/NoResult';
+import { Roles } from '../../settings/constants';
 
 // query getStaffs($role: String, $searchBy: String) {
 //   getStaffs(role: $role, searchBy: $searchBy) {
@@ -88,12 +89,14 @@ const Row = withStyle(Rows, () => ({
   },
 }));
 
+
 const roleSelectOptions = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'manager', label: 'Manager' },
-  { value: 'member', label: 'Member' },
-  { value: 'delivery boy', label: 'Delivery boy' },
-  { value: 'client', label: 'Client' },
+  { value: Roles.MANAGER, label: 'Manager' },
+  { value: Roles.MEMBER, label: 'Member' },
+  { value: Roles.DELIVERY_BOY, label: 'Delivery boy' },
+  { value: Roles.CLIENT, label: 'Client' },
+  { value: Roles.GROWER, label: 'Grower' },
+  { value: Roles.STAFF, label: 'Staff' },
 ];
 
 export default function StaffMembers() {

@@ -133,7 +133,8 @@ const AddCategory: React.FC<Props> = props => {
   }
 
   React.useEffect(() => {
-    data && data.shopCategories && data.shopCategories.items
+    console.log('data.shopCategories.item:',data)
+    data?.shopCategories?.items
       && setParentCategoryOptions(data.shopCategories.items.map(category => ({
         value: category.id,
         name: category.name,

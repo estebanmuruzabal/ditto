@@ -161,6 +161,7 @@ const AddProduct: React.FC<Props> = props => {
   const closeDrawer = useCallback(() => dispatch({ type: 'CLOSE_DRAWER' }), [
     dispatch,
   ]);
+
   const { register, handleSubmit, setValue } = useForm();
   const [type, setType] = useState([]);
   const [category, setCategory] = useState([]);
@@ -224,11 +225,11 @@ const AddProduct: React.FC<Props> = props => {
   };
 
   const handleTypeChange = ({ value }) => {
+    console.log('value',value)
     if (value) {
       setValue('type', {
         id: value[0].id,
-        name: value[0].name,
-        slug: value[0].slug
+        name: value[0].name
       });  
     }
     setType(value);
