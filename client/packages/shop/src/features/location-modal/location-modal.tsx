@@ -31,7 +31,7 @@ import {
 } from "react-geocode";
 const googleApiKey = process.env.GOOGLE_API_KEY;
 
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+// import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 // import { useJsApiLoader } from '@react-google-maps/api';
 
 
@@ -59,13 +59,13 @@ export default function LocationModal({ isPickUp }) {
   };
 
   const handleSelect = address => {
-    geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
-      .then(latLng => {
-        console.log('Success', latLng)
-        setAddress(address)
-      })
-      .catch(error => console.error('Error', error));
+    // geocodeByAddress(address)
+    //   .then(results => getLatLng(results[0]))
+    //   .then(latLng => {
+    //     console.log('Success', latLng)
+    //     setAddress(address)
+    //   })
+    //   .catch(error => console.error('Error', error));
 
   };
 
@@ -119,7 +119,7 @@ export default function LocationModal({ isPickUp }) {
             defaultMessage="You have to select your location for deliver service perpous"
           />
         </SubHeading> */}
-        <PlacesAutocomplete
+        {/* <PlacesAutocomplete
           value={address}
           onChange={(e) => setAddress(e)}
           onSelect={handleSelect}
@@ -172,7 +172,7 @@ export default function LocationModal({ isPickUp }) {
               </div>
             </div>
           )}
-        </PlacesAutocomplete>
+        </PlacesAutocomplete> */}
         <Button
           fullwidth
           radius={100}
