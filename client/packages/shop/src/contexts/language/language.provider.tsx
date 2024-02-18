@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, { useRef } from 'react';
 import { IntlProvider } from 'react-intl';
 import { InjectRTL } from 'assets/styles/global.style';
 import Cookie from 'js-cookie';
@@ -9,6 +8,7 @@ import RTLPlugin from 'stylis-plugin-rtl';
 import { Locales } from 'utils/constant';
 
 const LanguageContext = React.createContext({} as any);
+// import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 
 export const LanguageProvider = ({ children, messages }) => {
   const [locale, setLocale] = React.useState('en');
@@ -22,7 +22,6 @@ export const LanguageProvider = ({ children, messages }) => {
   };
 
   React.useEffect(() => {
-    console.log(locale, location)
     setLocateBasedOnLocation()
   }, [locale, location]);
 
@@ -37,12 +36,16 @@ export const LanguageProvider = ({ children, messages }) => {
     }
   }
 
+  // const { isLoaded } = useLoadScript({
+  //   googleMapsApiKey: 'AIzaSyBfOLWnTDHvAxu7eftvpbiGT54bcOZgwS0',
+  // });
+  // console.log('isLoaded',isLoaded)
   React.useEffect(() => {
     if (navigator.geolocation) {
       navigator.permissions
         .query({ name: "geolocation" })
         .then(function (result) {
-          console.log(result);
+          // console.log(result);
           if (result.state === "granted") {
             //If granted then you can directly call your function here
             navigator.geolocation.getCurrentPosition(success, errors, options);
@@ -60,13 +63,13 @@ export const LanguageProvider = ({ children, messages }) => {
   
   function getLocationInfo(latitude, longitude) {
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&key=9224762c77b8486bb04d32f036690d2f`;
+
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.status.code === 200) {
 
-          console.log("results:", data.results);
+          // console.log("results:", data.results);
           setLocation(data.results[0].formatted);
         } else {
           console.log("Reverse geolocation request failed.");

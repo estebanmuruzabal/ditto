@@ -3,7 +3,7 @@ import { background } from 'styled-system';
 import css from '@styled-system/css';
 export const Box = styled.div(
   css({
-    height: [200, '100vh'],
+    height: [300, '100vh'],
   }),
   {
     display: 'flex',

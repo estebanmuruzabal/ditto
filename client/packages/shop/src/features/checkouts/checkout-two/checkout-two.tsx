@@ -209,7 +209,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const selectedContact= phones.find(
     (item) => item.is_primary === true
   );
-
+    console.log('deliveryMethods,',deliveryMethods)
   const pickUpAddress = deliveryMethods.find(deliveryMethod => {
     return submitResult.delivery_method_id === deliveryMethod.id;
   })?.pickUpAddress;
@@ -560,7 +560,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 </>
 
                   <RadioGroupTwo
-                    items={deliveryMethodsSelected}
+                    items={deliveryMethods}
                     component={(item: any, index: any) => (
                       <RadioCard
                         id={item.id}

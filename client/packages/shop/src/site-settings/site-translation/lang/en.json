@@ -174,8 +174,9 @@
   "loading": "Loading...",
   "intlCopyBtnId": "Copy",
   "intlCopySuccessId": "Copied",
-
-  "locationModalheading": "Select Your Location",
+  "pickupModalheading": "Find your closest PickUp Location",
+  "deliveryModalheading": "Check delivery fees and times",
+  "defaultDeliveryPickupText": "How you want your items?",
   "locationModalSubHeading": "You have to select your location for deliver service perpous",
   "locationModalFooter": "Free Delivery For 1st Order",
   "saleText": "Sale",

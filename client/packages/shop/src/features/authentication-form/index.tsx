@@ -5,6 +5,7 @@ import ForgotPassForm from './forgot-password';
 import OtpModal from './otpForm';
 import PhoneVerificationModal from './phone-verification';
 import { AuthContext } from 'contexts/auth/auth.context';
+import LocationModal from 'features/location-modal/location-modal';
 
 export default function AuthenticationForm() {
   const { authState } = useContext<any>(AuthContext);
@@ -16,6 +17,10 @@ export default function AuthenticationForm() {
 
   if (authState.currentForm === 'signUp') {
     RenderForm = SignOutForm;
+  }
+
+  if (authState.currentForm === 'locationModal') {
+    RenderForm = LocationModal;
   }
 
   if (authState.currentForm === 'forgotPass') {

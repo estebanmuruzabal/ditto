@@ -4,7 +4,8 @@ import PopoverBiggerWrapper from './popover-bigger.style';
 
 type PopoverBiggerProps = {
   className?: string;
-  handler: React.ReactNode;
+  openHandler: React.ReactNode;
+  closeHandler: React.ReactNode;
   content: React.ReactNode;
   direction?: 'left' | 'right';
   handleToggle?: () => void;
@@ -12,7 +13,8 @@ type PopoverBiggerProps = {
 
 const PopoverBigger: React.FC<PopoverBiggerProps> = ({
   className,
-  handler,
+  openHandler,
+  closeHandler,
   content,
   direction,
 }) => {
@@ -63,7 +65,7 @@ const PopoverBigger: React.FC<PopoverBiggerProps> = ({
   return (
     <PopoverBiggerWrapper className={addAllClasses.join(' ')} ref={ref}>
       <div className="popover-handler" onClick={handleToggle}>
-        {handler}
+        { state ? openHandler : closeHandler}
       </div>
       {state && (
         <div className="popover-content">

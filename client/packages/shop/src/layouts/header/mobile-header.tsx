@@ -27,6 +27,7 @@ import { CATEGORY_MENU_ITEMS } from 'site-settings/site-navigation';
 import { AuthContext } from 'contexts/auth/auth.context';
 import { Button } from 'components/button/button';
 import { FormattedMessage } from 'react-intl';
+import SubHeader from 'features/sub-header/sub-header';
 
 type MobileHeaderProps = {
   className?: string;
@@ -138,8 +139,8 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
           >
             <SearchIcon />
           </SearchWrapper>
-        ) : null} */}
-        {/* <SearchWrapper
+        ) : null}
+        <SearchWrapper
           onClick={handleSearchModal}
           className="searchIconWrapper"
         >

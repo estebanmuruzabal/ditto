@@ -16,6 +16,46 @@ export const BANK_TRANSFER_ALIAS = 'dittofarm';
 export const BANK_TRANSFER_CBU = '0000003100030458924685';
 export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
 
+// **************** Delivery CONSTANT Start **************************
+export enum DeliveryMethodsConstants {
+    PICKUP = 'PICKUP',
+    DELIVERY = 'DELIVERY',
+}
+
+export const deliverySelectOptions = [
+    { value: DeliveryMethodsConstants.PICKUP, label: 'Pickup' },
+    { value: DeliveryMethodsConstants.DELIVERY, label: 'Delivery' },
+  ];
+
+
+// **************** Roles CONSTANT Start **************************
+export enum Roles {
+    ADMIN = 'ADMIN',
+    MANAGER = 'MANAGER',
+    MEMBER = 'MEMBER',
+    DELIVERY_BOY = 'DELIVERY_BOY',
+    CLIENT = 'CLIENT',
+    STAFF = 'STAFF',
+    GROWER = 'GROWER'
+}
+export const roleSelectOptions = [
+    { value: Roles.ADMIN, label: 'Admin' },
+    { value: Roles.MANAGER, label: 'Manager' },
+    { value: Roles.MEMBER, label: 'Member' },
+    { value: Roles.DELIVERY_BOY, label: 'Delivery boy' },
+    { value: Roles.CLIENT, label: 'Client' },
+    { value: Roles.GROWER, label: 'Grower' },
+    { value: Roles.STAFF, label: 'Staff' },
+  ];
+
+  // this should be part of delivery option MODEL, and come from API
+  const deliveryAreaPolygon = [
+    { lat: 3.1336599385978805, lng: 101.31866455078125 },
+    { lat: 3.3091633559540123, lng: 101.66198730468757 },
+    { lat: 3.091150714460597,  lng: 101.92977905273438 },
+    { lat: 3.1336599385978805, lng: 101.31866455078125 } // last point has to be same as first point
+  ];
+
 export enum SensorsTypes {
     SOIL_HUMIDITY = 'SOIL_HUMIDITY',
     LIGHT = 'LIGHT',

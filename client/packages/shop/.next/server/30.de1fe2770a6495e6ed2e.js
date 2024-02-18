@@ -171,7 +171,7 @@ var CloseIcon = __webpack_require__("2nMb");
 // EXTERNAL MODULE: ./src/contexts/auth/auth.context.tsx
 var auth_context = __webpack_require__("QfjN");
 
-// EXTERNAL MODULE: ./src/features/authentication-form/index.tsx + 7 modules
+// EXTERNAL MODULE: ./src/features/authentication-form/index.tsx + 9 modules
 var authentication_form = __webpack_require__("kp67");
 
 // EXTERNAL MODULE: ./src/layouts/header/header.style.tsx

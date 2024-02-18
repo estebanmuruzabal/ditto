@@ -35,24 +35,8 @@ export const StyledCheckBoxInputIndicator = styled.div(
 );
 export const StyledCheckBoxInput = styled.input(
   css({
-    opacity: 0,
-    position: 'absolute',
-    margin: 0,
-    zIndex: -1,
-    width: 0,
-    height: 0,
-    overflow: 'hidden',
-    pointerEvents: 'none',
-
-    '&:checked + div': {
-      borderColor: 'text.regular',
-      backgroundColor: 'white',
-      '&::after': {
-        opacity: 1,
-        visibility: 'visible',
-        transform: 'rotate(45deg) scale(1)',
-      },
-    },
+    display: 'flex',
+    alignItems: 'center',
   })
 );
 

@@ -135,16 +135,17 @@ export default function SignInModal() {
           <Button
             variant='primary'
             size='big'
+            disable={loading}
             style={{ width: '100%' }}
             type='submit'
           >
-            <FormattedMessage id='continueBtn' defaultMessage='Continue' />
+            { !loading ? (
+              <FormattedMessage id='continueBtn' defaultMessage='Continue' />
+            ) : (
+              <FormattedMessage id='loading' defaultMessage='Cargando...' />
+            )}
           </Button>
         </form>
-        
-        {loading && <p style={{
-          marginTop: "15px"
-        }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>}
         
         {authError && <p style={{
           marginTop: "15px", fontSize: '16px'

@@ -14,7 +14,7 @@ import { ProfileContext } from 'contexts/profile/profile.context';
 import { AuthContext } from 'contexts/auth/auth.context';
 // import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 // import { GeolocateControl } from "mapbox-gl";
-import Map, {GeolocateControl} from 'react-map-gl';
+// import Map, {GeolocateControl} from 'react-map-gl';
 type DittoMarketProps = {
   data?: any;
   userRefetch: any;
@@ -37,12 +37,12 @@ const DittoMarket: React.FC<DittoMarketProps> = ({ deviceType, userRefetch }) =>
     fetchPolicy: "network-only",
     // pollInterval: 5000,
   });
-  const geoControlRef = useRef<mapboxgl.GeolocateControl>();
+  // const geoControlRef = useRef<mapboxgl.GeolocateControl>();
 
-  useEffect(() => {
-    // Activate as soon as the control is loaded
-    geoControlRef.current?.trigger();
-  }, [geoControlRef.current]);
+  // useEffect(() => {
+  //   // Activate as soon as the control is loaded
+  //   geoControlRef.current?.trigger();
+  // }, [geoControlRef.current]);
 
   if (loading) {
     return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
@@ -57,7 +57,7 @@ const DittoMarket: React.FC<DittoMarketProps> = ({ deviceType, userRefetch }) =>
   return (
     <PlantPageWrapper>
       {/* <PlantsPageContainer> */}
-        <Map
+        {/* <Map
           mapboxAccessToken="pk.eyJ1IjoiZXN0ZWJhbm11cnV6YWJhbCIsImEiOiJjbG4ybGZzYmcwMWQwMmlvMDVrbHhheno3In0.EZPhoOcmHwM3BFhGkrQ2-A"
           initialViewState={{
             longitude: -100,
@@ -67,7 +67,7 @@ const DittoMarket: React.FC<DittoMarketProps> = ({ deviceType, userRefetch }) =>
           mapStyle="mapbox://styles/mapbox/streets-v9"
         >
           <GeolocateControl ref={geoControlRef} />
-        </Map>
+        </Map> */}
       {/* </PlantsPageContainer> */}
     </PlantPageWrapper>
   );
