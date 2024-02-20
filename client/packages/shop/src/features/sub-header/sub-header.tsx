@@ -1,18 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { BannerIcon, BannerText, Button, CardWrapper, Container, DeliveryMethods, DeliveryText, Heading, Input, LocationContent, MethodOption, Offer, OfferSection, Options, SubHeaderWrapper, Wrapper } from './sub-header.style';
-import { openModal } from '@redq/reuse-modal';
 import { useLocale } from 'contexts/language/language.provider';
 import DeliveryIcon from 'assets/images/locationIcon.webp';
-import Popover from 'components/popover/popover';
 import { useMedia } from 'utils/use-media';
-import { MenuItem } from 'layouts/header/menu/language-switcher/language-switcher.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import PopoverBigger from 'components/popover-bigger/popover-bigger';
-import LocationModal from 'features/location-modal/location-modal';
-import { AuthContext } from 'contexts/auth/auth.context';
-import AuthenticationForm from 'features/authentication-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faChevronCircleDown, faChevronCircleUp, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faChevronCircleDown, faChevronCircleUp, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { DeliveryMethodsConstants } from 'utils/constant';
 import { useQuery } from '@apollo/react-hooks';
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
@@ -33,7 +27,7 @@ const LocationMenu = ({ deliveryMethodSaved, isOpen }) => {
   const time = deliveryMethodSaved?.details?.split('|')?.[1]
 
   const intl = useIntl();
-  console.log('deliveryMethodSaved:"::', deliveryMethodSaved)
+
   const defaultText = intl.formatMessage({ id: 'defaultDeliveryPickupText', defaultMessage: 'check here' })
   return (
     <LocationContent>
@@ -45,7 +39,7 @@ const LocationMenu = ({ deliveryMethodSaved, isOpen }) => {
 
         }
         <DeliveryText>{deliveryMethodSaved ? deliveryMethodSaved?.isPickUp ? DeliveryMethodsConstants.PICKUP : DeliveryMethodsConstants.DELIVERY : defaultText}</DeliveryText>
-        { deliveryMethodSaved && (
+        { deliveryMethodSaved?.name && address && (
           <>
               |
             <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>
@@ -66,14 +60,13 @@ const SubHeader: React.FC<Props> = ({ ...props  }) => {
   const [deliveryMethodSelected, setDeliveryMethod] = React.useState(undefined);
   const { data: deliverData } = useQuery(DELIVERY_METHOD)
   const deliveryMethods = deliverData?.deliveryMethods?.items;
-  const { authDispatch } = useContext<any>(AuthContext);
+  // const [address, setDeliveryAddress] = useState("");
   const [zipCode, setZipCode] = React.useState('');
   const [searchResult, setSearchResult] = React.useState([]);
   
   useEffect(() => {
     if (getCookie('deliveryMethodSaved') && !deliveryMethodSaved) {
       const deliveryMethodSaved = JSON.parse(getCookie('deliveryMethodSaved'));
-      console.log('deliveryMethodSaved', deliveryMethodSaved)
       setDeliveryMethodSaved(deliveryMethodSaved)
     }
   }, []);
@@ -86,18 +79,16 @@ const SubHeader: React.FC<Props> = ({ ...props  }) => {
     // }
   };
   
-
   const searchDeliveryZipCode =  (e, deli) => {
     handleOnFocus(e)
     setZipCode(deli)
     const deliveryOptionsMethods = deliveryMethods?.filter(deliveryMethod => {
       return !deliveryMethod.isPickUp;
     });
-   
-    const methodFound = deliveryOptionsMethods.filter(method => method.details.includes(zipCode));
 
+    const methodFound = deliveryOptionsMethods.filter(method => method.name.includes(zipCode));
     e.stopPropagation();
-    setSearchResult(deli ? methodFound : [])
+    setSearchResult(deli ? methodFound : null)
   };
   
   const searchPickupZipCode =  (e, deli) => {
@@ -110,13 +101,13 @@ const SubHeader: React.FC<Props> = ({ ...props  }) => {
     const methodFound = pickUpOptionsMethods.filter(method => method.details.includes(zipCode));
 
     e.stopPropagation();
-    setSearchResult(deli ? methodFound : [])
+    setSearchResult(deli ? methodFound : null)
   };
 
   const setDelivery =  (e, deli: DeliveryMethodsConstants) => {
     e.stopPropagation();
     setDeliveryMethodType(deli)
-    setSearchResult([])
+    setSearchResult(null)
     setZipCode('')
   };
 
@@ -162,30 +153,23 @@ const SubHeader: React.FC<Props> = ({ ...props  }) => {
                     />
                   )}
                 </Heading>
-                {/* <SubHeading>
-                  <FormattedMessage
-                    id="locationModalSubHeading"
-                    defaultMessage="You have to select your location for deliver service perpous"
-                  />
-                </SubHeading> */}
                 <div onClick={(e) => handleOnFocus(e)}>
-                <Input
-                    type='text'
-                    name='name'
-                    onFocus={(e) => handleOnFocus(e)}
-                    placeholder='Enter zip code'
-                    value={zipCode}
-                    // we have to change the onChange because the is no one for the controller name actualy
-                    onChange={(e) => isPickUpSelected ? searchPickupZipCode(e, e.target.value) : searchDeliveryZipCode(e, e.target.value)}
-                    width='197px'
-                    height='34.5px'
-                  />
+                  <Input
+                      type='text'
+                      name='name'
+                      onFocus={(e) => handleOnFocus(e)}
+                      placeholder='ZIP Code'
+                      value={zipCode}
+                      // we have to change the onChange because the is no one for the controller name actualy
+                      onChange={(e) => isPickUpSelected ? searchPickupZipCode(e, e.target.value) : searchDeliveryZipCode(e, e.target.value)}
+                      width='197px'
+                      height='34.5px'
+                    />
                 </div>
                 { searchResult?.length === 0 && zipCode.length > 4 && (
                    <DeliveryText>{deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP ? 'No Dittos Pickup Locations found, yet, sorry' : 'Sorry, we dont deliver there, yet..'}</DeliveryText>
                 )}
                 {searchResult?.length ? searchResult.map((result, i) => {
-                  // const isChecked = deliveryMethodSelected?.id === result.id;
                   return (
                       <Checkbox
                         keyName={`${i}-results`}
@@ -193,9 +177,8 @@ const SubHeader: React.FC<Props> = ({ ...props  }) => {
                         labelText={`${result.name} - ${result.details}`}
                         id={`result-${i}`}
                         onChange={e => {
-                          setDeliveryMethodAndSaveCookie(deliveryMethodSelected?.id === result.id ? [] : result)
+                          setDeliveryMethodAndSaveCookie(deliveryMethodSelected?.id === result.id ? null : result)
                         }}
-
                       />
                     )}
                   ) : ('')

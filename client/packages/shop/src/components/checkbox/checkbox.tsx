@@ -30,9 +30,6 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   disabled = false,
   onChange,
 }) => {
-  // use toggle hooks
-
-  console.log('isChecked', isChecked, keyName)
   return (
     <StyledCheckBox key={keyName} className={`Mahdi Fashion__checkbox ${keyName}`.trim()}>
       <StyledCheckBoxLabel htmlFor={id} position={labelPosition}>
@@ -49,7 +46,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
           disabled={disabled}
        
         />
-        <StyledCheckBoxInputIndicator />
+        {/* <StyledCheckBoxInputIndicator /> */}
       </StyledCheckBoxLabel>
     </StyledCheckBox>
   );

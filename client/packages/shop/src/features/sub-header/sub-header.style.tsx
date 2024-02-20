@@ -231,13 +231,14 @@ export const CardWrapper = styled.span`
   width: 100px;
   flex-direction: column;
   position: relative;
-  background-color: '#e4f4fc';
+  background-color: #e4f4fc;
   padding: 5px 8px;
   border-radius: ${themeGet('radii.base', '6px')};
   border-width: 1px;
   margin-bottom: 10px;
   border-style: solid;
   border-color: ${(props) => props.color || '#e4f4fc'};
+  text-align: center;
 `;
 export const MethodOption = styled.div`
   display: flex;

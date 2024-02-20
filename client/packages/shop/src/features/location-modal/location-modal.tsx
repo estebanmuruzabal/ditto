@@ -69,7 +69,50 @@ export default function LocationModal({ isPickUp }) {
 
   };
 
+// const handleSelect = address => {
+  //   geocodeByAddress(address)
+  //     .then(results => getLatLng(results[0]))
+  //     .then(latLng => {
+  //       console.log('Success', latLng)
+  //       setDeliveryAddress(address)
+  //     })
+  //     .catch(error => console.error('Error', error));
 
+  // };
+
+  // const isPointInPolygon = (latitude, longitude, polygon) => {
+  //   if (typeof latitude !== 'number' || typeof longitude !== 'number') {
+  //     throw new TypeError('Invalid latitude or longitude. Numbers are expected')
+  //   } else if (!polygon || !Array.isArray(polygon)) {
+  //     throw new TypeError('Invalid polygon. Array with locations expected')
+  //   } else if (polygon.length === 0) {
+  //     throw new TypeError('Invalid polygon. Non-empty Array expected')
+  //   }
+  
+  //   const x = latitude; const y = longitude
+  
+  //   let inside = false
+  //   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+  //     const xi = polygon[i][0]; const yi = polygon[i][1]
+  //     const xj = polygon[j][0]; const yj = polygon[j][1]
+  
+  //     const intersect = ((yi > y) !== (yj > y)) &&
+  //             (x < (xj - xi) * (y - yi) / (yj - yi) + xi)
+  //     if (intersect) inside = !inside
+  //   }
+  
+  //   return inside
+  // };
+
+  // const dogsBeachPolygon = [
+  //   { latitude: 32.7502030, longitude: -117.2432460},
+  //   { latitude: 32.7489451, longitude: -117.2523153},
+  //   { latitude: 32.7541973, longitude: -117.2525931},
+  //   { latitude: 32.7542674, longitude: -117.2460937},
+  // ]
+
+  // console.log('isInside:', isPointInPolygon(32.7449888, -117.2263579, dogsBeachPolygon))
+  
   // const fetchCurrentPosition = () => {
   //   navigator.geolocation.getCurrentPosition(
   //     function(position) {
