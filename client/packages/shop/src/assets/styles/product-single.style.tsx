@@ -7,11 +7,11 @@ const ProductSingleWrapper = styled.div`
   background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
 
   @media (min-width: 1600px) {
-    // padding-top: 89px;
+    padding-top: 89px;
   }
 
   @media (max-width: 990px) {
-    // padding-top: 60px;
+    padding-top: 60px;
   }
 `;
 

@@ -102,8 +102,6 @@ export const SubHeaderWrapper = styled.header`
     background-color: ${themeGet('colors.white', '#ffffff')};
     position: fixed;
     box-shadow: ${themeGet('shadows.header', '0 1px 2px rgba(0, 0, 0, 0.06)')};
-    // padding-top: 20px;
-    // padding-bottom: 20px;
     .modern-wrap,
     .banner-search{
       animation: ${hideSearch} 0.3s ease;
@@ -113,10 +111,6 @@ export const SubHeaderWrapper = styled.header`
       animation: ${hideSearch} 0.3s ease;
       display: flex;
       width: 75%;
-    }
-    @media (max-width: 1400px) {
-      padding-top: 20px;
-      padding-bottom: 20px;
     }
     @media (max-width: 1366px) {
       .minimal-wrap{
@@ -199,6 +193,7 @@ export const BannerText = styled.div`
   font-family: 'Poppins';
   color: black;
   margin-left: 4px;
+  margin-top: 2px;
 `;
 
 export const DeliveryText = styled.div`
@@ -211,7 +206,6 @@ export const LocationContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: '300px';
 `;
 
 export const DeliveryMethods = styled.div`

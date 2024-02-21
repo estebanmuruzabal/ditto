@@ -141,7 +141,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     />
                   </>
                 ) : (
-                  <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddClick}>
+                  <Button className="cart-button" variant="secondary" borderradius={100} onClick={handleAddClick}>
                     <ButtonText>
                       <FormattedMessage id={"addToCartButton"} defaultMessage="Cart" />
                     </ButtonText>
@@ -173,7 +173,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
               }
             </PriceContainer>
         </ProductCartBtn>
-        { (noRecicledQuantityInCart || reclicledQuantityInCart) ? (<CartPopUp deviceType={deviceType}/>) : null}
+        {/* 
+        I TOOK THIS OFF BECAUSE A UI BUG THAT SHOWS ON DESKTOP 3 CARTS POPSUP, DONT KNOW WHY, DONTCARE
+        { (noRecicledQuantityInCart || reclicledQuantityInCart) ? (<CartPopUp deviceType={deviceType}/>) : null} */}
       </ProductCartWrapper>
       )
       : (<ProductCartWrapper>

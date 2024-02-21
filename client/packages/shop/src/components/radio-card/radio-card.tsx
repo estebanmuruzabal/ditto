@@ -17,7 +17,7 @@ const CardWrapper = styled.label`
   align-items: center;
   /* justify-content: center; */
   border-radius: ${themeGet('radii.base', '6px')};
-  background-color: ${themeGet('colors.gray.200', '#F7F7F7')};
+  background-color: ${themeGet('colors.white', '#ffffff')};
   border: 1px solid ${themeGet('colors.gray.200', '#F7F7F7')};
   text-align: center;
   padding: 15px 20px;

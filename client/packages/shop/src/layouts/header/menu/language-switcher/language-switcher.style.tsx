@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 
 export const Box = styled.div`
-  // margin-right: 20px;
+  margin-right: 20px;
 
   .popover-wrapper.right {
     .popover-content {
@@ -10,9 +10,9 @@ export const Box = styled.div`
     }
   }
 
-  // @media (max-width: 767px) {
-  //   margin-right: 10px;
-  // }
+  @media (max-width: 767px) {
+    margin-right: 0px;
+  }
 `;
 
 export const SelectedItem = styled.button`

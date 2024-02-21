@@ -66,7 +66,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
 
   const deliveryMethods = deliverData?.deliveryMethods?.items;
   const orderDeliveryMethod = deliveryMethods?.filter(method => method.id === myOrder?.delivery_method_id)[0];
-  const deliveryDateAndTime = `${myOrder?.delivery_pickup_date} ${getDeliverySchedule(orderDeliveryMethod?.details, intl.locale)}`;
+  const deliveryDateAndTime = `${myOrder?.delivery_pickup_date}`;
 
   return (
     <OrderReceivedWrapper>
@@ -141,7 +141,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                 </Text>
               </ListTitle>
               <ListDes>
-            <Text bold>{orderDeliveryMethod?.name}</Text>
+            <Text bold>{orderDeliveryMethod?.isPickUp ? `${orderDeliveryMethod?.name} - ${orderDeliveryMethod?.details?.split('|')[0]}` : orderDeliveryMethod?.name}</Text>
               </ListDes>
             </ListItem>
           
@@ -267,7 +267,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                 </Text>
               </ListTitle>
               <ListDes>
-                <Text>{CURRENCY}{getDeliveryFee(orderDeliveryMethod.name)}</Text>
+                <Text>{CURRENCY}{getDeliveryFee(orderDeliveryMethod?.name)}</Text>
               </ListDes>
             </ListItem>
           )}

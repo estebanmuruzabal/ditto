@@ -8,7 +8,7 @@ type TextProps = {
 const OrderReceivedWrapper = styled.div`
   background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
   position: relative;
-  padding: 70px 0 60px 0;
+  padding: 90px 0 60px 0;
   min-height: 100vh;
 `;
 
@@ -80,7 +80,7 @@ export const OrderReceivedContainer = styled.div`
     padding: 50px 45px;
   }
   @media (max-width: 767px) {
-    padding: 50px 25px;
+    padding: 60px 25px;
   }
 
   .home-btn {

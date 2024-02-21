@@ -20,7 +20,6 @@ export const getDeliveryFee = (deliveryTitle: string) => {
 }
 
 export const calculateDeliveryCharge = (deliveryMethodName: string) => {
-    console.log('deliveryMethodName', deliveryMethodName)
     // MUST HAVE $ IN THE STRING, JEJE
     if (!deliveryMethodName) return 0;
     const charge = deliveryMethodName?.split("$");
