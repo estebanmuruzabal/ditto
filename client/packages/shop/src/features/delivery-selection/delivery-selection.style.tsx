@@ -309,7 +309,7 @@ export const Offer = styled.p`
   margin-left: 10px;
 `;
 export const Input = styled.input`
-  width: 100%;
+  // width: 100%;
   height: 48px;
   cursor: pointer;
   border-radius: ${themeGet('radii.base', '6px')};

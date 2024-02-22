@@ -170,6 +170,7 @@ export default function SignOutModal() {
               onChange={(e) => setEmail(e.target.value)}
               backgroundColor='#F7F7F7'
               marginBottom='10px'
+              required
               // intlInputLabelId="profileEmailField"
             />
            {/* <Input

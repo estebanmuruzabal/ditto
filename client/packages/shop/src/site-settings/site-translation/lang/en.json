@@ -163,7 +163,7 @@
   "verifyNowText": "Verify Now",
   "phoneVerificationText": "Phone Verification",
   "sendPhoneVerifyText": "We'll send you a verification code to verify your phone number",
-  "signUpText": "Purchase confirmations are being sent to your WhatsApp. Fill out the email field if you wish to receive them that way!",
+  "signUpText": "Purchase confirmations are being sent to your WhatsApp (if you happend to have) and email",
   "tramsText": "By signing up, you agree to Ditto's",
   "termsConditionText": "Terms & Conditions",
   "alreadyHaveAccount": "Already have an account?",

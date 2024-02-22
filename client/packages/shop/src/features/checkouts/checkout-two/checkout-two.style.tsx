@@ -183,8 +183,8 @@ export const DeliverySchedule = styled.div`
     justify-content: space-between;
     > label {
       margin-right: 0;
-      flex: calc(33.3333333333% - 10px);
-      max-width: calc(33.3333333333% - 10px);
+      // flex: calc(33.3333333333% - 10px);
+      // max-width: calc(33.3333333333% - 10px);
       padding: 11px 15px;
 
       @media (max-width: 900px) and (min-width: 768px) {

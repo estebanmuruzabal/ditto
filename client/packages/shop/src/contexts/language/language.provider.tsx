@@ -21,20 +21,20 @@ export const LanguageProvider = ({ children, messages }) => {
     Cookie.set('locale', newLocale);
   };
 
-  React.useEffect(() => {
-    setLocateBasedOnLocation()
-  }, [locale, location]);
+  // React.useEffect(() => {
+  //   setLocateBasedOnLocation()
+  // }, [locale, location]);
 
-  const setLocateBasedOnLocation = () => {
-    const isUs = location.toLowerCase().includes('united states')
-    const isAr = location.toLowerCase().includes('argentina')
+  // const setLocateBasedOnLocation = () => {
+  //   const isUs = location.toLowerCase().includes('united states')
+  //   const isAr = location.toLowerCase().includes('argentina')
 
-    if (isUs && locale !== Locales.EN) {
-      changeLanguage(Locales.EN)
-    } else if (isAr && locale !== Locales.ES) {
-      changeLanguage(Locales.ES)
-    }
-  }
+  //   if (isUs && locale !== Locales.EN) {
+  //     changeLanguage(Locales.EN)
+  //   } else if (isAr && locale !== Locales.ES) {
+  //     changeLanguage(Locales.ES)
+  //   }
+  // }
 
   // const { isLoaded } = useLoadScript({
   //   googleMapsApiKey: 'AIzaSyBfOLWnTDHvAxu7eftvpbiGT54bcOZgwS0',

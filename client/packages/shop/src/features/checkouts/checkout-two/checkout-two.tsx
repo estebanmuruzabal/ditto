@@ -579,47 +579,53 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       id={deliveryMethodSaved ? deliveryMethodSaved?.isPickUp ? 'pickupScheduleSelected' : 'deliveryScheduleSelected' : 'defaultDeliveryPickupText'}
                       defaultMessage='Select Your Delivery Schedule'
                     />
-                    {deliveryMethodSaved && (
-                        <Button
-                          className='changeButton'
-                          variant='text'
-                          type='button'
-                          onClick={resetDeliveryMethodAndDeleteSavedCookie}
-                        >
-                          <FormattedMessage id='changeDeliveryMethod' defaultMessage='changeDeliveryMethod' />
-                        </Button>
-                    )}
                   </HeadingWider>
                 </>
                 { deliveryMethodSaved ? (
-                   <RadioGroupTwo
-                    items={deliveryMethodSaved ? [deliveryMethodSaved] : deliveryMethods}
-                    component={(item: any, index: any) => (
-                      <RadioCard
-                        id={item.id}
-                        key={item.id}
-                        // title={deliveryMethodSaved?.isPickUp ? ` (PICKUP) - ${item.name}` : `(DELIVERY) - ${item.name}`}
-                        title={item.name}
-                        details={item.details}
-                        link={item.isPickUp && item.pickUpAddress ? item.pickUpAddress : null}
-                        name='schedule'
-                        checked={true}
-                        withActionButtons={false}
-                        onClick={() => setSubmitResult({
-                          ...submitResult,
-                          delivery_method_id: item.id, 
-                          products: cartProduct
-                        })}
-                        onChange={() =>{
-                          return(dispatch({
-                            type: 'SET_PRIMARY_SCHEDULE',
-                            payload: item.id.toString(),
-                          }))
+                   <ButtonGroup>
+                   <RadioGroupThree
+                      items={[deliveryMethodSaved]}
+                      component={(item: any, index: any) => (
+                        <RadioCard
+                          id={item.id}
+                          key={item.id}
+                          // title={deliveryMethodSaved?.isPickUp ? ` (PICKUP) - ${item.name}` : `(DELIVERY) - ${item.name}`}
+                          title={item.name}
+                          details={item.details}
+                          link={item.isPickUp && item.pickUpAddress ? item.pickUpAddress : null}
+                          name='schedule'
+                          checked={true}
+                          withActionButtons={false}
+                          onClick={() => setSubmitResult({
+                            ...submitResult,
+                            delivery_method_id: item.id, 
+                            products: cartProduct
+                          })}
+                          onChange={() =>{
+                            return(dispatch({
+                              type: 'SET_PRIMARY_SCHEDULE',
+                              payload: item.id.toString(),
+                            }))
+                            }
                           }
-                        }
-                      />
-                    )}
-                  />
+                        />
+                      )}
+                     secondaryComponent={ deliveryMethodSaved ? (
+                      <Button
+                        className='changeButton'
+                        variant='text'
+                        type='button'
+                        onClick={resetDeliveryMethodAndDeleteSavedCookie}
+                      >
+                        <IconWrapper>
+                            <Plus width='10px' />
+                          </IconWrapper>
+                        <FormattedMessage id='changeDeliveryMethod' defaultMessage='changeDeliveryMethod' />
+                      </Button>
+                     ) : (null)
+                     }
+                   />
+                 </ButtonGroup>
                 ) : (
                   <DeliverySelection deliveryMethodSaved={deliveryMethodSaved} setDeliveryMethodSaved={setDeliveryMethod} />
                 )}

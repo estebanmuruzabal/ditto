@@ -111,8 +111,6 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                             value={zipCode}
                             // we have to change the onChange because the is no one for the controller name actualy
                             onChange={(e) => isPickUpSelected ? searchPickupZipCode(e, e.target.value) : searchDeliveryZipCode(e, e.target.value)}
-                            width='197px'
-                            height='34.5px'
                         />
                       </div>
                       { searchResult?.length === 0 && zipCode.length > 4 && (
@@ -134,7 +132,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                       }
                   </Container>
                 )}
-                <OfferSection>
+                {/* <OfferSection>
                 <GiftBox />
                 <Offer>
                     <FormattedMessage
@@ -143,7 +141,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                     values={{ number: 1 }}
                     />
                 </Offer>
-                </OfferSection>
+                </OfferSection> */}
             </Wrapper>
         </DeliveryMethods>
   );
