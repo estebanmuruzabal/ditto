@@ -494,7 +494,7 @@ export const usersResolvers: IResolvers = {
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
             let message = "Created plant successfully.";
             if (index < 0) {
-                if (userResult.plants.length === 3) throw new Error("Already added three plants. You are not allowed to add more than three.");    
+                if (userResult.plants.length === 10) throw new Error("Already added three plants. You are not allowed to add more than three.");    
                 const plantObject = {
                     id: shortid.generate(),
                     name,
