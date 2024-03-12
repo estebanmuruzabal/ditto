@@ -196,10 +196,16 @@ const PromoCode = styled.span`
   }
 `;
 
+const MinOrderText = styled.div`
+display: flex;
+  justify-content: center;
+`;
+
 const CheckoutButton = styled.button`
   height: 48px;
   width: calc(100% - 30px);
   display: flex;
+  color: white;
   align-items: center;
   justify-content: space-between;
   background-color: ${themeGet('colors.primary.regular', '#009e7f')};
@@ -231,6 +237,9 @@ const CheckoutButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: auto;
+
+  .disabled {
+  pointer-events: none
 }
 `;
 
@@ -428,5 +437,6 @@ export {
   CouponBoxWrapper,
   CouponCode,
   ErrorMsg,
-  ProductQuantityExceededMsg
+  ProductQuantityExceededMsg,
+  MinOrderText
 };

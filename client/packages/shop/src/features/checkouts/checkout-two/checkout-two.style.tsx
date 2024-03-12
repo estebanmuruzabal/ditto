@@ -390,13 +390,16 @@ export const HaveCoupon = styled.button`
 `;
 
 export const ErrorMsg = styled('span')`
-  font-family: ${themeGet('fonts.body', 'Lato')};
+font-family: Lato, sans-serif;
   font-size: ${themeGet('fontSizes.smm', '16')}px;
-  font-weight: ${themeGet('fontWeights.regular', '400')};
-  color: ${themeGet('colors.secondary.hover', '#FF282F')};
+  font-weight: ${themeGet('fontWeights.bold', '500')};
+  color: '#0D1136';
   padding-top: 10px;
   display: flex;
-  // margin-left: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: -15px;
 `;
 
 export const TermConditionText = styled.span`

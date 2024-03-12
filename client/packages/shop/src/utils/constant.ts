@@ -29,6 +29,18 @@ export const deliverySelectOptions = [
     { value: DeliveryMethodsConstants.DELIVERY, label: 'Delivery' },
   ];
 
+  export enum DeliveryCarryMethodsConstants {
+    OWN_BAG = 'OWN_BAG',
+    CARTOON_BOX = 'CARTOON_BOX',
+    WOODEN_BOX = 'WOODEN_BOX',
+}
+
+  export const deliveryCarrySelectOptions = [
+    { value: DeliveryCarryMethodsConstants.OWN_BAG, label: 'I have my own bag' },
+    { value: DeliveryCarryMethodsConstants.CARTOON_BOX, label: 'I want a box' },
+    { value: DeliveryCarryMethodsConstants.WOODEN_BOX, label: 'I want to signup for exchangeble wooden box' },
+  ];
+
 
 // **************** Roles CONSTANT Start **************************
 export enum Roles {

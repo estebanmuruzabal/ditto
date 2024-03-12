@@ -79,13 +79,13 @@ const PaymentGroup: React.FunctionComponent<PaymentGroupProps> = ({
   return (
     <>
       {/* {deviceType === 'desktop' && ( */}
-      <Header>
+      {/* <Header>
         {items.length !== 0 && (
           <SavedCard>
             <FormattedMessage id="savedCardsId2" defaultMessage="Saved Payment Methods" />
           </SavedCard>
         )}
-      </Header>
+      </Header> */}
       <PaymentCardList>
         <Carousel
           deviceType={deviceType}

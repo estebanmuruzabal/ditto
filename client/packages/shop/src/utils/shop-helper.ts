@@ -15,7 +15,7 @@ export const getDeliverySchedule = (details: string, intLocale: string) => {
 export const getDeliveryFee = (deliveryTitle: string) => {
     if (!deliveryTitle) return 0;
     const charge = deliveryTitle?.split("$");
-    const chargeFormatted = charge[charge?.length -1]?.replace(/\D/g,'');
+    const chargeFormatted = deliveryTitle?.includes("$") ? charge[charge?.length -1]?.replace(/\D/g,'') : 0;
     return Number(chargeFormatted);
 }
 
@@ -23,6 +23,6 @@ export const calculateDeliveryCharge = (deliveryMethodName: string) => {
     // MUST HAVE $ IN THE STRING, JEJE
     if (!deliveryMethodName) return 0;
     const charge = deliveryMethodName?.split("$");
-    const chargeFormatted = charge[charge?.length -1]?.replace(/\D/g,'');
+    const chargeFormatted = deliveryMethodName?.includes("$") ? charge[charge?.length -1]?.replace(/\D/g,'') : 0;
     return Number(chargeFormatted);
   }

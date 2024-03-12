@@ -16,7 +16,7 @@ import { GET_COUPON } from 'graphql/query/coupon';
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
 import { DELETE_CARD } from 'graphql/mutation/card';
 import { DELETE_CONTACT } from 'graphql/mutation/contact';
-import { CC_PAYMENT_OPTION, CURRENCY, deliveryMethodCookieKeyName } from 'utils/constant';
+import { CC_PAYMENT_OPTION, CURRENCY, deliveryCarrySelectOptions, deliveryMethodCookieKeyName } from 'utils/constant';
 import { openModal } from '@redq/reuse-modal';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -201,7 +201,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [deleteContactMutation] = useMutation(DELETE_CONTACT);
   const [deletePaymentCardMutation] = useMutation(DELETE_CARD);
   const size = useWindowSize();
-  // const [deliveryMethodsSelected, setDeliveryMethodsSelected] = React.useState([]);
+  const [deliveryMethodsSelected, setDeliveryMethodsSelected] = React.useState(null);
   const [deliveryMethodSaved, setDeliveryMethodSaved] = React.useState();
 
   useEffect(() => {
@@ -481,8 +481,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       total,
       discount_amount
     } = otherSubmitResult;
-    console.log('deliveryMethodSaved:::::', deliveryMethodSaved, delivery_method_id)
-    console.log('delivery_method_id:::::',  delivery_method_id)
+
     if (!deliveryMethodSaved || !delivery_method_id) { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
     if (deliveryMethodSaved && !deliveryMethodSaved.isPickUp && !delivery_address) { setErrorFor5Sec('checkoutDeliveryAddressInvalid');return; }
     // if (!delivery_method_id) { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
@@ -494,7 +493,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       return null;
     }
     setLoading(true);
-    const delivery_date = deliveryMethodSaved?.details.split("|")[1]?.trim();
+    const delivery_date = deliveryMethodSaved?.isPickUp ? deliveryMethodSaved?.details.split("|")[1]?.trim() : `${deliveryMethodSaved?.details.split("|")[0]?.trim()} ${deliveryMethodSaved?.details.split("|")[1]?.trim()}`;
     // const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethodSaved?.details)} - ${moment(deliveryDate).format('DD MMM')}`;
     // if (confirm('Are you sure? You want to place this order?')) {
       try {
@@ -572,15 +571,14 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
             {/* DeliverySchedule */}
             <InformationBox>
+            <Heading>
+                <FormattedMessage
+                   id={'s'}
+                   defaultMessage='Select Your Delivery Type'
+                />
+                <DeliveryTypesOptions />
+              </Heading>
               <DeliverySchedule>
-                <>
-                  <HeadingWider>
-                    <FormattedMessage
-                      id={deliveryMethodSaved ? deliveryMethodSaved?.isPickUp ? 'pickupScheduleSelected' : 'deliveryScheduleSelected' : 'defaultDeliveryPickupText'}
-                      defaultMessage='Select Your Delivery Schedule'
-                    />
-                  </HeadingWider>
-                </>
                 { deliveryMethodSaved ? (
                    <ButtonGroup>
                    <RadioGroupThree
@@ -756,6 +754,61 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             </InformationBox>
             {/* PaymentOption */}
 
+            {/* Own bag */}
+            {/* <InformationBox>
+              <Heading>
+                <FormattedMessage
+                  id='ownBagText'
+                  defaultMessage=''
+                />
+                <DeliveryTypesOptions />
+              </Heading>
+              <ButtonGroup>
+                   <RadioGroupThree
+                      items={deliveryCarrySelectOptions}
+                      component={(item: any, index: any) => (
+                        <RadioCard
+                          id={item.id}
+                          key={item.id}
+                          title={item.label}
+                          details={item.details}
+                          link={item.isPickUp && item.pickUpAddress ? item.pickUpAddress : null}
+                          name='schedule'
+                          checked={true}
+                          withActionButtons={false}
+                          onClick={() => setSubmitResult({
+                            ...submitResult,
+                            delivery_method_id: item.id, 
+                            products: cartProduct
+                          })}
+                          onChange={() =>{
+                            return(dispatch({
+                              type: 'SET_PRIMARY_SCHEDULE',
+                              payload: item.id.toString(),
+                            }))
+                            }
+                          }
+                        />
+                      )}
+                     secondaryComponent={ deliveryMethodSaved ? (
+                      <Button
+                        className='changeButton'
+                        variant='text'
+                        type='button'
+                        onClick={resetDeliveryMethodAndDeleteSavedCookie}
+                      >
+                        <IconWrapper>
+                            <Plus width='10px' />
+                          </IconWrapper>
+                        <FormattedMessage id='changeDeliveryMethod' defaultMessage='changeDeliveryMethod' />
+                      </Button>
+                     ) : (null)
+                     }
+                   />
+                 </ButtonGroup>
+            </InformationBox>
+            Own bag */}
+
             <InformationBox
               className='paymentBox'
               style={{ paddingBottom: 30 }}
@@ -765,7 +818,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   id='selectPaymentText'
                   defaultMessage='Select Payment Option'
                 />
+                <DeliveryTypesOptions />
               </Heading>
+
               <PaymentGroup
                 name='payment'
                 deviceType={deviceType}

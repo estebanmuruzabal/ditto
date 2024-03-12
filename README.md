@@ -8,21 +8,47 @@
 - Client ADMIN Port: 5000 (3000)
 - Client ADMIN API Port: 4000
 
+# Ditto Setup
+Add Payment method: 
+"Efectivo 💰"
+type "cash"
+image "images/HkqFxzr5q-cash.png"
+details "Pagás cuando te entregamos tu pedido!"
 
-# Ditto Fashion Documentation
+name "Te transfiero!"
+type "bank_transfer"
+image "images/S1tJS1dSj-ditt.webp"
+details "Enviá una transferencia al alias "ditto.farm.rcia" y mandanos el compr…"
+
+name
+"Tarjeta 💳 [8% de recargo 🥲]"
+type "cc"
+details "Pagas con tu tarjeta de crédito/débito al recibir tu pedido"
+
+# Ditto Documentation
 
 
 here are all the tabs and language settings: client/packages/shop/src/site-settings/site-navigation.ts
 <!-- "ecoDescription": "EcoCompra: pagás ${packageDiscount} menos si tenés envases/bolsas de este art. para devolvernos.", -->
 # To do SHOP:
+\
+un mensaje mejor de lo que hacemos y nuestras pros
+zip code checker en 
+agregar products are freshly cut 1 day before the delivery date
 
+- Delivery date field en la confirmation de una purchase muestra cualquiera
+- completar /terms page
+
+
+# Nice to have SHOP:
+
+- client/packages/shop/src/components/contact-card/contact-card.tsx ponerle el phone mask input commentado que el otro te deja poner cualquier cosa
 
 
 - poner mejores datos en los cards de las tasks (start, end time).
 - better ui in task listing edit staff modal
 
 # To do VENTAS:
-poner  numeros
 1️⃣ Compra tu AssistCard 💳
 2️⃣ Asistencia en viaje 🩺
 3️⃣ Reintegros 💲

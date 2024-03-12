@@ -32,7 +32,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
 }) => {
   console.log('keyName,',keyName)
   return (
-    <StyledCheckBox key={keyName} className={`Mahdi Fashion__checkbox ${keyName}`.trim()}>
+    <StyledCheckBox key={keyName} onClick={onChange} className={`Mahdi Fashion__checkbox ${keyName}`.trim()}>
       <StyledCheckBoxLabel htmlFor={id} position={labelPosition}>
         {labelText && (
           <StyledCheckBoxLabelText position={labelPosition}>
@@ -43,7 +43,6 @@ const CheckBox: React.FC<CheckBoxProps> = ({
           type="checkbox"
           className="checkbox-input"
           checked={isChecked}
-          onChange={onChange}
           disabled={disabled}
        
         />

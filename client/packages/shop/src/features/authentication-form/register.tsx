@@ -136,7 +136,7 @@ export default function SignOutModal() {
           <form method="post" onSubmit={
             async (e) => {
                 e.preventDefault();
-                if (!passwordsAreEqual()) { setErrorFor5Sec('passShouldBeEqual');return; }
+                // if (!passwordsAreEqual()) { setErrorFor5Sec('passShouldBeEqual');return; }
                 
                 await signupMeMutation({
                   variables: {phone, password, name}
@@ -219,7 +219,7 @@ export default function SignOutModal() {
               mb='10px'
               required
             />
-            <Input
+            {/* <Input
               type="text"
               name="password"
               width='100%'
@@ -233,7 +233,7 @@ export default function SignOutModal() {
               backgroundColor='#F7F7F7'
               mb='10px'
               required
-            />
+            /> */}
              {!hasMinLength && (
               <SubrequirementContainer>
                 <Dot />
@@ -296,12 +296,12 @@ export default function SignOutModal() {
               </Link>
             </HelperText>
             <Button variant='primary' size='big' width='100%' type='submit'>
-              <FormattedMessage id='registerBtn' defaultMessage='Continue' />
+              {loading ? <FormattedMessage id='loadingBtn' defaultMessage='Continue' /> : <FormattedMessage id='registerBtn' defaultMessage='Continue' /> }
             </Button>
           </form>
-          {loading && <p style={{
+          {/* {loading && <p style={{
             marginTop: "15px"
-          }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>}
+          }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>} */}
           {(error || errorMessage) && <p style={{
             marginTop: "15px",
             color: "red"

@@ -118,6 +118,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                       )}
                       {searchResult?.length ? searchResult.map((result, i) => {
                           return (
+                            <>
                               <Checkbox
                                   keyName={`${i}-results`}
                                   isChecked={deliveryMethodSelected?.id === result.id}
@@ -127,12 +128,14 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                                       setDeliveryMethodAndSaveCookie(deliveryMethodSelected?.id === result.id ? null : result)
                                   }}
                               />
+                            </>
                           )}
                           ) : ('')
                       }
+                      {!!searchResult?.length && <>{isPickUpSelected ? <FormattedMessage id="timepickupOfConvinience" defaultMessage="Frevery For 1st Order" /> : <FormattedMessage id="timedeliOfConvinience" defaultMessage="Fder" />}</>}
                   </Container>
                 )}
-                {/* <OfferSection>
+                <OfferSection>
                 <GiftBox />
                 <Offer>
                     <FormattedMessage
@@ -141,7 +144,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                     values={{ number: 1 }}
                     />
                 </Offer>
-                </OfferSection> */}
+                </OfferSection>
             </Wrapper>
         </DeliveryMethods>
   );

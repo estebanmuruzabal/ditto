@@ -79,7 +79,7 @@ export default function OtpModal() {
         <SubHeading>
           <FormattedMessage
             id='otpSubText'
-            defaultMessage='Login with your phone number &amp; password'
+            defaultMessage='Next time login with your phone number and password.'
           />
         </SubHeading>
         <form onSubmit={submitForm}
@@ -102,14 +102,17 @@ export default function OtpModal() {
             size='big'
             style={{ width: '100%' }}
             type='submit'
-          ><FormattedMessage
-          id='continueBtn'
-          defaultMessage='Continuar'
-        /></Button>
+          >
+            { loading ? <FormattedMessage
+          id='loadingBtn'
+          defaultMessage='loadingBtn'
+        /> : <FormattedMessage
+        id='continueBtn'
+        defaultMessage='continueBtn'
+      />
+            }
+            </Button>
         </form>
-        {loading && <p style={{
-          marginTop: "15px"
-        }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>}
         {error && <p style={{
           marginTop: "15px",
           color: "red"

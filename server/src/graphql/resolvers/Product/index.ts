@@ -23,13 +23,13 @@ export const productsResolvers: IResolvers = {
                     )
                 );
             }
-            if (type) {
-                products = products.filter((product) => product.type.slug === type);
-            }
+            // if (type) {
+            //     products = products.filter((product) => product.type.slug === type);
+            // }
 
-            products = products.filter((product) => product.is_online === true);
+            // products = products.filter((product) => product.is_online === true);
 
-            if (filterUnstockProducts) products = products.filter((product) =>  product.product_quantity > 0);
+            // if (filterUnstockProducts) products = products.filter((product) =>  product.product_quantity > 0);
 
             products = search(products, ['name', 'slug'], searchText);
             const hasMore = products.length > offset + limit;

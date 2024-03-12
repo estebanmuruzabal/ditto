@@ -96,7 +96,7 @@ export default () => {
                   type='text'
                   name='phone'
                   component={MyInput}
-                  placeholder='Ex: demo@demo.com'
+                  placeholder='Phone number'
                 />
                 {errors.phone && touched.phone && (
                   <Error>{errors.phone}</Error>
@@ -108,7 +108,7 @@ export default () => {
                   type='password'
                   name='password'
                   component={MyInput}
-                  placeholder='Ex: demo'
+                  placeholder='Password'
                 />
                 {errors.password && touched.password && (
                   <Error>{errors.password}</Error>
