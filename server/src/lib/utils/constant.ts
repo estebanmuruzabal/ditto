@@ -31,7 +31,7 @@ export const PICKUP_OB_DELIVERY_METHOD = 'OB Dog Beach PickUp Point'
 export const DELIVERY_METHOD_SELECTED = 'Delivery (+$20)';
 
 export const ZELLE_MAIL = 'estebannmuruzabal@gmail.com';
-export const COMPANY_EMAIL = 'dittofarm.sd@gmail.com';
+export const COMPANY_EMAIL = 'dittofarms.sd@gmail.com';
 export const COMPANY_DESCRIPTION_TEXT = 'Ditto Farm es un proyecto frutihorticola a solo 8km de Rcia. Chaco producimos frutas, verduras y fertilizantes orgánicos con tecnicas de agricultura sustentable y cosechados en el dia!';
 export const COMPANY_EMAIL_PASSWORD = 'SanDiego765!';
 export const INTRODUCE_NEW_NAME_KEY_WORDS = 'No, cambiar nombre';
