@@ -5,6 +5,7 @@ export interface IOrderProductInput {
     name?: string;
     image?: string;
     quantity: number;
+    seller_id?: string;
     recicledQuantity: number;
     unit?: string;
     price: number;

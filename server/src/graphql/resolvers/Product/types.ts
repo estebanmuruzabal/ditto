@@ -13,6 +13,7 @@ export interface IProductInput {
     type: IProductType;
     categories: string;
     slug: string;
+    user_owner_id: string;
     packagePrice: number;
     description?: string;
     images_data?: any;

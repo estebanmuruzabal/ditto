@@ -15,7 +15,7 @@ import {authorize} from "../../../lib/utils";
 import {IOrderInputArgs, IOrderProductInput, IOrderQuickInput, IOrderQuickInputArgs} from "./types";
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
-import { sendCompanyConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
+import { sendCompanyConfirmationMail, sendClientConfirmationMail, sendSellerConfirmationMail } from '../../../lib/utils/number-verification-otp';
 import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
 import { orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
@@ -185,6 +185,10 @@ export const ordersResolvers: IResolvers = {
                     const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
                     const total = dbProduct.product_quantity - purchasedQuantity;
 
+                    // sending seller email
+                    const seller = await db.users.findOne({ _id: new ObjectId(input.products[i].seller_id) });
+
+                    if (seller?.email?.length) await sendSellerConfirmationMail(seller.email, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
                     await db.products.updateOne(
                         {_id: products[i]._id},
                         {$set: {product_quantity: total }}
@@ -194,6 +198,7 @@ export const ordersResolvers: IResolvers = {
             
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
+                // await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
                 await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
 
                 if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName, input?.lenguageLocale);
