@@ -151,13 +151,13 @@ const Dashboard = () => {
   }
 
 
-  const getLastMonthTotalOrders = () => {
-    return ordersData.orders.items.find(order => {
-      const lastMonth = moment(order.datetime, 'MM/D/YYYY').day();
+  // const getLastMonthTotalOrders = () => {
+  //   return ordersData.orders.items.find(order => {
+  //     const lastMonth = moment(order.datetime, 'MM/D/YYYY').day();
       
       
-    })
-  }
+  //   })
+  // }
 
 
   
@@ -235,8 +235,8 @@ const Dashboard = () => {
   //   });
   //   console.log(salesTotalAmounts.reverse())
   // }
-  console.log('salesTotalAmounts:', salesTotalAmounts)
-  console.log('salesDates:', salesDates)
+  // console.log('salesTotalAmounts:', salesTotalAmounts)
+  // console.log('salesDates:', salesDates)
   return (
     <Grid fluid={true}>
       <Row>

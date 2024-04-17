@@ -97,6 +97,7 @@ export const productsResolvers: IResolvers = {
                 categories: JSON.parse(input.categories),
                 name: input.name,
                 slug: input.slug,
+                user_owner_id: input.user_owner_id, 
                 description: input.description,
                 packagePrice: input.packagePrice,
                 images: imagesPath,

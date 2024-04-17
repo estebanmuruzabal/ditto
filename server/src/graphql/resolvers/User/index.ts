@@ -441,7 +441,7 @@ export const usersResolvers: IResolvers = {
                     throw new Error(`'${input.products[i].name}', No hay suficiente cantidad de este producto. Cantidad disponible: ${products[i].product_quantity}`);
                 }
             }
-            console.log('input:::::::::::',input)
+
             const shoppingCart: IOrderInput = {
                 customer_id: input.customer_id,
                 contact_number: input.contact_number,

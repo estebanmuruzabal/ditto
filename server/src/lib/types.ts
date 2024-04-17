@@ -125,6 +125,18 @@ export interface IUser {
     workInfo: IWorkInfo;
     tasks: Array<Task>;
     logs: Array<Logs>;
+
+    // testing the dittomarket model
+    types?: Collection<IType>;
+    categories?: Collection<ICategory>;
+    products?: Collection<IProduct>;
+    shops?: Collection<IShop>;
+    delivery_methods?: Collection<IDeliveryMethod>;
+    payment_options?: Collection<IPaymentOption>;
+    orders?: Collection<IOrder | IQuickOrder>;
+    settings?: Collection<ISetting>;
+    coupons?: Collection<ICoupon>;
+    home_cards?: Collection<IHomeCard>;
 }
 
 export interface IChat {
@@ -324,6 +336,7 @@ export interface IProduct {
     categories: Array<IProductCategory>;
     name: string;
     slug?: string;
+    user_owner_id?: string;
     packagePrice?: number;
     description?: string;
     images: Array<string>;

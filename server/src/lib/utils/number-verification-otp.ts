@@ -116,6 +116,61 @@ export const sendCompanyConfirmationMail = (email: string, customer: any, input:
     });
 }
 
+export const sendSellerConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
+    const transporter = nodemailer.createTransport({
+        host: "live.smtp.mailtrap.io",
+        port: 587,
+        auth: {
+          user: "api",
+          pass: "fa6003645f3677f052161a6140ee5df3"
+        }
+    });
+    let template;
+    let emailTitle;
+
+    const englishConfirmationTemplate = `
+        <div>Customer name: ${customer.name}</div><br>
+        <div>Date: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Delivery/pickup method: ${deliveryMethod}</div>
+        <div>Address of delivery/pickup: ${input?.delivery_address}</div>
+        <div>Date of delivery/pickup: ${input.delivery_date}</div>
+        <div>Payment Method: ${paymentMethod}</div>
+        <div>Purchased products</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Total Amount $${input.total}</div>
+    `;
+
+    const spanishConfirmationTemplate = `
+        <div>Nombre cliente: ${customer.name}</div><br> 
+        <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
+        <div>Metodo de envio: ${deliveryMethod}</div>
+        <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
+        <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+        <div>Metodo de pago: ${paymentMethod}</div>
+        <div>Productos comprados</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Monto total ${input.total}</div>
+    `;
+
+    const spanishTitle = 'Confirmación de compra';
+    const englishTitle = 'Purchase Confirmation';
+
+    switch (lenguageLocale) {
+        case Locales.ES: { template = spanishConfirmationTemplate; emailTitle = spanishTitle } break;
+        case Locales.EN: { template = englishConfirmationTemplate; emailTitle = englishTitle } break;
+        default: { console.log('sendCompanyConfirmationMail. no locale found at sendind confirmation email')} break;
+    }
+
+    return transporter.sendMail({
+        from: 'mailtrap@dittofarm.com',
+        to: email,
+        subject: emailTitle,
+        text: template,
+        html: template
+    });
+}
+
 export const sendClientConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
 
     const transporter = nodemailer.createTransport({
