@@ -22,10 +22,15 @@ import { readInboxContent } from './lib/utils/number-verification-otp';
 const { Client, LocalAuth, List, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json'
+const wwebVersion = '2.2412.54';
 
 export let client: any =  new Client({
         authStrategy: new LocalAuth(),
-        puppeteer: { headless: true, args: ["--no-sandbox"] }
+        puppeteer: { headless: true, args: ["--no-sandbox"] },
+        webVersionCache: {
+            type: 'remote',
+            remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${wwebVersion}.html`,
+        },
 });
 
 let sessionData: any;
