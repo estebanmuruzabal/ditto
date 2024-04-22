@@ -205,20 +205,22 @@ export default function StaffMembers() {
                 {data ? (
                   data.getStaffs.length ? (
                     data.getStaffs
-                      .map((item, index) => (
+                      .map((item, index) => {
+                        if (item.role !== Roles.STAFF) return;
+                        return (
                         <React.Fragment key={index}>
                           <StyledBodyCell>{item.name || '-'}</StyledBodyCell>
                           <StyledBodyCell>{item.role || '-'}</StyledBodyCell>
                           <StyledBodyCell>{item.workInfo?.isWorking?.toString()?.toUpperCase() || '-'}</StyledBodyCell>
                           <StyledBodyCell>${item.workInfo?.ratePerHour || '0'}</StyledBodyCell>
                           <StyledBodyCell>${item.workInfo?.totalSalaryToPayWeekly || '0'}</StyledBodyCell>
-                          <StyledBodyCell>{item.tasks?.filter((task) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false)).length}</StyledBodyCell>
+                          <StyledBodyCell>{item.tasks?.filter((task) => (task.startDate?.length === 0 && task.finishDate?.length === 0 && task?.isDone === false))?.length}</StyledBodyCell>
                           <StyledBodyCell>{item.workInfo?.totalWorkingMinutesPerWeek ? `${item.workInfo?.totalWorkingMinutesPerWeek / 60 | 0}:${Number(item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0) >= 9 ? item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0 : '0' + item.workInfo?.totalWorkingMinutesPerWeek % 60} hs` : '0'}</StyledBodyCell>
                           <StyledBodyCell>
                             <ActionWrapper itemsOffset={offset} itemData={item}/>
                           </StyledBodyCell>
                         </React.Fragment>
-                      ))
+                      )})
                   ) : (
                     <NoResult
                       hideButton={false}
