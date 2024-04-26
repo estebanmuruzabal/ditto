@@ -82,8 +82,8 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   return (
         <DeliveryMethods>
             <Options>
-                <CardWrapper color={isPickUpSelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.PICKUP)}>Pickup</CardWrapper> 
-                <CardWrapper color={isDeliverySelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.DELIVERY)}>Delivery</CardWrapper> 
+                <CardWrapper color={isPickUpSelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.PICKUP)}><FormattedMessage id="pickUpId" defaultMessage="notFoundId" /></CardWrapper> 
+                <CardWrapper color={isDeliverySelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.DELIVERY)}><FormattedMessage id="deliveryId" defaultMessage="notFoundId2" /></CardWrapper> 
             </Options>
             <Wrapper>
             

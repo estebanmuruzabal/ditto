@@ -193,7 +193,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             </ListItem>
           )}
           
-          { (setting.mode === LightSensorMode.MANUAL && hasRelayAsociated) && (
+          {/* { (setting.mode === LightSensorMode.MANUAL && hasRelayAsociated) && (
             <>
               <ListItem>
                 <ListTitle>
@@ -215,7 +215,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                 </ListDes>
               </ListItem>
             </>
-          )}
+          )} */}
 
           { ((setting.mode === LightSensorMode.SCHEDULE) && hasRelayAsociated) && (
             <>

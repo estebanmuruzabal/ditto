@@ -22,7 +22,10 @@ import { SIGNIN_MUTATION } from 'graphql/mutation/signin';
 import Router, { useRouter } from 'next/router';
 import PhoneInput from 'react-phone-input-2'
 import startsWith from 'lodash.startswith';
-import us from 'react-phone-input-2/lang/es.json'
+// import us from 'react-phone-input-2/lang/es.json'
+// const currentLng = 'us';
+import ar from 'react-phone-input-2/lang/es.json'
+const currentLng = 'ar';
 
 export default function SignInModal() {
   const router = useRouter();
@@ -109,10 +112,10 @@ export default function SignInModal() {
               }}
               containerStyle={{textAlign: "left"}}
               inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
-              onlyCountries={['us']}
-              localization={us}
-              country={'us'}
-              masks={{us: '(...) ...-......'}}
+              onlyCountries={[currentLng]}
+              localization={ar}
+              country={currentLng}
+              masks={{ar: '(...) ...-......'}}
               value={phone}
               onChange={handlePhoneChange}
           />

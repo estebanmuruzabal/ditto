@@ -37,6 +37,7 @@ import { Label } from 'components/forms/label';
 import { ItemCount } from 'components/cart-popup/cart-popup.style';
 import Switch from 'components/switch/switch';
 import moment from 'moment';
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 type WorkContentProps = {
   deviceType?: {
@@ -118,10 +119,10 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     user.workInfo.totalWorkingMinutesPerWeek += workedInMinutes;
     user.workInfo.totalSalaryToPayWeekly = Number(user.workInfo.totalWorkingMinutesPerWeek) * Number(ratePerMinute) - Number(user.workInfo.advancedSalaryPaid);
 
-    // user.logs.push({
-    //   logDescription: ,
-    //   timestamp: new Date().toLocaleString('en-US', { timeZone: })
-    // });
+    user.logs.push({
+      logDescription: 'finished working',
+      timestamp: new Date().toLocaleString('en-US', { timeZone })
+    });
 
     dispatch({
       type: 'HANDLE_WORK_CHANGE',
@@ -137,11 +138,10 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone });
     user.workInfo.stoppedWorkTime = null;
 
-    user.workInfo.ratePerHour = 300;
-    // user.logs.push({
-    //   logDescription: ,
-    //   timestamp: new Date().toLocaleString('en-US', { timeZone })
-    // })
+    user.logs.push({
+      logDescription: `started working.`,
+      timestamp: new Date().toLocaleString('en-US', { timeZone })
+    })
 
     dispatch({
       type: 'HANDLE_WORK_CHANGE',

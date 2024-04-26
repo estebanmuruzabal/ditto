@@ -60,7 +60,7 @@ const HeaderWrapper = styled.header`
   }
 
   @media (min-width: 1600px) {
-    padding: 10px 40px;
+    padding: 0px 30px;
   }
 
   @media (max-width: 990px) {
