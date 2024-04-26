@@ -53,6 +53,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
 
     // if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
+    if (message.trim === '' || from === 'status@broadcast') return;
     console.log('from:1 ', from?.toString()); console.log('text msg: ', message?.toString());
     const number: string = cleanNumber(from)
     let user, access_token: any;
