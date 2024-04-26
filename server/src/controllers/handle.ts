@@ -77,7 +77,8 @@ const checkEnvFile = () => {
 
 const isValidNumber = (rawNumber: string) => {
     const regexGroup = /\@g.us\b/gm;
-    const exist = rawNumber.match(regexGroup);
+    const regexCGroup = /\@c.us\b/gm;
+    const exist = rawNumber.match(regexGroup) || rawNumber.match(regexCGroup);
     return !exist
 }
 

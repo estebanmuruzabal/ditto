@@ -52,19 +52,18 @@ const listenMessage = () => client.on('message', async (msg: any) => {
 
     console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
 
-    if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
-
+    // if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
+    console.log('from:1 ', from?.toString()); console.log('text msg: ', message?.toString());
     const number: string = cleanNumber(from)
     let user, access_token: any;
-    if (number !== '5493624951926') return;
-
+    // if (number !== '5493624951926') return;
+    console.log('from2: ', from?.toString()); console.log('text msg: ', message?.toString());
     const res: any = await fetchCustomerAndToken(number);
-
+    console.log('from:3 ', from?.toString()); console.log('text msg: ', message?.toString());
     if (!!(res?.data?.getCustomer.user && res?.data?.getCustomer.access_token)) {
         user = res.data.getCustomer.user;
         access_token = res.data.getCustomer.access_token;
     }
-
     // nextTrigger means that we use the latest nextTrigger saved in user history chat, that was setted by us, 
     // depending on what client's latest answer.
 
