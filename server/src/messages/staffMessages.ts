@@ -139,6 +139,5 @@ export const stopWorking = async (user: any) => {
     user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone });
     user.workInfo.stoppedWorkTime = null;
 
-    user.workInfo.ratePerHour = 375;
     await updateUserWorkInfoMutation(user, `started working.`);
   };
