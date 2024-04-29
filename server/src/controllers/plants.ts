@@ -70,6 +70,33 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
+        case HumiditySensorMode.MIN_WARNING:
+                // modo riego solo cuando falta agua con 1 solo reley y cierra cuando detecta humedad,
+                // must have maxReading, minWarning and relayIdRelated variables setted!!!
+    
+                if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
+    
+                if (reading < minReading && !relayOneWorking) {
+    
+                    plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = true;
+                    setting.relayOneWorking = true;
+    
+                    if (whatsappWarningsOn) sendMessage(phoneNumber, `Aviso: tu planta: ${setting.name} llego a ${reading}% de humedad, ya estamos regando!`);
+                    break;
+                } else if (reading >= minReading && relayOneWorking) {
+                    setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
+    
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = false;
+                    setting.relayOneWorking = false;
+                    if (whatsappWarningsOn) await sendMessage(phoneNumber, `Aviso: tu planta: ${setting.name} llego a ${reading}% de humedad, ya terminamos de regar!`);
+                    break;
+                }
+    
+                plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+                break;
         case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION:
             if (!minReading || !relayOneIdRelated || !relayTwoIdRelated)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 

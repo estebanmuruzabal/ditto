@@ -9,6 +9,7 @@ const MULTI_DEVICE = process.env.MULTI_DEVICE || 'true';
 
 const cleanNumber = (number: string) => {
     number = number.replace('@c.us', '');
+    number = number.replace('@c.us', '');
     return number
 }
 
