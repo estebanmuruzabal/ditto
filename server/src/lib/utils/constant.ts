@@ -9,7 +9,7 @@ export const TECNICAS_DE_CULTIVO_OPT = 3;
 export const CHECKOUT_OPTION_SELECTED = 99;
 
 // ditto bot personal variables (change in front and back):
-export const timeZone = 'America/Los_Angeles';
+export const timeZone = 'America/Argentina/Buenos_Aires';
 
 // COMPANY RELATED CONSTANTS TO FILL OUT
 // MUST CHANGE ALL THIS THE GET IT 
