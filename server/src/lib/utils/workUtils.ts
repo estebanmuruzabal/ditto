@@ -167,7 +167,7 @@ export const getGrowerMainMenuButtons = (resData: any, user: IUser, plant: Plant
     const bodyContent =
         `Controller ID: ${plant.plantId}
 Humedad del suelo: ${plant.soil_humidity_1}
-Humedad del aire: ${plant.airHumidity}
+Humedad del aire: ${plant.humidity}
 Temperatura: ${plant.tempeture}
 Relay 1: ${plant.isRelayOneOn}
 Relay 2: ${plant.isRelayTwoOn}

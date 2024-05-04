@@ -19,7 +19,7 @@ export const typeDefs = gql`
         name: String!
         soil_humidity_1: Int
         soil_humidity_2: Int
-        airHumidity: Int
+        humidity: Int
         tempeture: Int
         light: Int
         sensors: [ISensorSetting]
