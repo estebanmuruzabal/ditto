@@ -316,7 +316,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED:
-            if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
+            if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading > maxReading && !relayOneWorking) {
 
