@@ -50,7 +50,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [passwordChangeMsg, setPasswordChangeMsg] = useState('');
   const {
-    authState: { isStaff },
+    authState: { isStaff, isGrower },
     authDispatch,
   } = React.useContext<any>(AuthContext);
   const [updateMeMutation] = useMutation(UPDATE_ME);
@@ -225,7 +225,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               defaultMessage='Your Profile'
             />
           </Title>
-          { isStaff && (
+          { (isStaff || isGrower) && (
               <Title>[{role}]</Title>
           )}
         </HeadingSection>
@@ -243,9 +243,9 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               name='name'
               value={name}
               onChange={handleChange}
-              backgroundColor='#F7F7F7'
+              backgroundcolor='#F7F7F7'
               height='48px'
-              marginBottom='10px'
+              marginbottom='10px'
               // intlInputLabelId="profileNameField"
             />
           </Col>

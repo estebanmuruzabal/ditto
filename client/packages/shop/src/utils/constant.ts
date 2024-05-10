@@ -75,12 +75,16 @@ export enum SensorsTypes {
     LIGHT = 'LIGHT',
     DISTANCE = 'DISTANCE',
     PLUG = 'PLUG',
-    HUMIDITY_TEMPETURE = 'HUMIDITY_TEMPETURE',
+    HUMIDITY = 'HUMIDITY',
+    TEMPETURE = 'TEMPETURE',
 }
 export enum Locales {
     ES = 'es',
     EN = 'en',
 }
+
+export const timeZone = 'America/Argentina/Buenos_Aires';
+
 export const timezones = [
     'America/Argentina/Buenos_Aires',
     'America/Port_of_Spain',
@@ -112,6 +116,8 @@ export enum HumiditySensorMode {
     IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION = 'IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
     MANUAL = 'HUMIDITY_MANUAL',
+    MIN_WARNING = 'HUMIDITY_MIN_WARNING',
+    MAX_WARNING = 'HUMIDITY_MAX_WARNING',
     SCHEDULE = 'HUMIDITY_SCHEDULE',
     SCHEDULE_DOUBLE_ACTION = 'HUMIDITY_SCHEDULE_DOUBLE_ACTION',
     NONE = 'NONE'
@@ -140,10 +146,19 @@ export enum PlugMode {
     NONE = 'NONE'
 }
 
-export enum PlugSensorMode {
+export enum AirHumiditySensorMode {
     MANUAL = 'MANUAL',
     SCHEDULE = 'SCHEDULE',
-    ASSOCIATED = 'ASSOCIATED',
+    WHEN_MIN_ACTION_AUTOMATED = 'WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+
+export enum AirTemperatureSensorMode {
+    MANUAL = 'MANUAL',
+    SCHEDULE = 'SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'WHEN_MAX_ACTION_AUTOMATED',
     NONE = 'NONE'
 }
 
@@ -177,13 +192,31 @@ export const distanceModeOptions = [
 
 export const humidityModeOptions = [
     { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
+    { value: HumiditySensorMode.MIN_WARNING, label: 'Aviso en mínimos' },
+    { value: HumiditySensorMode.MAX_WARNING, label: 'Aviso en máximos' },
     { value: HumiditySensorMode.MANUAL, label: 'Manual' },
     { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND, label: 'A demanda cant. exacta' },
     { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION, label: 'A demanda cant. exacta, doble acción' },
     { value: HumiditySensorMode.IRRIGATE_ON_DEMAND, label: 'A demanda' },
-    { value: HumiditySensorMode.SCHEDULE, label: 'Calendario de riego' },
-    { value: HumiditySensorMode.SCHEDULE_DOUBLE_ACTION, label: 'Calendario de riego, doble acción' },
+    { value: HumiditySensorMode.SCHEDULE, label: 'Calendario' },
+    { value: HumiditySensorMode.SCHEDULE_DOUBLE_ACTION, label: 'Calendario, doble acción' },
     { value: HumiditySensorMode.NONE, label: 'Ninguno' }
+];
+
+export const airHumiditySensorModeOptions = [
+    { value: AirHumiditySensorMode.MANUAL, label: 'Manual' },
+    { value: AirHumiditySensorMode.SCHEDULE, label: 'Calendario' },
+    { value: AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción en mínimos' },
+    { value: AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción en máximos' },
+    { value: AirHumiditySensorMode.NONE, label: 'Ninguno' }
+];
+
+export const airTemperatureSensorModeOptions = [
+    { value: AirTemperatureSensorMode.MANUAL, label: 'Manual' },
+    { value: AirTemperatureSensorMode.SCHEDULE, label: 'Calendario' },
+    { value: AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción en mínimos' },
+    { value: AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción en máximos' },
+    { value: AirTemperatureSensorMode.NONE, label: 'Ninguno' }
 ];
 
 export const lightModeOptions = [

@@ -17,11 +17,11 @@ export const getLastNumOfSensor = (settingType: SensorsTypes) : number => {
 
 
 export const hasDittoBotUpdatedInLastMinute = (lastTimeStamp: string, timeZone: string) => {
-    console.log('timeZone', timeZone)
+    // console.log('timeZone', timeZone)
     const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone }));
-    console.log('currentTimeMoment', currentTimeMoment)
+    // console.log('currentTimeMoment', currentTimeMoment)
     const lastTimeStampMoment = moment(new Date(lastTimeStamp));
-    console.log('lastTimeStampMoment', lastTimeStampMoment)
+    // console.log('lastTimeStampMoment', lastTimeStampMoment)
     const lastTimestampInMins = currentTimeMoment?.diff(lastTimeStampMoment, 'minutes');
 
     // we are updating acutally every 5 seconds, but just in case we check if in the last minute there was any conection

@@ -138,7 +138,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                     />
                   </>
                 ) : (
-                  <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddClick}>
+                  <Button className="cart-button" variant="secondary" borderradius={100} onClick={handleAddClick}>
                     <ButtonText>
                       <FormattedMessage id={"addToCartButton"} defaultMessage="Cart" />
                     </ButtonText>

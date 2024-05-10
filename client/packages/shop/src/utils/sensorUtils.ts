@@ -14,6 +14,8 @@ export const getSettingTypeText = (settingType: SensorsTypes) => {
         case `${SensorsTypes.DISTANCE}_1`: return 'DISTANCIA';
         case `${SensorsTypes.DISTANCE}_2`: return 'DISTANCIA 2';
         case `${SensorsTypes.DISTANCE}_3`: return 'DISTANCIA 3';
+        case `${SensorsTypes.TEMPETURE}_1`: return 'TEMPERATURA AIRE';
+        case `${SensorsTypes.HUMIDITY}_1`: return 'HUMEDAD AIRE';
         default:
             break;
     }

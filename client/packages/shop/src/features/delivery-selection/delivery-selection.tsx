@@ -47,7 +47,8 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
 
     const methodFound = deliveryOptionsMethods.filter(method => method.name.includes(zipCode));
     e.stopPropagation();
-    setSearchResult(deli ? methodFound : null)
+    // setSearchResult(deli ? methodFound : null)
+    setSearchResult(deliveryOptionsMethods)
   };
   
   const searchPickupZipCode =  (e, deli) => {
@@ -60,7 +61,8 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
     const methodFound = pickUpOptionsMethods.filter(method => method.details.includes(zipCode));
 
     e.stopPropagation();
-    setSearchResult(deli ? methodFound : null)
+    // setSearchResult(deli ? methodFound : null)
+    setSearchResult(pickUpOptionsMethods)
   };
 
   const setDelivery =  (e, deli: DeliveryMethodsConstants) => {

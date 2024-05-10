@@ -36,7 +36,7 @@ export const Banner: React.FC<Props> = ({
   };
   return (
     <Box>
-      <Image backgroundImage={`url(${imageUrl})`} />
+      <Image backgroundimage={`url(${imageUrl})`} />
       <Content>
         <Title>
           <FormattedMessage

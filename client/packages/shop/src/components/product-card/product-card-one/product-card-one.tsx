@@ -186,7 +186,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
               {finalPrice}
             </ProductPrice>
           </ProductPriceWrapper>
-            {/* <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p> */}
         </ProductCartWrapper>)
       }
       { showProductQuantityExceededMsg && (

@@ -45,11 +45,7 @@ const ProductPage: NextPage<Props> = ({ data, deviceType }) => {
 
       <Modal>
         <ProductSingleWrapper>
-          <ProductSingleContainer
-          style={{
-            marginTop: "30px"
-          }}
-          >
+          <ProductSingleContainer>
             {content}
           </ProductSingleContainer>
         </ProductSingleWrapper>

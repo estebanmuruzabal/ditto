@@ -539,7 +539,7 @@ export const WeekContainer = styled.div`
   display: flex;
   flex-direction: column;
   border: 1px solid #bba3a3;
-  padding: 10px;
+  padding: 4px;
   margin: 10px;
   border-radius: 5px;
   width: fit-content;

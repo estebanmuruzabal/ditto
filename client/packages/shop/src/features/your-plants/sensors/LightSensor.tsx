@@ -147,8 +147,8 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             <ListTitle>
               <Text>
                 <FormattedMessage
-                  id="lightModeId"
-                  defaultMessage="lightModeId"
+                  id="modeId"
+                  defaultMessage="modeId"
                 />
               </Text>
             </ListTitle>

@@ -2,7 +2,7 @@ import React,  { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { openModal } from '@redq/reuse-modal';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { CommonMode, RelaysIds, SensorsTypes, timezones } from 'utils/constant';
+import { CommonMode, RelaysIds, SensorsTypes, timeZone, timezones } from 'utils/constant';
 import ErrorMessage from 'components/error-message/error-message';
 
 import {
@@ -37,6 +37,8 @@ import DistanceSensor from './sensors/DistanceSensor';
 import { AuthContext } from 'contexts/auth/auth.context';
 import { hasDittoBotUpdatedInLastMinute, getLastNumOfSensor, getSensorWithoutNumber } from 'utils/ditto-bot';
 import moment from 'moment';
+import AirHumidity from './sensors/AirHumiditySensor';
+import AirTemperature from './sensors/AirTemperatureSensor';
   
 
 type YourPlantsProps = {
@@ -68,6 +70,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   // });
   
   // const router = useRouter();
+
   const intl = useIntl();
   const [name, setPlantName] = useState('');
   const [openTab, setOpenTab] = useState('');
@@ -279,7 +282,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   const sensorsOptions = [
     { value: SensorsTypes.DISTANCE, label: intl.formatMessage({ id: 'distanceId', defaultMessage: 'distanceId' }) },
     { value: SensorsTypes.SOIL_HUMIDITY, label: intl.formatMessage({ id: 'moistHumidityId', defaultMessage: 'moistHumidityId' }) },
-    { value: SensorsTypes.HUMIDITY_TEMPETURE, label: intl.formatMessage({ id: 'airHumidityAndTempetureId', defaultMessage: 'airHumidityAndTempetureId' }) },
+    { value: SensorsTypes.HUMIDITY, label: intl.formatMessage({ id: 'airHumidityId', defaultMessage: 'airHumidityId' }) },
+    { value: SensorsTypes.TEMPETURE, label: intl.formatMessage({ id: 'airTempetureId', defaultMessage: 'airTempetureId' }) },
     { value: SensorsTypes.LIGHT, label: intl.formatMessage({ id: 'lightSensorId', defaultMessage: 'lightSensorId' }) },
     { value: SensorsTypes.PLUG, label: intl.formatMessage({ id: 'intelligentPlugId', defaultMessage: 'intelligentPlugId' }) },
   ];
@@ -307,7 +311,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
             console.log(plant)
-            plant.timeZone = 'America/Los_Angeles';
+            plant.timeZone = timeZone;
               return (
                 <DashboardContainer key={i + '-orderList'}>
                   <Row1>
@@ -328,7 +332,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             disabled={true}
                             value={plant?.name}
                             // we have to change the onChange because the is no one for the controller name actualy
-                            onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, e.target.value, false, intl.locale)}
+                            onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, e.target.value, false, timeZone)}
                             backgroundColor='#F7F7F7'
                             width='197px'
                             height='34.5px'
@@ -379,7 +383,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                           </ListDes>
                         </ListItem>
 
-                        <ListItem style={{ justifyContent: 'flex-start' }}>
+                        {/* <ListItem style={{ justifyContent: 'flex-start' }}>
                             <ListTitle>
                               <Text bold>
                                   <FormattedMessage
@@ -398,7 +402,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                                   menuPosition={'fixed'}
                               />
                             </ListDes>
-                          </ListItem>
+                          </ListItem> */}
                     </Column1>
                   </Row1>
                   <SensorsWrapper>
@@ -425,6 +429,36 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                         case `${SensorsTypes.LIGHT}_1`:
                           return (
                             <LightSensor 
+                              key={i + module.settingType}
+                              data={data}
+                              errorId={errorId}
+                              plant={plant}
+                              handleDeleteSensor={handleDeleteSensor}
+                              openTab={openTab}
+                              setOpenTab={setOpenTab}
+                              settingType={module.settingType}
+                              handleSettingsChange={handleSettingsChange}
+                              onDeleteSchedule={onDeleteSchedule} 
+                            />
+                          );
+                        case `${SensorsTypes.HUMIDITY}_1`:
+                          return (
+                            <AirHumidity 
+                              key={i + module.settingType}
+                              data={data}
+                              errorId={errorId}
+                              plant={plant}
+                              handleDeleteSensor={handleDeleteSensor}
+                              openTab={openTab}
+                              setOpenTab={setOpenTab}
+                              settingType={module.settingType}
+                              handleSettingsChange={handleSettingsChange}
+                              onDeleteSchedule={onDeleteSchedule} 
+                            />
+                          );
+                        case `${SensorsTypes.TEMPETURE}_1`:
+                          return (
+                            <AirTemperature 
                               key={i + module.settingType}
                               data={data}
                               errorId={errorId}
@@ -542,7 +576,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           </ListDes>
         </ListItem>
 
-        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={() => handleCreateUpdatePlantOnClick(plants, name, true, intl.locale)}>
+        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={() => handleCreateUpdatePlantOnClick(plants, name, true, timeZone)}>
           <ButtonText>
             <FormattedMessage id={"addDittoBotButton"} defaultMessage="Add plant" />
           </ButtonText>

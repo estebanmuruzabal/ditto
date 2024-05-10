@@ -6,6 +6,7 @@ import { OFFER_MENU_ITEM, HELP_MENU_ITEM } from 'site-settings/site-navigation';
 import LanguageSwitcher from '../language-switcher/language-switcher';
 import { HelpIcon } from 'assets/icons/HelpIcon';
 import { RightMenuBox } from './right-menu.style';
+
 const AuthMenu = dynamic(() => import('../auth-menu'), { ssr: false });
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
   avatar: string;
   isAuthenticated: boolean;
   isStaff: boolean;
+  isGrower: boolean;
 };
 
 export const RightMenu: React.FC<Props> = ({
@@ -21,6 +23,7 @@ export const RightMenu: React.FC<Props> = ({
   avatar,
   isAuthenticated,
   isStaff,
+  isGrower,
   onJoin,
 }) => {
   return (
@@ -40,7 +43,7 @@ export const RightMenu: React.FC<Props> = ({
         icon={<HelpIcon />}
       /> */}
 
-      <LanguageSwitcher />
+      {/* <LanguageSwitcher /> */}
 
       <AuthMenu
         avatar={avatar}
@@ -48,6 +51,7 @@ export const RightMenu: React.FC<Props> = ({
         onLogout={onLogout}
         isAuthenticated={isAuthenticated}
         isStaff={isStaff}
+        isGrower={isGrower}
       />
     </RightMenuBox>
   );

@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   currentUser: false,
   user: {},
   isStaff: false,
+  isGrower: false,
   isManager: false
 
 };
@@ -25,6 +26,7 @@ function reducer(state: any, action: any) {
           ...state,
           isAuthenticated: true,
           isStaff: [Roles.MEMBER, Roles.ADMIN, Roles.MANAGER, Roles.DELIVERY_BOY, Roles.STAFF].includes(action.user.role),
+          isGrower: [Roles.GROWER].includes(action.user.role),
           isManager: [Roles.ADMIN, Roles.MANAGER].includes(action.user.role),
           user: action.user,
         };

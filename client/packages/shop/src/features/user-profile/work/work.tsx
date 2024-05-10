@@ -117,7 +117,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     const ratePerMinute = user.workInfo.ratePerHour / 60;
 
     user.workInfo.totalWorkingMinutesPerWeek += workedInMinutes;
-    user.workInfo.totalSalaryToPayWeekly = Number(user.workInfo.totalWorkingMinutesPerWeek) * Number(ratePerMinute) - Number(user.workInfo.advancedSalaryPaid);
+    user.workInfo.totalSalaryToPayWeekly = Number(user.workInfo.totalWorkingMinutesPerWeek) * Number(ratePerMinute) - Number(user.workInfo.advancedSalaryPaid || 0);
 
     user.logs.push({
       logDescription: 'finished working',

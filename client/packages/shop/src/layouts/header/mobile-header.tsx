@@ -130,9 +130,9 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
           />
         </LogoWrapper>
 
-        <LanguageSwitcher />
+        {/* <LanguageSwitcher /> */}
 
-        {/* {isHomePage ? (
+        {isHomePage ? (
           <SearchWrapper
             onClick={handleSearchModal}
             className="searchIconWrapper"
@@ -145,7 +145,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ className }) => {
           className="searchIconWrapper"
         >
           <SearchIcon />
-        </SearchWrapper> */}
+        </SearchWrapper>
       </MobileHeaderInnerWrapper>
     </MobileHeaderWrapper>
   );
