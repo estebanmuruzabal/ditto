@@ -18,8 +18,7 @@ import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';
 import { ISetting } from 'utils/types';
 import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import { CheckMark } from 'assets/icons/CheckMark';
-import Reading from './HumidityReading';
-import LightReading from './LightReading';
+import AirTempetureReading from './sensor-readings/AirTempetureReading';
 
 interface Props {
   data?: any;
@@ -38,6 +37,7 @@ const AirTemperature: React.FC<Props> = ({ errorId, plant, settingType, handleSe
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
     const intl = useIntl();
+    const module = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const selectedMode = airTemperatureSensorModeOptions.find((option) => option.value === setting.mode);
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
@@ -65,7 +65,7 @@ const AirTemperature: React.FC<Props> = ({ errorId, plant, settingType, handleSe
             componentProps: { item: modalProps },
         });
     };
-console.log('setting', setting)
+
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '66px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -108,11 +108,7 @@ console.log('setting', setting)
               </Text>
             </ListTitle>
             <ListDes>
-                <LightReading
-                    settingType={settingType}
-                    plant={plant}
-                />
-              {/* <Text bold>{setting?.reading} % {setting?.reading < 40 ? '🌙' : '💡'}</Text> */}
+                <AirTempetureReading module={module} plantId={plant.plantId} latestDataFetched={data} />
             </ListDes>
           </ListItem>
   
@@ -408,8 +404,8 @@ console.log('setting', setting)
                         <ListTitle>
                             <Text>
                             <FormattedMessage
-                                id='minHumidityId'
-                                defaultMessage='minHumidityId'
+                                id='minTempetureId'
+                                defaultMessage='minTempetureId'
                             />
                             </Text>
                         </ListTitle>
@@ -428,7 +424,7 @@ console.log('setting', setting)
                                     <Porcentage>%</Porcentage>
                                 </Row>
                             ) : (
-                                <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} %</Text>
+                                <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} °</Text>
                             )}
                             {errorId === 'minWarning' && (
                                 <ErrorMsg>

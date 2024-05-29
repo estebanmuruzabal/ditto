@@ -39,6 +39,8 @@ import { hasDittoBotUpdatedInLastMinute, getLastNumOfSensor, getSensorWithoutNum
 import moment from 'moment';
 import AirHumidity from './sensors/AirHumiditySensor';
 import AirTemperature from './sensors/AirTemperatureSensor';
+import LastConectionReading from './sensors/sensor-readings/LastConectionReading';
+import Switch from 'components/switch/switch';
   
 
 type YourPlantsProps = {
@@ -146,6 +148,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
     // if we want to stop user to reuse plugs, uncomment line bellow
     if (shouldNotAssignRelay(plant, field, value)) return;
+    // we dont want to reset enchufes or values. YET
     plant = defaultSettingValuesIfModeChanges(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
@@ -158,7 +161,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     }, 8000)
   };
 
-  const handleCreateUpdatePlantOnClick = (plant, name: string, newPlant: boolean, timeZone: string) => {
+  const handleCreateUpdatePlantOnClick = (plant, name: string, newPlant: boolean, timeZone?: string, offline_notification?: boolean) => {
     setTimezone(timeZone);
     setTimeout(function () {
       addPlant({
@@ -166,7 +169,8 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           id: data?.getUser?.id,
           name,
           plantId: newPlant ? Number(plantId) : plant.plantId,
-          ...(timeZone && {timeZone})
+          ...(timeZone && {timeZone}),
+          offline_notification: offline_notification
         },
       });
   
@@ -310,7 +314,6 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           { plants?.length < 1 && (<Text>{intl.formatMessage({ id: 'noDittoBotsTextId', defaultMessage: 'noDittoBotsTextId' })}</Text>) }
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
-            console.log(plant)
             plant.timeZone = timeZone;
               return (
                 <DashboardContainer key={i + '-orderList'}>
@@ -343,23 +346,35 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                       <ListItem>
                         <ListTitle>
                           <Text bold>
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
                             <FormattedMessage
                               id="statusId"
                               defaultMessage="statusId"
                             />
-                          {/* <Reading> */}
-                        {/* <Reading> */}
-
                           </Text>
                         </ListTitle>
                         <ListDes>
-                          <Text>{plant.timestamp?.length > 0 ? moment(plant.timestamp).format('hh:mm A - DD MMM') : ''} {hasDittoBotUpdatedInLastMinute(plant.timestamp, plant.timeZone) ? '[ONLINE]' : '[OFFLINE]'}</Text>
+                          <LastConectionReading key={'lastcon'+i} plantIndex={i} />
                         </ListDes>
-                        {/* <Reading> */}{/* <Reading> */}
+                      </ListItem>
+
+                      <ListItem>
+                        <ListTitle>
+                          <Text bold>
+                            <FormattedMessage
+                              id="offlineNotificationId"
+                              defaultMessage="offlineNotificationId"
+                            />
+                          </Text>
+                        </ListTitle>
+                        <ListDes>
+                          <Switch 
+                            disabled={false}
+                            checked={plant.offline_notification}
+                            labelPosition={'right'}
+                            // className,
+                            onUpdate={(e: any) => handleCreateUpdatePlantOnClick(plant, plant.name, false, plant.timeZone, !plant.offline_notification)}
+                          />
+                        </ListDes>
                       </ListItem>
 
                       <ListItem style={{ justifyContent: 'flex-start' }}>

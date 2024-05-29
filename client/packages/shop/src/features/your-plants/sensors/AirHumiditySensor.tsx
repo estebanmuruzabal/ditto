@@ -18,8 +18,7 @@ import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';
 import { ISetting } from 'utils/types';
 import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import { CheckMark } from 'assets/icons/CheckMark';
-import Reading from './HumidityReading';
-import LightReading from './LightReading';
+import AirHumidityReading from './sensor-readings/AirHumidityReading';
 
 interface Props {
   data?: any;
@@ -38,6 +37,7 @@ const AirHumidity: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
     const intl = useIntl();
+    const module = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const selectedMode = airHumiditySensorModeOptions.find((option) => option.value === setting.mode);
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
@@ -65,7 +65,7 @@ const AirHumidity: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             componentProps: { item: modalProps },
         });
     };
-console.log('setting', setting)
+
     return (
         <PlantsSensorContainer style={{ height: tabIsOpen ? '100%' : '66px' }} onClick={(e) => { e.stopPropagation(); setOpenTab(tabIsOpen ? '' : settingType); }}>
             <ListItem style={{ justifyContent: 'flex-start' }}>
@@ -108,11 +108,7 @@ console.log('setting', setting)
               </Text>
             </ListTitle>
             <ListDes>
-                <LightReading
-                    settingType={settingType}
-                    plant={plant}
-                />
-              {/* <Text bold>{setting?.reading} % {setting?.reading < 40 ? '🌙' : '💡'}</Text> */}
+                <AirHumidityReading module={module} plantId={plant.plantId} latestDataFetched={data} />
             </ListDes>
           </ListItem>
   

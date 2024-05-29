@@ -18,7 +18,7 @@ import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';
 import { ISetting } from 'utils/types';
 import { CheckMark } from 'assets/icons/CheckMark';
 import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
-import HumidityReading from './HumidityReading';
+import HumidityReading from './sensor-readings/HumidityReading';
 
 // import { useQuery } from '@apollo/react-hooks';
 // const { loading, error, data = {} } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
@@ -49,7 +49,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === module.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === module.relayTwoIdRelated);
     const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
-    
+
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
 
@@ -116,7 +116,7 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
                     </Text>
                 </ListTitle>
                 <ListDes>
-                    <HumidityReading module={module} />
+                    <HumidityReading module={module} plantId={plant.plantId} latestDataFetched={data} />
                 </ListDes>
             </ListItem>
             <ListItem style={{ justifyContent: 'flex-start' }}>

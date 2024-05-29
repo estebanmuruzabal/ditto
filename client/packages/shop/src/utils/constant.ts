@@ -206,16 +206,16 @@ export const humidityModeOptions = [
 export const airHumiditySensorModeOptions = [
     { value: AirHumiditySensorMode.MANUAL, label: 'Manual' },
     { value: AirHumiditySensorMode.SCHEDULE, label: 'Calendario' },
-    { value: AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción en mínimos' },
-    { value: AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción en máximos' },
+    { value: AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción < de mín.' },
+    { value: AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción > de máx.' },
     { value: AirHumiditySensorMode.NONE, label: 'Ninguno' }
 ];
 
 export const airTemperatureSensorModeOptions = [
     { value: AirTemperatureSensorMode.MANUAL, label: 'Manual' },
     { value: AirTemperatureSensorMode.SCHEDULE, label: 'Calendario' },
-    { value: AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción en mínimos' },
-    { value: AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción en máximos' },
+    { value: AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción < de mín.' },
+    { value: AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción > de máx.' },
     { value: AirTemperatureSensorMode.NONE, label: 'Ninguno' }
 ];
 

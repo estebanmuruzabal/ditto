@@ -18,8 +18,7 @@ import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';
 import { ISetting } from 'utils/types';
 import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import { CheckMark } from 'assets/icons/CheckMark';
-import Reading from './HumidityReading';
-import LightReading from './LightReading';
+import LightReading from './sensor-readings/LightReading';
 
 interface Props {
   data?: any;
@@ -38,6 +37,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
     const intl = useIntl();
+    const module = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const selectedMode = lightModeOptions.find((option) => option.value === setting.mode);
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
@@ -108,11 +108,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
               </Text>
             </ListTitle>
             <ListDes>
-                <LightReading
-                    settingType={settingType}
-                    plant={plant}
-                />
-              {/* <Text bold>{setting?.reading} % {setting?.reading < 40 ? '🌙' : '💡'}</Text> */}
+                <LightReading module={module} plantId={plant.plantId} />
             </ListDes>
           </ListItem>
   
@@ -166,6 +162,29 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                 )}
             </ListDes>
           </ListItem>
+          { (setting.mode === LightSensorMode.MANUAL && hasRelayAsociated) && (
+            <>
+              <ListItem>
+                <ListTitle>
+                  <Text>
+                    <FormattedMessage
+                      id='manualModeStateId'
+                      defaultMessage='manualModeStateId'
+                    />
+                  </Text>
+                </ListTitle>
+                <ListDes>
+                    <Switch 
+                        disabled={false}
+                        checked={setting.relayOneWorking}
+                        labelPosition={'right'}
+                        // className,
+                        onUpdate={(e: any) => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
+                    />
+                </ListDes>
+              </ListItem>
+            </>
+          )} 
   
           { (setting?.mode === LightSensorMode.MANUAL || setting?.mode === LightSensorMode.SCHEDULE) && (
             <ListItem>
@@ -192,30 +211,6 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
               </ListDes>
             </ListItem>
           )}
-          
-          {/* { (setting.mode === LightSensorMode.MANUAL && hasRelayAsociated) && (
-            <>
-              <ListItem>
-                <ListTitle>
-                  <Text>
-                    <FormattedMessage
-                      id='manualModeStateId'
-                      defaultMessage='manualModeStateId'
-                    />
-                  </Text>
-                </ListTitle>
-                <ListDes>
-                    <Switch 
-                        disabled={false}
-                        checked={setting.relayOneWorking}
-                        labelPosition={'right'}
-                        // className,
-                        onUpdate={(e: any) => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
-                    />
-                </ListDes>
-              </ListItem>
-            </>
-          )} */}
 
           { ((setting.mode === LightSensorMode.SCHEDULE) && hasRelayAsociated) && (
             <>

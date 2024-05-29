@@ -24,6 +24,7 @@ query GetUser{
       timeZone
       alarm
       alarm_timestamp
+      offline_notification
       sensors {
         reading
         name
@@ -104,8 +105,11 @@ query GetUser{
     name
     plants {
       plantId
+      timestamp
+      timeZone
       sensors {
         reading
+        settingType
       }
     }
   }

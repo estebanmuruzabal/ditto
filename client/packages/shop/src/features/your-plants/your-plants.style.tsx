@@ -493,7 +493,7 @@ export const ListItem = styled.div`
 
 export const ListTitle = styled.div`
   flex-basis: 140px;
-  width: 197px;
+  width: 297px;
   flex-shrink: 0;
   position: relative;
   text-align: left;
