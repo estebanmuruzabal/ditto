@@ -27,6 +27,7 @@ export const typeDefs = gql`
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
+        offline_notification: Boolean
         timestamp: String
         alarm: Boolean
         alarm_timestamp: String
@@ -627,6 +628,7 @@ export const typeDefs = gql`
         getSetting(key: String!): Setting!
         getSiteSetting(key: String!): Setting!
         getUser: User!
+        getOfflineDittoBotsUsers: [User]
         getCustomer(phone: String!): UserAuthPayload!
         coupons(limit: Int = 12, offset: Int = 0, searchText: String): CouponPaginationType!
         validateCoupon(code: String!): CouponValid!
@@ -669,7 +671,7 @@ export const typeDefs = gql`
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameEmailAndLenguage(id: ID!, name: String!, email: String, lenguage: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String): DefaultMessageType!
+        addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String, offline_notification: Boolean): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, alarm: Boolean, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
         deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!

@@ -79,6 +79,30 @@ export const usersResolvers: IResolvers = {
             // @ts-ignore
             return await authorize(req, db);
         },
+        getOfflineDittoBotsUsers: async (
+            _root: undefined,
+            {}: {},
+            {db, req}: { db: Database, req: Request }
+            // change any
+         ): Promise<IUser[]> => {
+            // @ts-ignore
+            return await db.users.find( { role: Roles.GROWER } ).toArray();
+            // if (!growerUsersList) {
+            //     throw new Error("User grogers not found.");
+            // } 
+            // // else {
+            // //     growerUsersList = growerUsersList.filter((category: any) => {
+            // //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // //         // @ts-ignore
+            // //         return category.type_id === typeResult._id.toString();
+            // //     });
+            // // }
+            //  console.log('growerUsersList::', growerUsersList)
+
+            //  return {
+            //     growerUsersList
+            //  };
+        },
         // updateShop: async (
         //     _root: undefined,
         //     {id, input}: IShopInputArgs,
@@ -479,8 +503,9 @@ export const usersResolvers: IResolvers = {
             {   id, 
                 name,
                 plantId,
-                timeZone
-            }: { id: string, name: string, plantId: number, timeZone?: string },
+                timeZone,
+                offline_notification
+            }: { id: string, name: string, plantId: number, timeZone?: string, offline_notification: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -510,6 +535,7 @@ export const usersResolvers: IResolvers = {
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
                     isRelayFourthOn: false,
+                    offline_notification: false,
                     timestamp: null,
                     timeZone,
                     sensors: []
@@ -524,6 +550,7 @@ export const usersResolvers: IResolvers = {
                 const plants = userResult.plants;
                 plants[index].name = name;
                 if (timeZone) plants[index].timeZone = timeZone;
+                plants[index].offline_notification = offline_notification;
                 message = 'Updated plants name and timezone'
                 await db.users.updateOne(
                     {_id: new ObjectId(id)},

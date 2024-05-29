@@ -14,11 +14,11 @@ const DELAY_TIME = 170; //ms
 import { cleanNumber, isValidNumber } from './controllers/handle';
 import { lastClientTrigger, lastGrowerTrigger, lastStaffTrigger, sendMedia, sendMessage, sendMessageButton } from './controllers/send';
 import { findResponseMsg } from './controllers/flows';
-import { fetchCustomerAndToken, getSettings, saveUserChatHistory } from './api';
+import { fetchCustomerAndToken, fetchOfflineDittoBotsUsers, getSettings, saveUserChatHistory } from './api';
 import { TriggerSteps } from './lib/types';
-import { INITIAL_USER_USERNAME } from './lib/utils/constant';
 import { isGrower, isUserStaff, normalizeText } from './lib/utils/shoppingUtils';
-import { readInboxContent } from './lib/utils/number-verification-otp';
+import { offlineDittoBotsJob } from './cron-job';
+
 const { Client, LocalAuth, List, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json'
@@ -169,6 +169,8 @@ const mount = async (app: Application) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     app.use(cors());
+
+    offlineDittoBotsJob.start();
 
     server.applyMiddleware({
         app,

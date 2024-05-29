@@ -21,6 +21,8 @@ export interface Plant {
     isRelayTwoOn: boolean;
     isRelayThirdOn: boolean;
     isRelayFourthOn: boolean;
+    timestamp: string;
+    offline_notification: boolean;
     timeZone: string;
 }
 
@@ -118,7 +120,7 @@ export interface IUser {
     plants: Array<Plant>;
     delivery_address?: Array<Address>;
     otp?: string;
-    role?: Roles;
+    role: Roles;
     shoppingCart?: IOrderInput;
     chatHistory: IChat[];
     created_at: string;

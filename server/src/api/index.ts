@@ -1,7 +1,7 @@
 import { cleanNumber } from "../controllers/handle";
 import { IOrderInput, IOrderQuickInput } from "../graphql/resolvers/Orders/types";
 import { ICategory, IPaymentOption, IProduct, IUser, Plant } from "../lib/types";
-import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO, UPDATE_PRODUCT, createQuickOrderQuery, updateUserNameEmailAndLenguageQuery } from "./queries";
+import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO, UPDATE_PRODUCT, createQuickOrderQuery, updateUserNameEmailAndLenguageQuery, GET_DITTO_BOTS_OFFLINE_USERS } from "./queries";
 
 const { createApolloFetch } = require('apollo-fetch');
 
@@ -41,6 +41,27 @@ export const fetchCustomerAndToken = (phone: string) => new Promise((resolve, re
         resolve(err);
     });
 });
+
+
+export const fetchOfflineDittoBotsUsers = () => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: GET_DITTO_BOTS_OFFLINE_USERS,
+        variables: { },
+    }).then((res: any) => {
+        if (res?.errors?.length > 0 && res?.errors?.[0]?.message?.length) {
+            console.log('[fetchOfflineDittoBotsUsers]', res?.errors?.[0]?.message);
+        } else if (res?.data?.getCustomer?.user) {
+            console.log('[fetchOfflineDittoBotsUsers] User Fetched.');
+        } else {
+            console.log('fetchOfflineDittoBotsUsers response:',res);
+        }
+        resolve(res);
+    }).catch((err: any) => {
+        console.log('fetchOfflineDittoBotsUsers error:', err);
+        resolve(err);
+    });
+});
+
 
 export const signUpUser = (name: string, phone: string, password: string) => new Promise((resolve, reject) => {
     apolloFetch({

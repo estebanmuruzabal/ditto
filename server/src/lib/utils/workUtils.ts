@@ -161,6 +161,17 @@ import { getButtons, getListButtons, getSectionWith } from "./whatsAppUtils";
 //     return resData;
 // };
 
+export const hasDittoBotUpdatedInLast3Minute = (lastTimeStamp: string, timeZone: string) => {
+    const currentTimeMoment = moment(new Date().toLocaleString('en-US', { timeZone }));
+    // console.log('currentTimeMoment', currentTimeMoment)
+    const lastTimeStampMoment = moment(new Date(lastTimeStamp));
+    // console.log('lastTimeStampMoment', lastTimeStampMoment)
+    const lastTimestampInMins = currentTimeMoment?.diff(lastTimeStampMoment, 'minutes');
+
+    // we are updating acutally every 5 seconds, but just in case we check if in the last minute there was any conection
+    return lastTimestampInMins < 3;
+}
+
 export const getGrowerMainMenuButtons = (resData: any, user: IUser, plant: Plant, trigger: TriggerGrowerSteps, title: string, buttonText: string) => {
     const buttons: any = [{ body: '1 - Editar configuración' }, { body: '2 - Agregar module' }];
 

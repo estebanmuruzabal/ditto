@@ -8,6 +8,25 @@ export const GET_SETTINGS = `
   }
 `;
 
+export const GET_DITTO_BOTS_OFFLINE_USERS = `
+  query GetOfflineDittoBotsUsers {
+    getOfflineDittoBotsUsers {
+        phones {
+            number
+            }
+            chatHistory {
+                trigger
+            }
+            role
+            plants {
+                name
+                offline_notification
+                timestamp
+            }
+    }
+  }
+`;
+
 export const UPDATE_USER_WORK_INFO = `
   mutation UpdateUserWorkInfo(
     $id: ID!, 
@@ -67,6 +86,7 @@ export const getCustomerQuery = `
                     isRelayFourthOn
                     timestamp
                     timeZone
+                    offline_notification
                     sensors {
                         name
                         whatsappWarningsOn
