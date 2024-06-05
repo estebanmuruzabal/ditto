@@ -1,7 +1,7 @@
 // import { playintegrity } from "googleapis/build/src/apis/playintegrity";
 import moment from "moment";
 
-import { AirHumiditySensorMode, AirTemperatureSensorMode, DistanceSensorMode, HumiditySensorMode, ISensorSetting, ISetting, LightSensorMode, Plant } from "../lib/types";
+import { AirHumiditySensorMode, AirTemperatureSensorMode, C02SensorMode, DistanceSensorMode, HumiditySensorMode, ISensorSetting, ISetting, LightSensorMode, Plant } from "../lib/types";
 import { sendMessage } from "./send";
 import { WeekDays } from "../utils/constants";
 import { fireWhatappAlarmIfIsOn, logTimeStampWithTimeFilter } from "../utils/logsUtils";
@@ -268,6 +268,83 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
+        case C02SensorMode.MANUAL:
+            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
+            // @ts-ignore
+            plant[relayOneIdRelated] = setting.relayOneWorking;
+
+            setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
+            break;
+        case C02SensorMode.SCHEDULE:
+            setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+
+                    let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0])); 
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1])); 
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0])); 
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
+
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
+
+                }
+            })
+            setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
+            break;
+        case C02SensorMode.WHEN_MIN_ACTION_AUTOMATED:
+            if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
+
+            if (reading < minReading && !relayOneWorking) {
+
+                plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+
+                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya activamos tu accion asociada!`);
+                break;
+            } else if (reading >= minReading && relayOneWorking) {
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
+
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya desactivamos tu accion asociada!`);
+                break;
+            }
+
+            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+            break;
+        case C02SensorMode.WHEN_MAX_ACTION_AUTOMATED:
+            if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
+
+            if (reading > maxReading && !relayOneWorking) {
+
+                plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+
+                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya activamos tu accion asociada!`);
+                break;
+            } else if (reading < maxReading && relayOneWorking) {
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
+
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya desactivamos tu accion asociada!`);
+                break;
+            }
+
+            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+            break;
         case AirTemperatureSensorMode.SCHEDULE:
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
@@ -359,11 +436,10 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
 
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
-                    // if there is natural light we dont turn the lights on
-                    const thereIsNaturalLight = reading > 50 && schedule.smartLight;
+
                     // @ts-ignore
-                    plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
-                    setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
 
                 }
             })

@@ -196,6 +196,14 @@ export enum AirHumiditySensorMode {
     NONE = 'NONE'
 }
 
+export enum C02SensorMode {
+    MANUAL = 'MANUAL',
+    SCHEDULE = 'C02_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'C02_C02_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'C02_C02_WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+
 export enum AirTemperatureSensorMode {
     MANUAL = 'MANUAL',
     SCHEDULE = 'SCHEDULE',

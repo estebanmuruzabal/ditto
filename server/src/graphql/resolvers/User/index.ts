@@ -84,9 +84,23 @@ export const usersResolvers: IResolvers = {
             {}: {},
             {db, req}: { db: Database, req: Request }
             // change any
-         ): Promise<IUser[]> => {
-            // @ts-ignore
-            return await db.users.find( { role: Roles.GROWER } ).toArray();
+         ): Promise<any> => {
+            let growerUsersList = await db.users.find( { role: Roles.GROWER } ).toArray();
+            if (!growerUsersList) {
+                throw new Error("User grogers not found.");
+            } 
+            // else {
+            //     growerUsersList = growerUsersList.filter((category: any) => {
+            //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //         // @ts-ignore
+            //         return category.type_id === typeResult._id.toString();
+            //     });
+            // }
+             console.log('growerUsersList::', growerUsersList)
+
+             return {
+                growerUsersList
+             };
             // if (!growerUsersList) {
             //     throw new Error("User grogers not found.");
             // } 
@@ -531,6 +545,7 @@ export const usersResolvers: IResolvers = {
                     distance_cm: 0,
                     light_1: 0,
                     alarm: false,
+                    c02: 0,
                     isRelayOneOn: false,
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
@@ -552,6 +567,7 @@ export const usersResolvers: IResolvers = {
                 if (timeZone) plants[index].timeZone = timeZone;
                 plants[index].offline_notification = offline_notification;
                 message = 'Updated plants name and timezone'
+                console.log(plants[index])
                 await db.users.updateOne(
                     {_id: new ObjectId(id)},
                     {$set: { plants }}
@@ -574,11 +590,12 @@ export const usersResolvers: IResolvers = {
                 hum2,
                 light,
                 alarm,
+                c02,
                 isRelayOneOn,
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, contrId: number, hum1: number, airHum: number, temp: number, dist: number, hum2: number, light: number, alarm: boolean, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
+            }: { id: string, contrId: number, hum1: number, airHum: number, temp: number, dist: number, hum2: number, light: number, alarm: boolean, c02: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -602,6 +619,7 @@ export const usersResolvers: IResolvers = {
                 plants[index].light_1 = light;
                 plants[index].alarm_timestamp = alarmHasJustTurnOn ? new Date().toLocaleString('en-US', { timeZone }) : plants[index].alarm_timestamp;
                 plants[index].alarm = alarm;
+                plants[index].c02 = c02;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;

@@ -15,9 +15,11 @@ export const timeZone = 'America/Argentina/Buenos_Aires';
 // MUST CHANGE ALL THIS THE GET IT 
 
 // DITTO FARM RCIA VARIABLES
+export const PRIMARY_ONCALL_NUMBER = '5493624951926';
 
 export const BANK_TRANSFER_ALIAS = 'ditto.farm.rcia';
 export const BANK_TRANSFER_CBU = 'estebannmuruzabal@gmail.com';
+
 // export const COMPANY_EMAIL = 'dittofarm.rcia@gmail.com';
 // export const COMPANY_DESCRIPTION_TEXT = 'Ditto Farm es un proyecto frutihorticola a solo 8km de Rcia. Chaco producimos frutas, verduras y fertilizantes orgánicos con tecnicas de agricultura sustentable y cosechados en el dia!';
 // delivery_methods
