@@ -307,7 +307,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya activamos tu accion asociada!`);
+                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya activamos tu accion asociada!`);
                 break;
             } else if (reading >= minReading && relayOneWorking) {
                 setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
@@ -315,7 +315,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 setting.relayOneWorking = false;
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya desactivamos tu accion asociada!`);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya desactivamos tu accion asociada!`);
                 break;
             }
 
@@ -331,7 +331,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
 
-                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya activamos tu accion asociada!`);
+                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya activamos tu accion asociada!`);
                 break;
             } else if (reading < maxReading && relayOneWorking) {
                 setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
@@ -339,7 +339,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 setting.relayOneWorking = false;
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de c02, ya desactivamos tu accion asociada!`);
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya desactivamos tu accion asociada!`);
                 break;
             }
 
