@@ -274,14 +274,14 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               <FormattedMessage id='profileSaveBtn' defaultMessage='Save' />
             </Button>
           </Col>
-          {userinfoMsg && (
+          {/* {userinfoMsg && (
               <SuccessMsg>
                 <FormattedMessage
                   id='userInfoSuccess'
                   defaultMessage={userinfoMsg}
                 />
               </SuccessMsg>
-          )}
+          )} */}
         </Row>
         <Row>
           <Col xs={12} sm={12} md={12} lg={12}>

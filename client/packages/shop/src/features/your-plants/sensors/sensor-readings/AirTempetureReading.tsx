@@ -31,7 +31,7 @@ const AirTempetureReading: React.FC<Props> = ({ module, plantId  }) => {
     const { loading, error, data } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
         notifyOnNetworkStatusChange: true,
         fetchPolicy: "network-only",
-        pollInterval: 1000,
+        // pollInterval: 1000,
       });
     
       const plantIndex = data?.getUser?.plants?.findIndex((plant: any) => plant.plantId === plantId);

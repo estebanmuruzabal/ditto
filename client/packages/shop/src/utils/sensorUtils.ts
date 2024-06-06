@@ -7,6 +7,8 @@ export const getSettingTypeText = (settingType: SensorsTypes) => {
         case `${SensorsTypes.SOIL_HUMIDITY}_3`: return 'HUMEDAD TIERRA 3';
         case `${SensorsTypes.LIGHT}_1`: return 'LUZ';
         case `${SensorsTypes.LIGHT}_2`: return 'LUZ 2';
+        case `${SensorsTypes.C02}_1`: return 'CO2';
+        case `${SensorsTypes.C02}_2`: return 'CO2 1';
         case `${SensorsTypes.PLUG}_1`: return 'ENCHUFE 1';
         case `${SensorsTypes.PLUG}_2`: return 'ENCHUFE 2';
         case `${SensorsTypes.PLUG}_3`: return 'ENCHUFE 3';

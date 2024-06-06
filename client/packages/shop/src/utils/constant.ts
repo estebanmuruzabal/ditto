@@ -70,11 +70,14 @@ export const roleSelectOptions = [
     { lat: 3.1336599385978805, lng: 101.31866455078125 } // last point has to be same as first point
   ];
 
+export const currentLng = 'ar';
+
 export enum SensorsTypes {
     SOIL_HUMIDITY = 'SOIL_HUMIDITY',
     LIGHT = 'LIGHT',
     DISTANCE = 'DISTANCE',
     PLUG = 'PLUG',
+    C02 = 'C02',
     HUMIDITY = 'HUMIDITY',
     TEMPETURE = 'TEMPETURE',
 }
@@ -154,6 +157,14 @@ export enum AirHumiditySensorMode {
     NONE = 'NONE'
 }
 
+export enum C02SensorMode {
+    MANUAL = 'C02_MANUAL',
+    SCHEDULE = 'C02_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'C02_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'C02_WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+
 export enum AirTemperatureSensorMode {
     MANUAL = 'MANUAL',
     SCHEDULE = 'SCHEDULE',
@@ -209,6 +220,14 @@ export const airHumiditySensorModeOptions = [
     { value: AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción < de mín.' },
     { value: AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción > de máx.' },
     { value: AirHumiditySensorMode.NONE, label: 'Ninguno' }
+];
+
+export const c02SensorModeOptions = [
+    { value: C02SensorMode.MANUAL, label: 'Manual' },
+    { value: C02SensorMode.SCHEDULE, label: 'Calendario' },
+    { value: C02SensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción < de mín.' },
+    { value: C02SensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción > de máx.' },
+    { value: C02SensorMode.NONE, label: 'Ninguno' }
 ];
 
 export const airTemperatureSensorModeOptions = [

@@ -23,9 +23,8 @@ import Router, { useRouter } from 'next/router';
 import PhoneInput from 'react-phone-input-2'
 import startsWith from 'lodash.startswith';
 // import us from 'react-phone-input-2/lang/es.json'
-// const currentLng = 'us';
 import ar from 'react-phone-input-2/lang/es.json'
-const currentLng = 'ar';
+import { currentLng } from 'utils/constant';
 
 export default function SignInModal() {
   const router = useRouter();
@@ -115,7 +114,7 @@ export default function SignInModal() {
               onlyCountries={[currentLng]}
               localization={ar}
               country={currentLng}
-              masks={{ar: '(...) ...-......'}}
+              masks={{ar: '(...) ...-....'}}
               value={phone}
               onChange={handlePhoneChange}
           />

@@ -34,14 +34,11 @@ interface Props {
 
 const AirHumidity: React.FC<Props> = ({ errorId, plant, settingType, handleSettingsChange, onDeleteSchedule, data, openTab, setOpenTab, handleDeleteSensor }) => {
     const setting = plant.sensors.find((setting: ISetting) => setting.settingType === settingType);
-    const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
     const intl = useIntl();
     const module = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const selectedMode = airHumiditySensorModeOptions.find((option) => option.value === setting.mode);
-    const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
-    const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
     const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
@@ -185,25 +182,28 @@ const AirHumidity: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             </ListItem>
 
           )}
-                      <ListItem style={{ justifyContent: 'flex-start' }}>
+
+        { (setting?.mode === AirHumiditySensorMode.MANUAL) && (
+            <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
-                <Text>
-                    <FormattedMessage
-                    id="manualModeStateId"
-                    defaultMessage="manualModeStateId"
+                    <Text>
+                        <FormattedMessage
+                        id="manualModeStateId"
+                        defaultMessage="manualModeStateId"
+                        />
+                    </Text>
+                    </ListTitle>
+                    <ListDes>
+                    <Switch 
+                        disabled={false}
+                        checked={setting.relayOneWorking}
+                        labelPosition={'right'}
+                        // className,
+                        onUpdate={() => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
                     />
-                </Text>
-                </ListTitle>
-                <ListDes>
-                <Switch 
-                                disabled={false}
-                                checked={setting.relayOneWorking}
-                                labelPosition={'right'}
-                                // className,
-                                onUpdate={() => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
-                            />
-                    </ListDes>
-                </ListItem>
+                </ListDes>
+            </ListItem>
+          )}
 
           { (setting?.mode === AirHumiditySensorMode.MANUAL || setting?.mode === AirHumiditySensorMode.SCHEDULE) && (
             <ListItem>

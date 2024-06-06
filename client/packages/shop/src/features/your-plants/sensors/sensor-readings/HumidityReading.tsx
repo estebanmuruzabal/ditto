@@ -31,7 +31,7 @@ const HumidityReading: React.FC<Props> = ({ module, plantId  }) => {
     const { loading, error, data } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
         notifyOnNetworkStatusChange: true,
         fetchPolicy: "network-only",
-        pollInterval: 10000,
+        // pollInterval: 10000,
       });
     
     

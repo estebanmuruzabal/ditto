@@ -41,6 +41,7 @@ import AirHumidity from './sensors/AirHumiditySensor';
 import AirTemperature from './sensors/AirTemperatureSensor';
 import LastConectionReading from './sensors/sensor-readings/LastConectionReading';
 import Switch from 'components/switch/switch';
+import C02Sensor from './sensors/C02Sensor';
   
 
 type YourPlantsProps = {
@@ -75,6 +76,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
 
   const intl = useIntl();
   const [name, setPlantName] = useState('');
+  const [plants, setPlantPlants] = useState(state?.plants);
   const [openTab, setOpenTab] = useState('');
   const [errorId, setErrorId] = useState('');
   const [plantId, setControllerID] = useState('');
@@ -85,7 +87,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   
   const [updateSetting] = useMutation(UPDATE_SETTING);
   const [deleteSetting] = useMutation(DELETE_SETTING);
-  const { plants } = state;
+  // const { plants } = state;
 
   if (loading) {
     return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
@@ -154,7 +156,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     dispatch({ type: settingType, payload: { plant, value, field } });
 
     if(isClean(plant, field, value)) dispatchSettingSave(plant, field, value, settingType);
-
+    
     setUserinfoMsg('Update user info successfully');
     setTimeout(function () {
       setUserinfoMsg('');
@@ -282,7 +284,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     dispatch({ type: 'ADD_MODULE', payload: {plantIndex, setting: getDefaultSetting(completeSensorTypeName) }});
   };
 
-  const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left' }) };
+  const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left', cursor: 'pointer' }) };
   const sensorsOptions = [
     { value: SensorsTypes.DISTANCE, label: intl.formatMessage({ id: 'distanceId', defaultMessage: 'distanceId' }) },
     { value: SensorsTypes.SOIL_HUMIDITY, label: intl.formatMessage({ id: 'moistHumidityId', defaultMessage: 'moistHumidityId' }) },
@@ -290,6 +292,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     { value: SensorsTypes.TEMPETURE, label: intl.formatMessage({ id: 'airTempetureId', defaultMessage: 'airTempetureId' }) },
     { value: SensorsTypes.LIGHT, label: intl.formatMessage({ id: 'lightSensorId', defaultMessage: 'lightSensorId' }) },
     { value: SensorsTypes.PLUG, label: intl.formatMessage({ id: 'intelligentPlugId', defaultMessage: 'intelligentPlugId' }) },
+    { value: SensorsTypes.C02, label: intl.formatMessage({ id: 'c02Id', defaultMessage: 'c02Id' }) }
   ];
 
   const timezonesList = timezones.map((timezone: string) => ({ value: timezone, label: timezone  }))
@@ -392,6 +395,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                               value={sensorSelected}
                               // @ts-ignore
                               options={sensorsOptions}
+                              placeholder={intl.formatMessage({ id: 'clickAquiId', defaultMessage: 'clickAquiId' })}
                               styles={selectStyle}
                               menuPosition={'fixed'}
                           />
@@ -423,6 +427,23 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                   <SensorsWrapper>
                   { sensors?.map((module: ISetting, index: number) => {
                       switch (module?.settingType) {
+                        case `${SensorsTypes.C02}_1`:
+                        case `${SensorsTypes.C02}_2`:
+                          // check the number of same setting to send
+                          return (
+                            <C02Sensor 
+                              key={i + module.settingType}
+                              data={data}
+                              plant={plant}
+                              errorId={errorId}
+                              openTab={openTab}
+                              handleDeleteSensor={handleDeleteSensor}
+                              setOpenTab={setOpenTab}
+                              settingType={module.settingType}
+                              handleSettingsChange={handleSettingsChange}
+                              onDeleteSchedule={onDeleteSchedule} 
+                            />
+                          );
                         case `${SensorsTypes.SOIL_HUMIDITY}_1`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_2`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_3`:
@@ -527,14 +548,14 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
             })
           }
 
-          {userinfoMsg && (
+          {/* {userinfoMsg && (
               <SuccessMsg>
                 <FormattedMessage
                   id='userInfoSuccess'
                   defaultMessage={userinfoMsg}
                 />
               </SuccessMsg>
-          )}
+          )} */}
 
         </OrderDetails>
       </PlantsPageContainer>

@@ -32,19 +32,19 @@ const LastConectionReading: React.FC<Props> = ({ plantIndex }) => {
   const { loading, error, data } = useQuery(GET_LOGGED_IN_USER_SETTINGS, {
     notifyOnNetworkStatusChange: true,
     fetchPolicy: "network-only",
-    pollInterval: 10000,
+    // pollInterval: 10000,
   });
 
 
   // const sensorIndex = Number(module?.settingType[module?.settingType.length - 1]);
   const lastTimeStamp = data?.getUser?.plants[plantIndex]?.timestamp;
-  // console.log('lastTimeStamp', lastTimeStamp)
+  console.log('lastTimeStamp', lastTimeStamp)
   
   // const sensorIndex = data?.getUser.plantsx[plantIndex]?.sensors?.findIndex((sensor: any) => sensor.settingType === module.settingType);            
   // let reading = data?.getUser.plants[plantIndex]?.sensors[sensorIndex]?.reading;
 
     return (
-      <Text style={{ width: 'max-content' }}>{lastTimeStamp?.length > 0 ? moment(lastTimeStamp?.timestamp).format('hh:mm A - DD MMM') : ''} {hasDittoBotUpdatedInLastMinute(lastTimeStamp, data?.getUser?.plants.timeZone) ? '[ONLINE]' : '[OFFLINE]'}</Text>
+      <Text key={'lastcontt'+plantIndex} style={{ width: 'max-content' }}>{lastTimeStamp?.length > 0 ? moment(lastTimeStamp).format('hh:mm A - DD MMM') : ''} {hasDittoBotUpdatedInLastMinute(lastTimeStamp, data?.getUser?.plants.timeZone) ? '[ONLINE]' : '[OFFLINE]'}</Text>
     );
 };
 

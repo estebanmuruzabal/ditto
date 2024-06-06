@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@apollo/react-hooks';
-import us from 'react-phone-input-2/lang/es.json'
+// import us from 'react-phone-input-2/lang/es.json'
+import ar from 'react-phone-input-2/lang/es.json'
 import { Input } from 'components/forms/input';
 
 import {
@@ -21,6 +22,7 @@ import { AuthContext } from 'contexts/auth/auth.context';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { SIGNUP_MUTATION } from 'graphql/mutation/signup';
 import PhoneInput from 'react-phone-input-2'
+import { currentLng } from 'utils/constant';
 
 export default function SignOutModal() {
   const intl = useIntl();
@@ -197,10 +199,10 @@ export default function SignOutModal() {
               }}
               containerStyle={{textAlign: "left"}}
               inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
-              onlyCountries={['us']}
-              localization={us}
-              country={'us'}
-              masks={{us: '(...) ...-....'}}
+              onlyCountries={[currentLng]}
+              localization={ar}
+              country={currentLng}
+              masks={{ar: '(...) ...-....'}}
               value={phone}
               onChange={handlePhoneChange}
             />
