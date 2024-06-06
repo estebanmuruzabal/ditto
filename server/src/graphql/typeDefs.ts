@@ -166,7 +166,11 @@ export const typeDefs = gql`
         plants: [Plant]
     }
 
-
+    type User2 {
+        phones: [Phone]
+        role: String
+        plants: [Plant]
+    }
 
     type Task {
         taskId: String
@@ -628,7 +632,7 @@ export const typeDefs = gql`
         getSetting(key: String!): Setting!
         getSiteSetting(key: String!): Setting!
         getUser: User!
-        getOfflineDittoBotsUsers: [User]
+        getOfflineDittoBotsUsers: User
         getCustomer(phone: String!): UserAuthPayload!
         coupons(limit: Int = 12, offset: Int = 0, searchText: String): CouponPaginationType!
         validateCoupon(code: String!): CouponValid!

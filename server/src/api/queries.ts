@@ -11,18 +11,15 @@ export const GET_SETTINGS = `
 export const GET_DITTO_BOTS_OFFLINE_USERS = `
   query GetOfflineDittoBotsUsers {
     getOfflineDittoBotsUsers {
+        role
+        plants {
+            name
+            offline_notification
+            timestamp
+        }
         phones {
             number
-            }
-            chatHistory {
-                trigger
-            }
-            role
-            plants {
-                name
-                offline_notification
-                timestamp
-            }
+        }
     }
   }
 `;

@@ -46,7 +46,6 @@ export const fetchCustomerAndToken = (phone: string) => new Promise((resolve, re
 export const fetchOfflineDittoBotsUsers = () => new Promise((resolve, reject) => {
     apolloFetch({
         query: GET_DITTO_BOTS_OFFLINE_USERS,
-        variables: { },
     }).then((res: any) => {
         if (res?.errors?.length > 0 && res?.errors?.[0]?.message?.length) {
             console.log('[fetchOfflineDittoBotsUsers]', res?.errors?.[0]?.message);

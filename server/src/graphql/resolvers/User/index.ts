@@ -85,22 +85,8 @@ export const usersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
             // change any
          ): Promise<any> => {
-            let growerUsersList = await db.users.find( { role: Roles.GROWER } ).toArray();
-            if (!growerUsersList) {
-                throw new Error("User grogers not found.");
-            } 
-            // else {
-            //     growerUsersList = growerUsersList.filter((category: any) => {
-            //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //         // @ts-ignore
-            //         return category.type_id === typeResult._id.toString();
-            //     });
-            // }
-             console.log('growerUsersList::', growerUsersList)
-
-             return {
-                growerUsersList
-             };
+     
+             return await db.users.find( { role: Roles.GROWER } ).toArray();
             // if (!growerUsersList) {
             //     throw new Error("User grogers not found.");
             // } 
