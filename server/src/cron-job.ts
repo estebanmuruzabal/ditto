@@ -14,7 +14,7 @@ export const offlineDittoBotsJobEvery5Min = nodeCron.schedule('0 */1 * * * *', a
         if (plant.offline_notification === true && !hasDittoBotUpdatedInLast3Minute(plant.timestamp, timeZone)) {
             await sendMessage(grower.phones[0]?.number, `Aviso: tu dittobot ${plant.name} esta apagado`);
             if (grower?.phones[1]?.number) await sendMessage(grower.phones[1]?.number, `Aviso: tu dittobot ${plant.name} esta apagado`);
-            await sendMessage(PRIMARY_ONCALL_NUMBER, `Problema: dittobot apagado. User name: ${grower.name}, User id: ${grower.id} plant ID: ${plant.id}`);
+            await sendMessage(PRIMARY_ONCALL_NUMBER, `Problema: dittobot apagado. User name: ${grower.name}, User id: ${grower.id} plant ID: ${plant.plantId}`);
         }
     })
   
