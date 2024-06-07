@@ -5,9 +5,9 @@ import { hasDittoBotUpdatedInLast3Minute } from "./lib/utils/workUtils";
 
 const nodeCron = require("node-cron");
 
-export const offlineDittoBotsJobEvery5Min = nodeCron.schedule('0 */1 * * * *', async () => {
+export const offlineDittoBotsJobEvery5Min = nodeCron.schedule('0 */5 * * * *', async () => {
     // const res: any = await fetchOfflineDittoBotsUsers();
-    const res: any = await fetchCustomerAndToken('543624951926');
+    const res: any = await fetchCustomerAndToken('543624654465');
     const grower = res?.data?.getCustomer?.user;
     if (!grower) return;
     grower.plants?.map(async (plant: any) => {
