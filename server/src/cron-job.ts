@@ -7,10 +7,13 @@ const nodeCron = require("node-cron");
 
 export const offlineDittoBotsJobEvery5Min = nodeCron.schedule('0 */5 * * * *', async () => {
     // const res: any = await fetchOfflineDittoBotsUsers();
-    const res: any = await fetchCustomerAndToken('543624654465');
+    const res: any = await fetchCustomerAndToken('5493624654465');
     const grower = res?.data?.getCustomer?.user;
+    console.log(grower)
     if (!grower) return;
+    console.log(1)
     grower.plants?.map(async (plant: any) => {
+        console.log(2)
         if (plant.offline_notification === true && !hasDittoBotUpdatedInLast3Minute(plant.timestamp, timeZone)) {
             await sendMessage(grower.phones[0]?.number, `Aviso: tu dittobot ${plant.name} esta apagado`);
             if (grower?.phones[1]?.number) await sendMessage(grower.phones[1]?.number, `Aviso: tu dittobot ${plant.name} esta apagado`);
