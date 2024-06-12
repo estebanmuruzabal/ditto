@@ -346,6 +346,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.SCHEDULE:
+            if (reading < 0 || reading > 100) return;
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
@@ -369,6 +370,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED:
+            if (reading < 0 || reading > 100) return;
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
@@ -446,6 +448,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED:
+            if (reading < 0 || reading > 100) return;
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
@@ -470,6 +473,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED:
+            if (reading < 0 || reading > 100) return;
             if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading > maxReading && !relayOneWorking) {
