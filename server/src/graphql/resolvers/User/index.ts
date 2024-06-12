@@ -599,8 +599,8 @@ export const usersResolvers: IResolvers = {
             } else {
                 plants[index].soil_humidity_1 = hum1;
                 plants[index].soil_humidity_2 = hum2;
-                plants[index].humidity_1 = airHum;
-                plants[index].tempeture_1 = temp;
+                if (airHum >= 0 || airHum <= 100) plants[index].humidity_1 = airHum;
+                if (temp >= 0 || temp <= 100) plants[index].tempeture_1 = temp;
                 plants[index].distance_1 = dist;
                 plants[index].light_1 = light;
                 plants[index].alarm_timestamp = alarmHasJustTurnOn ? new Date().toLocaleString('en-US', { timeZone }) : plants[index].alarm_timestamp;
