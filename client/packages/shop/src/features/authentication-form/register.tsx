@@ -150,8 +150,8 @@ export default function SignOutModal() {
               type="text"
               name="name"
               width='100%'
-              value={upperCaseEverything(name)}
-              onChange={(e) => setName(upperCaseEverything(e.target.value))}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder={intl.formatMessage({
                 id: 'namePlaceholder',
                 defaultMessage: 'Complete name',
