@@ -370,7 +370,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED:
-            if (reading < 0 || reading > 100) return;
+            if (reading < 0 || reading > 100) break;
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
@@ -448,7 +448,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED:
-            if (reading < 0 || reading > 100) return;
+            if (reading < 0 || reading > 100) break;
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
