@@ -351,10 +351,10 @@ const AirTemperature: React.FC<Props> = ({ errorId, plant, settingType, handleSe
                                         height='34.5px'
                                         width='45px'
                                     />
-                                    <Porcentage>%</Porcentage>
+                                    <Porcentage>°</Porcentage>
                                 </Row>
                             ) : (
-                                <Text bold>{(setting.maxWarning >= 0 && setting.maxWarning <= 100) ? setting?.maxWarning : '-'} %</Text>
+                                <Text bold>{(setting.maxWarning >= 0 && setting.maxWarning <= 100) ? setting?.maxWarning : '-'} °</Text>
                             )}
                             {errorId === 'maxWarning' && (
                                 <ErrorMsg>
@@ -421,7 +421,7 @@ const AirTemperature: React.FC<Props> = ({ errorId, plant, settingType, handleSe
                                         height='34.5px'
                                         width='45px'
                                     />
-                                    <Porcentage>%</Porcentage>
+                                    <Porcentage>°</Porcentage>
                                 </Row>
                             ) : (
                                 <Text bold>{(setting.minWarning >= 0 && setting.minWarning <= 100) ? setting?.minWarning : '-'} °</Text>
