@@ -295,8 +295,8 @@ return (
 solamente eso (Por ejemplo: Sofia Martinez)`)
 case Locales.EN:
 return (
-`Almost there! Please write your complete name. 
-Example: "Joe Smith"`)
+`Almost there! Por favor escribí tu nombre completo. 
+Example: "Pablito Lezcano"`)
 default: console.log('enterValidName defaulted. lenguageLocale not found:'); return ''   
 }};
 

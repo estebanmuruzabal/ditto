@@ -4,7 +4,7 @@ import { IDeliveryMethod, IProduct, IUser, TriggerSteps } from "../lib/types"
 import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, Locales } from "../lib/utils/constant"
 import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText, containsValidName } from "../lib/utils/shoppingUtils"
 import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, mainMenuUnauthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, noProductsAvailableListCategoriesAgain, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
-const lenguageLocale = Locales.EN;
+const lenguageLocale = Locales.ES;
 
 const fetchCategories = async () => {
     let categoriesRes: any = await getCategories();
@@ -116,7 +116,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             } 
             shoppingCart.selectedCategorySlug = selectedCategory.slug;
             await updateUserShoppingCart(shoppingCart);
-            console.log('shoppingCart::::::::::::::::::::::1', shoppingCart)
             const noLengthCheck = true;
             products = await fetchProducts(shoppingCart.selectedCategorySlug, noLengthCheck);
 
@@ -139,8 +138,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             userInputNumber = Number(userInput);
             shoppingCart = user?.shoppingCart;
 
-            //////
-            console.log('shoppingCart:::::::::::::::::::;4.2', shoppingCart)
             products = await fetchProducts(shoppingCart.selectedCategorySlug);
             
             const goBackToMainMenu = userInputNumber === products?.length + 1;
@@ -175,7 +172,6 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             } 
             
             productSelected = products[userInputNumber - 1];
-            console.log('shoppingCart::::::::::::::::::::::2', shoppingCart)
             if (!productSelected) {
                 resData.trigger = TriggerSteps.ALL_CATEGORIES;
                 resData.replyMessage = invalidNumberInput(products?.length);
@@ -291,7 +287,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 resolve(resData)
                 break;
             }
-            console.log('shoppingCart::::::::::::::::::::::3', shoppingCart)
+
             resData.replyMessage = unknownDeliPickUpOptInput(deliveryOpts, lenguageLocale)
             resData.trigger = TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
             resolve(resData)
@@ -381,7 +377,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
                 resolve(resData);
                 break;
             }
-            console.log('shoppingCart::::::::::::::::::::::4', shoppingCart)
+
             resData.replyMessage = unknownPaymentOptInput(paymentMethodsOpts)
             resData.trigger = TriggerSteps.SELECT_PAYMENT_METHOD;
             resolve(resData)
@@ -396,7 +392,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
 
             const response: any = await updateUserNameEmailAndLenguage(user.id, userName, user.email, access_token);
             if (!response?.data?.updateUserNameEmailAndLenguage?.status) {
-                console.log('Error at updateUserNameEmailAndLenguage ', response);
+
                 resData.replyMessage = purchaseErrorMsg();
                 resData.trigger = TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
                 resolve(resData)
@@ -410,7 +406,7 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
         case TriggerSteps.ORDER_CHECK_CONFIRMATION:
             userInputNumber = Number(userInput);
             shoppingCart = user?.shoppingCart;
-            console.log('shoppingCart::::2134432',shoppingCart)
+
             switch (userInputNumber) {
                 case 1:
                     const res: any = await createOrder(shoppingCart);

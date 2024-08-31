@@ -306,6 +306,7 @@ export interface ICategoryChildren {
     icon: string;
 }
 export interface ICategory {
+    visible?: boolean;
     _id?: ObjectId;
     type_id: string;
     parent_id?: string | null;
@@ -384,6 +385,7 @@ export interface IProduct {
 }
 
 export interface IDeliveryMethod {
+    visible?: boolean;
     _id?: ObjectId;
     name: string;
     details: string;
