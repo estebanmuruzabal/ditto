@@ -627,7 +627,8 @@ export const getPrelinkText = (detailsText: string) => {
 
     const linkContent = contentDivided?.find((part) => part.includes('http'));
     const preLinkText = linkContent?.substring(0, linkContent.indexOf('http'));
-    return preLinkText;
+    // solo por el evento saco esto
+    return '';
 }
 
 export const getAddressLinkText = (detailsText: string) => {
@@ -657,8 +658,8 @@ ${deliveryOptions.map((deliOption: any, i: number) => (`
 *${getEmojiNumber(i + 1)} ${deliOption.name}*
 Dirección: ${deliOption.pickUpAddress}
 ¿Cuándo?: ${getDeliveryOrPickUpDatetime(deliOption.details, localeLenguage)}
-// solo por el evento saco esto
-// ${getPrelinkText(deliOption.details)}: ${getAddressLinkText(deliOption.details)}`)).join('')}
+Pizzas salen de 19:30 a 21:30. Barra de 18 a 23hs.
+`)).join('')}
 `
 };
 
