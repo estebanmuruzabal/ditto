@@ -119,8 +119,9 @@ export const getDeliveryOrPickUpDatetime = (detailsText: string, lenguageLocale:
     // if modify this, also modify server utils with these functions logic
     const timeText = getDeliverySchedule(detailsText, lenguageLocale);
     const dateText = geDateScheduleOnly(detailsText);
-
-    return `${dateText} ${timeText}`;
+    // solo por el evento saco esto
+    // return `${dateText} ${timeText}`;
+    return detailsText;
 }
 
 export const addTalkToRepresentativeOptToList = (section: { title?: string; rows?: any; row?: any; }) => {

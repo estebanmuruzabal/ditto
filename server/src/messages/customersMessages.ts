@@ -657,7 +657,9 @@ ${deliveryOptions.map((deliOption: any, i: number) => (`
 *${getEmojiNumber(i + 1)} ${deliOption.name}*
 Dirección: ${deliOption.pickUpAddress}
 ¿Cuándo?: ${getDeliveryOrPickUpDatetime(deliOption.details, localeLenguage)}
-${getPrelinkText(deliOption.details)}: ${getAddressLinkText(deliOption.details)}`)).join('')}`
+// solo por el evento saco esto
+// ${getPrelinkText(deliOption.details)}: ${getAddressLinkText(deliOption.details)}`)).join('')}
+`
 };
 
 const getDeliveryOrPickupOptSelectedAndGetPaymentMethodText = (deliOption: IDeliveryMethod, paymentMethods: any, delivery_address: string) => {
