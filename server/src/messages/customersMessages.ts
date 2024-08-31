@@ -3,7 +3,7 @@ import { ICategory, IDeliveryMethod, IPaymentOption, IProduct } from "../lib/typ
 import { BANK_TRANSFER_ALIAS, BANK_TRANSFER_CBU, COMPANY_DESCRIPTION_TEXT, CURRENCY, Locales, PICKUP_GRANJA_DELIVERY_METHOD, PICKUP_GUEMES_DELIVERY_METHOD, PICKUP_LAJOLLA_DELIVERY_METHOD, PICKUP_OB_DELIVERY_METHOD } from "../lib/utils/constant";
 import { getDeliveryOrPickUpDatetime, getTotalAmount } from "../lib/utils/shoppingUtils";
 import { getEmojiNumber } from "../lib/utils/whatsAppUtils";
-const isEnglish = true;
+const isEnglish = false;
 
 const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: string, total: number, customerName: string, deliveryMethod: string, paymentMethod: string, products: any, delivery_pickup_date: string, lenguageLocale: string) => {
 
