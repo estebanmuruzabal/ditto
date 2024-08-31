@@ -1,5 +1,34 @@
 /************ CONSTANTS ***********/
 export const CURRENCY = '$';
+export const resistenciaZipCode = '3500';
+
+export const plazadoceDeOctubrePolygon = [
+    [-27.438348, -58.972117],
+    [-27.451195, -58.986501],
+    [-27.441537, -58.997427],
+    [27.428763, -58.983112],
+  ]
+
+  export const plazaBelgranoPolygon = [
+    [-27.4481, -58.96074],
+    [-27.43829, -58.9722],
+    [-27.45114, -58.98647],
+    [-27.46134, -58.97495],
+  ]
+
+  export const plazaEspañaPolygon = [
+    [-27.45114, -58.98647],
+    [-27.46134, -58.97495],
+    [-27.47423, -58.98923],
+    [-27.46392, -59.00075],
+  ]
+
+export const plazaNueveDeJulioPolygon = [
+    [-27.46392, -59.00075],
+    [-27.451147, -58.986537],
+    [-27.44148, -58.99731],
+    [-27.45442, -59.01161],
+  ]
 
 // ditto bot personal variables (change in front and back):
 

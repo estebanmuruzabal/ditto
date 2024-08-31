@@ -220,6 +220,12 @@ export const Options = styled.div`
   padding: 0px 20px;
 `;
 
+export const PickUpOptions = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+`;
+
 export const CardWrapper = styled.span`
   display: flex;
   width: 100px;

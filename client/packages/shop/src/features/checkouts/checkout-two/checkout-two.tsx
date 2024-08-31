@@ -206,7 +206,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
 
   useEffect(() => {
     if (getCookie(deliveryMethodCookieKeyName) && !deliveryMethodSaved) {
-      const deliveryMethodSaved = JSON.parse(getCookie(deliveryMethodCookieKeyName));
+      const deliveryMethodSaved: any = JSON.parse(getCookie(deliveryMethodCookieKeyName));
       setDeliveryMethodSaved(deliveryMethodSaved)
       console.log('seyed: deliveryMethodSaved', deliveryMethodSaved)
       setSubmitResult({
@@ -573,7 +573,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             <InformationBox>
             <Heading>
                 <FormattedMessage
-                   id={'s'}
+                   id='selectDeliveryMethod'
                    defaultMessage='Select Your Delivery Type'
                 />
                 <DeliveryTypesOptions />

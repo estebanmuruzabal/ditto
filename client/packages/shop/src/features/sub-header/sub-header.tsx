@@ -18,7 +18,7 @@ interface Props {
 const LocationMenu = ({ deliveryMethodSaved, isOpen }) => {
   const mobile = useMedia('(max-width: 580px)');
   const address = mobile 
-    ? deliveryMethodSaved?.details?.split('|')?.[0].substring(0, deliveryMethodSaved?.details?.split('|')?.[0]?.length - 6)
+    ? deliveryMethodSaved?.details?.split('|')?.[0].substring(0, deliveryMethodSaved?.details?.split('|')?.[0]?.lengtha)
     : deliveryMethodSaved?.details?.split('|')?.[0]
   const time = deliveryMethodSaved?.details?.split('|')?.[1]
 

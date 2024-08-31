@@ -129,12 +129,12 @@ export default function SignOutModal() {
         <Heading>
           <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
         </Heading>
-        <SubHeading>
+        {/* <SubHeading>
           <FormattedMessage
             id='signUpText'
             defaultMessage=''
           />
-        </SubHeading>
+        </SubHeading> */}
           <form method="post" onSubmit={
             async (e) => {
                 e.preventDefault();
@@ -221,7 +221,7 @@ export default function SignOutModal() {
               mb='10px'
               required
             />
-            {/* <Input
+            <Input
               type="text"
               name="password"
               width='100%'
@@ -235,7 +235,7 @@ export default function SignOutModal() {
               backgroundColor='#F7F7F7'
               mb='10px'
               required
-            /> */}
+            />
              {!hasMinLength && (
               <SubrequirementContainer>
                 <Dot />

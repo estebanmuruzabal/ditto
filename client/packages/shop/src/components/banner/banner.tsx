@@ -38,7 +38,7 @@ export const Banner: React.FC<Props> = ({
     <Box>
       <Image backgroundimage={`url(${imageUrl})`} />
       <Content>
-        <Title>
+        {/* <Title>
           <FormattedMessage
             id="spanishOnlyTitle"
             defaultMessage={intlTitleId}
@@ -55,7 +55,8 @@ export const Banner: React.FC<Props> = ({
           onEnter={removeSticky}
           onLeave={setSticky}
           onPositionChange={onWaypointPositionChange}
-        />
+        /> */}
+        <iframe src={`https://www.youtube.com/embed/i_5pt4FbzTk`}></iframe>
       </Content>
     </Box>
   );

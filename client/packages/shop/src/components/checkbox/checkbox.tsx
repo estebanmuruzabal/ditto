@@ -30,7 +30,7 @@ const CheckBox: React.FC<CheckBoxProps> = ({
   disabled = false,
   onChange,
 }) => {
-  console.log('keyName,',keyName)
+
   return (
     <StyledCheckBox key={keyName} onClick={onChange} className={`Mahdi Fashion__checkbox ${keyName}`.trim()}>
       <StyledCheckBoxLabel htmlFor={id} position={labelPosition}>

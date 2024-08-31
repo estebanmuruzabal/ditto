@@ -197,6 +197,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
 
       {details && <CardContent>{<Link href={link} target="_blank" rel="noopener noreferrer">{ detailsDivided[0]}</Link>}</CardContent>}
       {details && <CardContent>{detailsDivided[1]}</CardContent>}
+      {details && <CardContent>{detailsDivided[2]}</CardContent>}
       {withActionButtons && (
         <CardButtons className='button-wrapper'>
           {hasEdit && (

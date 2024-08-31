@@ -107,7 +107,7 @@
   "voucherApply": "Apply",
   "couponError": "Invalid Coupon",
   "totalText": "Total",
-  "selectDeliverySchedule": "Select Delivery Method",
+  "selectDeliveryMethod": "Select Delivery Method",
   "deliveryScheduleSelected": "Delivery Method Selected",
   "pickupScheduleSelected": "Pickup Method Selected",
   "checkoutDeliveryAddress": "Select Delivery Address",

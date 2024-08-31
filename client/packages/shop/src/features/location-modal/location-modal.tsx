@@ -15,8 +15,7 @@ import {
   Input,
 } from './location-modal.style';
 import { GiftBox } from 'assets/icons/GiftBox';
-// import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
-// import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import {
   setKey,
   setDefaults,
