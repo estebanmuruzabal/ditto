@@ -17,7 +17,7 @@ import { findResponseMsg } from './controllers/flows';
 import { fetchCustomerAndToken, fetchOfflineDittoBotsUsers, getSettings, saveUserChatHistory } from './api';
 import { TriggerSteps } from './lib/types';
 import { isGrower, isUserStaff, normalizeText } from './lib/utils/shoppingUtils';
-import { offlineDittoBotsJobEvery5Min } from './cron-job';
+import { offlineDittoBotsJobEvery5Min } from './cron-jobs';
 
 const { Client, LocalAuth, List, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
@@ -170,7 +170,8 @@ const mount = async (app: Application) => {
     // @ts-ignore
     app.use(cors());
 
-    offlineDittoBotsJobEvery5Min.start();
+    // offlineDittoBotsJobEvery5Min.start();
+    // scrapPaymentsReceivedEvery5Mins.start();
 
     server.applyMiddleware({
         app,

@@ -4,7 +4,6 @@ import nodemailer from "nodemailer";
 import { IOrderInputArgs } from "../../graphql/resolvers/Orders/types";
 import { IProduct, IUser } from "../types";
 import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD, Locales, READ_MAIL_CONFIG, timeZone } from "./constant";
-// const imaps = require('imap-simple');
 
 const fromNumber = process.env.OTP_FROM_NUMBER
 const apiToken = process.env.OTP_API_TOKEN
@@ -59,6 +58,7 @@ export const sendOtp = (sendToNumber: string, otpCode: string) => {
 //     console.log(error);
 //   }
 // };
+
 
 export const sendCompanyConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
     const transporter = nodemailer.createTransport({

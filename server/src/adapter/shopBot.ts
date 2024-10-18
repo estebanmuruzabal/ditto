@@ -60,8 +60,9 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             categories = await fetchCategories();
 
             if (user?.id && user?.name) {
-                resData.replyMessage = user.name !== INITIAL_USER_USERNAME ? mainMenuAuthenticatedUser(user?.name, categories) : mainMenuUnauthenticatedUser(categories);
-                resData.trigger = TriggerSteps.SELECT_CATEGORY;
+                // resData.replyMessage = user.name !== INITIAL_USER_USERNAME ? mainMenuAuthenticatedUser(user?.name, categories) : mainMenuUnauthenticatedUser(categories);
+                // resData.trigger = TriggerSteps.SELECT_CATEGORY;
+                resData = getCategoriesButtons(resData, categories);
                 resolve(resData);
             } else {
                 resData.replyMessage = thereWasAProblemWaitForAssistance2();

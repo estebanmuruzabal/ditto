@@ -70,6 +70,63 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
+        case HumiditySensorMode.INTERMITTENT_IRRIGATION:
+            setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+
+                    let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0])); 
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1])); 
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0])); 
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
+
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+
+                    if (isInsideTimeFrame) {
+                        const originalIrrigationCycles = Number(relayOneAutomatedTimeToRun);
+                        const originalWaitingCycles = Number(relayTwoAutomatedTimeToRun);
+                        const currentIrrigationCycles = Number(relayOneAutomatedStartedTime);
+                        const currentWaitingCycles = Number(relayTwoAutomatedStartedTime);
+                        
+                        if (currentIrrigationCycles > 0 && currentIrrigationCycles % 2 === 0) {
+                            setting.relayOneAutomatedStartedTime = String(currentIrrigationCycles - 1); 
+                            // @ts-ignore
+                            plant[relayOneIdRelated] = true;
+                            setting.relayOneWorking = true;
+                            // @ts-ignore
+                            plant[relayTwoIdRelated] = true;
+                            setting.relayTwoWorking = true;
+                            console.log(1)    
+                        } else if (currentWaitingCycles > 0) {
+                            setting.relayTwoAutomatedStartedTime = String(currentWaitingCycles - 1); 
+                            // @ts-ignore
+                            plant[relayOneIdRelated] = false;
+                            setting.relayOneWorking = false;   
+                            // @ts-ignore
+                            plant[relayTwoIdRelated] = true;
+                            setting.relayTwoWorking = true; 
+                            console.log(2)    
+                        } else if (originalIrrigationCycles === 0) {
+                            // @ts-ignore
+                            plant[relayOneIdRelated] = false;
+                            setting.relayOneWorking = false;   
+                            // @ts-ignore
+                            plant[relayTwoIdRelated] = false;
+                            setting.relayTwoWorking = false; 
+                            setting.relayOneAutomatedStartedTime = String(relayOneAutomatedTimeToRun); 
+                            setting.relayTwoAutomatedStartedTime = String(relayTwoAutomatedTimeToRun); 
+                            console.log(3)    
+                        }
+                        console.log(4)
+                    } else {
+                        console.log(5)
+                    }
+                }  
+            })
+            setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
+            break;
         case HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION:
             if (!minReading || !relayOneIdRelated || !relayTwoIdRelated)  { console.log('No relayOneIdRelated, relayOneAutomatedStartedTime or no minWarning setted: ', plant.sensors[sensorIndex]); break; }
 
@@ -247,15 +304,16 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
 
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
-                    const soilIsStillHumid = reading >= minReading && schedule.smartLight;
+                    // const soilIsStillHumid = reading >= minReading && schedule.smartLight;
+                    const smartLightOn = schedule.smartLight;
 
                     // @ts-ignore
                     plant[relayOneIdRelated] = isInsideTimeFrame;
                     setting.relayOneWorking = isInsideTimeFrame;
                     if (mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
                         // @ts-ignore
-                        plant[relayTwoIdRelated] = soilIsStillHumid ? false : isInsideTimeFrame;
-                        setting.relayTwoWorking = soilIsStillHumid ? false : isInsideTimeFrame;
+                        plant[relayTwoIdRelated] = smartLightOn ? false : isInsideTimeFrame;
+                        setting.relayTwoWorking = smartLightOn ? false : isInsideTimeFrame;
                     }
                 }  
             })

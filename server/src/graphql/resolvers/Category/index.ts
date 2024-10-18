@@ -39,9 +39,6 @@ export const categoriesResolvers: IResolvers = {
                 if (category.visible) { visibleCategories.push(category) }
             });
 
-            console.log("visibleCategories:", visibleCategories);
-            
-
             visibleCategories = search(visibleCategories, ['name', 'slug'], searchText);
             const hasMore = visibleCategories.length > offset + limit;
             return {

@@ -33,9 +33,9 @@ export const PICKUP_OB_DELIVERY_METHOD = 'OB Dog Beach PickUp Point'
 export const DELIVERY_METHOD_SELECTED = 'Delivery (+$20)';
 
 export const ZELLE_MAIL = 'estebannmuruzabal@gmail.com';
-export const COMPANY_EMAIL = 'dittofarms.sd@gmail.com';
+export const COMPANY_EMAIL = 'estebannmuruzabal@gmail.com';
 export const COMPANY_DESCRIPTION_TEXT = 'Ditto Farm es un proyecto frutihorticola a solo 8km de Rcia. Chaco producimos frutas, verduras y fertilizantes orgánicos con tecnicas de agricultura sustentable y cosechados en el dia!';
-export const COMPANY_EMAIL_PASSWORD = 'SanDiego765!';
+export const COMPANY_EMAIL_PASSWORD = 'xjqq clhj tkgc bzxq';
 export const INTRODUCE_NEW_NAME_KEY_WORDS = 'No, cambiar nombre';
 export const KEEP_USER_NAME_KEY_WORD = 'Si';
 export const INITIAL_USER_PASSWORD = 'Initial_ditt0_pa$$word';
@@ -58,14 +58,28 @@ export enum Locales {
   EN = 'en',
 }
 
+// export const READ_MAIL_CONFIG = {
+//   imap: {
+//     user: COMPANY_EMAIL,
+//     password: COMPANY_EMAIL_PASSWORD,
+//     host: 'imap.gmail.com',
+//     port: 993,
+//     authTimeout: 10000,
+//     tls: true,
+//     tlsOptions: { rejectUnauthorized: false },
+//   },
+// };
+
 export const READ_MAIL_CONFIG = {
-  imap: {
-    user: COMPANY_EMAIL,
+  user: COMPANY_EMAIL,
     password: COMPANY_EMAIL_PASSWORD,
-    host: 'imap.gmail.com',
-    port: 993,
-    authTimeout: 10000,
-    tls: true,
-    tlsOptions: { rejectUnauthorized: false },
+  host: 'imap.gmail.com',
+  port: 993,
+  tls: true,
+  tlsOptions: {
+      rejectUnauthorized: false, // For testing, you can disable certificate rejection
   },
+  connectTimeout: 100000, // 60 seconds 
+  authTimeout: 30000,
+  debug: console.log,
 };
