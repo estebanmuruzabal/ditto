@@ -90,7 +90,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                         const currentIrrigationCycles = Number(relayOneAutomatedStartedTime);
                         const currentWaitingCycles = Number(relayTwoAutomatedStartedTime);
                         
-                        if (currentIrrigationCycles > 0 && currentIrrigationCycles % 2 === 0 || currentIrrigationCycles % 2 === 0 && !setting.relayOneWorking) {
+                        if (currentIrrigationCycles > 0 && currentIrrigationCycles % 2 === 0 || currentIrrigationCycles % 2 !== 0 && !setting.relayOneWorking) {
                             setting.relayOneAutomatedStartedTime = String(currentIrrigationCycles - 1); 
                             // @ts-ignore
                             plant[relayOneIdRelated] = true;
@@ -98,7 +98,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                             // @ts-ignore
                             plant[relayTwoIdRelated] = true;
                             setting.relayTwoWorking = true;
-                            console.log(1)    
+                            console.log(1, currentWaitingCycles)    
                         } else if (currentWaitingCycles > 0 && currentWaitingCycles % 2 === 0 || currentWaitingCycles % 2 !== 0 && setting.relayOneWorking) {
                             setting.relayTwoAutomatedStartedTime = String(currentWaitingCycles - 1); 
                             // @ts-ignore
@@ -107,7 +107,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                             // @ts-ignore
                             plant[relayTwoIdRelated] = false;
                             setting.relayTwoWorking = false; 
-                            console.log(2)    
+                            console.log(2, currentIrrigationCycles)    
                         } else if (currentIrrigationCycles === 0) {
                             // @ts-ignore
                             plant[relayOneIdRelated] = false;
