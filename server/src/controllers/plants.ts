@@ -99,7 +99,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                             plant[relayTwoIdRelated] = true;
                             setting.relayTwoWorking = true;
                             console.log(1)    
-                        } else if (currentWaitingCycles > 0) {
+                        } else if (currentIrrigationCycles > 0 && currentIrrigationCycles % 2 !== 0) {
                             setting.relayTwoAutomatedStartedTime = String(currentWaitingCycles - 1); 
                             // @ts-ignore
                             plant[relayOneIdRelated] = false;
@@ -108,7 +108,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                             plant[relayTwoIdRelated] = true;
                             setting.relayTwoWorking = true; 
                             console.log(2)    
-                        } else if (originalIrrigationCycles === 0) {
+                        } else if (currentIrrigationCycles === 0) {
                             // @ts-ignore
                             plant[relayOneIdRelated] = false;
                             setting.relayOneWorking = false;   
