@@ -90,7 +90,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                         const currentIrrigationCycles = Number(relayOneAutomatedStartedTime);
                         const currentWaitingCycles = Number(relayTwoAutomatedStartedTime);
                         
-                        if (currentIrrigationCycles > 0 && currentIrrigationCycles % 2 === 0 || currentIrrigationCycles % 2 !== 0 && !setting.relayOneWorking) {
+                        if (currentIrrigationCycles > 0 && currentIrrigationCycles % 2 === 0 || currentIrrigationCycles % 2 === 0 && !setting.relayOneWorking) {
                             setting.relayOneAutomatedStartedTime = String(currentIrrigationCycles - 1); 
                             // @ts-ignore
                             plant[relayOneIdRelated] = true;
