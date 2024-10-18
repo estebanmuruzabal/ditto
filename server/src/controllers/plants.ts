@@ -85,30 +85,32 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
 
                     if (isInsideTimeFrame) {
+                        // relayOneAutomatedTimeToRun : original cycles num
+                        // relayTwoAutomatedTimeToRun : current cycles num
                         const originalIrrigationCycles = Number(relayOneAutomatedTimeToRun);
-                        const originalWaitingCycles = Number(relayTwoAutomatedTimeToRun);
-                        const currentIrrigationCycles = Number(relayOneAutomatedStartedTime);
-                        const currentWaitingCycles = Number(relayTwoAutomatedStartedTime);
+                        const currentIrrigationCycles = Number(relayTwoAutomatedTimeToRun);
+                        // const currentIrrigationCycles = Number(relayOneAutomatedStartedTime);
+                        const lastIrrigationMinuteStamp = Number(relayTwoAutomatedStartedTime);
                         
-                        if (currentIrrigationCycles > 0 && currentIrrigationCycles % 2 === 0 || currentIrrigationCycles % 2 !== 0 && !setting.relayOneWorking) {
-                            setting.relayOneAutomatedStartedTime = String(currentIrrigationCycles - 1); 
+                        if (currentIrrigationCycles > 0 && setting.relayOneWorking) {
                             // @ts-ignore
-                            plant[relayOneIdRelated] = true;
-                            setting.relayOneWorking = true;
+                            plant[relayOneIdRelated] = !setting.relayOneWorking;
+                            setting.relayOneWorking = !setting.relayOneWorking;
                             // @ts-ignore
-                            plant[relayTwoIdRelated] = true;
-                            setting.relayTwoWorking = true;
-                            console.log(1, currentWaitingCycles)    
-                        } else if (currentWaitingCycles > 0 && currentWaitingCycles % 2 === 0 || currentWaitingCycles % 2 !== 0 && setting.relayOneWorking) {
-                            setting.relayTwoAutomatedStartedTime = String(currentWaitingCycles - 1); 
+                            plant[relayTwoIdRelated] = !setting.relayTwoWorking;
+                            setting.relayTwoWorking = !setting.relayTwoWorking;
+                            console.log(1)  
+                        } else if (currentIrrigationCycles > 0 && !setting.relayOneWorking  && currentTime.minutes() !== lastIrrigationMinuteStamp) {
+                            setting.relayTwoAutomatedTimeToRun = String(currentIrrigationCycles - 1); 
+                            setting.relayTwoAutomatedStartedTime = String(currentTime.minutes()); 
                             // @ts-ignore
-                            plant[relayOneIdRelated] = false;
-                            setting.relayOneWorking = false;   
+                            plant[relayOneIdRelated] = !setting.relayOneWorking;
+                            setting.relayOneWorking = !setting.relayOneWorking;
                             // @ts-ignore
-                            plant[relayTwoIdRelated] = false;
-                            setting.relayTwoWorking = false; 
-                            console.log(2, currentIrrigationCycles)    
-                        } else if (currentIrrigationCycles === 0) {
+                            plant[relayTwoIdRelated] = !setting.relayTwoWorking;
+                            setting.relayTwoWorking = !setting.relayTwoWorking;
+                            console.log(2)    
+                        } else {
                             // @ts-ignore
                             plant[relayOneIdRelated] = false;
                             setting.relayOneWorking = false;   
