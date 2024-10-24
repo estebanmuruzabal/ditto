@@ -178,6 +178,8 @@
   "plantName": "Nombre referencia",
   "plantNameRequiredNameId": "Ingresar nombre",
   "irrigationTimeId": "Tiempo riego",
+  "cyclesId": "Cant. ciclos de riego",
+  "waitingId": "Cant. ciclos sin riego",
   "irrigationEvacuationTimeId": "Tiempo evacuación",
   "runingMinMaxWarningTimeId": "Tiempo encendido",
   "notifyChangesId" : "Notificaciones",

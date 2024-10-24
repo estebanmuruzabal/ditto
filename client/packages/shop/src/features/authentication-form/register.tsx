@@ -156,14 +156,14 @@ export default function SignOutModal() {
                 id: 'namePlaceholder',
                 defaultMessage: 'Complete name',
               })}
-              oninvalid="this.setCustomValidity('Please Enter valid email')"
+              oninvalid="this.setCustomValidity('Please Enter valid name')"
               oninput="setCustomValidity('')"
               height='48px'
               backgroundColor='#F7F7F7'
               mb='10px'
               required
           />
-           <Input
+           {/* <Input
               type='email'
               name='email'
               width='100%'
@@ -174,7 +174,7 @@ export default function SignOutModal() {
               marginBottom='10px'
               required
               // intlInputLabelId="profileEmailField"
-            />
+            /> */}
            {/* <Input
               type="text"
               name="name"

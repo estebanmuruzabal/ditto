@@ -652,6 +652,159 @@ const SoilHumiditySensor: React.FC<Props> = ({ errorId, plant, settingType, hand
             </>
             )}
             
+            { (module.mode === HumiditySensorMode.INTERMITTENT_IRRIGATION) && (
+            <>
+
+                <ListItem>
+                    <ListTitle>
+                        <Text>
+                        <FormattedMessage
+                            id='cyclesId'
+                            defaultMessage='cyclesId'
+                        />
+                        </Text>
+                    </ListTitle>
+                    <ListDes>
+                        { editIsOn ? (
+                            <Input
+                                type='number'
+                                name='relayOneAutomatedTimeToRun'
+                                value={module.relayOneAutomatedTimeToRun}
+                                onChange={(e: any) => handleSettingsChange(plant, 'relayOneAutomatedTimeToRun', e.target.value, settingType)}
+                                backgroundColor='#F7F7F7'
+                                height='34.5px'
+                            />
+                        ) : (
+                            <Text bold>{module?.relayOneAutomatedTimeToRun >= 0 ? module.relayOneAutomatedTimeToRun + ' ciclos' : '-'}</Text>
+                        )}
+                    </ListDes>
+                </ListItem>
+
+                <ListItem>
+                    <ListTitle>
+                        <Text>
+                        <FormattedMessage
+                            id='waitingId'
+                            defaultMessage='waitingId'
+                        />
+                        </Text>
+                    </ListTitle>
+                    <ListDes>
+                        { editIsOn ? (
+                            <Input
+                                type='number'
+                                name='relayTwoAutomatedTimeToRun'
+                                value={module.relayTwoAutomatedTimeToRun}
+                                onChange={(e: any) => handleSettingsChange(plant, 'relayTwoAutomatedTimeToRun', e.target.value, settingType)}
+                                backgroundColor='#F7F7F7'
+                                height='34.5px'
+                            />
+                        ) : (
+                            <Text bold>{module?.relayTwoAutomatedTimeToRun?.length > 0 ? module.relayTwoAutomatedTimeToRun + ' mins' : '-'}</Text>
+                        )}
+                    </ListDes>
+                </ListItem>
+
+                <ListItem>
+                    <ListTitle>
+                        <Text>
+                        <FormattedMessage
+                            id={relayTwoSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelay1Id'}
+                            defaultMessage='asociateRelay1Id'
+                        />
+                        </Text>
+                    </ListTitle>
+                    <ListDes>
+                        { editIsOn ? (
+                            <Select 
+                                onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                                value={relayOneSelected}
+                                options={fourRelaysOptions}
+                                styles={selectStyle}
+                                menuPosition={'fixed'}
+                            />
+                        ) : (
+                            <Text bold>{module?.relayOneIdRelated.length > 1 ? getRelayNameText(module?.relayOneIdRelated) : '-'}  {module?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
+                        )}
+                    </ListDes>
+                </ListItem>
+
+                <ListItem>
+                    <ListTitle>
+                        <Text>
+                        <FormattedMessage
+                            id={relayTwoSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelay2Id'}
+                            defaultMessage='asociateRelay2Id'
+                        />
+                        </Text>
+                    </ListTitle>
+                    <ListDes>
+                    { editIsOn ? (
+                        <Select 
+                            onChange={(e: any) => handleSettingsChange(plant, 'relayTwoIdRelated', e.value, settingType)}
+                            value={relayTwoSelected}
+                            options={fourRelaysOptions}
+                            styles={selectStyle}
+                            menuPosition={'fixed'}
+                        />
+                    ) : (
+                        <Text bold>{module?.relayTwoIdRelated.length > 1 ? getRelayNameText(module?.relayTwoIdRelated) : '-'}  {module?.relayTwoWorking ? '[ON]' : '[OFF]'}</Text>
+                    )}
+                    </ListDes>
+                </ListItem>
+
+                { module?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                    return (
+                        <WeekContainer>
+                            <ListDes style={{ flexDirection: 'row', display: 'flex', paddingBottom: '10px' }} >
+                            {WeekDays.map((day: any) => {
+                                    return (
+                                        <DayContainer
+                                            key={i + '-day--humidity-1container'}
+                                            style={{ backgroundColor: schedule.daysToRepeat.includes(day) ? '#c2b0b0' : 'transparent' }}
+                                            // onClick={() => setDay(day)}
+                                        >
+                                            {getDayShortName(day)}
+                                        </DayContainer>
+                                        )
+                                    })
+                                }
+                            </ListDes>
+                            <ScheduleTimeContainer>
+                                <TextSpaced> <FormattedMessage id='desdeId' defaultMessage='desdeId' /> </TextSpaced> 
+                                <TextSpaced bold>{schedule.startTime}</TextSpaced>
+                                <TextSpaced> <FormattedMessage id='aId' defaultMessage='aId' /> </TextSpaced> 
+                                <TextSpaced bold>{schedule.endTime}</TextSpaced>
+                                <ActionsButtons className='button-wrapper'>
+                                    <ActionButton onClick={(e) => { handleModal( AddTimeSchedule, { settingType: settingType, plant, id: data?.getUser?.id, schedulePosition: i } ); e.stopPropagation(); } } className='edit-btn'>
+                                        <PencilIcon />
+                                    </ActionButton>
+
+                                    <ActionButton onClick={() => onDeleteSchedule(plant, settingType, i)} className='delete-btn'>
+                                        <CloseIcon />
+                                    </ActionButton>
+                                    {/* 💤🤖 ❌🚫⛔️✅🔆⏹️ */}
+                                    <TextSpaced bold>{schedule.enabled ? '' : '⏹️'}</TextSpaced>
+                                </ActionsButtons>
+                            </ScheduleTimeContainer>
+                        </WeekContainer>
+                    )
+                })}
+
+                <Button
+                    size='small'
+                    variant='outlined'
+                    style={{marginLeft: '10px'}}
+                    type='button'
+                    className='add-button'
+                    onClick={() => handleModal(
+                        AddTimeSchedule,  { name: 'add-humidity-1-schedule', plant, id: data?.getUser?.id, settingType } )}
+                >
+                    <FormattedMessage id='addTimeScheduleId' defaultMessage='addTimeScheduleId' />
+                </Button>
+            </>
+            )}
+            
             { (module.mode === HumiditySensorMode.MANUAL) && (
                 <>
                     <ListItem style={{ justifyContent: 'flex-start' }}>

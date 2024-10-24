@@ -144,6 +144,7 @@ export enum RelaysIds {
 
 export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
+    INTERMITTENT_IRRIGATION = 'INTERMITTENT_IRRIGATION',
     IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND = 'IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND',
     IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION = 'IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
@@ -232,6 +233,7 @@ export const distanceModeOptions = [
 
 export const humidityModeOptions = [
     { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
+    { value: HumiditySensorMode.INTERMITTENT_IRRIGATION, label: 'Riego intermitente' },
     { value: HumiditySensorMode.MIN_WARNING, label: 'Aviso en mínimos' },
     { value: HumiditySensorMode.MAX_WARNING, label: 'Aviso en máximos' },
     { value: HumiditySensorMode.MANUAL, label: 'Manual' },
