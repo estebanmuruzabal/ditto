@@ -38,7 +38,7 @@ export const COMPANY_DESCRIPTION_TEXT = 'Ditto Farm es un proyecto frutihorticol
 export const COMPANY_EMAIL_PASSWORD = 'xjqq clhj tkgc bzxq';
 export const INTRODUCE_NEW_NAME_KEY_WORDS = 'No, cambiar nombre';
 export const KEEP_USER_NAME_KEY_WORD = 'Si';
-export const INITIAL_USER_PASSWORD = 'Initial_ditt0_pa$$word';
+export const INITIAL_USER_PASSWORD = '123456';
 export const CURRENCY = '$';
 
 

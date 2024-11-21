@@ -4,6 +4,7 @@ import { IDeliveryMethod, IProduct, IUser, TriggerSteps } from "../lib/types"
 import { INITIAL_USER_PASSWORD, INITIAL_USER_USERNAME, Locales } from "../lib/utils/constant"
 import { getTotalAmount, calculateCCCharge, calculateDeliveryCharge, isUserInputInvalid, getEmptyShoppingCart, getOrderConfirmationMsgText, getEmptyAddress, getDeliveryOrPickUpDatetime, harcodedFilterOfUnusedCategories, getAddQuantityButtons, getCategoriesButtons, getProductsList, getDeliveryMethodsButtons, getPaymentButtons, getInputDeliveryAddress, getOrderConfirmationButtons, confirmNameOrNewNameButtons, normalizeText, containsValidName } from "../lib/utils/shoppingUtils"
 import { deliveryOptions, enterValidAddress, enterValidName, getDeliveryAddress, getDeliveryOrPickupOptSelectedAndGetPaymentMethodText, getQuantityOfProduct, hablarConUnRepMsg, invalidNumberInput, invalidProductQuantity, listAvailableProducts, listCategories, mainMenuAuthenticatedUser, mainMenuUnauthenticatedUser, manualInput, noAvailableCategories, noAvailableDeliveryMethods, noAvailableProducts, noProductsAvailableListCategoriesAgain, paymentMethodSelectedAndOrderConfirmationMsj, purchaseErrorMsg, reEnterValidName, reListingAvailableProducts, thanksMsgNoDevelopedFunction, thanksMsgNoPurchase, thereWasAProblemWaitForAssistance, thereWasAProblemWaitForAssistance2, unknownDeliPickUpOptInput, unknownInputDefault, unknownPaymentOptInput, unknownUserInput, welcomeMsgNameRequired } from "../messages/customersMessages"
+import { mainMenuUnauthenticatedUser1 } from "../messages/newShopPathMessages"
 const lenguageLocale = Locales.ES;
 
 const fetchCategories = async () => {
@@ -50,8 +51,10 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             }
         
             categories = await fetchCategories();
-            resData.replyMessage = mainMenuUnauthenticatedUser(categories);
+            resData.replyMessage = mainMenuUnauthenticatedUser1(categories, number);
+            // console.log('res',res)
             resData.trigger = TriggerSteps.SELECT_CATEGORY;
+            // resData = getCategoriesButtons(resData, categories);
             resolve(resData);
             break;
 
