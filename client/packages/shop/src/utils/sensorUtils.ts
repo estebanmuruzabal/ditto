@@ -2,9 +2,10 @@ import { RelaysIds, SensorsTypes } from "./constant";
 
 export const getSettingTypeText = (settingType: SensorsTypes) => {
     switch (settingType) {
-        case `${SensorsTypes.SOIL_HUMIDITY}_1`: return 'HUMEDAD TIERRA';
+        case `${SensorsTypes.SOIL_HUMIDITY}_1`: return 'HUMEDAD TIERRA 1';
         case `${SensorsTypes.SOIL_HUMIDITY}_2`: return 'HUMEDAD TIERRA 2';
         case `${SensorsTypes.SOIL_HUMIDITY}_3`: return 'HUMEDAD TIERRA 3';
+        case `${SensorsTypes.SOIL_HUMIDITY}_4`: return 'HUMEDAD TIERRA 4';
         case `${SensorsTypes.LIGHT}_1`: return 'LUZ';
         case `${SensorsTypes.LIGHT}_2`: return 'LUZ 2';
         case `${SensorsTypes.C02}_1`: return 'CO2';

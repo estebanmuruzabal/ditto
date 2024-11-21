@@ -212,7 +212,7 @@ const handleSelect = async (address) => {
       </FieldWrapper>
       <FieldWrapper>
           <PlacesAutocomplete
-            value={deliveryAddress.split(',')[0]}
+            value={deliveryAddress && deliveryAddress?.split(',')[0]}
             onChange={(e) => setDeliveryAddress(e)}
             onSelect={handleSelect}
             searchOptions={{
@@ -301,7 +301,7 @@ const handleSelect = async (address) => {
           placeholder={intl.formatMessage({ id: 'locationId', defaultMessage: 'Localidad' })}
           width='100%'
           error={touched.location && errors.location}
-          value={deliveryAddress.split(',')[1]}
+          value={deliveryAddress && deliveryAddress.split(',')[1]}
           onChange={handleChange}
           onBlur={handleBlur}
         />

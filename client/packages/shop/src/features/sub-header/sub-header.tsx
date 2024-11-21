@@ -55,8 +55,12 @@ const SubHeader: React.FC<Props> = ({ ...props  }) => {
       const deliveryMethodSaved = JSON.parse(getCookie(deliveryMethodCookieKeyName));
       setDeliveryMethodSaved(deliveryMethodSaved)
     }
-  }, [deliveryMethodSaved]);
 
+    if (window.location.href.split("?").pop()) {
+      
+    }
+  }, [deliveryMethodSaved]);
+  
   return (
     <SubHeaderWrapper className={props.className} id="layout-header">
       <PopoverBigger
