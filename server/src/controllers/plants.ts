@@ -290,9 +290,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
         case HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case HumiditySensorMode.SCHEDULE:
-            let shouldTurnOn = false;
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
-                console.log("schedule", schedule, i)
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
                     
@@ -306,15 +304,14 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
                     // const soilIsStillHumid = reading >= minReading && schedule.smartLight;
                     const smartLightOn = schedule.smartLight;
-                    if (isInsideTimeFrame && !setting.relayOneWorking) {
+                    if (isInsideTimeFrame && !setting.relayOneWorking || !isInsideTimeFrame && setting.relayOneWorking) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = isInsideTimeFrame;
                         setting.relayOneWorking = isInsideTimeFrame;
+                        console.log("in")
                         return;
                     } else {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = isInsideTimeFrame;
-                        setting.relayOneWorking = isInsideTimeFrame;
+                        console.log('isInsideTimeFrame && setting.relayOneWorking, i', isInsideTimeFrame ,setting.relayOneWorking, i)
                     }
                     if (mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
                         // @ts-ignore
