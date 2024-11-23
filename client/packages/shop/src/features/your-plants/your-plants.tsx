@@ -463,6 +463,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             />
                           );
                         case `${SensorsTypes.LIGHT}_1`:
+                        case `${SensorsTypes.LIGHT}_2`:
+                        case `${SensorsTypes.LIGHT}_3`:
+                        case `${SensorsTypes.LIGHT}_4`:
                           return (
                             <LightSensor 
                               key={i + module.settingType}
