@@ -592,18 +592,22 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                     // case 1  isInsideTimeFrame  false, i: 0
                     // case 1  isInsideTimeFrame  true, i: 1
-                    if (!isInsideTimeFrame && i !== 0) {
-                        console.log('return', i)
-                        return;
-                    }  else if (isInsideTimeFrame && i === 0) {
-
-                    } else {
+                    if (isInsideTimeFrame && i === 0) {
                         // @ts-ignore
                         plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
                         setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
                         console.log('in', i)
-                    }
-                    
+                        return;
+                    }  else if (!isInsideTimeFrame) {
+                        console.log('return', i)
+                        return;
+                    }  else if (isInsideTimeFrame && i === 1) {
+                        // @ts-ignore
+                        plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
+                        setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
+                        console.log('in', i)
+                        return;
+                    } 
 
                 }
             })
