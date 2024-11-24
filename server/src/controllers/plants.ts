@@ -595,6 +595,8 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     if (!isInsideTimeFrame && i !== 0) {
                         console.log('return', i)
                         return;
+                    }  else if (isInsideTimeFrame && i === 0) {
+
                     } else {
                         // @ts-ignore
                         plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
