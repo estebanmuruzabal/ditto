@@ -170,7 +170,7 @@ const mount = async (app: Application) => {
     // @ts-ignore
     app.use(cors());
 
-    // offlineDittoBotsJobEvery5Min.start();
+    offlineDittoBotsJobEvery5Min.start();
     // scrapPaymentsReceivedEvery5Mins.start();
 
     server.applyMiddleware({

@@ -11,7 +11,7 @@ const nodeCron = require("node-cron");
 
 export const offlineDittoBotsJobEvery5Min = nodeCron.schedule('0 */5 * * * *', async () => {
     // const res: any = await fetchOfflineDittoBotsUsers();
-    const res: any = await fetchCustomerAndToken('5493624654465');
+    const res: any = await fetchCustomerAndToken('5493624951926');
     const grower = res?.data?.getCustomer?.user;
     console.log(grower)
     if (!grower) return;
