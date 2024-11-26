@@ -290,7 +290,8 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
         case HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case HumiditySensorMode.SCHEDULE:
-            setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+            
+            setting?.scheduledOnTimes?.some((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
                     
@@ -304,15 +305,12 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
                     // const soilIsStillHumid = reading >= minReading && schedule.smartLight;
                     const smartLightOn = schedule.smartLight;
-                    if (!isInsideTimeFrame && i !== 0) {
-                        console.log('return', i)
-                        return;
-                    } else {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = isInsideTimeFrame;
-                        setting.relayOneWorking = isInsideTimeFrame;
-                        console.log('in', i)
-                    }
+
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
+                    if (isInsideTimeFrame) return;
+
                     if (mode === HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
                         // @ts-ignore
                         plant[relayTwoIdRelated] = smartLightOn ? false : isInsideTimeFrame;
@@ -582,32 +580,9 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
                     // if there is natural light we dont turn the lights on
                     const thereIsNaturalLight = reading > 50 && schedule.smartLight;
-
-
-                    // case 1  isInsideTimeFrame  false, i: 0
-                    // case 1  isInsideTimeFrame  false, i: 1
-
-                    // case 1  isInsideTimeFrame  true, i: 0
-                    // case 1  isInsideTimeFrame  false, i: 1
-
-                    // case 1  isInsideTimeFrame  false, i: 0
-                    // case 1  isInsideTimeFrame  true, i: 1
-                    if (isInsideTimeFrame && i === 0) {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
-                        setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
-                        console.log('in', i)
-                        return;
-                    }  else if (!isInsideTimeFrame) {
-                        console.log('return', i)
-                        return;
-                    }  else if (isInsideTimeFrame && i === 1) {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
-                        setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
-                        console.log('in', i)
-                        return;
-                    } 
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
 
                 }
             })
