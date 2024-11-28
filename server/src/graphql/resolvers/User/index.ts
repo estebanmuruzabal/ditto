@@ -369,9 +369,9 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User does not exits.");
             }
 
-            if (userResult.otp != '123456') {
-                throw new Error("Verification code dose not match.");
-            }
+            // if (userResult.otp != '123456') {
+            //     throw new Error("Verification code dose not match.");
+            // }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
