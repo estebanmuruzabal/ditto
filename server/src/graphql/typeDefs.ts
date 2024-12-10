@@ -414,7 +414,7 @@ export const typeDefs = gql`
         delivery_method_id: String!
         payment_option_type: String!
         isWhatsappPurchase: Boolean!
-        delivery_address: String!
+        delivery_address: String
         delivery_date: String
         sub_total: Float
         total: Float

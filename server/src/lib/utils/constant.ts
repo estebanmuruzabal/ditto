@@ -17,7 +17,7 @@ export const timeZone = 'America/Argentina/Buenos_Aires';
 // DITTO FARM RCIA VARIABLES
 export const PRIMARY_ONCALL_NUMBER = '5493624951926';
 
-export const BANK_TRANSFER_ALIAS = 'ditto.farm.rcia';
+export const BANK_TRANSFER_ALIAS = 'ditto.rcia';
 export const BANK_TRANSFER_CBU = '0000168300000003376935';
 
 // export const COMPANY_EMAIL = 'dittofarm.rcia@gmail.com';

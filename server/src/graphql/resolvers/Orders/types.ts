@@ -52,7 +52,7 @@ export interface IOrderQuickInput {
     delivery_method_id?: string;
     selectedCategorySlug?: string;
     isWhatsappPurchase?: boolean;
-    delivery_address: string;
+    delivery_address?: string;
     payment_method_name?: string;
     payment_option_type?: string;
     delivery_method_name?: string;

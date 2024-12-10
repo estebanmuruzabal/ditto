@@ -567,6 +567,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
         case LightSensorMode.SCHEDULE:
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
 
@@ -579,10 +580,12 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                     const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
                     // if there is natural light we dont turn the lights on
-                    const thereIsNaturalLight = reading > 50 && schedule.smartLight;
+                    // const thereIsNaturalLight = reading > 50 && schedule.smartLight;
                     // @ts-ignore
-                    plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
-                    setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    // plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    // setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
 
                 }
             })

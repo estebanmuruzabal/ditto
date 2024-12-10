@@ -239,15 +239,20 @@ export const usersResolvers: IResolvers = {
             {phone, password, name}: { phone: string, password: string, name: string },
             {db}: { db: Database }
         ): Promise<ICommonMessageReturnType> => {
+
+            if (phone[0] !== '5' || phone[1] !== '4') {
+                throw new Error("Anteponer el número 54");
+            }
+
             const phoneFormatted = takeNineOutIfItHasIt(phone)
             const userResult = await db.users.findOne({"phones.number": phoneFormatted});
             
             if (userResult) {
-                throw new Error("User already registered.");
+                throw new Error("Usuario ya registrado.");
             }
 
             if (!phone ||!password ||!name) {
-                throw new Error("Every field is required");
+                throw new Error("Todos los campos son requeridos");
             }
 
             if (password.length < 6) {
@@ -1029,9 +1034,9 @@ export const usersResolvers: IResolvers = {
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            if (userResult.delivery_address.length == 1) {
-                throw new Error("You are not allowed to delete your address.");
-            }
+            // if (userResult.delivery_address.length == 1) {
+            //     throw new Error("You are not allowed to delete your address.");
+            // }
 
 
             const addresses = [];

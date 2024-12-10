@@ -16,10 +16,7 @@ export const mainMenuUnauthenticatedUser1 = (categories: ICategory[], phoneNumbe
     *Please reply with a number between 1 and ${categories.length + 1}*` 
     : 
     `Hola! 🙋🏻 Soy un asistente virtual de Ditto Farm y estoy para ayudarte!
-    Ingresa a nuestra tienda online:
-    
-    http://dittofarms.com/?${phoneNumber}
-    `   
+Para hacer un pedido o ver nuestros productos ingresa a nuestra página web: https://shorturl.at/clDsE`   
     };
     
     export const getCategoriesButtons = (resData: any, categories: any) => {

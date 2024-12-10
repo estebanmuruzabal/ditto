@@ -10,30 +10,21 @@ const pickUpPurchaseWithTransferPayment = (purchasedDate: string, address: strin
 switch (lenguageLocale) {
 case Locales.ES:
 return (
-`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
-
-📢 *Importante* 📢
+`📢 *Importante* 📢
 - Te recordamos llevar bolsas para retirar tus productos!
 - Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
-*Detalle:*
-*Fecha de compra:*
-${purchasedDate}
 *Método de envío o retiro seleccionado:*
 ${deliveryMethod}
 *Fecha y horario del envío o retiro en tienda:*
 ${delivery_pickup_date}
 *Dirección de envío o donde retirar:*
 ${address}
-*Método de pago:*
-${paymentMethod}
-*Productos comprados:*
+
 ${products.map((product: any) => (`${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}\n`)).join('')}
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!💚
-También podes hacer tu pedido en nuestra página web http://www.dittofarms.com
 Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
 `)
 case Locales.EN:
@@ -69,14 +60,9 @@ const pickUpPurchaseWithCashPayment = (purchasedDate: string, address: string, t
 switch (lenguageLocale) {
 case Locales.ES:
 return (
-`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
-
-📢 *Importante* 📢
+`📢 *Importante* 📢
 - Te recordamos llevar bolsas para retirar tus productos!
 
-*Detalle:*
-*Fecha de compra:*
-${purchasedDate}
 *Método de envío o retiro seleccionado:*
 ${deliveryMethod}
 *Fecha y horario del envío o retiro en tienda:*
@@ -90,8 +76,6 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!💚
-También podes hacer tu pedido en nuestra página web http://www.dittofarms.com
 Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
 `)
 case Locales.EN:
@@ -126,15 +110,10 @@ const deliveryPurchaseWithTransferPayment = (purchasedDate: string, address: str
 switch (lenguageLocale) {
 case Locales.ES:
 return (
-`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
-
-📢 *Importante* 📢
+`📢 *Importante* 📢
 - Te vamos a escribir una hora antes de llevar tu pedido.
 - Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
-*Detalle:*
-*Fecha de compra:*
-${purchasedDate}
 *Método de envío o retiro seleccionado:*
 ${deliveryMethod}
 *Fecha y horario del envío o retiro en tienda:*
@@ -148,8 +127,6 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!💚
-También podes hacer tu pedido en nuestra página web http://www.dittofarms.com
 Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
 `)
 case Locales.EN:
@@ -186,14 +163,9 @@ const pickupMethoSelected = !!(PICKUP_LAJOLLA_DELIVERY_METHOD === deliveryMethod
 switch (lenguageLocale) {
 case Locales.ES:
 return (
-`${customerName ? `Hola ${customerName}, t` : 'T'}u compra ha sido realizada con éxito!
-
-📢 *Importante* 📢
+`📢 *Importante* 📢
 - Te vamos a escribir una hora antes de llevar tu pedido.
 
-*Detalle:*
-*Fecha de compra:*
-${purchasedDate}
 *Método de envío o retiro seleccionado:*
 ${deliveryMethod}
 *Fecha y horario del envío o retiro en tienda:*
@@ -207,8 +179,6 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Muchas gracias por su compra eco-sustentable!💚
-También podes hacer tu pedido en nuestra página web http://www.dittofarms.com
 Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
 `)
 case Locales.EN:

@@ -39,16 +39,16 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
     console.log('step in SHOP BOT Switch:', triggerStep)
     switch (triggerStep) {
         case TriggerSteps.INITIAL_UNAUTHENTICATED_USER:
-            const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
-            const registeredSuccessfully = res?.data?.signUp?.status;
+            // const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
+            // const registeredSuccessfully = res?.data?.signUp?.status;
 
             // welcomeTextAndCategoriesOpts
             // hereee
-            if (!registeredSuccessfully) {
-                resData.replyMessage = thereWasAProblemWaitForAssistance();
-                resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
-                resolve(resData);
-            }
+            // if (!registeredSuccessfully) {
+            //     resData.replyMessage = thereWasAProblemWaitForAssistance();
+            //     resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+            //     resolve(resData);
+            // }
         
             categories = await fetchCategories();
             resData.replyMessage = mainMenuUnauthenticatedUser1(categories, number);
