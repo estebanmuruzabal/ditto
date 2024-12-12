@@ -2,7 +2,7 @@ export interface ICategoryInput {
     type_id: string;
     parent_id?: string;
     name: string;
-    visible?: boolean;
+    visible: boolean;
     banner?: any;
     banner_data?: any;
     icon: string;
