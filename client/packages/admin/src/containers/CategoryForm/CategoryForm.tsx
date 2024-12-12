@@ -23,6 +23,7 @@ import { displayErrorMessage, displaySuccessNotification } from '../../helpers/c
 import { AllIconArray } from '../../assets/icons/all-icons';
 import { TYPE } from 'baseui/select';
 import { Textarea } from '../../components/Textarea/Textarea';
+import Checkbox, {LABEL_PLACEMENT} from "../../components/CheckBox/CheckBox";
 
 const GET_CATEGORIES = gql`
   query getCategories($searchText: String, $offset: Int) {
@@ -68,6 +69,7 @@ const CREATE_CATEGORY = gql`
       type_id
       name
       slug
+      visible
       banner
       icon
       meta_title
@@ -113,11 +115,13 @@ const AddCategory: React.FC<Props> = props => {
   const [meta_keyword, setMetaKeyword] = useState('');
   const [meta_description, setMetaDescription] = useState('');
   const [icon, setIcon] = useState([]);
+  const [visible, setVisible] = useState(false);
 
   React.useEffect(() => {
     register({ name: 'type_id' });
     register({ name: 'parent' });
     register({ name: 'banner_data' });
+    register({ name: 'visible' });
     register({ name: 'banner', required: true});
     register({ name: 'icon', required: true});
     register({ name: 'meta_title' });
@@ -133,7 +137,6 @@ const AddCategory: React.FC<Props> = props => {
   }
 
   React.useEffect(() => {
-    console.log('data.shopCategories.item:',data)
     data?.shopCategories?.items
       && setParentCategoryOptions(data.shopCategories.items.map(category => ({
         value: category.id,
@@ -174,12 +177,14 @@ const AddCategory: React.FC<Props> = props => {
 
   const onSubmit = (data) => {
 
-    const { name, type_id, parent, meta_title, meta_keyword, meta_description, banner, banner_data }  = data ;
+    const { name, type_id, parent, meta_title, meta_keyword, meta_description, banner, banner_data, visible }  = data ;
+    console.log('visible:',visible)
     const newCategory = {
       name: name,
       type_id: type_id[0].id,
       parent_id: parent ? parent[0].value : null,
       banner_data: banner_data,
+      visible: visible,
       banner: banner,
       icon: icon[0].value,
       meta_title: meta_title,
@@ -225,6 +230,11 @@ const AddCategory: React.FC<Props> = props => {
     const value = e.target.value;
     setValue('meta_keyword', value);
     setMetaKeyword(value);
+  };
+
+  const handleVisibleChange = ( value: any ) => {
+    setValue('visible', value);
+    setVisible(value);
   };
 
   const handleMetaDescriptionChange = e => {
@@ -355,6 +365,19 @@ const AddCategory: React.FC<Props> = props => {
                       }}
                       type={TYPE.search}
                   />
+                </FormFields>
+
+                <FormFields>
+                  <FormLabel>Visible</FormLabel>
+                  <Checkbox
+                        checked={visible}
+                        onChange={e => {
+                          setValue('visible', e.target.checked)
+                          setVisible(e.target.checked)
+                        }}
+                        labelPlacement={LABEL_PLACEMENT.right}
+                    >
+                    </Checkbox>
                 </FormFields>
 
                 <FormFields>

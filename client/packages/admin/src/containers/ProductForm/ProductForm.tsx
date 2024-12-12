@@ -181,7 +181,7 @@ const AddProduct: React.FC<Props> = props => {
     register({ name: 'type' });
     register({ name: 'categories' });
     register({ name: 'images', required: true });
-    register({ name: 'slug', required: true });
+    register({ name: 'slug' });
     register({ name: 'packagePrice' });
     register({ name: 'description' });
     register({ name: 'is_featured' });
@@ -403,10 +403,10 @@ const AddProduct: React.FC<Props> = props => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Unit</FormLabel>
                   <Input type="text" inputRef={register} name="unit" />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
                   <FormLabel>Price</FormLabel>
@@ -417,7 +417,7 @@ const AddProduct: React.FC<Props> = props => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Package price</FormLabel>
                   <Input
                       name="packagePrice"
@@ -425,10 +425,10 @@ const AddProduct: React.FC<Props> = props => {
                       value={packagePrice}
                       onChange={handlePackagePriceChange}
                   />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
-                  <FormLabel>Product Quantity</FormLabel>
+                  <FormLabel>Stock</FormLabel>
                   <Input
                     type="number"
                     inputRef={register({ required: true })}
@@ -437,7 +437,7 @@ const AddProduct: React.FC<Props> = props => {
                 </FormFields>
 
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Sale Price</FormLabel>
                   <NumberInput
                       type="number"
@@ -453,7 +453,7 @@ const AddProduct: React.FC<Props> = props => {
                     inputRef={register}
                     name="discountInPercent"
                   />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
                   <FormLabel>Type</FormLabel>
@@ -557,16 +557,16 @@ const AddProduct: React.FC<Props> = props => {
                     multi
                   />
                 </FormFields>
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Slug</FormLabel>
                   <Input
                       name="slug"
                       value={slug}
-                      inputRef={register({ required: true })}
+                      inputRef={register()}
                       onChange={handleSlugTitleChange}
                   />
-                </FormFields>
-                <FormFields>
+                </FormFields> */}
+                {/* <FormFields>
                   <FormLabel>Meta Title</FormLabel>
                   <Input
                       name="meta_title"
@@ -591,7 +591,7 @@ const AddProduct: React.FC<Props> = props => {
                       value={meta_description}
                       onChange={handleMetaDescriptionChange}
                   />
-                </FormFields>
+                </FormFields> */}
               </DrawerBox>
             </Col>
           </Row>

@@ -389,10 +389,10 @@ const AddProduct: React.FC<Props> = () => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Unit</FormLabel>
                   <Input type="text" inputRef={register} name="unit" />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
                   <FormLabel>Price</FormLabel>
@@ -403,7 +403,7 @@ const AddProduct: React.FC<Props> = () => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Package price</FormLabel>
                   <Input
                       name="packagePrice"
@@ -411,9 +411,9 @@ const AddProduct: React.FC<Props> = () => {
                       value={packagePrice}
                     onChange={handlePackagePriceChange}
                   />
-                </FormFields>
+                </FormFields> */}
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Sale Price</FormLabel>
                   <Input type="number" inputRef={register} name="sale_price" />
                 </FormFields>
@@ -425,7 +425,7 @@ const AddProduct: React.FC<Props> = () => {
                     inputRef={register}
                     name="discount_in_percent"
                   />
-                </FormFields>
+                </FormFields> */}
 
                 
                 <FormFields>
@@ -438,7 +438,7 @@ const AddProduct: React.FC<Props> = () => {
                 </FormFields>
 
                 <FormFields>
-                  <FormLabel>Product Quantity</FormLabel>
+                  <FormLabel>Stock</FormLabel>
                   <Input
                       type="number"
                       inputRef={register({ required: true })}
@@ -547,7 +547,7 @@ const AddProduct: React.FC<Props> = () => {
                       multi
                   />
                 </FormFields>
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Meta Title</FormLabel>
                   <Input
                       name="meta_title"
@@ -572,7 +572,7 @@ const AddProduct: React.FC<Props> = () => {
                       value={meta_description}
                       onChange={handleMetaDescriptionChange}
                   />
-                </FormFields>
+                </FormFields> */}
               </DrawerBox>
             </Col>
           </Row>
