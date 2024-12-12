@@ -35,6 +35,7 @@ const GET_CATEGORIES = gql`
         slug
         banner
         icon
+        visible
         meta_title
         meta_keyword
         meta_description
@@ -50,6 +51,7 @@ const GET_CATEGORIES_FOR_LIST = gql`
       items{
         id
         type_id
+        visible
         name
         slug
         banner
@@ -178,7 +180,7 @@ const AddCategory: React.FC<Props> = props => {
   const onSubmit = (data) => {
 
     const { name, type_id, parent, meta_title, meta_keyword, meta_description, banner, banner_data, visible }  = data ;
-    console.log('visible:',visible)
+
     const newCategory = {
       name: name,
       type_id: type_id[0].id,
