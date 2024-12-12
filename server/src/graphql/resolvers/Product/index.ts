@@ -6,6 +6,7 @@ import {authorize} from "../../../lib/utils";
 import {IProductInput, IProductsArgs, IUpdateProductInputArgs} from "./types";
 import {search} from "../../../lib/utils/search";
 import {storeImage} from "../../../lib/utils/image-store";
+import { slugify } from '../../../lib/utils/slugify';
 
 export const productsResolvers: IResolvers = {
     Query: {
@@ -96,7 +97,7 @@ export const productsResolvers: IResolvers = {
                 type: input.type,
                 categories: JSON.parse(input.categories),
                 name: input.name,
-                slug: input.slug,
+                slug: slugify(input.name),
                 user_owner_id: input.user_owner_id, 
                 description: input.description,
                 packagePrice: input.packagePrice,

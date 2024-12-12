@@ -224,6 +224,7 @@ export const typeDefs = gql`
         type_id: String!
         parent_id: String
         name: String!
+        visible: Boolean
         banner_data: File
         banner: String
         icon: String!
@@ -244,6 +245,7 @@ export const typeDefs = gql`
         type_id: String
         parent_id: String
         name: String!
+        visible: Boolean
         slug: String!
         banner: String
         icon: String!
