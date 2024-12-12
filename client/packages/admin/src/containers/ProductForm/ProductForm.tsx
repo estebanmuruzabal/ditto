@@ -557,7 +557,7 @@ const AddProduct: React.FC<Props> = props => {
                     multi
                   />
                 </FormFields>
-                {/* <FormFields>
+                <FormFields>
                   <FormLabel>Slug</FormLabel>
                   <Input
                       name="slug"
@@ -565,7 +565,7 @@ const AddProduct: React.FC<Props> = props => {
                       inputRef={register()}
                       onChange={handleSlugTitleChange}
                   />
-                </FormFields> */}
+                </FormFields>
                 {/* <FormFields>
                   <FormLabel>Meta Title</FormLabel>
                   <Input
