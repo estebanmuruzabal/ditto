@@ -1,3 +1,4 @@
+import DeliveryIcon from 'assets/images/locationIcon.webp';
 import React, { useContext, useEffect } from 'react';
 import * as Yup from 'yup';
 import { withFormik, FormikProps, Form } from 'formik';
@@ -6,7 +7,7 @@ import TextField from 'components/forms/text-field';
 import { Button } from 'components/button/button';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { ADD_ADDRESS, UPDATE_ADDRESS } from 'graphql/mutation/address';
-import { DeliveryText, FieldWrapper, Heading, PickUpOptions } from './address-card.style';
+import { BannerIcon, DeliveryText, FieldWrapper, Heading, PickUpOptions } from './address-card.style';
 import { ProfileContext } from 'contexts/profile/profile.context';
 import { FormattedMessage, useIntl } from 'react-intl';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
@@ -76,28 +77,21 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
   const [searchResult, setSearchResult] = React.useState([]);
   const [deliveryAddress, setDeliveryAddress] = React.useState("");
   const [notInsideDeliveryAreas, setNotInsideDeliveryAreas] = React.useState(false);
-
-  useEffect(() => {
-    const savedDeliveryMethod = getCookie(deliveryMethodCookieKeyName);
-    if (savedDeliveryMethod) {
-      const deliveryMethodSaved = JSON.parse(savedDeliveryMethod);
-      console.log(deliveryMethodSaved)
-      setDeliveryAddress(deliveryMethodSaved?.deliveryAddress)
-    }
-  }, []);
-
+  
   const ID = item.id;
   let newAddressid = null;
   const addressItem = item.item;
+  console.log('addressItem:::', addressItem)
   const addressValue = {
     id: ID,
     addressId: addressItem.id, 
     title: values.title,
-    address: values.address,
+    address: addressItem.address,
     location: values.location,
     instructions: values.instructions,
-    is_primary: true
+    is_primary: false
   };
+  console.log('addressItem::', addressItem)
   const { state, dispatch } = useContext(ProfileContext);
   const intl = useIntl();
 
@@ -107,7 +101,8 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
   const handleSubmit = async () => {
     if (isValid) {
       const {id, addressId, title, address, location, instructions} = addressValue;
-      if (Object.keys(addressItem).length === 0) {
+      // addressItem puede pre-cargar address solamente para luego el usuario completar el resto de los datos
+      if (Object.keys(addressItem).length === 0 || Object.keys(addressItem).length === 1) {
         const {data}  = await addAddressMutation({
           variables: { 
             id,
@@ -162,7 +157,6 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
 };
 
 const handleSelect = async (address) => {
-  setDeliveryAddress(address);
   const results = await geocodeByAddress(address);
   const latLng = await getLatLng(results[0]);
   setNotInsideDeliveryAreas(false);
@@ -192,9 +186,11 @@ const handleSelect = async (address) => {
     setNotInsideDeliveryAreas(true);
     console.log(inside([latLng.lat, latLng.lng], plazaNueveDeJulioPolygon));
   }
+  console.log('setDeliveryAddress(address?.split(',')[0]);', address?.split(',')[0])
+  setDeliveryAddress(address?.split(',')[0]);
   setSearchResult(deliveryOptionsMethods)
 };
-
+  console.log(values)
   return (
     <Form>
       <Heading>{intl.formatMessage({ id: addressItem?.id ? 'editAddressId' : 'addNewAddressId', defaultMessage: 'Address name' })}</Heading>
@@ -211,9 +207,10 @@ const handleSelect = async (address) => {
         />
       </FieldWrapper>
       <FieldWrapper>
-          <PlacesAutocomplete
-            value={deliveryAddress && deliveryAddress?.split(',')[0]}
-            onChange={(e) => setDeliveryAddress(e)}
+          {/* <PlacesAutocomplete
+            value={deliveryAddress?.split(',')[0]}
+            // onChange={handleChange}
+            onChange={(e) => { setDeliveryAddress(e); handleChange(e);}}
             onSelect={handleSelect}
             searchOptions={{
               types: [],
@@ -224,7 +221,7 @@ const handleSelect = async (address) => {
               <div>
                 <input
                   {...getInputProps({
-                    placeholder: "Calle, altura, localidad",
+                    placeholder: "Dirección",
                     className: "location-search-input",
                     style: {
                       width: '300px',
@@ -256,15 +253,15 @@ const handleSelect = async (address) => {
                       : { backgroundColor: "#ffffff", cursor: "pointer" };
                     return (
                       <div {...getSuggestionItemProps(suggestion, { style })}>
-                        {suggestion.description}
+                        <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>{suggestion.description}
                       </div>
                     );
                   })}
                 </div>
               </div>
             )}
-          </PlacesAutocomplete>
-          {searchResult?.length ? searchResult.map((deliveryMethod, i) => {
+          </PlacesAutocomplete> */}
+          {/* {searchResult?.length ? searchResult.map((deliveryMethod, i) => {
               return (
                 <PickUpOptions>
                   <Checkbox
@@ -273,26 +270,27 @@ const handleSelect = async (address) => {
                       labelText={`${deliveryMethod.name} - ${deliveryMethod.details} `}
                       id={`deliveryMethod-${i}`}
                       onChange={e => {
-                          setDeliveryMethodAndSaveCookie(deliveryMethodSelected?.id === deliveryMethod.id ? null : deliveryMethod)
+                          setDeliveryMethod(deliveryMethodSelected?.id === deliveryMethod.id ? null : deliveryMethod)
                       }}
                   />
                 </PickUpOptions>
               )}
               ) : ('')
-          }
-          {notInsideDeliveryAreas && (
+          } */}
+          {/* {notInsideDeliveryAreas && (
             <DeliveryText>{intl.formatMessage({ id: 'noDeliveryThereYet', defaultMessage: 'noDeliveryThereYet' })}</DeliveryText>
-          )}
-          {/* <TextField
+          )} */}
+          <TextField
             id="address"
             type="text"
+            disabled={true}
             width='100%'
             placeholder={intl.formatMessage({ id: 'addressId', defaultMessage: 'Address' })}
             error={touched.address && errors.address}
             value={values.address}
             onChange={handleChange}
             onBlur={handleBlur}
-          /> */}
+          />
       </FieldWrapper>
       <FieldWrapper>
         <TextField
@@ -301,7 +299,7 @@ const handleSelect = async (address) => {
           placeholder={intl.formatMessage({ id: 'locationId', defaultMessage: 'Localidad' })}
           width='100%'
           error={touched.location && errors.location}
-          value={deliveryAddress && deliveryAddress.split(',')[1]}
+          value={values.location}
           onChange={handleChange}
           onBlur={handleBlur}
         />

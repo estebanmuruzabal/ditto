@@ -254,13 +254,29 @@ export const MethodOption = styled.div`
 export const BannerIcon = styled.span`
 line-height: 0;
   img {
-    height: 18px;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 3px;
+    height: 14px;
     line-height: 0;
-    -webkit-filter: invert(100%);
-    filter: invert(100%);
-    
+    // -webkit-filter: invert(100%);
+    // filter: invert(100%);
+     -webkit-filter: invert(1);
+      filter: invert(1);
   }
 `;
+
+
+// export const BannerIcon = styled.span`
+// line-height: 0;
+//   img {
+//     height: 18px;
+//     line-height: 0;
+//     -webkit-filter: invert(100%);
+//     filter: invert(100%);
+    
+//   }
+// `;
 
 export const Wrapper = styled.div`
   text-align: center;
@@ -281,6 +297,42 @@ export const LogoWrapper = styled.div`
     max-width: 160px;
   }
 `;
+export const ActionsButtons = styled.span`
+
+
+  transition: 0.2s ease-in-out;
+`;
+
+export const ActionButton = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 5px;
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  color: ${themeGet('colors.white', '#ffffff')};
+
+  &.edit-btn {
+    background-color: ${themeGet('colors.primary.regular', '#009E7F')};
+  }
+  &.delete-btn {
+    background-color: ${themeGet('colors.secondary.regular', '#ff5b60')};
+  }
+
+  svg {
+    display: block;
+    width: 8px;
+    height: auto;
+  }
+`;
+
 export const Heading = styled.h4`
   color: black;
   margin-bottom: 10px;

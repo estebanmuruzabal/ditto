@@ -214,25 +214,6 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
 
           { ((setting.mode === LightSensorMode.SCHEDULE) && hasRelayAsociated) && (
             <>
-              <ListItem style={{ justifyContent: 'flex-start' }}>
-                <ListTitle>
-                <Text>
-                    <FormattedMessage
-                    id="manualModeStateId"
-                    defaultMessage="manualModeStateId"
-                    />
-                </Text>
-                </ListTitle>
-                <ListDes>
-                    <Text  bold> 
-                        <FormattedMessage
-                        id={setting.relayOneWorking ? 'manualModeStateOnId' : 'manualModeStateOffId'}
-                        defaultMessage='noDefaultOnOffMsg'
-                        />
-                    </Text>
-                    </ListDes>
-                </ListItem>
-
                 <ListItem style={{ justifyContent: 'flex-start' }}>
                     <ListTitle>
                     <Text>

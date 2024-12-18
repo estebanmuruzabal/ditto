@@ -65,8 +65,10 @@ export default function SignOutModal() {
     onError: (error) => {
       setPassword('');
       setRepeatPassword('');
-      if (error?.toString() && error?.toString().includes('User already registered')) setErrorMessage(intl.formatMessage({ id: 'userAlreadyRegistered', defaultMessage: 'User already registered' }))
+      if (error?.toString() && error?.toString().includes('Usuario ya registrado.')) setErrorMessage(intl.formatMessage({ id: 'userAlreadyRegistered', defaultMessage: 'User already registered' }))
       else if (error?.toString() && error?.toString().includes('Incorrect length')) setErrorMessage(intl.formatMessage({ id: 'atLeast6Char', defaultMessage: 'Mínimo 6 caracteres' }))
+      else if (error?.toString() && error?.toString().includes('Anteponer el número 54')) setErrorMessage(intl.formatMessage({ id: 'a', defaultMessage: 'Anteponer el número 54' }))
+      else if (error?.toString() && error?.toString().includes('Todos los campos son requeridos')) setErrorMessage(intl.formatMessage({ id: 'a', defaultMessage: 'Todos los campos son requeridos' }))
       else setErrorMessage(error?.toString())
     }
   });
@@ -80,6 +82,10 @@ export default function SignOutModal() {
   }
   const passwordsAreEqual = () => {
     return password === repeatPassword;
+  }
+
+  const startsWith54 = () => {
+    return phone[0] === '5' && phone[1] === '4';
   }
 
   // private hasSecurity() {
@@ -127,7 +133,7 @@ export default function SignOutModal() {
     <Wrapper>
       <Container>
         <Heading>
-          <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
+          <FormattedMessage id='completeBtnText' defaultMessage='Sign Up' />
         </Heading>
         {/* <SubHeading>
           <FormattedMessage
@@ -206,6 +212,13 @@ export default function SignOutModal() {
               value={phone}
               onChange={handlePhoneChange}
             />
+            {!startsWith54 && (
+              <SubrequirementContainer>
+                <Dot />
+                <Requirement>{intl.formatMessage({ id: 'passShouldBeEqual', defaultMessage: 'Passwords does not match' })}</Requirement>
+              </SubrequirementContainer>
+            )}
+            
             <Input
               type="text"
               name="password"

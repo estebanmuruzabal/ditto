@@ -22,6 +22,21 @@ const Heading = styled.div`
   margin-bottom: 15px;
 `;
 
+export const BannerIcon = styled.span`
+line-height: 0;
+  img {
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+    height: 14px;
+    line-height: 0;
+    // -webkit-filter: invert(100%);
+    // filter: invert(100%);
+     -webkit-filter: invert(1);
+      filter: invert(1);
+  }
+`;
+
 const PickUpOptions = styled.div`
   display: flex;
   flex-direction: row;

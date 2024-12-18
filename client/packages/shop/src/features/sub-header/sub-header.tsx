@@ -50,17 +50,18 @@ const LocationMenu = ({ deliveryMethodSaved, isOpen }) => {
 const SubHeader: React.FC<Props> = ({ ...props  }) => {
   const [deliveryMethodSaved, setDeliveryMethodSaved] = React.useState();
 
-  useEffect(() => {
-    if (getCookie(deliveryMethodCookieKeyName) && !deliveryMethodSaved) {
-      const deliveryMethodSaved = JSON.parse(getCookie(deliveryMethodCookieKeyName));
-      setDeliveryMethodSaved(deliveryMethodSaved)
-    }
+  // useEffect(() => {
+  //   // if (getCookie(deliveryMethodCookieKeyName) && !deliveryMethodSaved) {
+  //   //   const deliveryMethodSaved = JSON.parse(getCookie(deliveryMethodCookieKeyName));
+  //   //   setDeliveryMethodSaved(deliveryMethodSaved)
+  //   // }
+  //   console.log('window.location.href.split("?").pop()',window.location.href.split("?").pop())
+  //   if (window.location.href.split("?").pop()) {
+  //     handlePhoneChange(window.location.href.split("?").pop())
+  //   }
+  // }, []);
 
-    if (window.location.href.split("?").pop()) {
-      
-    }
-  }, [deliveryMethodSaved]);
-  
+
   return (
     <SubHeaderWrapper className={props.className} id="layout-header">
       <PopoverBigger

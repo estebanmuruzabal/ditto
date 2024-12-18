@@ -3,19 +3,24 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { DeliveryMethodsConstants, deliveryMethodCookieKeyName, plazaBelgranoPolygon, plazaEspañaPolygon, plazaNueveDeJulioPolygon, plazadoceDeOctubrePolygon, resistenciaZipCode } from 'utils/constant';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
-import { GiftBox } from 'assets/icons/GiftBox';
+import { CloseIcon } from 'assets/icons/CloseIcon';
 import Checkbox from 'components/checkbox/checkbox';
 import { getCookie, setCookie } from 'utils/session';
-import { CardWrapper, Container, DeliveryMethods, DeliveryText, Heading, Input, Offer, OfferSection, Options, PickUpOptions, Wrapper } from './delivery-selection.style';
+import { ActionButton, ActionsButtons, BannerIcon, CardWrapper, Container, DeliveryMethods, DeliveryText, Heading, Input, Offer, OfferSection, Options, PickUpOptions, Wrapper } from './delivery-selection.style';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import { alignContent, borderRadius, display, flexDirection, justifyContent, textAlign, width } from 'styled-system';
+import { ProfileContext } from 'contexts/profile/profile.context';
+import { ADD_ADDRESS } from 'graphql/mutation/address';
+import DeliveryIcon from 'assets/images/locationIcon.webp';
 
 interface Props {
   deliveryMethodSaved: any
   setDeliveryMethodSaved: any
+  deliveryMethodTypeSelected: any
+  setDeliveryMethodType: any
 }
 
 const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
-  const [deliveryMethodTypeSelected, setDeliveryMethodType] = React.useState();
 
   const [deliveryMethodSelected, setDeliveryMethod] = React.useState(undefined);
   const { data: deliverData } = useQuery(DELIVERY_METHOD)
@@ -30,7 +35,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
     setDeliveryMethod(deliveryMethod)
     props.setDeliveryMethodSaved(deliveryMethod)
 
-    setCookie(deliveryMethodCookieKeyName, deliveryMethod);
+    // setCookie(deliveryMethodCookieKeyName, deliveryMethod);
     // }
   };
 
@@ -68,10 +73,21 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   };
 
   const setDelivery =  (e, deli: DeliveryMethodsConstants) => {
+    // if (deli === DeliveryMethodsConstants.DELIVERY) {
+    //   setDeliveryMethodType(deli)
+    //   props.setDeliveryMethodSaved(DeliveryMethodsConstants.DELIVERY)
+    //   return;  
+    // }
     e.stopPropagation();
-    setDeliveryMethodType(deli)
+    props.setDeliveryMethodType(deli)
     setSearchResult(null)
     setZipCode('')
+  };
+
+  const deleteDeliveryAddress =  () => {
+    setSearchResult(null)
+    setDeliveryAddress('')
+    setNotInsideDeliveryAreas(false)
   };
 
   const handleOnFocus =  (event) => {
@@ -80,8 +96,8 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   };
 
   // deliveryMethodSelected
-  const isPickUpSelected = deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP;
-  const isDeliverySelected = deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY;
+  const isPickUpSelected = props.deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP;
+  const isDeliverySelected = props.deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY;
   const intl = useIntl();
 
   const handleSelect = async (address) => {
@@ -93,22 +109,22 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
 
     if (inside([latLng.lat, latLng.lng], plazadoceDeOctubrePolygon)) {
       deliveryOptionsMethods = deliveryMethods?.filter(deliveryMethod => {
-        if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Lunes')) { deliveryMethod.name = 'Delivery Gratis'; return true;}
+        if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Lunes')) { deliveryMethod.name = 'GRATIS'; return true;}
         return !deliveryMethod.isPickUp;
       });
     } else if (inside([latLng.lat, latLng.lng], plazaBelgranoPolygon)) {
       deliveryOptionsMethods = deliveryMethods?.filter(deliveryMethod => {
-        if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Martes')) { deliveryMethod.name = 'Delivery Gratis'; return true;}
+        if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Martes')) { deliveryMethod.name = 'GRATIS'; return true;}
         return !deliveryMethod.isPickUp;
       });
     } else if (inside([latLng.lat, latLng.lng], plazaNueveDeJulioPolygon)) {
         deliveryOptionsMethods = deliveryMethods?.filter(deliveryMethod => {
-          if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Miercoles')) { deliveryMethod.name = 'Delivery Gratis'; return true;}
+          if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Miercoles')) { deliveryMethod.name = 'GRATIS'; return true;}
           return !deliveryMethod.isPickUp;
         });
     } else if (inside([latLng.lat, latLng.lng], plazaEspañaPolygon)) {
       deliveryOptionsMethods = deliveryMethods?.filter(deliveryMethod => {
-        if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Jueves')) { deliveryMethod.name = 'Delivery Gratis'; return true;}
+        if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Jueves')) { deliveryMethod.name = 'GRATIS'; return true;}
         return !deliveryMethod.isPickUp;
       });
     } else {
@@ -117,7 +133,6 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
     }
     setSearchResult(deliveryOptionsMethods)
   };
-
     
   // const searchDeliveryZipCode =  (e) => {
   //   handleOnFocus(e)
@@ -139,7 +154,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
             </Options>
             <Wrapper>
             
-                { !!deliveryMethodTypeSelected && (
+                { !!props.deliveryMethodTypeSelected && (
                   <Container>
                     <Heading  onClick={(e) => handleOnFocus(e)}>
                         { isPickUpSelected ? (
@@ -178,42 +193,55 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                           }}
                         >
                           {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                            <div onClick={(e) => handleOnFocus(e)}>
-                              <input
-                                {...getInputProps({
-                                  placeholder: "Calle, altura, localidad",
-                                  className: "location-search-input",
-                                  style: {
-                                    width: '220px',
-                                    padding:'0px 8px',
-                                    appearance: 'none',
-                                    fontFamily: `'Lato', sans-serif`,
-                                    fontSize: '15',
-                                    lineHeight: 'inherit',
-                                    border: '1px solid',
-                                    borderColor: '#f7f7f7',
-                                    borderRadius: '6px',
-                                    backgroundColor: '#f7f7f7',
-                                    color: '#0D1136',
-                                    height: '48px',
-                                    transition: 'all 0.25s ease',
-                                    // mb: 3,
-                                    '&:hover,&:focus': {
-                                      outline: 0,
-                                      borderColor: '#009e7f',
+                            <div onClick={(e) => handleOnFocus(e)} >
+                              <div style={{ width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                padding: '0px 0px',}}>
+                                <input
+                                  {...getInputProps({
+                                    placeholder: "Calle, altura, localidad",
+                                    className: "location-search-input",
+                                    style: {
+                                      width: '220px',
+                                      padding:'0px 8px',
+                                      appearance: 'none',
+                                      fontFamily: `'Lato', sans-serif`,
+                                      fontSize: '15',
+                                      lineHeight: 'inherit',
+                                      border: '1px solid',
+                                      borderColor: '#f7f7f7',
+                                      borderRadius: '6px',
+                                      backgroundColor: '#f7f7f7',
+                                      color: '#0D1136',
+                                      height: '48px',
+                                      transition: 'all 0.25s ease',
+                                      // mb: 3,
+                                      '&:hover,&:focus': {
+                                        outline: 0,
+                                        borderColor: '#009e7f',
+                                      },
                                     },
-                                  },
-                                })}
-                              />
+                                  })}
+                                />{ deliveryAddress?.length ? (
+                                  <ActionsButtons className='button-wrapper'>
+                                      <ActionButton onClick={() => deleteDeliveryAddress()} className='delete-btn'>
+                                          <CloseIcon />
+                                      </ActionButton>
+                                  </ActionsButtons>
+                                ): ''}
+                              </div>
                               <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
                                 {suggestions.map((suggestion) => {
                                   const style = suggestion.active
-                                    ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                                    : { backgroundColor: "#ffffff", cursor: "pointer" };
+                                    ? { backgroundColor: "#fafafa", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px' }
+                                    : { backgroundColor: "#ffffff", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px', alignItems: "center" };
                                   return (
                                     <div {...getSuggestionItemProps(suggestion, { style })}>
-                                      {suggestion.description}
+                                      <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>{suggestion.description?.split(",")[0]}{suggestion.description?.split(",")[1]}
                                     </div>
                                   );
                                 })}
@@ -222,23 +250,24 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                           )}
                         </PlacesAutocomplete>
                         )}
-                      {searchResult?.length ? searchResult.map((deliveryMethod, i) => {
-                          return (
-                            <PickUpOptions>
-                              <Checkbox
-                                  keyName={`${i}-deliveryMethods`}
-                                  isChecked={deliveryMethodSelected?.id === deliveryMethod.id}
-                                  labelText={`${deliveryMethod.name} - ${deliveryMethod.details} `}
-                                  id={`deliveryMethod-${i}`}
-                                  onChange={e => {
-                                      setDeliveryMethodAndSaveCookie(deliveryMethodSelected?.id === deliveryMethod.id ? null : deliveryMethod)
-                                  }}
-                              />
-                            </PickUpOptions>
-                          )}
-                          ) : ('')
-                      }
-                      { !searchResult && zipCode.length >= 4 && deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP && (
+                        <div style={{ paddingTop: '20px'}}>
+                          {searchResult?.length ? searchResult.map((deliveryMethod, i) => {
+                            return (
+                              <PickUpOptions>
+                                <Checkbox
+                                    keyName={`${i}-deliveryMethods`}
+                                    isChecked={deliveryMethodSelected?.id === deliveryMethod.id}
+                                    labelText={`${deliveryMethod.name} - ${deliveryMethod.details} `}
+                                    id={`deliveryMethod-${i}`}
+                                    onChange={e => {
+                                        setDeliveryMethodAndSaveCookie(deliveryMethodSelected?.id === deliveryMethod.id ? null : deliveryMethod)
+                                    }}
+                                />
+                              </PickUpOptions>
+                            )}) : ('')
+                          }
+                        </div>
+                      { !searchResult && zipCode.length >= 4 && props.deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP && (
                         <DeliveryText>{intl.formatMessage({ id: 'noDittoPickUpLocations', defaultMessage: 'noDittoPickUpLocations' })}</DeliveryText>
                       )}
                       {notInsideDeliveryAreas && (

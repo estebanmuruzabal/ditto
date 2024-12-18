@@ -129,7 +129,7 @@
   "orderTrackingText": "Order Tracking",
   "totalItemText": "Amount of items",
   "orderTimeText": "Order Method",
-  "deliveryMethodTitle": "Where ?",
+  "pickUpMethodTitle": "Where ?",
   "deliveryMethodNotPickupTitle": "Delivery Zone",
   "deliveryTimeText": "Delivery Time",
   "deliveryTime": "When ?",
