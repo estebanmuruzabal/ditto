@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "export NODE_OPTIONS=--openssl-legacy-provider; next -p 9000",
-    "build": "next build",
-    "start": "next -p 9000",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider; next build",
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider; next -p 9000",
     "shop-dev": "next -p 9000",
-    "prod": "ENV=production; next start -p 9000"
+    "prod": "export NODE_OPTIONS=--openssl-legacy-provider; ENV=production; next start -p 9000"
   },
   "dependencies": {
     "@apollo/client": "^3.2.9",
