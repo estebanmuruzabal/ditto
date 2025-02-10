@@ -14,21 +14,26 @@ const DELAY_TIME = 170; //ms
 import { cleanNumber, isValidNumber } from './controllers/handle';
 import { lastClientTrigger, lastGrowerTrigger, lastStaffTrigger, sendMedia, sendMessage, sendMessageButton } from './controllers/send';
 import { findResponseMsg } from './controllers/flows';
-import { fetchCustomerAndToken, getSettings, saveUserChatHistory } from './api';
+import { fetchCustomerAndToken, fetchOfflineDittoBotsUsers, getSettings, saveUserChatHistory } from './api';
 import { TriggerSteps } from './lib/types';
-import { INITIAL_USER_USERNAME } from './lib/utils/constant';
 import { isGrower, isUserStaff, normalizeText } from './lib/utils/shoppingUtils';
-import { readInboxContent } from './lib/utils/number-verification-otp';
+import { offlineDittoBotsJobEvery5Min } from './cron-jobs';
+
 const { Client, LocalAuth, List, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json'
+const wwebVersion = '2.2412.54';
 
 export let client: any =  new Client({
         authStrategy: new LocalAuth(),
-        puppeteer: { headless: true, args: ["--no-sandbox"] }
+        puppeteer: { headless: true, args: ["--no-sandbox"] },
+        webVersionCache: {
+            type: 'remote',
+            remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${wwebVersion}.html`,
+        },
 });
 
-// let sessionData: any;
+let sessionData: any;
 
 /**
  * Escuchamos cuando entre un mensaje
@@ -45,19 +50,14 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     const settingValues = JSON.parse(settingResponse);
     if (!settingValues?.whatsapp_bot_is_on) return;
 
-    console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
+    // console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
 
-    if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
+    // if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
+    if (message.trim === '' || from === 'status@broadcast') return;
 
     const number: string = cleanNumber(from)
     let user, access_token: any;
-    // ditto num
-    // if (number !== '5493624885763') return;
-    // if (number !== '5493624276159') return;
-    // juan numero
-    // if (number !== '5493624309309') return;
-      if (number !== '5493624951926') return;
-    //   if (number !== '5493624651317') return;
+    // if (number !== '5493624951926') return;
 
     const res: any = await fetchCustomerAndToken(number);
 
@@ -65,7 +65,6 @@ const listenMessage = () => client.on('message', async (msg: any) => {
         user = res.data.getCustomer.user;
         access_token = res.data.getCustomer.access_token;
     }
-
     // nextTrigger means that we use the latest nextTrigger saved in user history chat, that was setted by us, 
     // depending on what client's latest answer.
 
@@ -120,33 +119,33 @@ const withOutSession = () => {
     return client;
 }
 
-// const withSession = () => {
-//     sessionData = require(SESSION_FILE_PATH);
+const withSession = () => {
+    sessionData = require(SESSION_FILE_PATH);
 
-//     client = new Client({
-//         session: sessionData
-//     })
+    client = new Client({
+        session: sessionData
+    })
 
-//     client.on('ready', () => {
-//         console.log('Client is ready!');
-//     });
+    client.on('ready', () => {
+        console.log('Client is ready!');
+    });
 
 
-//     client.on('message', (message: any) => {
-//         const {from, to, body } = message;
-//         // console.log('From:', from);
-//         // console.log('To:', to);
-//         // console.log('Message:', body);
-//         // if(message.body === 'ping') {
-//         //     message.reply('pong');
-//         // }
-//     });
+    // client.on('message', (message: any) => {
+    //     const {from, to, body } = message;
+    //     // console.log('From:', from);
+    //     // console.log('To:', to);
+    //     // console.log('Message:', body);
+    //     // if(message.body === 'ping') {
+    //     //     message.reply('pong');
+    //     // }
+    // });
     
-//     // client.sendMessage('+5493624951926', 'test');
-//     client.initialize();
+    // client.sendMessage('+5493624951926', 'test');
+    client.initialize();
     
-//     return client;
-// }
+    return client;
+}
 
 const mount = async (app: Application) => {
     // client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
@@ -170,6 +169,9 @@ const mount = async (app: Application) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     app.use(cors());
+
+    offlineDittoBotsJobEvery5Min.start();
+    // scrapPaymentsReceivedEvery5Mins.start();
 
     server.applyMiddleware({
         app,

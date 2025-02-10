@@ -1,5 +1,36 @@
 /************ CONSTANTS ***********/
 export const CURRENCY = '$';
+export const resistenciaZipCode = '3500';
+
+export const plazadoceDeOctubrePolygon = [
+    [-27.438348, -58.972117],
+    [-27.451195, -58.986501],
+    [-27.441537, -58.997427],
+    [27.428763, -58.983112],
+  ]
+
+  export const plazaBelgranoPolygon = [
+    [-27.4481, -58.96074],
+    [-27.43829, -58.9722],
+    [-27.45114, -58.98647],
+    [-27.46134, -58.97495],
+  ]
+
+  export const plazaEspañaPolygon = [
+    [-27.45114, -58.98647],
+    [-27.46134, -58.97495],
+    [-27.47423, -58.98923],
+    [-27.46392, -59.00075],
+  ]
+
+export const plazaNueveDeJulioPolygon = [
+    [-27.46392, -59.00075],
+    [-27.451147, -58.986537],
+    [-27.44148, -58.99731],
+    [-27.45442, -59.01161],
+  ]
+
+// ditto bot personal variables (change in front and back):
 
 
 export const PICKUP_GUEMES_DELIVERY_METHOD = 'Lo busco en el centro';
@@ -14,13 +45,95 @@ export const BANK_TRANSFER_ALIAS = 'dittofarm';
 export const BANK_TRANSFER_CBU = '0000003100030458924685';
 export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
 
+export const deliveryMethodCookieKeyName = 'deliveryMethodSaved';
+
+// **************** Delivery CONSTANT Start **************************
+export enum DeliveryMethodsConstants {
+    PICKUP = 'PICKUP',
+    DELIVERY = 'DELIVERY',
+}
+
+export const deliverySelectOptions = [
+    { value: DeliveryMethodsConstants.PICKUP, label: 'Pickup' },
+    { value: DeliveryMethodsConstants.DELIVERY, label: 'Delivery' },
+  ];
+
+  export enum DeliveryCarryMethodsConstants {
+    OWN_BAG = 'OWN_BAG',
+    CARTOON_BOX = 'CARTOON_BOX',
+    WOODEN_BOX = 'WOODEN_BOX',
+}
+
+  export const deliveryCarrySelectOptions = [
+    { value: DeliveryCarryMethodsConstants.OWN_BAG, label: 'I have my own bag' },
+    { value: DeliveryCarryMethodsConstants.CARTOON_BOX, label: 'I want a box' },
+    { value: DeliveryCarryMethodsConstants.WOODEN_BOX, label: 'I want to signup for exchangeble wooden box' },
+  ];
+
+
+// **************** Roles CONSTANT Start **************************
+export enum Roles {
+    ADMIN = 'ADMIN',
+    MANAGER = 'MANAGER',
+    MEMBER = 'MEMBER',
+    DELIVERY_BOY = 'DELIVERY_BOY',
+    CLIENT = 'CLIENT',
+    STAFF = 'STAFF',
+    GROWER = 'GROWER'
+}
+export const roleSelectOptions = [
+    { value: Roles.ADMIN, label: 'Admin' },
+    { value: Roles.MANAGER, label: 'Manager' },
+    { value: Roles.MEMBER, label: 'Member' },
+    { value: Roles.DELIVERY_BOY, label: 'Delivery boy' },
+    { value: Roles.CLIENT, label: 'Client' },
+    { value: Roles.GROWER, label: 'Grower' },
+    { value: Roles.STAFF, label: 'Staff' },
+  ];
+
+  // this should be part of delivery option MODEL, and come from API
+  const deliveryAreaPolygon = [
+    { lat: 3.1336599385978805, lng: 101.31866455078125 },
+    { lat: 3.3091633559540123, lng: 101.66198730468757 },
+    { lat: 3.091150714460597,  lng: 101.92977905273438 },
+    { lat: 3.1336599385978805, lng: 101.31866455078125 } // last point has to be same as first point
+  ];
+
+export const currentLng = 'ar';
+
 export enum SensorsTypes {
     SOIL_HUMIDITY = 'SOIL_HUMIDITY',
     LIGHT = 'LIGHT',
     DISTANCE = 'DISTANCE',
     PLUG = 'PLUG',
-    HUMIDITY_TEMPETURE = 'HUMIDITY_TEMPETURE',
+    C02 = 'C02',
+    HUMIDITY = 'HUMIDITY',
+    TEMPETURE = 'TEMPETURE',
 }
+export enum Locales {
+    ES = 'es',
+    EN = 'en',
+}
+
+export const timeZone = 'America/Argentina/Buenos_Aires';
+
+export const timezones = [
+    'America/Argentina/Buenos_Aires',
+    'America/Port_of_Spain',
+    'America/Eirunepe',
+    'America/Rio_Branco',
+    'America/Nassau',
+    'America/Belize',
+    'America/New_York',
+    'America/Detroit',
+    'America/North_Dakota/Center',
+    'America/North_Dakota/New_Salem',
+    'America/North_Dakota/Beulah',
+    'America/Denver',
+    'America/Boise',
+    'America/Phoenix',
+    'America/Los_Angeles',
+] 
 
 export enum RelaysIds {
     RELAY_ONE = 'isRelayOneOn',
@@ -31,10 +144,15 @@ export enum RelaysIds {
 
 export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
+    INTERMITTENT_IRRIGATION = 'INTERMITTENT_IRRIGATION',
     IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND = 'IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND',
+    IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION = 'IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
     MANUAL = 'HUMIDITY_MANUAL',
+    MIN_WARNING = 'HUMIDITY_MIN_WARNING',
+    MAX_WARNING = 'HUMIDITY_MAX_WARNING',
     SCHEDULE = 'HUMIDITY_SCHEDULE',
+    SCHEDULE_DOUBLE_ACTION = 'HUMIDITY_SCHEDULE_DOUBLE_ACTION',
     NONE = 'NONE'
 }
 
@@ -61,10 +179,27 @@ export enum PlugMode {
     NONE = 'NONE'
 }
 
-export enum PlugSensorMode {
-    MANUAL = 'MANUAL',
-    SCHEDULE = 'SCHEDULE',
-    ASSOCIATED = 'ASSOCIATED',
+export enum AirHumiditySensorMode {
+    MANUAL = 'AIR_HUM_MANUAL',
+    SCHEDULE = 'AIR_HUM_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'AIR_HUM_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'AIR_HUM_WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+
+export enum C02SensorMode {
+    MANUAL = 'C02_MANUAL',
+    SCHEDULE = 'C02_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'C02_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'C02_WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+
+export enum AirTemperatureSensorMode {
+    MANUAL = 'AIR_TEMP_MANUAL',
+    SCHEDULE = 'AIR_TEMP_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'AIR_TEMP_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'AIR_TEMP_WHEN_MAX_ACTION_AUTOMATED',
     NONE = 'NONE'
 }
 
@@ -75,10 +210,9 @@ export enum CommonMode {
 export enum LightSensorMode {
     MANUAL = 'LIGHT_MANUAL',
     SCHEDULE = 'LIGHT_SCHEDULE',
-    SMART_SCHEDULE = 'LIGHT_SMART_SCHEDULE',
     NONE = 'NONE'
 }
-export const WeekDays = [1, 2, 3, 4, 5, 6, 7];
+export const WeekDays = [0, 1, 2, 3, 4, 5, 6];
 
     // - Accion vacio custom: activa relay asociado x cantidad de tiempo
     // - Accion vacio automatico: avisa cuando esta vacio y activa relay asociado hasta llegar al maximo
@@ -99,17 +233,45 @@ export const distanceModeOptions = [
 
 export const humidityModeOptions = [
     { value: HumiditySensorMode.SEEDS_POOL_IRRIGATION, label: 'Riego por inmersión' },
+    { value: HumiditySensorMode.INTERMITTENT_IRRIGATION, label: 'Riego intermitente' },
+    { value: HumiditySensorMode.MIN_WARNING, label: 'Aviso en mínimos' },
+    { value: HumiditySensorMode.MAX_WARNING, label: 'Aviso en máximos' },
     { value: HumiditySensorMode.MANUAL, label: 'Manual' },
     { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND, label: 'A demanda cant. exacta' },
+    { value: HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION, label: 'A demanda cant. exacta, doble acción' },
     { value: HumiditySensorMode.IRRIGATE_ON_DEMAND, label: 'A demanda' },
-    { value: HumiditySensorMode.SCHEDULE, label: 'Calendario de riego' },
+    { value: HumiditySensorMode.SCHEDULE, label: 'Calendario' },
+    { value: HumiditySensorMode.SCHEDULE_DOUBLE_ACTION, label: 'Calendario, doble acción' },
     { value: HumiditySensorMode.NONE, label: 'Ninguno' }
+];
+
+export const airHumiditySensorModeOptions = [
+    { value: AirHumiditySensorMode.MANUAL, label: 'Manual' },
+    { value: AirHumiditySensorMode.SCHEDULE, label: 'Calendario' },
+    { value: AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción < de mín.' },
+    { value: AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción > de máx.' },
+    { value: AirHumiditySensorMode.NONE, label: 'Ninguno' }
+];
+
+export const c02SensorModeOptions = [
+    { value: C02SensorMode.MANUAL, label: 'Manual' },
+    { value: C02SensorMode.SCHEDULE, label: 'Calendario' },
+    { value: C02SensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción < de mín.' },
+    { value: C02SensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción > de máx.' },
+    { value: C02SensorMode.NONE, label: 'Ninguno' }
+];
+
+export const airTemperatureSensorModeOptions = [
+    { value: AirTemperatureSensorMode.MANUAL, label: 'Manual' },
+    { value: AirTemperatureSensorMode.SCHEDULE, label: 'Calendario' },
+    { value: AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED, label: 'Acción < de mín.' },
+    { value: AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED, label: 'Acción > de máx.' },
+    { value: AirTemperatureSensorMode.NONE, label: 'Ninguno' }
 ];
 
 export const lightModeOptions = [
     { value: LightSensorMode.MANUAL, label: 'Manual' },
     { value: LightSensorMode.SCHEDULE, label: 'Calendario' },
-    { value: LightSensorMode.SMART_SCHEDULE, label: 'Calendario inteligente' },
     { value: LightSensorMode.NONE, label: 'Ninguno' }
 ];
 

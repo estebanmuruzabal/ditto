@@ -18,8 +18,7 @@ import AddTimeSchedule from 'components/add-time-schedule/add-schedule-card';
 import { ISetting } from 'utils/types';
 import { getDayShortName, getRelayNameText, getSettingTypeText } from 'utils/sensorUtils';
 import { CheckMark } from 'assets/icons/CheckMark';
-import Reading from './HumidityReading';
-import LightReading from './LightReading';
+import LightReading from './sensor-readings/LightReading';
 
 interface Props {
   data?: any;
@@ -38,14 +37,15 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
     const [daySelected, setDay] = useState('');
     const [editIsOn, setEditIsOn] = useState(false);
     const intl = useIntl();
+    const module = plant.sensors.find((module: ISetting) => module.settingType === settingType);
     const selectedMode = lightModeOptions.find((option) => option.value === setting.mode);
     const selectedManualState = manualModeOptions.find((option) => option.value === setting.relayOneWorking);
     const relayOneSelected = fourRelaysOptions.find((option) => option.value === setting.relayOneIdRelated);
     const relayTwoSelected = fourRelaysOptions.find((option) => option.value === setting.relayTwoIdRelated);
-    const selectStyle = { control: styles => ({ ...styles, width: '160px', textAlign: 'left' }) };
+    const selectStyle = { control: styles => ({ ...styles, width: '120px', textAlign: 'left' }) };
     // const tabIsOpen = openTab === settingType;
     const tabIsOpen = true;
-
+    const hasRelayAsociated = setting.relayOneIdRelated?.length > 0;
     const handleModal = (
         modalComponent: any,
         modalProps = {},
@@ -71,6 +71,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             <ListItem style={{ justifyContent: 'flex-start' }}>
                 <ListTitle>
                     <Type bold>{getSettingTypeText(setting?.settingType)}</Type>
+                    { !hasRelayAsociated && (<Type>{<FormattedMessage id="fillModeAndRelayToWork" defaultMessage="fillModeAndRelayToWork" />}</Type>)}
                 </ListTitle>
                 <ListDes style={{ marginLeft: '-10px' }}>
                     <CardButtons className='button-wrapper'>
@@ -107,11 +108,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
               </Text>
             </ListTitle>
             <ListDes>
-                <LightReading
-                    settingType={settingType}
-                    plant={plant}
-                />
-              {/* <Text bold>{setting?.reading} % {setting?.reading < 40 ? '🌙' : '💡'}</Text> */}
+                <LightReading module={module} plantId={plant.plantId} />
             </ListDes>
           </ListItem>
   
@@ -146,8 +143,8 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             <ListTitle>
               <Text>
                 <FormattedMessage
-                  id="lightModeId"
-                  defaultMessage="lightModeId"
+                  id="modeId"
+                  defaultMessage="modeId"
                 />
               </Text>
             </ListTitle>
@@ -161,42 +158,15 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                         menuPosition={'fixed'}
                     />
                 ) : (
-                    <Text  bold>{selectedMode.value.length > 1 ? selectedMode.label : '-'}</Text>
+                    <Text style={{ width: 'max-content' }} bold>{selectedMode?.value.length > 1 ? selectedMode.label : '-'}</Text>
                 )}
             </ListDes>
           </ListItem>
-  
-          { (setting?.mode === LightSensorMode.MANUAL || setting?.mode === LightSensorMode.SCHEDULE || setting?.mode === LightSensorMode.SMART_SCHEDULE) && (
-            <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
-                    defaultMessage={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-              { editIsOn ? (
-                    <Select 
-                        onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
-                        value={relayOneSelected}
-                        options={fourRelaysOptions}
-                        styles={selectStyle}
-                        menuPosition={'fixed'}
-                    />
-                ) : (
-                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}</Text>
-                )}
-              </ListDes>
-            </ListItem>
-          )}
-          
-          { setting.mode === LightSensorMode.MANUAL && (
+          { (setting.mode === LightSensorMode.MANUAL && hasRelayAsociated) && (
             <>
               <ListItem>
                 <ListTitle>
-                  <Text bold>
+                  <Text>
                     <FormattedMessage
                       id='manualModeStateId'
                       defaultMessage='manualModeStateId'
@@ -214,29 +184,36 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                 </ListDes>
               </ListItem>
             </>
+          )} 
+  
+          { (setting?.mode === LightSensorMode.MANUAL || setting?.mode === LightSensorMode.SCHEDULE) && (
+            <ListItem>
+              <ListTitle>
+                <Text>
+                  <FormattedMessage
+                    id={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
+                    defaultMessage={setting.relayOneIdRelated?.length ? 'asociatedRelayId': 'asociateRelayId'}
+                  />
+                </Text>
+              </ListTitle>
+              <ListDes>
+              { editIsOn ? (
+                    <Select 
+                        onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                        value={relayOneSelected}
+                        options={fourRelaysOptions}
+                        styles={selectStyle}
+                        menuPosition={'fixed'}
+                    />
+                ) : (
+                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
+                )}
+              </ListDes>
+            </ListItem>
           )}
 
-          { (setting.mode === LightSensorMode.SCHEDULE || setting.mode === LightSensorMode.SMART_SCHEDULE) && (
+          { ((setting.mode === LightSensorMode.SCHEDULE) && hasRelayAsociated) && (
             <>
-              <ListItem style={{ justifyContent: 'flex-start' }}>
-                <ListTitle>
-                <Text>
-                    <FormattedMessage
-                    id="manualModeStateId"
-                    defaultMessage="manualModeStateId"
-                    />
-                </Text>
-                </ListTitle>
-                <ListDes>
-                    <Text  bold> 
-                        <FormattedMessage
-                        id={setting.relayOneWorking ? 'manualModeStateOnId' : 'manualModeStateOffId'}
-                        defaultMessage='noDefaultOnOffMsg'
-                        />
-                    </Text>
-                    </ListDes>
-                </ListItem>
-
                 <ListItem style={{ justifyContent: 'flex-start' }}>
                     <ListTitle>
                     <Text>
@@ -261,10 +238,10 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                     return (
                         <WeekContainer>
                             <ListDes style={{ flexDirection: 'row', display: 'flex', paddingBottom: '10px' }} >
-                                {Object.keys(WeekDays).map((day: any, i: number) => {
+                                {WeekDays.map((day: any) => {
                                     return (
                                         <DayContainer
-                                            key={i + '-day-light-1-container'}
+                                            key={day + '-day-light-1-container'}
                                             style={{ backgroundColor: schedule.daysToRepeat.includes(day) ? '#c2b0b0' : 'transparent' }}
                                             // onClick={() => setDay(day)}
                                         >
@@ -288,6 +265,9 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                                         <CloseIcon />
                                     </ActionButton>
                                 </ActionsButtons>
+                                {/* 💤🤖 ❌🚫⛔️✅🔆⏹️ */}
+                                <TextSpaced bold>{schedule.enabled ? '' : '⏹️'}</TextSpaced>
+                                <TextSpaced bold>{schedule.smartLight ? '🔆' : ''}</TextSpaced>
                             </ScheduleTimeContainer>
                         </WeekContainer>
                     )
@@ -297,6 +277,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                     size='small'
                     variant='outlined'
                     type='button'
+                    style={{marginLeft: '10px'}}
                     className='add-button'
                     onClick={() => handleModal(
                         AddTimeSchedule,  { name: 'add-humidity-1-schedule', plant, id: data?.getUser?.id, settingType } )}
@@ -306,7 +287,7 @@ const LightSensor: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
             </>
             )}
 
-            { setting?.logs?.length > 0 && ( <HumidityLogsGraph data={setting.logs} /> )}
+            { (setting?.logs?.length > 0 && hasRelayAsociated) && ( <HumidityLogsGraph data={setting.logs} /> )}
         </PlantsSensorContainer>
       )
 };

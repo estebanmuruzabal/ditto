@@ -11,6 +11,10 @@ export const ProductDetailsWrapper = styled.div`
   * {
     box-sizing: border-box;
   }
+
+  @media (max-width: 1600px) {
+    padding-top: 50px;
+  }
 `;
 
 export const ProductPreview = styled.div`

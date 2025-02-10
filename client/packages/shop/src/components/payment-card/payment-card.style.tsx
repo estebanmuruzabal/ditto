@@ -30,7 +30,7 @@ export const PaymentCardWrapper = styled.span`
   width: 100%;
   flex-direction: column;
   position: relative;
-  background-color: ${(props) => props.color || '#e4f4fc'};
+  background-color: ${(props) => props.color || 'white'};
   padding: 15px 20px;
   border-radius: ${themeGet('radii.base', '6px')};
   border-width: 2px;

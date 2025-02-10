@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -26,7 +26,10 @@ import { GET_TYPE } from 'graphql/query/type.query';
 import { GET_TYPE_HOMECARDS } from 'graphql/query/type.homecards.query';
 import { CATEGORY_MENU_ITEMS } from 'site-settings/site-navigation';
 import ErrorMessage from 'components/error-message/error-message';
-import { SHOP_IMAGE_HOST } from 'utils/images-path';
+import { OPEN_CAGE_KEY, SHOP_IMAGE_HOST } from 'utils/images-path';
+import { useIntl } from 'react-intl';
+import { useLocale } from 'contexts/language/language.provider';
+import { Locales } from 'utils/constant';
 const Sidebar = dynamic(() => import('layouts/sidebar/sidebar'));
 const Products = dynamic(() =>
   import('components/product-grid/product-list/product-list')
@@ -38,7 +41,11 @@ const CartPopUp = dynamic(() => import('features/carts/cart-popup'), {
 const CategoryPage: React.FC<any> = ({ deviceType }) => {
   const { query } = useRouter();
   const router = useRouter();
-
+  const { locale, changeLanguage } = useLocale();
+  const intl = useIntl();
+  const PAGE_TYPE: any = query.type;
+  const page = sitePages[PAGE_TYPE];
+  
   const { data: categoriesData, loading: categoriesLoading } = useQuery(GET_CATEGORIES, {
     variables: { 
      type: router.query.type
@@ -50,14 +57,12 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
     percentOfContainer: 0,
     offsetPX: -110,
   });
+
   React.useEffect(() => {
     if (query.text || query.category) {
       scroll();
     }
   }, [query.text, query.category]);
-  const PAGE_TYPE: any = query.type;
-  const page = sitePages[PAGE_TYPE];
-
 
   const { data: homeCardsData, loading: homeCardsLoading, error: homeCardsError } = useQuery(GET_TYPE_HOMECARDS, {
     variables: { 
@@ -73,14 +78,13 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
 
 
   if (loading || homeCardsLoading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error || homeCardsError) {
     return (
       error ? (
           <ErrorMessage message={error.message} />
-
       ) : (
           <ErrorMessage message={homeCardsError.message} />
       )
@@ -100,15 +104,16 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
           imageUrl={SHOP_IMAGE_HOST+image}
         />
         <MobileCarouselDropdown>
-          {/* if wanna show categories, fix the component to display them <StoreNav items={categoriesData.shopCategories.items} /> */}
+          {/* if wanna show categories, fix the component to display them */}
+          {/* <StoreNav items={categoriesData.categories.items} />  */}
           <Sidebar type={PAGE_TYPE} deviceType={deviceType} />
         </MobileCarouselDropdown>
-        {homeCardsData.getHomeCards.length > 0 ? (<OfferSection>
+        {/* {homeCardsData.getHomeCards.length > 0 ? (<OfferSection>
           <div style={{margin: '0 -10px'}}>
             <HomeCardsCarousel deviceType={deviceType} data={homeCardsData.getHomeCards}/>
           </div>
         </OfferSection>) : (<div></div>)
-        }
+        } */}
         <MainContentArea>
           <SidebarSection>
             <Sidebar type={PAGE_TYPE} deviceType={deviceType} />

@@ -26,6 +26,7 @@ import {
   StyledBodyCell,
 } from './StaffMembers.style';
 import NoResult from '../../components/NoResult/NoResult';
+import { Roles } from '../../settings/constants';
 
 // query getStaffs($role: String, $searchBy: String) {
 //   getStaffs(role: $role, searchBy: $searchBy) {
@@ -88,12 +89,14 @@ const Row = withStyle(Rows, () => ({
   },
 }));
 
+
 const roleSelectOptions = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'manager', label: 'Manager' },
-  { value: 'member', label: 'Member' },
-  { value: 'delivery boy', label: 'Delivery boy' },
-  { value: 'client', label: 'Client' },
+  { value: Roles.MANAGER, label: 'Manager' },
+  { value: Roles.MEMBER, label: 'Member' },
+  { value: Roles.DELIVERY_BOY, label: 'Delivery boy' },
+  { value: Roles.CLIENT, label: 'Client' },
+  { value: Roles.GROWER, label: 'Grower' },
+  { value: Roles.STAFF, label: 'Staff' },
 ];
 
 export default function StaffMembers() {
@@ -202,20 +205,22 @@ export default function StaffMembers() {
                 {data ? (
                   data.getStaffs.length ? (
                     data.getStaffs
-                      .map((item, index) => (
+                      .map((item, index) => {
+                        if (item.role !== Roles.STAFF) return;
+                        return (
                         <React.Fragment key={index}>
                           <StyledBodyCell>{item.name || '-'}</StyledBodyCell>
                           <StyledBodyCell>{item.role || '-'}</StyledBodyCell>
                           <StyledBodyCell>{item.workInfo?.isWorking?.toString()?.toUpperCase() || '-'}</StyledBodyCell>
                           <StyledBodyCell>${item.workInfo?.ratePerHour || '0'}</StyledBodyCell>
                           <StyledBodyCell>${item.workInfo?.totalSalaryToPayWeekly || '0'}</StyledBodyCell>
-                          <StyledBodyCell>{item.tasks?.filter((task) => (task.startDate.length === 0 && task.finishDate.length === 0 && task.isDone === false)).length}</StyledBodyCell>
+                          <StyledBodyCell>{item.tasks?.filter((task) => (task.startDate?.length === 0 && task.finishDate?.length === 0 && task?.isDone === false))?.length}</StyledBodyCell>
                           <StyledBodyCell>{item.workInfo?.totalWorkingMinutesPerWeek ? `${item.workInfo?.totalWorkingMinutesPerWeek / 60 | 0}:${Number(item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0) >= 9 ? item.workInfo?.totalWorkingMinutesPerWeek % 60 | 0 : '0' + item.workInfo?.totalWorkingMinutesPerWeek % 60} hs` : '0'}</StyledBodyCell>
                           <StyledBodyCell>
                             <ActionWrapper itemsOffset={offset} itemData={item}/>
                           </StyledBodyCell>
                         </React.Fragment>
-                      ))
+                      )})
                   ) : (
                     <NoResult
                       hideButton={false}

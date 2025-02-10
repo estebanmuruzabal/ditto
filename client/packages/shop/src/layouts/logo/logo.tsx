@@ -28,7 +28,7 @@ const Logo: React.FC<LogoProps> = ({ refs, imageUrl, alt, onClick }: any) => {
   }
   return (
     <LogoBox onClick={onLogoClick} ref={refs}>
-      {loading && <span>logo here</span> }
+      {/* {loading && <span>logo here</span> } */}
       {data &&<LogoImage src={siteSettingData ? SHOP_IMAGE_HOST+siteSettingData.image : imageUrl } alt={alt} />}
     </LogoBox>
   );

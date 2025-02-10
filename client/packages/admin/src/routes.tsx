@@ -70,13 +70,13 @@ function PrivateRoute({ children, ...rest }) {
 
 
   authCheck(function (token) {
-      if (token) {
-        authRefactch().then(res => {
-          if (res.data && !res.data.userAuthCheck.status) {
-            signout();
-          }
-        });
-      }
+      // if (token) {
+      //   authRefactch().then(res => {
+      //     if (res.data && !res.data.userAuthCheck.status) {
+      //       signout();
+      //     }
+      //   });
+      // }
   })
 
 

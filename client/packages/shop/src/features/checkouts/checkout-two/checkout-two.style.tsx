@@ -4,7 +4,7 @@ import { themeGet } from '@styled-system/theme-get';
 const CheckoutWrapper = styled.div`
   width: 100%;
   display: flex;
-  padding: 130px 60px 60px;
+  padding: 90px 60px 60px;
   position: relative;
 
   @media (max-width: 1100px) {
@@ -58,7 +58,7 @@ export const Heading = styled.h3`
   font-weight: ${themeGet('fontWeights.regular', '400')};
   color: ${themeGet('colors.text.bold', '#0D1136')};
   line-height: 1.4;
-  margin-bottom: 35px;
+  margin-bottom: 15px;
   position: relative;
   width: calc(100% - 100px);
   display: flex;
@@ -74,7 +74,7 @@ export const HeadingWider = styled.h3`
   font-weight: ${themeGet('fontWeights.regular', '400')};
   color: ${themeGet('colors.text.bold', '#0D1136')};
   line-height: 1.4;
-  margin-bottom: 35px;
+  margin-bottom: 15px;
   position: relative;
   display: flex;
   align-items: center;
@@ -83,6 +83,17 @@ export const HeadingWider = styled.h3`
     font-size: ${themeGet('fontSizes.md', '19')}px;
   }
 `;
+
+export const DeliveryTypesOptions = styled.h3`
+  display: flex;
+  border-radius: 0.5rem;
+  align-items: center;
+  margin-left: 5px;
+  @media (max-width: 600px) {
+    font-size: ${themeGet('fontSizes.md', '19')}px;
+  }
+`;
+
 
 export const InformationBox = styled.div`
   background-color: ${themeGet('colors.white', '#ffffff')};
@@ -172,8 +183,8 @@ export const DeliverySchedule = styled.div`
     justify-content: space-between;
     > label {
       margin-right: 0;
-      flex: calc(33.3333333333% - 10px);
-      max-width: calc(33.3333333333% - 10px);
+      // flex: calc(33.3333333333% - 10px);
+      // max-width: calc(33.3333333333% - 10px);
       padding: 11px 15px;
 
       @media (max-width: 900px) and (min-width: 768px) {
@@ -238,6 +249,29 @@ export const ButtonGroup = styled.div`
     }
 
     .addButton {
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      border: 0;
+      outline: 0;
+      border-radius: 0;
+      padding: 0;
+      font-family: ${themeGet('fonts.body', 'Lato')};
+      font-size: ${themeGet('fontSizes.sm', '13')}px;
+      font-weight: ${themeGet('fontWeights.bold', '700')};
+      color: ${themeGet('colors.primary.regular', '#009e7f')};
+      position: absolute;
+      top: 40px;
+      right: 30px;
+
+      @media (max-width: 600px) {
+        top: 27px;
+        right: 20px;
+      }
+    }
+    .changeButton {
       width: auto;
       height: auto;
       display: flex;
@@ -356,13 +390,16 @@ export const HaveCoupon = styled.button`
 `;
 
 export const ErrorMsg = styled('span')`
-  font-family: ${themeGet('fonts.body', 'Lato')};
+font-family: Lato, sans-serif;
   font-size: ${themeGet('fontSizes.smm', '16')}px;
-  font-weight: ${themeGet('fontWeights.regular', '400')};
-  color: ${themeGet('colors.secondary.hover', '#FF282F')};
+  font-weight: ${themeGet('fontWeights.bold', '500')};
+  color: '#0D1136';
   padding-top: 10px;
   display: flex;
-  // margin-left: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: -15px;
 `;
 
 export const TermConditionText = styled.span`

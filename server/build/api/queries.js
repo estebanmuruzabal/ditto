@@ -66,6 +66,8 @@ exports.getCustomerQuery = `
                     isRelayTwoOn
                     isRelayThirdOn
                     isRelayFourthOn
+                    timestamp
+                    timezone
                     sensors {
                         name
                         whatsappWarningsOn
@@ -205,10 +207,12 @@ exports.updateUserNameAndEmailQuery = `
         $id: ID!, 
         $name: String!,
         $email: String,
-    ) { updateUserNameAndEmail(
+        $lenguage: String,
+    ) { updateUserNameEmailAndLenguage(
         id: $id, 
         name: $name,
         email: $email,
+        lenguage: $lenguage
         ) {
             status
             message

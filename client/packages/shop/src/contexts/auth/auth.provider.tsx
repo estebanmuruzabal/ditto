@@ -1,14 +1,7 @@
 import React, { useReducer } from 'react';
 import { AuthContext } from './auth.context';
+import { Roles } from 'utils/constant';
 const isBrowser = typeof window !== 'undefined';
-// **************** Roles CONSTANT Start **************************
-export const ADMIN = 'ADMIN';
-export const MANAGER = 'MANAGER';
-export const MEMBER = 'MEMBER';
-export const DELIVERY_BOY = 'DELIVERY_BOY';
-export const STAFF = 'STAFF';
-export const CLIENT = 'CLIENT';
-// **************** Roles CONSTANT End **************************
 
 const INITIAL_STATE = {
   isAuthenticated: isBrowser && !!localStorage.getItem('access_token'),
@@ -16,12 +9,12 @@ const INITIAL_STATE = {
   currentUser: false,
   user: {},
   isStaff: false,
+  isGrower: false,
   isManager: false
 
 };
 
 function reducer(state: any, action: any) {
-
   switch (action.type) {
     case 'SIGNIN':
       return {
@@ -32,8 +25,9 @@ function reducer(state: any, action: any) {
         return {
           ...state,
           isAuthenticated: true,
-          isStaff: [MEMBER, ADMIN, MANAGER, DELIVERY_BOY, STAFF].includes(action.user.role),
-          isManager: [ADMIN, MANAGER].includes(action.user.role),
+          isStaff: [Roles.MEMBER, Roles.ADMIN, Roles.MANAGER, Roles.DELIVERY_BOY, Roles.STAFF].includes(action.user.role),
+          isGrower: [Roles.GROWER].includes(action.user.role),
+          isManager: [Roles.ADMIN, Roles.MANAGER].includes(action.user.role),
           user: action.user,
         };
       case 'CURRENT_USER':
@@ -59,6 +53,12 @@ function reducer(state: any, action: any) {
           currentForm: 'otpVerification',
 
         };
+        case 'LOCATION_MODAL':
+          return {
+            ...state,
+            currentForm: 'locationModal',
+  
+          };
         case 'PHONE_VERIFICATION':
         return {
           ...state,
@@ -77,7 +77,7 @@ function reducer(state: any, action: any) {
 
 export const AuthProvider: React.FunctionComponent = ({ children }) => {
   const [authState, authDispatch] = useReducer(reducer, INITIAL_STATE);
-  //console.log(authState);
+
   return (
     <AuthContext.Provider value={{ authState, authDispatch }}>
       {children}

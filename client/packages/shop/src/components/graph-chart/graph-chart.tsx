@@ -48,7 +48,7 @@ const GrpahChart = ({
             fontFamily: "'Lato', sans-serif",
           },
           formatter: function(value, timestamp, index) {
-            return moment(new Date(timestamp)).format("DD/MM HH:MM")
+            return moment(new Date(timestamp)).format("HH:MM")
           }
         },
         axisBorder: {

@@ -1,6 +1,5 @@
 import React,  { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Table from 'rc-table';
 import { useRouter } from 'next/router'
 import moment from 'moment';
 import { useQuery } from '@apollo/react-hooks';
@@ -20,13 +19,11 @@ import OrderReceivedWrapper, {
   ListTitle,
   ListDes,
   LinkPickUp,
-  OrderTableWrapper,
   OrderTable
 } from './order-received.style';
-import Progress from 'components/progress-box/progress-box';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DELIVERY_METHOD } from 'graphql/query/delivery';
-import { orderTableColumns } from 'features/user-profile/order/order';
+import { getDeliverySchedule, capitalizeFirstLetter, getDeliveryFee } from 'utils/shop-helper';
 
 type OrderReceivedProps = {
   data?: any;
@@ -41,7 +38,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
   const { data: deliverData, error: deliveryError, loading: deliveryLoading, refetch: deliveryRefetch } = useQuery(DELIVERY_METHOD)
   
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   const components = {
@@ -64,26 +61,13 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
     }
   }
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  
-  const getDeliverySchedule = (details) => {
-    if (!details) return '';
-    const word = 'Horario: ';
-
-    const index = details.indexOf(word);   // 8
-    const length = word.length;			// 7
-
-    return details.slice(index + length);
-  }
 
   const dateAndTime = `${moment(myOrder?.datetime).format('MM/DD/YY')}, ${moment(myOrder?.datetime).format('hh:mm A')}`;
+
   const deliveryMethods = deliverData?.deliveryMethods?.items;
   const orderDeliveryMethod = deliveryMethods?.filter(method => method.id === myOrder?.delivery_method_id)[0];
-  const deliveryDateAndTime = `${myOrder?.delivery_pickup_date} ${getDeliverySchedule(orderDeliveryMethod?.details)}`;
-
+  // const deliveryDateAndTime = `${myOrder?.delivery_pickup_date}`;
+  console.log(myOrder, orderDeliveryMethod)
   return (
     <OrderReceivedWrapper>
       <OrderReceivedContainer>
@@ -135,12 +119,7 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                   defaultMessage="Payment Method"
                 />
               </Text>
-              <Text>
-                <FormattedMessage
-                  id="paymentMethodName"
-                  defaultMessage={myOrder?.payment_method}
-                />
-              </Text>
+              <Text>{myOrder?.payment_method}</Text>
             </InfoBlock>
           </InfoBlockWrapper>
         </OrderInfo>
@@ -148,38 +127,27 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
         <OrderDetails>
           <BlockTitle>
             <FormattedMessage
-              id="orderDetailsText"
+              id={orderDeliveryMethod?.isPickUp ? "pickupDetailsText" :  "deliveryDetailsText"}
               defaultMessage="Order Details"
             />
           </BlockTitle>
-
           <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="totalItemText"
-                  defaultMessage="Total Item"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Text>{myOrder?.order_products?.length} </Text>
-            </ListDes>
-          </ListItem>
-
-          <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage
-                  id="deliveryMethodTitle"
+              <ListTitle>
+                <Text>
+                {orderDeliveryMethod?.isPickUp ? <FormattedMessage
+                    id="pickUpMethodTitle"
+                    defaultMessage="Order Method"
+                  /> : <FormattedMessage
+                  id="deliveryMethodNotPickupTitle"
                   defaultMessage="Order Method"
-                />
-              </Text>
-            </ListTitle>
-            <ListDes>
-           <Text>{orderDeliveryMethod?.name}</Text>
-            </ListDes>
-          </ListItem>
+                />}
+                </Text>
+              </ListTitle>
+              <ListDes>
+            <Text bold>{orderDeliveryMethod?.isPickUp ? `${orderDeliveryMethod?.name} - ${orderDeliveryMethod?.details?.split('|')[0]}` : orderDeliveryMethod?.name}</Text>
+              </ListDes>
+            </ListItem>
+          
           {/* <ListItem>
             <ListTitle>
               <Text bold>
@@ -193,11 +161,13 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
            <Text>{orderDeliveryMethod.details}</Text>
             </ListDes>
           </ListItem> */}
+
+          
           { orderDeliveryMethod?.isPickUp ? (
             <>
-              <ListItem>
+              {/* <ListItem>
                 <ListTitle>
-                  <Text bold>
+                  <Text>
                     <FormattedMessage
                       id="deliveryTime"
                       defaultMessage="Delivery Time"
@@ -205,46 +175,44 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                   </Text>
                 </ListTitle>
                 <ListDes>
-                <Text>{capitalizeFirstLetter(deliveryDateAndTime)}</Text>
+                  <Text bold>{`${orderDeliveryMethod?.details?.split('|')[1]}`}</Text>
                 </ListDes>
-              </ListItem>
-             <ListItem>
-              <ListTitle>
-                <Text bold>
-                  <FormattedMessage
-                    id="deliveryLocationText"
-                    defaultMessage="Delivery Location"
-                  />
-                </Text>
-              </ListTitle>
-              <ListDes>
-              { orderDeliveryMethod?.pickUpAddress.includes('http')
-                ? (<LinkPickUp href={orderDeliveryMethod?.pickUpAddress} target="_blank" rel="noopener noreferrer">Click/toque aquí</LinkPickUp>) 
-                : (<Text>{orderDeliveryMethod?.pickUpAddress}</Text>)
-              }
-              </ListDes>
-            </ListItem>
+              </ListItem> */}
+
+              {/* { orderDeliveryMethod?.pickUpAddress.includes('http') && (
+                <ListItem>
+                  <ListTitle>
+                    <Text>
+                      <FormattedMessage
+                        id="deliveryLocationText"
+                        defaultMessage="Delivery Location"
+                      />
+                    </Text>
+                  </ListTitle>
+                  <ListDes>
+                    <LinkPickUp href={orderDeliveryMethod?.pickUpAddress} target="_blank" rel="noopener noreferrer">Click/toque aquí</LinkPickUp>      
+                  </ListDes>
+                </ListItem>
+                )} */}
            </>
           ) : (
             <>
               <ListItem>
                 <ListTitle>
-                  <Text bold>
+                  <Text>
                     <FormattedMessage
                       id="deliveryDateTitle"
                       defaultMessage="Delivery Date"
-                    />
+                    />  
                   </Text>
                 </ListTitle>
                 <ListDes>
-                  <Text>
-                  <Text>{capitalizeFirstLetter(deliveryDateAndTime)}</Text>
-                  </Text>
+                    <Text bold>{`${orderDeliveryMethod?.details?.split('|')}`}</Text>
                 </ListDes>
               </ListItem>
               <ListItem>
                 <ListTitle>
-                  <Text bold>
+                  <Text>
                     <FormattedMessage
                       id="deliveryAddress"
                       defaultMessage="Delivery Address"
@@ -252,13 +220,21 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
                   </Text>
                 </ListTitle>
                 <ListDes>
-                  <Text>
+                  <Text bold>
                     {myOrder?.delivery_address}
                   </Text>
                 </ListDes>
               </ListItem>
             </>
           )}
+           <ListTitle>
+              <Text bold>
+                <FormattedMessage
+                  id={orderDeliveryMethod?.isPickUp ? "timepickupOfConvinience" :  "timedeliOfConvinience"}
+                  defaultMessage="timepickupOfConvinience"
+                />
+              </Text>
+            </ListTitle>
         </OrderDetails>
 
         <TotalAmount>
@@ -268,17 +244,6 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               defaultMessage="Total Amount"
             />
           </BlockTitle>
-
-          <ListItem>
-            <ListTitle>
-              <Text bold>
-                <FormattedMessage id="subTotal" defaultMessage="Sub total" />
-              </Text>
-            </ListTitle>
-            <ListDes>
-              <Text>{CURRENCY}{myOrder?.sub_total}</Text>
-            </ListDes>
-          </ListItem>
 
           <ListItem>
             <ListTitle>
@@ -293,6 +258,30 @@ const OrderReceived: React.FunctionComponent<OrderReceivedProps> = (props) => {
               <Text>{myOrder?.payment_method}</Text>
             </ListDes>
           </ListItem>
+
+          <ListItem>
+            <ListTitle>
+              <Text bold>
+                <FormattedMessage id="subTotal" defaultMessage="Sub total" />
+              </Text>
+            </ListTitle>
+            <ListDes>
+              <Text>{CURRENCY}{myOrder?.sub_total}</Text>
+            </ListDes>
+          </ListItem>
+
+          { !orderDeliveryMethod?.isPickUp && (
+            <ListItem>
+              <ListTitle>
+                <Text bold>
+                  <FormattedMessage id="deliveryFee" defaultMessage="Delivery Fee" />
+                </Text>
+              </ListTitle>
+              <ListDes>
+                <Text>{CURRENCY}{getDeliveryFee(orderDeliveryMethod?.name)}</Text>
+              </ListDes>
+            </ListItem>
+          )}
 
           {/* <OrderTableWrapper>
             <Table

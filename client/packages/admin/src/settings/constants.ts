@@ -21,12 +21,24 @@ export const SITE_SETTINGS = '/site-settings';
 export const CURRENCY = '$';
 
 // **************** Roles CONSTANT Start **************************
-export const ADMIN = 'ADMIN';
-export const MANAGER = 'MANAGER';
-export const MEMBER = 'MEMBER';
-export const DELIVERY_BOY = 'DELIVERY_BOY';
-export const STAFF = 'STAFF';
-export const CLIENT = 'CLIENT';
+export enum Roles {
+    ADMIN = 'ADMIN',
+    MANAGER = 'MANAGER',
+    MEMBER = 'MEMBER',
+    DELIVERY_BOY = 'DELIVERY_BOY',
+    CLIENT = 'CLIENT',
+    STAFF = 'STAFF',
+    GROWER = 'GROWER'
+}
+export const roleSelectOptions = [
+    { value: Roles.ADMIN, label: 'Admin' },
+    { value: Roles.MANAGER, label: 'Manager' },
+    { value: Roles.MEMBER, label: 'Member' },
+    { value: Roles.DELIVERY_BOY, label: 'Delivery boy' },
+    { value: Roles.CLIENT, label: 'Client' },
+    { value: Roles.GROWER, label: 'Grower' },
+    { value: Roles.STAFF, label: 'Staff' },
+  ];
 // **************** Roles CONSTANT End **************************
 
 // **************** Coupon Status CONSTANT START **************************

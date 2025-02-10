@@ -2,7 +2,7 @@ import React,  { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { openModal } from '@redq/reuse-modal';
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { CommonMode, RelaysIds, SensorsTypes } from 'utils/constant';
+import { CommonMode, RelaysIds, SensorsTypes, timeZone, timezones } from 'utils/constant';
 import ErrorMessage from 'components/error-message/error-message';
 
 import {
@@ -15,16 +15,16 @@ import {
   ListDes,
   ButtonText,
   PlantPageWrapper,
-  PlantsWrapper,
-  PlantsSensorContainer,
   Column1,
   Row1,
-  CardButtons
+  CardButtons,
+  DashboardContainer,
+  SensorsWrapper
 } from './your-plants.style';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GET_LOGGED_IN_USER, GET_LOGGED_IN_USER_SETTINGS } from 'graphql/query/customer.query';
 import { Button } from 'components/button/button';
-import { ADD_PLANT, DELETE_SETTING, UPDATE_SETTING } from 'graphql/query/plants.query';
+import { CREATE_UPDATE_PLANT, DELETE_SETTING, UPDATE_SETTING } from 'graphql/query/plants.query';
 import { Input } from 'components/forms/input';
 import { ProfileContext } from 'contexts/profile/profile.context';
 import { SuccessMsg } from 'features/user-profile/settings/settings.style';
@@ -37,6 +37,11 @@ import DistanceSensor from './sensors/DistanceSensor';
 import { AuthContext } from 'contexts/auth/auth.context';
 import { hasDittoBotUpdatedInLastMinute, getLastNumOfSensor, getSensorWithoutNumber } from 'utils/ditto-bot';
 import moment from 'moment';
+import AirHumidity from './sensors/AirHumiditySensor';
+import AirTemperature from './sensors/AirTemperatureSensor';
+import LastConectionReading from './sensors/sensor-readings/LastConectionReading';
+import Switch from 'components/switch/switch';
+import C02Sensor from './sensors/C02Sensor';
   
 
 type YourPlantsProps = {
@@ -68,21 +73,24 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   // });
   
   // const router = useRouter();
+
   const intl = useIntl();
   const [name, setPlantName] = useState('');
+  const [plants, setPlantPlants] = useState(state?.plants);
   const [openTab, setOpenTab] = useState('');
   const [errorId, setErrorId] = useState('');
   const [plantId, setControllerID] = useState('');
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [sensorSelected, setSensor] = useState('');
-  const [addPlant] = useMutation(ADD_PLANT);
+  const [timezoneSelected, setTimezone] = useState('');
+  const [addPlant] = useMutation(CREATE_UPDATE_PLANT);
   
   const [updateSetting] = useMutation(UPDATE_SETTING);
   const [deleteSetting] = useMutation(DELETE_SETTING);
-  const { plants } = state;
+  // const { plants } = state;
 
   if (loading) {
-    return <ErrorMessage message={'Cargando...'} />
+    return <ErrorMessage message={intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })} />
   };
 
   if (error) {
@@ -91,24 +99,23 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     );
   };
 
-  const isRelayIdAlreadyAssigend = (plant: any, field: string, value: string | boolean) => {
+  const shouldNotAssignRelay = (plant: any, field: string, value: string | boolean) => {
     const relayOneIdRelated = 'relayOneIdRelated';
     const relayTwoIdRelated = 'relayTwoIdRelated';
 
     if (field !== relayOneIdRelated && field !== relayTwoIdRelated) return false;
 
-    let relayAlreadyAssigned = false;
-
     plant.sensors.map((module) => {
       if ((module[relayOneIdRelated] === value || module[relayTwoIdRelated] === value ) && value !== '') {
         const texto1 = intl.formatMessage({ id: 'relayAlreadyAssinged', defaultMessage: 'Relay already assigned in ' });
         const texto2 = intl.formatMessage({ id: 'relayAlreadyAssinged2', defaultMessage: 'desigagned  ' });
-          alert(texto1 + module.name + texto2);
-          relayAlreadyAssigned = true;
+        const hasConfirmed = confirm(texto1 + module.name + texto2);
+        if (hasConfirmed) return false;
+        return false;
       }
     })
 
-   return relayAlreadyAssigned;
+   return false;
   };
 
   const defaultSettingValuesIfModeChanges = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
@@ -141,46 +148,36 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
   };
 
   const handleSettingsChange = (plant: any, field: string, value: string | boolean, settingType: SensorsTypes) => {
-    if (isRelayIdAlreadyAssigend(plant, field, value)) return;
+    // if we want to stop user to reuse plugs, uncomment line bellow
+    if (shouldNotAssignRelay(plant, field, value)) return;
+    // we dont want to reset enchufes or values. YET
     plant = defaultSettingValuesIfModeChanges(plant, field, value, settingType);
 
     dispatch({ type: settingType, payload: { plant, value, field } });
 
-    isClean(plant, field, value) && dispatchSettingSave(plant, field, value, settingType);
-
+    if(isClean(plant, field, value)) dispatchSettingSave(plant, field, value, settingType);
+    
     setUserinfoMsg('Update user info successfully');
     setTimeout(function () {
       setUserinfoMsg('');
     }, 8000)
   };
-  
-  const handleAddDittoBotClick = () => {
-    addPlant({
-      variables: {
-        id: data?.getUser?.id,
-        name,
-        plantId: Number(plantId)
-      },
-    });
 
-    setUserinfoMsg('added plany successfully');
-    setTimeout(function () {
-      setUserinfoMsg('');
-    }, 2000)  
-  };
-
-  const handleUpdateDittoControllerName = (plant, name: string) => {
+  const handleCreateUpdatePlantOnClick = (plant, name: string, newPlant: boolean, timeZone?: string, offline_notification?: boolean) => {
+    setTimezone(timeZone);
     setTimeout(function () {
       addPlant({
         variables: {
           id: data?.getUser?.id,
           name,
-          plantId: plant.plantId
+          plantId: newPlant ? Number(plantId) : plant.plantId,
+          ...(timeZone && {timeZone}),
+          offline_notification: offline_notification
         },
       });
   
     }, 2000)
-    setUserinfoMsg('added plany successfully');
+    setUserinfoMsg(newPlant ? 'added plant successfully' : 'updated plant successfully');
     setTimeout(function () {
       setUserinfoMsg('');
     }, 2000)  
@@ -287,14 +284,18 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
     dispatch({ type: 'ADD_MODULE', payload: {plantIndex, setting: getDefaultSetting(completeSensorTypeName) }});
   };
 
-  const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left' }) };
+  const selectStyle = { control: styles => ({ ...styles, width: '197px', textAlign: 'left', cursor: 'pointer' }) };
   const sensorsOptions = [
     { value: SensorsTypes.DISTANCE, label: intl.formatMessage({ id: 'distanceId', defaultMessage: 'distanceId' }) },
     { value: SensorsTypes.SOIL_HUMIDITY, label: intl.formatMessage({ id: 'moistHumidityId', defaultMessage: 'moistHumidityId' }) },
-    { value: SensorsTypes.HUMIDITY_TEMPETURE, label: intl.formatMessage({ id: 'airHumidityAndTempetureId', defaultMessage: 'airHumidityAndTempetureId' }) },
+    { value: SensorsTypes.HUMIDITY, label: intl.formatMessage({ id: 'airHumidityId', defaultMessage: 'airHumidityId' }) },
+    { value: SensorsTypes.TEMPETURE, label: intl.formatMessage({ id: 'airTempetureId', defaultMessage: 'airTempetureId' }) },
     { value: SensorsTypes.LIGHT, label: intl.formatMessage({ id: 'lightSensorId', defaultMessage: 'lightSensorId' }) },
     { value: SensorsTypes.PLUG, label: intl.formatMessage({ id: 'intelligentPlugId', defaultMessage: 'intelligentPlugId' }) },
+    { value: SensorsTypes.C02, label: intl.formatMessage({ id: 'c02Id', defaultMessage: 'c02Id' }) }
   ];
+
+  const timezonesList = timezones.map((timezone: string) => ({ value: timezone, label: timezone  }))
 
   return (
     <PlantPageWrapper>
@@ -316,8 +317,9 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           { plants?.length < 1 && (<Text>{intl.formatMessage({ id: 'noDittoBotsTextId', defaultMessage: 'noDittoBotsTextId' })}</Text>) }
           { plants?.map((plant, i: number) => {
             const { sensors } = plant;
+            plant.timeZone = timeZone;
               return (
-                <PlantsWrapper key={i + '-orderList'}>
+                <DashboardContainer key={i + '-orderList'}>
                   <Row1>
                     <Column1>
                       <ListItem>
@@ -336,7 +338,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             disabled={true}
                             value={plant?.name}
                             // we have to change the onChange because the is no one for the controller name actualy
-                            onChange={(e: any) => handleUpdateDittoControllerName(plant, e.target.value)}
+                            onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, e.target.value, false, timeZone)}
                             backgroundColor='#F7F7F7'
                             width='197px'
                             height='34.5px'
@@ -347,75 +349,101 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                       <ListItem>
                         <ListTitle>
                           <Text bold>
-                                                 {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}{/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
                             <FormattedMessage
                               id="statusId"
                               defaultMessage="statusId"
                             />
-                                                 {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}{/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
-                        {/* <Reading> */}
                           </Text>
                         </ListTitle>
                         <ListDes>
-                          <Text>{plant.timestamp?.length > 0 ? moment(plant.timestamp).format('hh:mm A - DD MMM') : ''} {hasDittoBotUpdatedInLastMinute(plant.timestamp) ? '[ONLINE]' : '[OFFLINE]'}</Text>
+                          <LastConectionReading key={'lastcon'+i} plantIndex={i} />
                         </ListDes>
                       </ListItem>
 
-                      {/* <Reading> */}{/* <Reading> */}
-
-                      <ListItem style={{ justifyContent: 'flex-start' }}>
+                      <ListItem>
                         <ListTitle>
-                        <Text bold>
+                          <Text bold>
                             <FormattedMessage
-                            id="addSensorId"
-                            defaultMessage="addSensorId"
+                              id="offlineNotificationId"
+                              defaultMessage="offlineNotificationId"
                             />
-                        </Text>
+                          </Text>
                         </ListTitle>
                         <ListDes>
-                        <Select 
-                            onChange={(e: any) => dispatchNewSettingSave(plant, e.value, i)}
-                            value={sensorSelected}
-                            // @ts-ignore
-                            options={sensorsOptions}
-                            styles={selectStyle}
-                            menuPosition={'fixed'}
-                        />
+                          <Switch 
+                            disabled={false}
+                            checked={plant.offline_notification}
+                            labelPosition={'right'}
+                            // className,
+                            onUpdate={(e: any) => handleCreateUpdatePlantOnClick(plant, plant.name, false, plant.timeZone, !plant.offline_notification)}
+                          />
                         </ListDes>
                       </ListItem>
 
+                      <ListItem style={{ justifyContent: 'flex-start' }}>
+                          <ListTitle>
+                          <Text bold>
+                              <FormattedMessage
+                              id="addSensorId"
+                              defaultMessage="addSensorId"
+                              />
+                          </Text>
+                          </ListTitle>
+                          <ListDes>
+                          <Select 
+                              onChange={(e: any) => dispatchNewSettingSave(plant, e.value, i)}
+                              value={sensorSelected}
+                              // @ts-ignore
+                              options={sensorsOptions}
+                              placeholder={intl.formatMessage({ id: 'clickAquiId', defaultMessage: 'clickAquiId' })}
+                              styles={selectStyle}
+                              menuPosition={'fixed'}
+                          />
+                          </ListDes>
+                        </ListItem>
+
+                        {/* <ListItem style={{ justifyContent: 'flex-start' }}>
+                            <ListTitle>
+                              <Text bold>
+                                  <FormattedMessage
+                                  id="timezone"
+                                  defaultMessage="timezone"
+                                  />
+                              </Text>
+                            </ListTitle>
+                            <ListDes>
+                              <Select 
+                                  onChange={(e: any) => handleCreateUpdatePlantOnClick(plant, plant.name, false, e.value, intl.locale)}
+                                  value={timezoneSelected}
+                                  // @ts-ignore
+                                  options={timezonesList}
+                                  styles={selectStyle}
+                                  menuPosition={'fixed'}
+                              />
+                            </ListDes>
+                          </ListItem> */}
                     </Column1>
                   </Row1>
-
-                    { sensors?.map((module: ISetting) => {
+                  <SensorsWrapper>
+                  { sensors?.map((module: ISetting, index: number) => {
                       switch (module?.settingType) {
+                        case `${SensorsTypes.C02}_1`:
+                        case `${SensorsTypes.C02}_2`:
+                          // check the number of same setting to send
+                          return (
+                            <C02Sensor 
+                              key={i + module.settingType}
+                              data={data}
+                              plant={plant}
+                              errorId={errorId}
+                              openTab={openTab}
+                              handleDeleteSensor={handleDeleteSensor}
+                              setOpenTab={setOpenTab}
+                              settingType={module.settingType}
+                              handleSettingsChange={handleSettingsChange}
+                              onDeleteSchedule={onDeleteSchedule} 
+                            />
+                          );
                         case `${SensorsTypes.SOIL_HUMIDITY}_1`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_2`:
                         case `${SensorsTypes.SOIL_HUMIDITY}_3`:
@@ -435,8 +463,41 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                             />
                           );
                         case `${SensorsTypes.LIGHT}_1`:
+                        case `${SensorsTypes.LIGHT}_2`:
+                        case `${SensorsTypes.LIGHT}_3`:
+                        case `${SensorsTypes.LIGHT}_4`:
                           return (
                             <LightSensor 
+                              key={i + module.settingType}
+                              data={data}
+                              errorId={errorId}
+                              plant={plant}
+                              handleDeleteSensor={handleDeleteSensor}
+                              openTab={openTab}
+                              setOpenTab={setOpenTab}
+                              settingType={module.settingType}
+                              handleSettingsChange={handleSettingsChange}
+                              onDeleteSchedule={onDeleteSchedule} 
+                            />
+                          );
+                        case `${SensorsTypes.HUMIDITY}_1`:
+                          return (
+                            <AirHumidity 
+                              key={i + module.settingType}
+                              data={data}
+                              errorId={errorId}
+                              plant={plant}
+                              handleDeleteSensor={handleDeleteSensor}
+                              openTab={openTab}
+                              setOpenTab={setOpenTab}
+                              settingType={module.settingType}
+                              handleSettingsChange={handleSettingsChange}
+                              onDeleteSchedule={onDeleteSchedule} 
+                            />
+                          );
+                        case `${SensorsTypes.TEMPETURE}_1`:
+                          return (
+                            <AirTemperature 
                               key={i + module.settingType}
                               data={data}
                               errorId={errorId}
@@ -483,19 +544,21 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
                           break;
                       }
                     })}
-                </PlantsWrapper>
+                  </SensorsWrapper>
+                   
+                </DashboardContainer>
               )
             })
           }
 
-          {userinfoMsg && (
+          {/* {userinfoMsg && (
               <SuccessMsg>
                 <FormattedMessage
                   id='userInfoSuccess'
                   defaultMessage={userinfoMsg}
                 />
               </SuccessMsg>
-          )}
+          )} */}
 
         </OrderDetails>
       </PlantsPageContainer>
@@ -552,7 +615,7 @@ const YourPlants: React.FC<YourPlantsProps> = ({ deviceType, userRefetch }) => {
           </ListDes>
         </ListItem>
 
-        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddDittoBotClick}>
+        <Button className="cart-button" variant="secondary" borderRadius={100} onClick={() => handleCreateUpdatePlantOnClick(plants, name, true, timeZone)}>
           <ButtonText>
             <FormattedMessage id={"addDittoBotButton"} defaultMessage="Add plant" />
           </ButtonText>

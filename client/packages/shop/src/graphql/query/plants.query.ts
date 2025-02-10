@@ -1,11 +1,13 @@
 import gql from 'graphql-tag';
 
-export const ADD_PLANT = gql`
-mutation AddPlant($id: ID!, $name: String!, $plantId: Int!) {
+export const CREATE_UPDATE_PLANT = gql`
+mutation AddPlant($id: ID!, $name: String!, $plantId: Int!, $timeZone: String, $offline_notification: Boolean) {
   addPlant(
     id: $id,
     name: $name,
-    plantId: $plantId
+    plantId: $plantId,
+    timeZone: $timeZone,
+    offline_notification: $offline_notification
   ) {
     message
     status

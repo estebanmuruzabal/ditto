@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.normalizeText = exports.endConversationKeys = exports.initialConversationKeys = exports.getTotalAmount = exports.calculateCCCharge = exports.calculateSubTotalPrice = exports.calculateDeliveryCharge = exports.getOrderConfirmationButtons = exports.getPaymentButtons = exports.getInputDeliveryAddress = exports.getDeliveryMethodsButtons = exports.getProductsList = exports.confirmNameOrNewNameButtons = exports.getAddQuantityButtons = exports.getCategoriesButtons = exports.addTalkToRepresentativeOptToButtons = exports.addTalkToRepresentativeOptToList = exports.getDeliveryOrPickUpDatetime = exports.isGrower = exports.isUserStaff = exports.getCustomerPrimaryNumber = exports.containsValidName = exports.getCleanNumber = exports.getOrderConfirmationMsgText = exports.getEmptyAddress = exports.getQuickSaleShoppingCart = exports.getEmptyShoppingCart = exports.harcodedFilterOfUnusedCategories = exports.getDeliveryPickUpDate = exports.isUserInputInvalid = void 0;
-const customersMessages_1 = require("../../messages/customersMessages");
 const types_1 = require("../types");
 const constant_1 = require("./constant");
 const whatsAppUtils_1 = require("./whatsAppUtils");
+const customersMessages_1 = require("../../messages/customersMessages");
 const isUserInputInvalid = (userInput, maxOptions) => {
     return userInput < 1 || userInput > maxOptions;
 };
@@ -61,24 +61,25 @@ const getEmptyAddress = (userId = null, address = '', title = '', location = '',
     };
 };
 exports.getEmptyAddress = getEmptyAddress;
-const getOrderConfirmationMsgText = (input, user = null) => {
-    const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+const getOrderConfirmationMsgText = (input, user = null, lenguageLocale) => {
+    /// aca papa metele codigo
+    const purchasedDate = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
     switch (input.payment_option_type) {
         case constant_1.BANK_TRANSFER_PAYMENT_OPTION:
             if (constant_1.PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || constant_1.PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
-                return (0, customersMessages_1.pickUpPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date);
+                return (0, customersMessages_1.pickUpPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
             }
             else if ((0, exports.normalizeText)(input.delivery_method_name).includes((0, exports.normalizeText)(constant_1.CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
-                return (0, customersMessages_1.deliveryPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date);
+                return (0, customersMessages_1.deliveryPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
             }
             break;
         case constant_1.CASH_PAYMENT_OPTION:
         case constant_1.CC_PAYMENT_OPTION:
             if (constant_1.PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || constant_1.PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
-                return (0, customersMessages_1.pickUpPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date);
+                return (0, customersMessages_1.pickUpPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
             }
             else if ((0, exports.normalizeText)(input.delivery_method_name).includes((0, exports.normalizeText)(constant_1.CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
-                return (0, customersMessages_1.deliveryPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date);
+                return (0, customersMessages_1.deliveryPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
             }
             break;
         default:

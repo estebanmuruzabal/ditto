@@ -141,9 +141,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     />
                   </>
                 ) : (
-                  <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddClick}>
+                  <Button className="cart-button" variant="secondary" borderradius={100} onClick={handleAddClick}>
                     <ButtonText>
-                      <FormattedMessage id={"addCartButton"} defaultMessage="Cart" />
+                      <FormattedMessage id={"addToCartButton"} defaultMessage="Cart" />
                     </ButtonText>
                   </Button>
                 )}
@@ -173,11 +173,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
               }
             </PriceContainer>
         </ProductCartBtn>
-        { (noRecicledQuantityInCart || reclicledQuantityInCart) ? (<CartPopUp deviceType={deviceType}/>) : null}
+        {/* 
+        I TOOK THIS OFF BECAUSE A UI BUG THAT SHOWS ON DESKTOP 3 CARTS POPSUP, DONT KNOW WHY, DONTCARE
+        { (noRecicledQuantityInCart || reclicledQuantityInCart) ? (<CartPopUp deviceType={deviceType}/>) : null} */}
       </ProductCartWrapper>
       )
       : (<ProductCartWrapper>
-            <p style={{color: '#ff5e5e'}}>{intl.formatMessage({ id: 'outOfStock', defaultMessage: 'Out of stock' })}</p>
+        <ProductPriceWrapper>
+            {data.discountInPercent ? (<SalePrice>{CURRENCY} {data.sale_price}</SalePrice>) : null}
+            <ProductPrice>
+              {CURRENCY}
+              {finalPrice}
+            </ProductPrice>
+          </ProductPriceWrapper>
         </ProductCartWrapper>)
       }
       { showProductQuantityExceededMsg && (

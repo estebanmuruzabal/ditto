@@ -19,12 +19,23 @@ export const deliveryMethodsResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonPaginationReturnType> => {
             let data = await db.delivery_methods.find({}).sort({_id: -1}).toArray();
-            data = search(data, ['name', 'details'], searchText);
-            const hasMore = data.length > offset + limit;
+            let visibleDeliveryMethods: any = [];
+
+            console.log('1', visibleDeliveryMethods)
+            data.map((deliMethod) => {
+                
+                if (deliMethod?.visible) { 
+                    visibleDeliveryMethods.push(deliMethod) 
+                    console.log(deliMethod?.visible)
+                }
+            });
+            console.log('2', visibleDeliveryMethods)
+            visibleDeliveryMethods = search(data, ['name', 'details'], searchText);
+            const hasMore = visibleDeliveryMethods.length > offset + limit;
 
             return {
-                items: limit == 0 ? data : data.slice(offset, offset + limit),
-                totalCount: data.length,
+                items: limit == 0 ? visibleDeliveryMethods : visibleDeliveryMethods.slice(offset, offset + limit),
+                totalCount: visibleDeliveryMethods.length,
                 hasMore,
             }
         }

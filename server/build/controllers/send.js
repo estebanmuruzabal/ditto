@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lastStaffTrigger = exports.lastClientTrigger = exports.lastGrowerTrigger = exports.sendMessageButton = exports.sendMessage = exports.sendMediaVoiceNote = exports.sendMedia = void 0;
 // import { saveMessage } from "../adapter";
-const whatsapp_web_js_1 = require("whatsapp-web.js");
+// import { List } from "whatsapp-web.js";
 const api_1 = require("../api");
 const types_1 = require("../lib/types");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
@@ -35,8 +35,8 @@ const sendMedia = (client, number = null, fileName = null) => {
     try {
         const file = `${DIR_MEDIA}/${fileName}`;
         if (fs.existsSync(file)) {
-            const media = MessageMedia.fromFilePath(file);
-            client.sendMessage(number, media, { sendAudioAsVoice: true });
+            // const media = MessageMedia.fromFilePath(file);
+            // client.sendMessage(number, media, { sendAudioAsVoice: true });
         }
     }
     catch (e) {
@@ -55,8 +55,8 @@ const sendMediaVoiceNote = (client, number = null, fileName = null) => {
     try {
         const file = `${DIR_MEDIA}/${fileName}`;
         if (fs.existsSync(file)) {
-            const media = MessageMedia.fromFilePath(file);
-            client.sendMessage(number, media, { sendAudioAsVoice: true });
+            // const media = MessageMedia.fromFilePath(file);
+            // client.sendMessage(number, media ,{ sendAudioAsVoice: true });
         }
     }
     catch (e) {
@@ -87,7 +87,11 @@ const productSections = {
         }
     ],
 };
-const list = new whatsapp_web_js_1.List(`/n Por favor, selecciona una opción en el siguiente menú:`, 'Ver menu', [productSections], 'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.', 'footer');
+// const list = new List(`/n Por favor, selecciona una opción en el siguiente menú:`,
+//     'Ver menu',
+//     [productSections],
+//     'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
+//     'footer');
 const sendMessage = (number, text, trigger, token) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     let settingResponse = yield (0, api_1.getSettings)();
@@ -103,6 +107,7 @@ const sendMessage = (number, text, trigger, token) => __awaiter(void 0, void 0, 
     }
     setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
         const message = text;
+        // @41252 arreglar numero aca
         try {
             if (number[0] == '5' && number[1] === '4' && number[2] !== '9')
                 number = '549' + number.substring(2, number.length);
@@ -125,8 +130,8 @@ exports.sendMessage = sendMessage;
  */
 const sendMessageButton = (client, number = null, text = null, actionButtons) => __awaiter(void 0, void 0, void 0, function* () {
     const { title = null, message = null, footer = null, buttons = [] } = actionButtons;
-    let button = new Buttons(message, [...buttons], title, footer);
-    client.sendMessage(number, button);
+    // let button = new Buttons(message,[...buttons], title, footer);
+    // client.sendMessage(number, button);
     // console.log(`⚡⚡⚡ Enviando mensajes....`);
 });
 exports.sendMessageButton = sendMessageButton;

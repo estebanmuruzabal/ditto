@@ -25,6 +25,7 @@ import {
 import UserImage from 'assets/images/user.png';
 import {
   AUTHORIZED_MENU_ITEMS,
+  GROWER_MENU_ITEMS,
   MOBILE_DRAWER_MENU,
   PROFILE_PAGE,
   STAFF_MENU_ITEMS,
@@ -35,7 +36,7 @@ import { ProfileContext } from 'contexts/profile/profile.context';
 const MobileDrawer: React.FunctionComponent = () => {
   const isDrawerOpen = useAppState('isDrawerOpen');
   const dispatch = useAppDispatch();
-  const { authState: { isAuthenticated, isStaff }, authDispatch,  } = useContext<any>(AuthContext);
+  const { authState: { isAuthenticated, isStaff, isGrower }, authDispatch,  } = useContext<any>(AuthContext);
   const { state } = useContext(ProfileContext);
 
   if (state) {
@@ -82,7 +83,7 @@ const MobileDrawer: React.FunctionComponent = () => {
     });
   };
 
-  const menuItems = isStaff ? STAFF_MENU_ITEMS : isAuthenticated ? AUTHORIZED_MENU_ITEMS : []; 
+  const menuItems = isGrower ? GROWER_MENU_ITEMS : isStaff ? STAFF_MENU_ITEMS : isAuthenticated ? AUTHORIZED_MENU_ITEMS : []; 
   return (
     <Drawer
       width="316px"

@@ -10,14 +10,14 @@ import {ordersResolvers} from "./Orders";
 import {settingsResolvers} from "./Setting";
 import {couponsResolvers} from "./Coupon";
 import {homeCardsResolvers} from "./HomeCard";
-// import {plantsResolvers} from "./Plants";
-
+import {shopsResolvers} from "./Shop";
 
 export const resolvers = merge(
     usersResolvers,
     typesResolvers,
     categoriesResolvers,
     productsResolvers,
+    shopsResolvers,
     deliveryMethodsResolvers,
     paymentOptionsResolvers,
     ordersResolvers,

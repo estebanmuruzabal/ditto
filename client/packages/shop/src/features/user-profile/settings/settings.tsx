@@ -50,7 +50,7 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
   const [userinfoMsg, setUserinfoMsg] = useState('');
   const [passwordChangeMsg, setPasswordChangeMsg] = useState('');
   const {
-    authState: { isAuthenticated },
+    authState: { isStaff, isGrower },
     authDispatch,
   } = React.useContext<any>(AuthContext);
   const [updateMeMutation] = useMutation(UPDATE_ME);
@@ -72,9 +72,10 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
     email,
     id,
     phones,
-    plants
+    plants,
+    role
   } = state;
-
+  
   const handleChange = (e) => {
     const { value, name } = e.target;
     dispatch({
@@ -224,6 +225,9 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               defaultMessage='Your Profile'
             />
           </Title>
+          { (isStaff || isGrower) && (
+              <Title>[{role}]</Title>
+          )}
         </HeadingSection>
         <Row style={{ alignItems: 'flex-end', marginBottom: '50px' }}>
           <Col xs={12} sm={5} md={5} lg={5}>
@@ -239,9 +243,9 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               name='name'
               value={name}
               onChange={handleChange}
-              backgroundColor='#F7F7F7'
+              backgroundcolor='#F7F7F7'
               height='48px'
-              marginBottom='10px'
+              marginbottom='10px'
               // intlInputLabelId="profileNameField"
             />
           </Col>
@@ -270,14 +274,14 @@ const SettingsContent: React.FC<SettingsContentProps> = ({ deviceType }) => {
               <FormattedMessage id='profileSaveBtn' defaultMessage='Save' />
             </Button>
           </Col>
-          {userinfoMsg && (
+          {/* {userinfoMsg && (
               <SuccessMsg>
                 <FormattedMessage
                   id='userInfoSuccess'
                   defaultMessage={userinfoMsg}
                 />
               </SuccessMsg>
-          )}
+          )} */}
         </Row>
         <Row>
           <Col xs={12} sm={12} md={12} lg={12}>

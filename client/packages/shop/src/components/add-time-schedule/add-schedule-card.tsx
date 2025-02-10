@@ -17,6 +17,7 @@ import Checkbox from '../../components/checkbox/checkbox';
 import { UPDATE_SETTING } from 'graphql/query/plants.query';
 import { ISetting } from 'utils/types';
 import { getDayShortName } from 'utils/sensorUtils';
+import Switch from 'components/switch/switch';
 
 
 // Shape of form values
@@ -62,14 +63,15 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
     name: values.name,
     info: values.info,
   };
-  
+
   const settingIndex = item.plant.sensors.findIndex((module: ISetting) => module.settingType === item.settingType);
   const currentSchedule = item.plant.sensors[settingIndex].scheduledOnTimes[item?.schedulePosition];
 
     
   const { state, dispatch } = useContext(ProfileContext);
   const [loading, setLoading] = useState(false);
-  const [isSmartLightingOn, isSmartLighting] = useState(false);
+  const [isSmartLightingOn, setSmartLighting] = useState(currentSchedule?.smartLight);
+  const [isEnabled, setIsEnabled] = useState(currentSchedule?.enabled);
   const [startTime, startTimeChange] = useState(currentSchedule?.startTime?.length > 0 ? currentSchedule.startTime : '00:00');
   const [endTime, endTimeChange] = useState(currentSchedule?.endTime?.length > 0 ? currentSchedule.endTime : '23:59');
   const [daysSelected,setDaysSelected] = useState(currentSchedule?.daysToRepeat?.length >= 0 ? currentSchedule.daysToRepeat : [])
@@ -92,7 +94,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
       daysToRepeat: daysSelected,
       startTime,
       endTime,
-      enabled: true,
+      enabled: isEnabled,
       smartLight: isSmartLightingOn
     };
 
@@ -166,9 +168,46 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
           </ListDes>
         </ListItem>
 
+        <ListItem style={{ justifyContent: 'flex-start' }}>
+          <ListTitle>
+            <Text bold>
+                <FormattedMessage
+                id="smartLightingLabelId"
+                defaultMessage="smartLightingLabelId"
+              />
+            </Text>
+          </ListTitle>
+          <ListDes style={{ marginLeft: '30px' }}>
+              <Switch 
+                  disabled={false}
+                  checked={isSmartLightingOn}
+                  labelPosition={'right'}
+                  onUpdate={() => setSmartLighting(!isSmartLightingOn) }
+              />
+          </ListDes>
+      </ListItem>
+
+      <ListItem style={{ justifyContent: 'flex-start' }}>
+        <ListTitle>
+          <Text bold>
+              <FormattedMessage
+              id="disabledLabelId"
+              defaultMessage="disabledLabelId"
+            />
+          </Text>
+        </ListTitle>
+        <ListDes style={{ marginLeft: '30px' }}>
+            <Switch 
+                disabled={false}
+                checked={!isEnabled}
+                labelPosition={'right'}
+                onUpdate={() => setIsEnabled(!isEnabled) }
+            />
+        </ListDes>
+      </ListItem>
+
       <WeekContainer>
         {WeekDays.map((day: any) => {
-          console.log('DATT', day)
             return (
               <DayContainer
                 key={day + '-day-container'}
@@ -182,23 +221,7 @@ const AddTimeSchedule = (props: FormikProps<FormValues> & MyFormProps) => {
         }
       </WeekContainer>
 
-      {/* <Checkbox
-        checked={isSmartLightingOn}
-        id='smart-lighting-id'
-        labelText='Luces'
-        onChange={() => isSmartLighting(!isSmartLightingOn) }
-        // inputRef={register({ required: true })}
-        name='isSmartLightingOn'
-        overrides={{
-          Label: {
-              style: ({ $theme }) => ({
-              color: $theme.colors.textNormal,
-              }),
-          },
-        }}
-      >
-        <FormattedMessage id="smartLightingId" defaultMessage="smartLightingId" />
-      </Checkbox> */}
+
       <ButtonsContainer>
         <Button
           onClick={handleSubmit}

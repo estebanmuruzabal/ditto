@@ -36,20 +36,18 @@ export const Banner: React.FC<Props> = ({
   };
   return (
     <Box>
-      <Image backgroundImage={`url(${imageUrl})`} />
+      <Image backgroundimage={`url(${imageUrl})`} />
       <Content>
         <Title>
           <FormattedMessage
-            /* istanbul ignore next line */
-            id="set your Title through Language File in the Admin UI"
+            id="spanishOnlyTitle"
             defaultMessage={intlTitleId}
-            values={{ minute: 90 }}
+            // values={{ minute: 90 }}
           />
         </Title>
         <Description>
           <FormattedMessage
-            /* istanbul ignore next line */
-             id="set your description through Language File in the Admin UI"
+             id="spanishOnlyDescription"
             defaultMessage={intlDescriptionId}
           />
         </Description>
@@ -58,6 +56,7 @@ export const Banner: React.FC<Props> = ({
           onLeave={setSticky}
           onPositionChange={onWaypointPositionChange}
         />
+        {/* <iframe src={`https://www.youtube.com/embed/i_5pt4FbzTk`}></iframe> */}
       </Content>
     </Box>
   );

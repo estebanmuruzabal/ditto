@@ -11,6 +11,8 @@ import { Button } from 'components/button/button';
 import { ADD_PHONENUMBER, UPDATE_PHONENUMBER } from 'graphql/mutation/phone';
 import { FieldWrapper, Heading } from './contact-card.style';
 import { FormattedMessage } from 'react-intl';
+import us from 'react-phone-input-2/lang/es.json'
+import PhoneInput from 'react-phone-input-2';
 
 type Props = {
   item?: any | null;
@@ -84,6 +86,22 @@ const CreateOrUpdateContact: React.FC<Props> = ({ item }) => {
             {ContactItem ? <FormattedMessage id="editContactId" defaultMessage="" /> : <FormattedMessage id="addNewContactId" defaultMessage="" />}
           </Heading>
           <FieldWrapper>
+            {/* <PhoneInput
+                inputProps={{
+                  name: 'phone',
+                  required: true,
+                  autoFocus: false
+                }}
+                containerStyle={{textAlign: "left"}}
+                inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
+                onlyCountries={['us']}
+                localization={us}
+                // id='my-input-id'
+                country={'us'}
+                masks={{ar: '(...) ...-....'}}
+                value={values.number}
+              onChange={handleChange}
+            /> */}
             <MaskedInput
               mask={[
                 /[0-9]/,

@@ -29,6 +29,8 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
+        timestamp: String
+        timeZone: String
     }
 
     type ISensorSetting {
@@ -52,7 +54,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
     }
 
     type ScheduledOnTimes {
-        daysToRepeat: [String]
+        daysToRepeat: [Int]
         startTime: String
         endTime: String
         enabled: Boolean
@@ -260,7 +262,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
     }
 
     input ScheduleInput {
-        daysToRepeat: [String]
+        daysToRepeat: [Int]
         startTime: String
         endTime: String
         enabled: Boolean
@@ -414,6 +416,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale:  String
     }
 
     input OrderQuickInput {
@@ -574,7 +577,37 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         hasMore: Boolean
     }
     
+    input BoundsInput {
+        ne: CoordinatesInput!
+        sw: CoordinatesInput!
+    }
+    
+    input CoordinatesInput {
+        latitude: Float!
+        longitude: Float!
+    }
+    
+    type Shop {
+        id: ID!
+        userId: String!
+        shopPublicName: String!
+        shopUrl: String!
+        address: String!
+        latitude: Float!
+        longitude: Float!
+    }
+    
+    input ShopInput {
+        shopPublicName: String!
+        shopUrl: String!
+        address: String!
+        coordinates: CoordinatesInput!
+    }
+      
     type Query {
+        shop(id: String!): Shop
+        shops(bounds: BoundsInput!): [Shop!]!
+
         getUsers: [User!]!
         types(limit: Int = 12, offset: Int = 0, searchText: String): MainTypePaginationType!
         categories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
@@ -601,6 +634,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
     }
     
     type Mutation {
+
         login(phone: String!, password: String!): UserAuthPayload!
         signUp(phone: String!, password: String!, name: String!): DefaultMessageType!
         staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!
@@ -630,9 +664,9 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         createQuickOrder(input: OrderQuickInput): Order!
         updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
-        updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
+        updateUserNameEmailAndLenguage(id: ID!, name: String!, email: String, lenguage: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, plantId: Int!): DefaultMessageType!
+        addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String): DefaultMessageType!
         updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
         deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!

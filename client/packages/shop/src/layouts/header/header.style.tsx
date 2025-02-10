@@ -39,8 +39,9 @@ export const SearchWrapper = styled.div`
 `;
 
 const HeaderWrapper = styled.header`
+  // for the sake of fitting the image bellow the sticky header so it doesnt overlap it
   /* padding: 30px 60px; */
-  padding: 20px 50px;
+  // padding: 20px 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,7 +60,7 @@ const HeaderWrapper = styled.header`
   }
 
   @media (min-width: 1600px) {
-    padding: 25px 40px;
+    padding: 0px 30px;
   }
 
   @media (max-width: 990px) {
@@ -106,8 +107,8 @@ const HeaderWrapper = styled.header`
     background-color: ${themeGet('colors.white', '#ffffff')};
     position: fixed;
     box-shadow: ${themeGet('shadows.header', '0 1px 2px rgba(0, 0, 0, 0.06)')};
-    padding-top: 20px;
-    padding-bottom: 20px;
+    // padding-top: 20px;
+    // padding-bottom: 20px;
     .modern-wrap,
     .banner-search{
       animation: ${hideSearch} 0.3s ease;
@@ -318,7 +319,7 @@ export const MobileHeaderInnerWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
+  padding: 0px 15px;
   position: fixed;
   width: 100%;
   top: 0;

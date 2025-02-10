@@ -21,7 +21,8 @@ import {
 } from '../DrawerItems/DrawerItems.style';
 import { FormFields, FormLabel } from '../../components/FormFields/FormFields';
 import Select from '../../components/Select/Select';
-import { ADMIN, CLIENT, DELIVERY_BOY, MANAGER, MEMBER } from '../../settings/constants';
+import { roleSelectOptions } from '../../settings/constants';
+
 
 const GET_STAFFS = gql`
   query getStaffs($role: String, $searchBy: String) {
@@ -85,14 +86,6 @@ const StaffMemberForm: React.FC<Props> = (props) => {
     // }
   }
 
-  const roleSelectOptions = [
-    { value: ADMIN, label: 'Admin' },
-    { value: MANAGER, label: 'Manager' },
-    { value: MEMBER, label: 'Member' },
-    { value: DELIVERY_BOY, label: 'Delivery boy' },
-    { value: CLIENT, label: 'Client' },
-  ];
-  
   const onSubmit = (data) => {
     const newStaff = {
       id: uuidv4(),

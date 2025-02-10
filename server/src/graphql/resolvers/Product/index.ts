@@ -4,10 +4,9 @@ import {Request} from "express";
 import {Database, ICommonMessageReturnType, ICommonPaginationReturnType, IProduct} from "../../../lib/types";
 import {authorize} from "../../../lib/utils";
 import {IProductInput, IProductsArgs, IUpdateProductInputArgs} from "./types";
-import {slugify} from "../../../lib/utils/slugify";
 import {search} from "../../../lib/utils/search";
 import {storeImage} from "../../../lib/utils/image-store";
-import { Product } from 'whatsapp-web.js';
+import { slugify } from '../../../lib/utils/slugify';
 
 export const productsResolvers: IResolvers = {
     Query: {
@@ -25,19 +24,19 @@ export const productsResolvers: IResolvers = {
                     )
                 );
             }
-            if (type) {
-                products = products.filter((product) => product.type.slug === type);
-            }
+            // if (type) {
+            //     products = products.filter((product) => product.type.slug === type);
+            // }
 
-            products = products.filter((product) => product.is_online === true);
+            // products = products.filter((product) => product.is_online === true);
 
-            if (filterUnstockProducts) products = products.filter((product) =>  product.product_quantity > 0);
+            // if (filterUnstockProducts) products = products.filter((product) =>  product.product_quantity > 0);
 
             products = search(products, ['name', 'slug'], searchText);
             const hasMore = products.length > offset + limit;
 
             return {
-                items: limit == 0 ? products: products.slice(offset, offset + limit),
+                items: products,
                 totalCount: products.length,
                 hasMore,
             }
@@ -98,7 +97,8 @@ export const productsResolvers: IResolvers = {
                 type: input.type,
                 categories: JSON.parse(input.categories),
                 name: input.name,
-                slug: input.slug,
+                slug: slugify(input.name),
+                user_owner_id: input.user_owner_id, 
                 description: input.description,
                 packagePrice: input.packagePrice,
                 images: imagesPath,

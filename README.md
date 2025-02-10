@@ -8,21 +8,47 @@
 - Client ADMIN Port: 5000 (3000)
 - Client ADMIN API Port: 4000
 
+# Ditto Setup
+Add Payment method: 
+"Efectivo 💰"
+type "cash"
+image "images/HkqFxzr5q-cash.png"
+details "Pagás cuando te entregamos tu pedido!"
 
-# Ditto Fashion Documentation
+name "Te transfiero!"
+type "bank_transfer"
+image "images/S1tJS1dSj-ditt.webp"
+details "Enviá una transferencia al alias "ditto.farm.rcia" y mandanos el compr…"
+
+name
+"Tarjeta 💳 [8% de recargo 🥲]"
+type "cc"
+details "Pagas con tu tarjeta de crédito/débito al recibir tu pedido"
+
+# Ditto Documentation
 
 
 here are all the tabs and language settings: client/packages/shop/src/site-settings/site-navigation.ts
 <!-- "ecoDescription": "EcoCompra: pagás ${packageDiscount} menos si tenés envases/bolsas de este art. para devolvernos.", -->
 # To do SHOP:
+\
+un mensaje mejor de lo que hacemos y nuestras pros
+zip code checker en 
+agregar products are freshly cut 1 day before the delivery date
 
+- Delivery date field en la confirmation de una purchase muestra cualquiera
+- completar /terms page
+
+
+# Nice to have SHOP:
+
+- client/packages/shop/src/components/contact-card/contact-card.tsx ponerle el phone mask input commentado que el otro te deja poner cualquier cosa
 
 
 - poner mejores datos en los cards de las tasks (start, end time).
 - better ui in task listing edit staff modal
 
 # To do VENTAS:
-poner  numeros
 1️⃣ Compra tu AssistCard 💳
 2️⃣ Asistencia en viaje 🩺
 3️⃣ Reintegros 💲
@@ -47,15 +73,31 @@ poner  numeros
 - Arreglar y testear distancia
 
 # BUGS
-- Arregglar el enchufe 4 qu no arranca el relay cuando esta bien setteado en el arduino
-- if you add a module when its already conected, it shows disconeccted/no reading, (we should ?)
+- los soil moister sensor 1 y 2 del [0] arduino, se esta copiando al [1] arduino sensores moiister 1 y 2 tmb
+- arreglar fecha si o si , que sea la del front, y un bug que dejas el browsser quieto 2 min, el online se vuelve offline, y das f5 y realmente esta online
+- jugar con el agregado de SOIL_HUMIDITY_3, se agregan mal entonces las lecturas son erroneas
+- hacemos fetch cada 2 seg 
+- agregar warning de vuelta para enchufes ya usados, pero poner confirmar o cancelar.
+- calendario modal para soil moister muestra smart lighting, hay que sacarlo
+- calendario modal nuevo, sale con el toogle disabled en on, deberia ser off
+- la hora del calendar de currentTime is la hora del servidor, tiene que ser la hora del cliente!!! (fixed creo, testear)
+- agregar cable del 4to enchufe
+- if you add a module (like light or soil) when its already conected, it shows disconeccted/no reading, (we should refresh with the actual value). and make sure it updates if the value changes
+- fix timestamp from general values in plant object: timestamp: '10/29/2023, 5:50:56 PM',
 - make check to not colapse when no whatsapp is linked when shuting a warning for instance.
 - Arreglar logs un poco
 
+
 # Improvements/features todo
+- agregar funcion pausar (disabled/enabled) para soil al menos y bot, luz y dist. todos
+- timeZone should be stored in user info (somewhere), so we pull it from the front client where the users is, so we reflect every timezone with the right information and also it works well
+- agregar textbox para ingresar user id y controller id
+- agregar boton y logica para reiniciar wifi config
+- Agregar DittoBot SHOULD BE A MODAL, ADD BUTTON ON TOP
 - agregar UI y logica de backend para enchufe inteligente
 - agregar UI y logica de backend para humedad y temperatura
-- Add wifi password ip address improvement.
+- mover las fotos a otro lugar, no en el server
+- arreglar alertas (en un nuevo server?)
 - testear cuanta agua para en 1 minuto de la manguera y poner metodo aca para en plants.ts decir cuanta agua utilizo.
 - para hacer mi sistema de agua de casa, voy a tener que agregar una logica a los sensores para que tengan un array con modos para ir saltando de modo en modo (stack).
 - agregar a que numbero avisar. al del user o otro
@@ -66,9 +108,18 @@ poner  numeros
 
 
 # Tests
-- Test: 
+- Soil Moist module:
+  calendar (done)
+  calendar double action (done)
+  demanda cantidad exacta (done)
+  demanda cantidad exacta double (done) 
 - Distance module: 
-- Light module 
+ accion custom en minimos (done)
+ accion automatico en minimos (done)
+- Light module :
+  calendar (done)
+  calendar, smart (done)
+  manual (done)
 
 # DONE
 

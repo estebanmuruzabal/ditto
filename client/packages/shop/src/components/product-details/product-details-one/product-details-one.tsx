@@ -138,9 +138,9 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
                     />
                   </>
                 ) : (
-                  <Button className="cart-button" variant="secondary" borderRadius={100} onClick={handleAddClick}>
+                  <Button className="cart-button" variant="secondary" borderradius={100} onClick={handleAddClick}>
                     <ButtonText>
-                      <FormattedMessage id={"addCartButton"} defaultMessage="Cart" />
+                      <FormattedMessage id={"addToCartButton"} defaultMessage="Cart" />
                     </ButtonText>
                   </Button>
                 )}
@@ -253,7 +253,7 @@ const ProductDetails: React.FunctionComponent<ProductDetailsProps> = ({
             <MetaSingle>
               {product?.categories?.map((item: any) => (
                 <Link
-                  href={`/${product.type.slug.toLowerCase()}?category=${item.slug}`}
+                  href={`/${product.type.slug ? product.type?.slug?.toLowerCase() : product?.type?.name.toLowerCase()}?category=${item.slug}`}
                   key={`link-${item.id}`}
                 >
                   {

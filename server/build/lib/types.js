@@ -14,22 +14,29 @@ var Roles;
 var HumiditySensorMode;
 (function (HumiditySensorMode) {
     HumiditySensorMode["IRRIGATE_ON_DEMAND"] = "IRRIGATE_ON_DEMAND";
+    HumiditySensorMode["IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION"] = "IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION";
     HumiditySensorMode["IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND"] = "IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND";
     HumiditySensorMode["SEEDS_POOL_IRRIGATION"] = "SEEDS_POOL_IRRIGATION";
-    HumiditySensorMode["MANUAL"] = "MANUAL";
-    HumiditySensorMode["SCHEDULE"] = "SCHEDULE";
+    HumiditySensorMode["MANUAL"] = "HUMIDITY_MANUAL";
+    HumiditySensorMode["SCHEDULE"] = "HUMIDITY_SCHEDULE";
+    HumiditySensorMode["SCHEDULE_DOUBLE_ACTION"] = "HUMIDITY_SCHEDULE_DOUBLE_ACTION";
     HumiditySensorMode["NONE"] = "NONE";
 })(HumiditySensorMode || (exports.HumiditySensorMode = HumiditySensorMode = {}));
 var LightSensorMode;
 (function (LightSensorMode) {
-    LightSensorMode["MANUAL"] = "MANUAL";
-    LightSensorMode["SCHEDULE"] = "SCHEDULE";
-    LightSensorMode["SMART_SCHEDULE"] = "SMART_SCHEDULE";
+    LightSensorMode["MANUAL"] = "LIGHT_MANUAL";
+    LightSensorMode["SCHEDULE"] = "LIGHT_SCHEDULE";
     LightSensorMode["NONE"] = "NONE";
 })(LightSensorMode || (exports.LightSensorMode = LightSensorMode = {}));
+// THIS SHOULD MATCH FRONTEND 'distanceModeOptions' enum 
 var DistanceSensorMode;
 (function (DistanceSensorMode) {
-    DistanceSensorMode["SISTEMA_AGUA_A_TRATAR"] = "SISTEMA_AGUA_A_TRATAR";
+    DistanceSensorMode["WHEN_EMPTY_ACTION_CUSTOM"] = "WHEN_EMPTY_ACTION_CUSTOM";
+    DistanceSensorMode["WHEN_EMPTY_ACTION_AUTOMATED"] = "WHEN_EMPTY_ACTION_AUTOMATED";
+    DistanceSensorMode["WHEN_FULL_ACTION_CUSTOM"] = "WHEN_FULL_ACTION_CUSTOM";
+    DistanceSensorMode["WHEN_FULL_ACTION_AUTOMATED"] = "WHEN_FULL_ACTION_AUTOMATED";
+    DistanceSensorMode["MIN_WARNING"] = "MIN_WARNING";
+    DistanceSensorMode["MAX_WARNING"] = "MAX_WARNING";
     DistanceSensorMode["NONE"] = "NONE";
 })(DistanceSensorMode || (exports.DistanceSensorMode = DistanceSensorMode = {}));
 var TriggerGrowerSteps;

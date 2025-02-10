@@ -14,13 +14,17 @@ query GetUser{
       soil_humidity_1
       soil_humidity_2
       light
-      airHumidity
+      humidity
       tempeture
       isRelayOneOn
       isRelayTwoOn
       isRelayThirdOn
       isRelayFourthOn
       timestamp
+      timeZone
+      alarm
+      alarm_timestamp
+      offline_notification
       sensors {
         reading
         name
@@ -101,8 +105,11 @@ query GetUser{
     name
     plants {
       plantId
+      timestamp
+      timeZone
       sensors {
         reading
+        settingType
       }
     }
   }

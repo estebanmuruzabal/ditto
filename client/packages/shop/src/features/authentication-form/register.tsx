@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import Link from 'next/link';
 import { useMutation } from '@apollo/react-hooks';
-import es from 'react-phone-input-2/lang/es.json'
+// import us from 'react-phone-input-2/lang/es.json'
+import ar from 'react-phone-input-2/lang/es.json'
 import { Input } from 'components/forms/input';
 
 import {
@@ -21,8 +22,7 @@ import { AuthContext } from 'contexts/auth/auth.context';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { SIGNUP_MUTATION } from 'graphql/mutation/signup';
 import PhoneInput from 'react-phone-input-2'
-import startsWith from 'lodash.startswith';
-import Router from 'next/router';
+import { currentLng } from 'utils/constant';
 
 export default function SignOutModal() {
   const intl = useIntl();
@@ -65,8 +65,10 @@ export default function SignOutModal() {
     onError: (error) => {
       setPassword('');
       setRepeatPassword('');
-      if (error?.toString() && error?.toString().includes('User already registered')) setErrorMessage(intl.formatMessage({ id: 'userAlreadyRegistered', defaultMessage: 'User already registered' }))
+      if (error?.toString() && error?.toString().includes('Usuario ya registrado.')) setErrorMessage(intl.formatMessage({ id: 'userAlreadyRegistered', defaultMessage: 'User already registered' }))
       else if (error?.toString() && error?.toString().includes('Incorrect length')) setErrorMessage(intl.formatMessage({ id: 'atLeast6Char', defaultMessage: 'Mínimo 6 caracteres' }))
+      else if (error?.toString() && error?.toString().includes('Anteponer el número 54')) setErrorMessage(intl.formatMessage({ id: 'a', defaultMessage: 'Anteponer el número 54' }))
+      else if (error?.toString() && error?.toString().includes('Todos los campos son requeridos')) setErrorMessage(intl.formatMessage({ id: 'a', defaultMessage: 'Todos los campos son requeridos' }))
       else setErrorMessage(error?.toString())
     }
   });
@@ -80,6 +82,10 @@ export default function SignOutModal() {
   }
   const passwordsAreEqual = () => {
     return password === repeatPassword;
+  }
+
+  const startsWith54 = () => {
+    return phone[0] === '5' && phone[1] === '4';
   }
 
   // private hasSecurity() {
@@ -127,18 +133,18 @@ export default function SignOutModal() {
     <Wrapper>
       <Container>
         <Heading>
-          <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
+          <FormattedMessage id='completeBtnText' defaultMessage='Sign Up' />
         </Heading>
-        <SubHeading>
-          {/* <FormattedMessage
+        {/* <SubHeading>
+          <FormattedMessage
             id='signUpText'
-            defaultMessage='Every fill is required in sign up'
-          /> */}
-        </SubHeading>
+            defaultMessage=''
+          />
+        </SubHeading> */}
           <form method="post" onSubmit={
             async (e) => {
                 e.preventDefault();
-                if (!passwordsAreEqual()) { setErrorFor5Sec('passShouldBeEqual');return; }
+                // if (!passwordsAreEqual()) { setErrorFor5Sec('passShouldBeEqual');return; }
                 
                 await signupMeMutation({
                   variables: {phone, password, name}
@@ -149,29 +155,32 @@ export default function SignOutModal() {
             <Input
               type="text"
               name="name"
-              value={upperCaseEverything(name)}
-              onChange={(e) => setName(upperCaseEverything(e.target.value))}
+              width='100%'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder={intl.formatMessage({
                 id: 'namePlaceholder',
                 defaultMessage: 'Complete name',
               })}
-              oninvalid="this.setCustomValidity('Please Enter valid email')"
+              oninvalid="this.setCustomValidity('Please Enter valid name')"
               oninput="setCustomValidity('')"
               height='48px'
               backgroundColor='#F7F7F7'
               mb='10px'
               required
           />
-           <Input
+           {/* <Input
               type='email'
               name='email'
+              width='100%'
               placeholder={intl.formatMessage({ id: 'emailSignUpPlaceholder', defaultMessage: 'Email address' })}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               backgroundColor='#F7F7F7'
               marginBottom='10px'
+              required
               // intlInputLabelId="profileEmailField"
-            />
+            /> */}
            {/* <Input
               type="text"
               name="name"
@@ -196,23 +205,31 @@ export default function SignOutModal() {
               }}
               containerStyle={{textAlign: "left"}}
               inputStyle={{backgroundColor: "#F7F7F7", height: "48px", marginBottom: "10px", width: "100%"}}
-              onlyCountries={['ar']}
-              localization={es}
-              country={'ar'}
+              onlyCountries={[currentLng]}
+              localization={ar}
+              country={currentLng}
               masks={{ar: '(...) ...-....'}}
               value={phone}
               onChange={handlePhoneChange}
             />
+            {!startsWith54 && (
+              <SubrequirementContainer>
+                <Dot />
+                <Requirement>{intl.formatMessage({ id: 'passShouldBeEqual', defaultMessage: 'Passwords does not match' })}</Requirement>
+              </SubrequirementContainer>
+            )}
+            
             <Input
               type="text"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={intl.formatMessage({
-                id: 'passwordPlaceholder',
+                id: 'passwordPlaceholderRegister',
                 defaultMessage: 'Password (min 6 characters)',
               })}
               height='48px'
+              width='100%'
               backgroundColor='#F7F7F7'
               mb='10px'
               required
@@ -220,6 +237,7 @@ export default function SignOutModal() {
             <Input
               type="text"
               name="password"
+              width='100%'
               value={repeatPassword}
               onChange={(e) => setRepeatPassword(e.target.value)}
               placeholder={intl.formatMessage({
@@ -283,22 +301,22 @@ export default function SignOutModal() {
                 defaultMessage="By signing up, you agree to Ditto's"
               />
               &nbsp;
-              <Link href='/'>
+              <Link href='/terms'>
                 <a>
                   <FormattedMessage
                     id='termsConditionText'
-                    defaultMessage='Terms &amp; Condition'
+                    defaultMessage='Terms &amp; Conditions'
                   />
                 </a>
               </Link>
             </HelperText>
             <Button variant='primary' size='big' width='100%' type='submit'>
-              <FormattedMessage id='registerBtn' defaultMessage='Continue' />
+              {loading ? <FormattedMessage id='loadingBtn' defaultMessage='Continue' /> : <FormattedMessage id='registerBtn' defaultMessage='Continue' /> }
             </Button>
           </form>
-          {loading && <p style={{
+          {/* {loading && <p style={{
             marginTop: "15px"
-          }}>Cargando...</p>}
+          }}>{intl.formatMessage({ id: 'loading', defaultMessage: 'Cargando...' })}</p>} */}
           {(error || errorMessage) && <p style={{
             marginTop: "15px",
             color: "red"

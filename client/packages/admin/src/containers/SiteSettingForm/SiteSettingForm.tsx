@@ -118,7 +118,13 @@ const SiteSettingsForm: React.FC<Props> = () => {
   const [keyword, setKeyword] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [whatsapp_bot_is_on, setWhatsapp_bot_is_on] = React.useState(true);
+
   const [siteData, setSiteData] = React.useState<ValueType>();
+  const [shopIsOnline, setShopIsOnline] = React.useState(false);
+  const [address, setAddress] = React.useState<ValueType>();
+  const [longitude, setLongitude] = React.useState<ValueType>();
+  const [latitude, setLatitude] = React.useState<ValueType>();
+
   const settingData = (): ValueType => {
     const settingData = JSON.parse(data.getSiteSetting.value);
     setFavicon(settingData.favicon);
@@ -126,7 +132,12 @@ const SiteSettingsForm: React.FC<Props> = () => {
     setTitle(settingData.site_title);
     setKeyword(settingData.site_keyword);
     setDescription(settingData.site_description);
+    setShopIsOnline(settingData.shopIsOnline);
+    setAddress(settingData.address);
+    setLongitude(settingData.longitude);
+    setLatitude(settingData.latitude);
     setWhatsapp_bot_is_on(settingData.whatsapp_bot_is_on);
+
     setSiteData(settingData);
 
     return settingData;
@@ -171,8 +182,12 @@ const SiteSettingsForm: React.FC<Props> = () => {
       site_keyword: keyword,
       site_description: description,
       whatsapp_bot_is_on: whatsapp_bot_is_on,
+      shopIsOnline: shopIsOnline,
+      address: address,
+      longitude: longitude,
+      latitude: latitude
     };
-
+    console.log('settingsValue:::', settingsValue)
     updateSiteSetting({
       variables: { key: 'site-settings', value: JSON.stringify(settingsValue) },
     });
@@ -247,6 +262,56 @@ const SiteSettingsForm: React.FC<Props> = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
+              </FormFields>
+
+              { !!shopIsOnline && (
+                <>
+                  <FormFields>
+                    <FormLabel>Business formal address</FormLabel>
+                    <Input
+                      name='address'
+                      inputRef={register({ required: true })}
+                      onChange={(e) => setAddress(e.target.value)}
+                      value={address}
+                    />
+                  </FormFields>
+
+                  <FormFields>
+                    <FormLabel>Coordinates of business.</FormLabel>
+                    <Input
+                      name='latitude'
+                      inputRef={register({ required: true })}
+                      onChange={(e) => setLatitude(e.target.value)}
+                      placeholder='latitude'
+                      value={latitude}
+                    />
+                     <Input
+                      name='longitude'
+                      placeholder='longitude'
+                      inputRef={register({ required: true })}
+                      onChange={(e) => setLongitude(e.target.value)}
+                      value={longitude}
+                    />
+                  </FormFields>
+                </>
+              )}
+
+              <FormFields>
+                <Checkbox
+                    checked={shopIsOnline}
+                    onChange={() => setShopIsOnline(!shopIsOnline) }
+                    // inputRef={register({ required: true })}
+                    name='shopIsOnline'
+                    overrides={{
+                    Label: {
+                        style: ({ $theme }) => ({
+                        color: $theme.colors.textNormal,
+                        }),
+                    },
+                    }}
+                >
+                    {'Shop is online'}
+                </Checkbox>
               </FormFields>
 
               <FormFields>

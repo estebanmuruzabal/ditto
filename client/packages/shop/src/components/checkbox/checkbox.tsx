@@ -7,30 +7,32 @@ import {
   StyledCheckBoxInputIndicator,
 } from './checkbox.style';
 
+
 type CheckBoxProps = {
   id: string;
   disabled?: boolean;
   isChecked?: boolean;
   labelText: string;
   className?: string;
+  keyName: string;
   labelPosition?: 'left' | 'right';
   [key: string]: unknown;
+  onChange: any
 };
 
 const CheckBox: React.FC<CheckBoxProps> = ({
   className,
-  isChecked = false,
+  isChecked,
   labelText,
+  keyName,
   id,
   labelPosition = 'right',
   disabled = false,
-  ...props
+  onChange,
 }) => {
-  // use toggle hooks
-  const [checked, setChecked] = useState(isChecked);
 
   return (
-    <StyledCheckBox className={`Mahdi Fashion__checkbox ${className}`.trim()}>
+    <StyledCheckBox key={keyName} onClick={onChange} className={`Mahdi Fashion__checkbox ${keyName}`.trim()}>
       <StyledCheckBoxLabel htmlFor={id} position={labelPosition}>
         {labelText && (
           <StyledCheckBoxLabelText position={labelPosition}>
@@ -40,13 +42,11 @@ const CheckBox: React.FC<CheckBoxProps> = ({
         <StyledCheckBoxInput
           type="checkbox"
           className="checkbox-input"
-          id={id}
-          checked={checked}
-          onChange={() => setChecked((prev) => !prev)}
+          checked={isChecked}
           disabled={disabled}
-          {...props}
+       
         />
-        <StyledCheckBoxInputIndicator />
+        {/* <StyledCheckBoxInputIndicator /> */}
       </StyledCheckBoxLabel>
     </StyledCheckBox>
   );

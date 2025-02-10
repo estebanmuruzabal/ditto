@@ -7,12 +7,13 @@ import { AuthorizedMenu } from './authorized-menu';
 interface Props {
   isAuthenticated: boolean;
   isStaff: boolean;
+  isGrower: boolean;
   onJoin: () => void;
   onLogout: () => void;
   avatar: string;
 }
 
-const AuthMenu = ({ isAuthenticated, onJoin, onLogout, avatar, isStaff }: Props) => {
+const AuthMenu = ({ isAuthenticated, onJoin, onLogout, avatar, isStaff, isGrower }: Props) => {
   return !isAuthenticated ? (
     <Button variant="primary" onClick={onJoin}>
       <FormattedMessage id="joinButton" defaultMessage="join" />
@@ -22,7 +23,7 @@ const AuthMenu = ({ isAuthenticated, onJoin, onLogout, avatar, isStaff }: Props)
       direction="right"
       className="user-pages-dropdown"
       handler={<img src={avatar} alt="user" />}
-      content={<AuthorizedMenu isStaff={isStaff} onLogout={onLogout} />}
+      content={<AuthorizedMenu isStaff={isStaff} isGrower={isGrower} onLogout={onLogout} />}
     />
   );
 };

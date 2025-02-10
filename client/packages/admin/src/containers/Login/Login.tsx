@@ -16,10 +16,11 @@ import Logoimage from '../../assets/image/PickBazar.png';
 import {gql} from "apollo-boost";
 import {useQuery} from "@apollo/react-hooks";
 import {ADMIN_IMAGE_HOST} from "../../helpers/images-path";
+import { DASHBOARD } from '../../settings/constants';
 
 const initialValues = {
-  phone: '543624951926',
-  password: '123456',
+  phone: '',
+  password: '',
 };
 const GET_SETTING = gql`
     query GetSetting {
@@ -64,10 +65,11 @@ export default () => {
   let history = useHistory();
   let location = useLocation();
   const { authenticate, isAuthenticated, error: signinErrors } = useContext(AuthContext);
-  if (isAuthenticated) return <Redirect to={{ pathname: '/' }} />;
+  if (isAuthenticated) return <Redirect to={{ pathname: DASHBOARD }} />;
 
-  let { from } = (location.state as any) || { from: { pathname: '/' } };
+  let { from } = (location.state as any) || { from: { pathname: DASHBOARD } };
   let login = ({ phone, password }) => {
+    
     authenticate({ phone, password }, () => {
       history.replace(from);
     });
@@ -94,7 +96,7 @@ export default () => {
                   type='text'
                   name='phone'
                   component={MyInput}
-                  placeholder='Ex: demo@demo.com'
+                  placeholder='Phone number'
                 />
                 {errors.phone && touched.phone && (
                   <Error>{errors.phone}</Error>
@@ -106,7 +108,7 @@ export default () => {
                   type='password'
                   name='password'
                   component={MyInput}
-                  placeholder='Ex: demo'
+                  placeholder='Password'
                 />
                 {errors.password && touched.password && (
                   <Error>{errors.password}</Error>

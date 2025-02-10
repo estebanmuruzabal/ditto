@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 
 const ProductSingleWrapper = styled.div`
-  padding: 78px 0 60px 0;
+  padding: 1px 0 60px 0;
   position: relative;
   background-color: ${themeGet('colors.gray.200', '#f7f7f7')};
 

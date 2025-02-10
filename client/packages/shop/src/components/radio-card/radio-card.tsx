@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { themeGet } from '@styled-system/theme-get';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { PencilIcon } from 'assets/icons/PencilIcon';
+import { useIntl } from 'react-intl';
 
 const Link = styled.a`
   font-family: ${themeGet('fonts.body', 'Lato')};
@@ -16,7 +17,7 @@ const CardWrapper = styled.label`
   align-items: center;
   /* justify-content: center; */
   border-radius: ${themeGet('radii.base', '6px')};
-  background-color: ${themeGet('colors.gray.200', '#F7F7F7')};
+  background-color: ${themeGet('colors.white', '#ffffff')};
   border: 1px solid ${themeGet('colors.gray.200', '#F7F7F7')};
   text-align: center;
   padding: 15px 20px;
@@ -82,7 +83,7 @@ const CardTitle = styled.span`
 const CardContent = styled.span`
   font-family: ${themeGet('fonts.body', 'Lato')};
   font-size: ${themeGet('fontSizes.base', '15')}px;
-  font-weight: ${themeGet('fontWeights.regular', '400')};
+  font-weight: ${themeGet('fontWeights.bold', '400')};
   color: ${themeGet('colors.text.medium', '#424561')};
 `;
 
@@ -131,7 +132,7 @@ type RadioCardProps = {
   id: string;
   name: string;
   title: string;
-  content: string;
+  details: string;
   editIcon?: any;
   deleteIcon?: any;
   withActionButtons?: boolean;
@@ -143,13 +144,13 @@ type RadioCardProps = {
   disabled?: boolean;
   checked?: boolean;
   onChange: () => void;
-  clickableText?: string;
+  link?: string;
 };
 const RadioCard: React.FC<RadioCardProps> = ({
   id,
   name,
   title,
-  content,
+  details,
   editIcon,
   deleteIcon,
   withActionButtons,
@@ -161,8 +162,9 @@ const RadioCard: React.FC<RadioCardProps> = ({
   disabled,
   checked,
   onChange,
-  clickableText
+  link
 }) => {
+  const intl = useIntl();
   const getLinkOnly = (text) => {
     if (!text) return;
     const word = 'https';
@@ -173,12 +175,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
     return text.slice(index + length - 5);
   }
 
-  const contentDivided = content?.split(' | ');
-
-  const linkContent = contentDivided?.find((part) => part.includes('http'));
-  const linkOnly = getLinkOnly(linkContent);
-  const preLinkText = linkContent?.substring(0, linkContent.indexOf('http'));
-  content = linkOnly ? `${contentDivided[1] && contentDivided[1]} ${contentDivided[2] && contentDivided[2]}` : content;
+  const detailsDivided = details?.split(' | ');
 
   return (
     <CardWrapper
@@ -190,16 +187,17 @@ const RadioCard: React.FC<RadioCardProps> = ({
         type='radio'
         id={`${name}-${id}`}
         name={name}
-        value={content}
+        value={details}
         disabled={disabled}
         checked={checked}
         onChange={onChange}
         onClick={onClick}
       />
       {title && <CardTitle>{title}</CardTitle>}
-      {content && <CardContent>{content}</CardContent>}
-      {preLinkText && (<CardContent>{preLinkText}</CardContent>)}
-      {linkOnly && <Link href={linkOnly} target="_blank" rel="noopener noreferrer">{ clickableText || 'Click aquí'}</Link>}
+
+      {details && <CardContent>{<Link href={link} target="_blank" rel="noopener noreferrer">{ detailsDivided[0]}</Link>}</CardContent>}
+      {details && <CardContent>{detailsDivided[1]}</CardContent>}
+      {details && <CardContent>{detailsDivided[2]}</CardContent>}
       {withActionButtons && (
         <CardButtons className='button-wrapper'>
           {hasEdit && (
@@ -219,7 +217,7 @@ const RadioCard: React.FC<RadioCardProps> = ({
 };
 RadioCard.defaultProps = {
   title: '',
-  content: '',
+  details: '',
   editIcon: <PencilIcon />,
   deleteIcon: <CloseIcon />,
   withActionButtons: true,

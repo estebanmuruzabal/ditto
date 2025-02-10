@@ -8,6 +8,22 @@ export const GET_SETTINGS = `
   }
 `;
 
+export const GET_DITTO_BOTS_OFFLINE_USERS = `
+  query GetOfflineDittoBotsUsers {
+    getOfflineDittoBotsUsers {
+        role
+        plants {
+            name
+            offline_notification
+            timestamp
+        }
+        phones {
+            number
+        }
+    }
+  }
+`;
+
 export const UPDATE_USER_WORK_INFO = `
   mutation UpdateUserWorkInfo(
     $id: ID!, 
@@ -58,7 +74,7 @@ export const getCustomerQuery = `
                     name
                     soil_humidity_1
                     soil_humidity_2
-                    airHumidity
+                    humidity
                     tempeture
                     light
                     isRelayOneOn
@@ -66,6 +82,8 @@ export const getCustomerQuery = `
                     isRelayThirdOn
                     isRelayFourthOn
                     timestamp
+                    timeZone
+                    offline_notification
                     sensors {
                         name
                         whatsappWarningsOn
@@ -124,6 +142,7 @@ export const getCustomerQuery = `
                     coupon_code
                     discount_amount
                     payment_id
+                    lenguageLocale
                     products {
                         product_id
                         name
@@ -207,15 +226,17 @@ export const UPDATE_PRODUCT = `
 `;
 
 
-export const updateUserNameAndEmailQuery = `
+export const updateUserNameEmailAndLenguageQuery = `
     mutation UpdateUser(
         $id: ID!, 
         $name: String!,
         $email: String,
-    ) { updateUserNameAndEmail(
+        $lenguage: String,
+    ) { updateUserNameEmailAndLenguage(
         id: $id, 
         name: $name,
         email: $email,
+        lenguage: $lenguage
         ) {
             status
             message

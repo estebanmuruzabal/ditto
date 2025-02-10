@@ -50,10 +50,11 @@ export default function OtpModal() {
         // Router.push('/[type]', router.asPath);
         // currently sending to profile instead of really checking otp
         // Router.push('/checkout', router.asPath);
-        Router.push({
-          pathname: '/checkout',
-          query: { shouldRefresh: true }
-        })
+        if (router.asPath === '/checkout') {
+          Router.push({ pathname: '/checkout', query: { shouldRefresh: true } })
+        } else {
+          Router.push({ pathname: '/home' })
+        }
       }
     },
     onError: (error) => {
@@ -78,7 +79,7 @@ export default function OtpModal() {
         <SubHeading>
           <FormattedMessage
             id='otpSubText'
-            defaultMessage='Login with your phone number &amp; password'
+            defaultMessage='Next time login with your phone number and password.'
           />
         </SubHeading>
         <form onSubmit={submitForm}
@@ -101,11 +102,17 @@ export default function OtpModal() {
             size='big'
             style={{ width: '100%' }}
             type='submit'
-          >Continuar</Button>
+          >
+            { loading ? <FormattedMessage
+          id='loadingBtn'
+          defaultMessage='loadingBtn'
+        /> : <FormattedMessage
+        id='continueBtn'
+        defaultMessage='continueBtn'
+      />
+            }
+            </Button>
         </form>
-        {loading && <p style={{
-          marginTop: "15px"
-        }}>Cargando...</p>}
         {error && <p style={{
           marginTop: "15px",
           color: "red"

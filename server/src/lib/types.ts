@@ -1,6 +1,8 @@
 import {Collection, ObjectId} from 'mongodb';
 import { IOrderInput, IOrderInputArgs } from '../graphql/resolvers/Orders/types';
 import { IScheduleInput } from '../graphql/resolvers/User/types';
+import { Locale } from 'moment';
+import { Locales } from './utils/constant';
 
 export interface Plant {
     id?: string;
@@ -9,14 +11,29 @@ export interface Plant {
     soil_humidity_1: number;
     soil_humidity_2: number;
     distance_cm: number;
-    airHumidity: number;
+    humidity: number;
     tempeture: number;
     light: number;
+    alarm: boolean;
+    alarm_timestamp: string;
     sensors: [ISensorSetting];
     isRelayOneOn: boolean;
     isRelayTwoOn: boolean;
     isRelayThirdOn: boolean;
     isRelayFourthOn: boolean;
+    timestamp: string;
+    offline_notification: boolean;
+    timeZone: string;
+}
+
+export interface Shop {
+    id?: string;
+    shopPublicName: string;
+    shopUrl: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    shopIsOnline: boolean;
 }
 
 export interface Phone {
@@ -99,16 +116,29 @@ export interface IUser {
     email?: string;
     password: string;
     phones?: Array<Phone>;
+    shop?: Shop | null;
     plants: Array<Plant>;
     delivery_address?: Array<Address>;
     otp?: string;
-    role?: Roles;
+    role: Roles;
     shoppingCart?: IOrderInput;
     chatHistory: IChat[];
     created_at: string;
     workInfo: IWorkInfo;
     tasks: Array<Task>;
     logs: Array<Logs>;
+
+    // testing the dittomarket model
+    types?: Collection<IType>;
+    categories?: Collection<ICategory>;
+    products?: Collection<IProduct>;
+    shops?: Collection<IShop>;
+    delivery_methods?: Collection<IDeliveryMethod>;
+    payment_options?: Collection<IPaymentOption>;
+    orders?: Collection<IOrder | IQuickOrder>;
+    settings?: Collection<ISetting>;
+    coupons?: Collection<ICoupon>;
+    home_cards?: Collection<IHomeCard>;
 }
 
 export interface IChat {
@@ -130,21 +160,25 @@ export enum Roles {
 
 export enum HumiditySensorMode {
     IRRIGATE_ON_DEMAND = 'IRRIGATE_ON_DEMAND',
+    INTERMITTENT_IRRIGATION = 'INTERMITTENT_IRRIGATION',
+    IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION = 'IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION',
     IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND = 'IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND',
     SEEDS_POOL_IRRIGATION = 'SEEDS_POOL_IRRIGATION',
     MANUAL = 'HUMIDITY_MANUAL',
     SCHEDULE = 'HUMIDITY_SCHEDULE',
+    MIN_WARNING = 'HUMIDITY_MIN_WARNING',
+    MAX_WARNING = 'HUMIDITY_MAX_WARNING',
+    SCHEDULE_DOUBLE_ACTION = 'HUMIDITY_SCHEDULE_DOUBLE_ACTION',
     NONE = 'NONE'
 }
 
 export enum LightSensorMode {
     MANUAL = 'LIGHT_MANUAL',
     SCHEDULE = 'LIGHT_SCHEDULE',
-    SMART_SCHEDULE = 'LIGHT_SMART_SCHEDULE',
     NONE = 'NONE'
 }
 
-// THIS SHOULD MATCH FRONTEND 'distanceModeOptions' enum 
+// THIS SHOULD MATCH FRONTEND 
 export enum DistanceSensorMode {
     WHEN_EMPTY_ACTION_CUSTOM = 'WHEN_EMPTY_ACTION_CUSTOM',
     WHEN_EMPTY_ACTION_AUTOMATED = 'WHEN_EMPTY_ACTION_AUTOMATED',
@@ -155,6 +189,30 @@ export enum DistanceSensorMode {
     NONE = 'NONE'
 }
 
+export enum AirHumiditySensorMode {
+    MANUAL = 'AIR_HUM_MANUAL',
+    SCHEDULE = 'AIR_HUM_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'AIR_HUM_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'AIR_HUM_WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+
+export enum C02SensorMode {
+    MANUAL = 'C02_MANUAL',
+    SCHEDULE = 'C02_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'C02_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'C02_WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+
+export enum AirTemperatureSensorMode {
+    MANUAL = 'AIR_TEMP_MANUAL',
+    SCHEDULE = 'AIR_TEMP_SCHEDULE',
+    WHEN_MIN_ACTION_AUTOMATED = 'AIR_TEMP_WHEN_MIN_ACTION_AUTOMATED',
+    WHEN_MAX_ACTION_AUTOMATED = 'AIR_TEMP_WHEN_MAX_ACTION_AUTOMATED',
+    NONE = 'NONE'
+}
+// END THIS SHOULD MATCH FRONTEND
 export enum TriggerGrowerSteps {
     SHOW_ALL_PLANTS = 'SHOW_ALL_PLANTS',
     PLANT_DETAILS = 'PLANT_DETAILS',
@@ -249,6 +307,7 @@ export interface ICategoryChildren {
     icon: string;
 }
 export interface ICategory {
+    visible?: boolean;
     _id?: ObjectId;
     type_id: string;
     parent_id?: string | null;
@@ -290,12 +349,24 @@ export interface IProductType {
     name: string;
     slug: string;
 }
+
+export interface IShop {
+    userId: ObjectId;
+    shopPublicName: string;
+    shopUrl: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    shopIsOnline: boolean;
+}
+
 export interface IProduct {
     _id?: ObjectId;
     type: IProductType;
     categories: Array<IProductCategory>;
     name: string;
     slug?: string;
+    user_owner_id?: string;
     packagePrice?: number;
     description?: string;
     images: Array<string>;
@@ -315,6 +386,7 @@ export interface IProduct {
 }
 
 export interface IDeliveryMethod {
+    visible?: boolean;
     _id?: ObjectId;
     name: string;
     details: string;
@@ -401,6 +473,7 @@ export interface IOrder {
     customer_name: string;
     delivery_method_name: string;
     delivery_pickup_date: string;
+    lenguageLocale: Locales;
 }
 
 export interface IQuickOrder {
@@ -427,6 +500,7 @@ export interface IQuickOrder {
     customer_name: string;
     delivery_method_name?: string;
     delivery_pickup_date?: string;
+    lenguageLocale: Locales;
 }
 
 export interface ICommonMessageReturnType {
@@ -434,6 +508,21 @@ export interface ICommonMessageReturnType {
     status: boolean;
     access_token?: string;
 }
+
+export interface ShopInput {
+    shopPublicName: string;
+    shopUrl: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    shopIsOnline: boolean;
+}
+
+export interface IShopInputArgs {
+    id?: string;
+    input: ShopInput;
+}
+
 
 export interface IPlantReturnType {
     isRelayOneOn: string;
@@ -469,6 +558,7 @@ export interface Database {
     types: Collection<IType>;
     categories: Collection<ICategory>;
     products: Collection<IProduct>;
+    shops: Collection<IShop>;
     delivery_methods: Collection<IDeliveryMethod>;
     payment_options: Collection<IPaymentOption>;
     orders: Collection<IOrder | IQuickOrder>;

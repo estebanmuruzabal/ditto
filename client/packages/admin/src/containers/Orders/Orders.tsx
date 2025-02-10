@@ -128,8 +128,7 @@ const nextButtonDisabledStyles = {
     color: '#6f6f6f',
     backgroundColor: '#d8d8d8'
 };
-// const intl = useIntl();
-// const pendingLabel = intl.formatMessage({ id: 'pendingStatusId', defaultMessage: 'Pending' });
+
 const statusSelectOptions = [
     {value: 'Pendiente', label: 'Pendiente'},
     {value: 'Recibido', label: 'Recibido'},

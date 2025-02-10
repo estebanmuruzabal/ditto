@@ -8,62 +8,21 @@ import {
     IOrder,
     IOrderTracker,
     IProduct,
-    IQuickOrder
+    IQuickOrder,
+    TriggerSteps
 } from "../../../lib/types";
 import {authorize} from "../../../lib/utils";
 import {IOrderInputArgs, IOrderProductInput, IOrderQuickInput, IOrderQuickInputArgs} from "./types";
 import {search} from "../../../lib/utils/search";
 import shortid from "shortid";
-import { sendCompanyConfirmationMail, sendClientConfirmationMail } from '../../../lib/utils/number-verification-otp';
-import { client } from '../../../index';
+import { sendCompanyConfirmationMail, sendClientConfirmationMail, sendSellerConfirmationMail } from '../../../lib/utils/number-verification-otp';
+// import { client } from '../../../index';
 import { sendMessage } from '../../../controllers/send';
 import { orderDeliveredAndFeedBack } from '../../../messages/customersMessages';
-import { COMPANY_EMAIL } from '../../../lib/utils/constant';
+import { COMPANY_EMAIL, Locales, timeZone } from '../../../lib/utils/constant';
 import { getOrderConfirmationMsgText, getCleanNumber } from '../../../lib/utils/shoppingUtils';
-const oderTracker: Array<IOrderTracker> = [
-    {
-        status: "Pendiente",
-        ordering: 1,
-        is_current: true,
-        step_competed: true,
-    },
-    {
-        status: "Recibido",
-        ordering: 2,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Procesando",
-        ordering: 3,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "EnTransito",
-        ordering: 4,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Entregado",
-        ordering: 5,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Cancelado",
-        ordering: 6,
-        is_current: false,
-        step_competed: false,
-    },
-    {
-        status: "Fallado",
-        ordering: 7,
-        is_current: false,
-        step_competed: false,
-    }
-];
+import { englishOrderTracker, spanishOrderTracker } from '../../../lib/utils/localesTexts';
+import { EnglishOrderStatus, EnglishPaymentStatus, SpanishOrderStatus, SpanishPaymentStatus } from '../../../utils/constants';
 
 
 export const makeObjectIds =  (productsInput: IOrderProductInput[]) =>  {
@@ -148,6 +107,7 @@ export const ordersResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         )/*: Promise<IOrder>*/ => {
             // await authorize(req, db);
+            const token = <string>req.headers["x-access-token"];
             const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
             const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
             // @ts-ignore
@@ -158,7 +118,7 @@ export const ordersResolvers: IResolvers = {
             const customer = await db.users.findOne({ _id: new ObjectId(input.customer_id) });
             if (!customer) throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
-            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone });
             
             // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {
@@ -179,6 +139,16 @@ export const ordersResolvers: IResolvers = {
             } else {
                 paymentStatus = "Paid";
             }*/
+            let orderTracker;
+            let payment_status;
+            let status;
+            let lenguageLocale: Locales;
+            console.log('token',token)
+            switch (input?.lenguageLocale) {
+                case Locales.ES: { orderTracker = spanishOrderTracker; payment_status = SpanishPaymentStatus.UNPAID; status = SpanishOrderStatus.PENDING; lenguageLocale = Locales.ES } break;
+                case Locales.EN: { orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING; lenguageLocale = Locales.EN } break;
+                default: { console.log('createOrder. no locale found ', input?.lenguageLocale); orderTracker = englishOrderTracker; payment_status = EnglishPaymentStatus.UNPAID; status = EnglishOrderStatus.PENDING; lenguageLocale = Locales.EN } break;
+            }
 
             const insertData: IOrder = {
                 _id: new ObjectId(),
@@ -198,11 +168,12 @@ export const ordersResolvers: IResolvers = {
                 discount_amount: input.discount_amount,
                 payment_id: input.payment_id,
                 payment_method: paymentOptionName,
-                payment_status: "Sin pagar",
-                status: "Pendiente",
-                order_tracking: oderTracker,
+                payment_status,
+                status,
+                order_tracking: orderTracker,
                 order_products: input.products,
                 created_at: purchasedDate,
+                lenguageLocale
             };
 
             const insertResult = await db.orders.insertOne(insertData);
@@ -214,6 +185,10 @@ export const ordersResolvers: IResolvers = {
                     const purchasedQuantity = input.products[i].quantity + input.products[i].recicledQuantity;
                     const total = dbProduct.product_quantity - purchasedQuantity;
 
+                    // sending seller email
+                    const seller = await db.users.findOne({ _id: new ObjectId(input.products[i].seller_id) });
+
+                    if (seller?.email?.length) await sendSellerConfirmationMail(seller.email, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
                     await db.products.updateOne(
                         {_id: products[i]._id},
                         {$set: {product_quantity: total }}
@@ -223,15 +198,17 @@ export const ordersResolvers: IResolvers = {
             
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName);
-                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                // await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
+                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
 
-                // whatsapp confirmation whatsapp is handled in another logic
+                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName, input?.lenguageLocale);
+
+                // Whatsapp orders are handled at server/src/adapter/shopBot.ts. Here we send it to web purchases curstomers only
                 if (!input.isWhatsappPurchase) {
                     const input2 = { delivery_method_name: deliveryMethodName, payment_option_type: paymentOptionType, delivery_address: input.delivery_address, payment_method_name: paymentOptionName, products: input.products, delivery_date: input.delivery_date, total: input.total }
-                    const message = getOrderConfirmationMsgText(input2, customer);
-                    // @ts-ignore
-                    sendMessage(client, input.contact_number, message, null);
+                    const message: any = getOrderConfirmationMsgText(input2, customer, input.lenguageLocale);
+
+                    sendMessage(input.contact_number, message, TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART, token);
                 }
 
             } catch (error) {
@@ -249,14 +226,14 @@ export const ordersResolvers: IResolvers = {
             // const paymentOption = await db.payment_options.findOne({ _id: new ObjectId(input.payment_option_id) });
             const products: Array<IProduct> = await db.products.find({ _id: { $in: makeObjectIds(input.products) } }).toArray();
             // @ts-ignore
-            // const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
+            const { name: paymentOptionName, type: paymentOptionType } = paymentOption;
             // const deliveryMethod = await db.delivery_methods.findOne({ _id: new ObjectId(input.delivery_method_id) });
             // @ts-ignore
-            // const { name: deliveryMethodName } = deliveryMethod;
+            const { name: deliveryMethodName } = deliveryMethod;
             const customer = await db.users.findOne({ _id: new ObjectId(input.customer_id) });
             if (!customer) throw new Error('Customer not found');
             const { name: customerName, email: customerEmail } = customer;
-            const purchasedDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const purchasedDate = new Date().toLocaleString('en-US', { timeZone });
             
             // Products quantity substation
             for (let i = 0; i < input.products.length; i++) {
@@ -292,9 +269,10 @@ export const ordersResolvers: IResolvers = {
                 payment_id: input.payment_id,
                 payment_status: "Pagado",
                 status: "Pendiente",
-                order_tracking: oderTracker,
+                order_tracking: englishOrderTracker,
                 order_products: input.products,
                 created_at: purchasedDate,
+                lenguageLocale: input.lenguageLocale
             };
 
             const insertResult = await db.orders.insertOne(insertData);
@@ -315,8 +293,8 @@ export const ordersResolvers: IResolvers = {
             
             try {
                 // EMAIL NOTIFICATION AND WHATSAPP CONFIRMATION
-                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, '', '');
-                // if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName);
+                await sendCompanyConfirmationMail(COMPANY_EMAIL, customer, input, '', '', input.lenguageLocale);
+                if (customerEmail?.length) await sendClientConfirmationMail(customerEmail, customer, input, deliveryMethodName, paymentOptionName, input.lenguageLocale);
 
                 // whatsapp confirmation whatsapp is handled in another logic
                 // if (!input.isWhatsappPurchase) {
@@ -397,9 +375,10 @@ export const ordersResolvers: IResolvers = {
             })[0];
 
             if (currentStatus.status === 'Entregado') {
-                const message: string = orderDeliveredAndFeedBack(customer_name);
-                // @ts-ignore
-                sendMessage(client, contact_number, message, null);
+
+                // const message: string = orderDeliveredAndFeedBack(customer_name);
+
+                // sendMessage(client, contact_number, message, null);
             }
 
             await db.orders.updateOne(

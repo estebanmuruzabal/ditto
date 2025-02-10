@@ -1,12 +1,12 @@
 import { cleanNumber } from "../controllers/handle";
 import { IOrderInput, IOrderQuickInput } from "../graphql/resolvers/Orders/types";
 import { ICategory, IPaymentOption, IProduct, IUser, Plant } from "../lib/types";
-import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserNameAndEmailQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO, UPDATE_PRODUCT, createQuickOrderQuery } from "./queries";
+import { ADD_ADDRESS, createOrderQuery, getAvailableProductsQuery, getCustomerQuery, getDeliveryMethodsQuery, getPaymentMethodsQuery, getUserShoppingCartsQuery, GET_CATEGORIES, GET_PRODUCTS, GET_SETTINGS, signUpQuery, updateUserChatQuery, updateUserShoppingCartQuery, UPDATE_USER_WORK_INFO, UPDATE_PRODUCT, createQuickOrderQuery, updateUserNameEmailAndLenguageQuery, GET_DITTO_BOTS_OFFLINE_USERS } from "./queries";
 
 const { createApolloFetch } = require('apollo-fetch');
 
 
-// const uri = 'http://3.15.129.60/api';
+// const uri = 'http://52.67.123.15/api';
 const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 
@@ -41,6 +41,26 @@ export const fetchCustomerAndToken = (phone: string) => new Promise((resolve, re
         resolve(err);
     });
 });
+
+
+export const fetchOfflineDittoBotsUsers = () => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: GET_DITTO_BOTS_OFFLINE_USERS,
+    }).then((res: any) => {
+        if (res?.errors?.length > 0 && res?.errors?.[0]?.message?.length) {
+            console.log('[fetchOfflineDittoBotsUsers]', res?.errors?.[0]?.message);
+        } else if (res?.data?.getCustomer?.user) {
+            console.log('[fetchOfflineDittoBotsUsers] User Fetched.');
+        } else {
+            console.log('fetchOfflineDittoBotsUsers response:',res);
+        }
+        resolve(res);
+    }).catch((err: any) => {
+        console.log('fetchOfflineDittoBotsUsers error:', err);
+        resolve(err);
+    });
+});
+
 
 export const signUpUser = (name: string, phone: string, password: string) => new Promise((resolve, reject) => {
     apolloFetch({
@@ -87,22 +107,22 @@ export const updateUserWorkInfoMutation = (user: any, logDescription: string) =>
     });
 });
 
-export const updateUserNameAndEmail = (id: string, name: string, email: string, token: string) => new Promise((resolve, reject) => {
+export const updateUserNameEmailAndLenguage = (id: string, name: string, email: string, token: string) => new Promise((resolve, reject) => {
 // @ts-ignore
     // apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
 
     apolloFetch({
-        query: updateUserNameAndEmailQuery,
+        query: updateUserNameEmailAndLenguageQuery,
         variables: { id, name, email },
     }).then((res: any) => {
-        if (res?.data?.updateUserNameAndEmail?.status === true) {
-            console.log('updateUserNameAndEmail. Updated name Succesfully.', name);
+        if (res?.data?.updateUserNameEmailAndLenguageQuery?.status === true) {
+            console.log('updateUserNameEmailAndLenguageQuery. Updated name Succesfully.', name);
         } else {
-            console.log('updateUserNameAndEmail response:', res);
+            console.log('updateUserNameEmailAndLenguageQuery response:', res);
         }
         resolve(res);
     }).catch((err: any) => {
-        console.log('updateUserNameAndEmail error:', err);
+        console.log('updateUserNameEmailAndLenguageQuery error:', err);
         resolve(err);
     });
 });
@@ -252,7 +272,8 @@ export const updateUserShoppingCart = (input: IOrderInput) => new Promise((resol
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
-                products: input.products
+                products: input.products,
+                lenguageLocale: input.lenguageLocale
             }
         }
     }).then((res: IUser) => {
@@ -281,7 +302,8 @@ export const createOrder = (input: IOrderInput) => new Promise((resolve, reject)
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
-                products: input.products
+                products: input.products,
+                lenguageLocale: input.lenguageLocale
             }
         }
     }).then((res: any) => {

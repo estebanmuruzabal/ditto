@@ -1,7 +1,7 @@
 import {ObjectId} from 'mongodb';
 import {IResolvers} from 'apollo-server-express';
 import {Request} from "express";
-import {Address, Database, DistanceSensorMode, HumiditySensorMode, ICommonMessageReturnType, IPlantReturnType, IProduct, ISensorSetting, ISetting, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, TriggerSteps} from "../../../lib/types";
+import {Address, Database, DistanceSensorMode, HumiditySensorMode, ICommonMessageReturnType, IPlantReturnType, IProduct, ISensorSetting, ISetting, IShopInputArgs, IUser, IUserAuth, IWorkInfo, Logs, Phone, Plant, Roles, ShopInput, TriggerSteps} from "../../../lib/types";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import {authorize, takeNineOutIfItHasIt} from "../../../lib/utils";
@@ -9,8 +9,11 @@ import shortid from "shortid";
 import {sendOtp} from "../../../lib/utils/number-verification-otp";
 import { IOrderInput, IOrderInputArgs } from '../Orders/types';
 import { makeObjectIds } from '../Orders';
-import { checkSensor } from '../../../controllers/plants';
-import { ISettingsInputArgs, deleteSettingsArgs } from './types';
+import { checkSensorAndUpdateSettings } from '../../../controllers/plants';
+import { ISettingsInputArgs, deleteSettingsArgs, deleteShopArgs } from './types';
+import { timeZone } from '../../../lib/utils/constant';
+import { sendMessage } from '../../../controllers/send';
+import { fireWhatappAlarmIfIsOn } from '../../../utils/logsUtils';
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10)
@@ -76,7 +79,86 @@ export const usersResolvers: IResolvers = {
             // @ts-ignore
             return await authorize(req, db);
         },
-         getCustomer: async (
+        getOfflineDittoBotsUsers: async (
+            _root: undefined,
+            {}: {},
+            {db, req}: { db: Database, req: Request }
+            // change any
+         ): Promise<any> => {
+     
+             return await db.users.find( { role: Roles.GROWER } ).toArray();
+            // if (!growerUsersList) {
+            //     throw new Error("User grogers not found.");
+            // } 
+            // // else {
+            // //     growerUsersList = growerUsersList.filter((category: any) => {
+            // //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // //         // @ts-ignore
+            // //         return category.type_id === typeResult._id.toString();
+            // //     });
+            // // }
+            //  console.log('growerUsersList::', growerUsersList)
+
+            //  return {
+            //     growerUsersList
+            //  };
+        },
+        // updateShop: async (
+        //     _root: undefined,
+        //     {id, input}: IShopInputArgs,
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     // await authorize(req, db);
+
+        //     const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+
+        //     const shop = {
+        //         id: id || shortid.generate(),
+        //         shopPublicName: input.shopPublicName,
+        //         shopUrl: input.shopUrl,
+        //         shopIsOnline: input.shopIsOnline,
+        //         address: input.address,
+        //         latitude: input.latitude,
+        //         longitude: input.longitude,
+        //     }
+        
+            
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {shop}}
+        //     );
+
+        //     return {
+        //         status: true,
+        //         message: `Updated ${input.shopPublicName} successfully`
+        //     };
+        // },
+        // deleteShop: async (
+        //     _root: undefined,
+        //     {id}: deleteShopArgs,
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     // await authorize(req, db);
+
+        //     const userResult: any = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+        //     const shop = null;
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {shop}}
+        //     );
+
+        //     return {
+        //         status: true,
+        //         message: `${id} deleted successfully`
+        //     };
+        // },
+        getCustomer: async (
             _root: undefined,
             {phone}: { phone: string},
             {db, req}: { db: Database, req: Request }
@@ -129,7 +211,7 @@ export const usersResolvers: IResolvers = {
 
             if (!userResult) throw new Error("User not found");
 
-            const datetime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+            const datetime = new Date().toLocaleString('en-US', { timeZone });
             let chatHistory = userResult.chatHistory?.length > 0 ? userResult.chatHistory : [];
             let shoppingCart: any = undefined;
 
@@ -157,15 +239,20 @@ export const usersResolvers: IResolvers = {
             {phone, password, name}: { phone: string, password: string, name: string },
             {db}: { db: Database }
         ): Promise<ICommonMessageReturnType> => {
+
+            if (phone[0] !== '5' || phone[1] !== '4') {
+                throw new Error("Anteponer el número 54");
+            }
+
             const phoneFormatted = takeNineOutIfItHasIt(phone)
             const userResult = await db.users.findOne({"phones.number": phoneFormatted});
             
             if (userResult) {
-                throw new Error("User already registered.");
+                throw new Error("Usuario ya registrado.");
             }
 
             if (!phone ||!password ||!name) {
-                throw new Error("Every field is required");
+                throw new Error("Todos los campos son requeridos");
             }
 
             if (password.length < 6) {
@@ -287,7 +374,7 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User does not exits.");
             }
 
-            // if (userResult.otp != verification_code) {
+            // if (userResult.otp != '123456') {
             //     throw new Error("Verification code dose not match.");
             // }
 
@@ -309,9 +396,9 @@ export const usersResolvers: IResolvers = {
                 access_token: accessToken(userResult._id),
             }
         },
-        updateUserNameAndEmail: async (
+        updateUserNameEmailAndLenguage: async (
             _root: undefined,
-            {id, name, email}: { id: string, name: string, email: string },
+            {id, name, email, lenguage}: { id: string, name: string, email: string, lenguage: string},
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             await authorize(req, db);
@@ -325,12 +412,12 @@ export const usersResolvers: IResolvers = {
             if (re.test(email)) {
                await db.users.updateOne(
                     {_id: new ObjectId(id)},
-                    {$set: {name: name, email: email}}
+                    {$set: {name: name, email: email, lenguage: lenguage}}
                 );
             } else {
                 await db.users.updateOne(
                     {_id: new ObjectId(id)},
-                    {$set: {name: name}}
+                    {$set: {name: name, lenguage: lenguage}}
                 );
             }
             return {
@@ -338,6 +425,29 @@ export const usersResolvers: IResolvers = {
                 message: "Updated successfully."
             };
         },
+        // updateUserTimeZone: async (
+        //     _root: undefined,
+        //     {id, name, email}: { id: string, name: string, email: string },
+        //     {db, req}: { db: Database, req: Request }
+        // ): Promise<ICommonMessageReturnType> => {
+        //     await authorize(req, db);
+            
+        //     const re = /\S+@\S+\.\S+/;
+        //     const userResult = await db.users.findOne({_id: new ObjectId(id)});
+        //     if (!userResult) {
+        //         throw new Error("User does not exits.");
+        //     }
+
+        //     await db.users.updateOne(
+        //         {_id: new ObjectId(id)},
+        //         {$set: {timeZone: timeZone}}
+        //     );
+
+        //     return {
+        //         status: true,
+        //         message: "Updated successfully."
+        //     };
+        // },
         updateUserShoppingCart: async (
             _root: undefined,
             {input}: IOrderInputArgs,
@@ -379,7 +489,8 @@ export const usersResolvers: IResolvers = {
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
-                products: input.products
+                products: input.products,
+                lenguageLocale: input.lenguageLocale
             };
 
             await db.users.updateOne(
@@ -396,8 +507,10 @@ export const usersResolvers: IResolvers = {
             _root: undefined,
             {   id, 
                 name,
-                plantId
-            }: { id: string, name: string, plantId: number },
+                plantId,
+                timeZone,
+                offline_notification
+            }: { id: string, name: string, plantId: number, timeZone?: string, offline_notification: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonMessageReturnType> => {
             // await authorize(req, db);
@@ -408,28 +521,29 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User does not exits.");
             }
 
-            if (userResult.plants.length === 3) {
-                throw new Error("Already added three plants. You are not allowed to add more than three.");
-            }
-
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == plantId));
-            
+            let message = "Created plant successfully.";
             if (index < 0) {
+                if (userResult.plants.length === 10) throw new Error("Already added three plants. You are not allowed to add more than three.");    
                 const plantObject = {
                     id: shortid.generate(),
                     name,
                     plantId,
                     soil_humidity_1: 0,
                     soil_humidity_2: 0,
-                    humidity_1: 0,
-                    tempeture_1: 0,
+                    humidity: 0,
+                    tempeture: 0,
                     distance_cm: 0,
                     light_1: 0,
+                    alarm: false,
+                    co2: 0,
                     isRelayOneOn: false,
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
                     isRelayFourthOn: false,
+                    offline_notification: false,
                     timestamp: null,
+                    timeZone,
                     sensors: []
                 };
     
@@ -441,7 +555,10 @@ export const usersResolvers: IResolvers = {
             } else {
                 const plants = userResult.plants;
                 plants[index].name = name;
-
+                if (timeZone) plants[index].timeZone = timeZone;
+                plants[index].offline_notification = offline_notification;
+                message = 'Updated plants name and timezone'
+                console.log(plants[index])
                 await db.users.updateOne(
                     {_id: new ObjectId(id)},
                     {$set: { plants }}
@@ -450,7 +567,7 @@ export const usersResolvers: IResolvers = {
             }
             return {
                 status: true,
-                message: "Created plant successfully."
+                message
             };
         },
         updatePlant: async (
@@ -463,11 +580,13 @@ export const usersResolvers: IResolvers = {
                 dist,
                 hum2,
                 light,
+                alarm,
+                co2,
                 isRelayOneOn,
                 isRelayTwoOn,
                 isRelayThirdOn,
                 isRelayFourthOn
-            }: { id: string, contrId: number, hum1: number, airHum: number, temp: number, dist: number, hum2: number, light: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
+            }: { id: string, contrId: number, hum1: number, airHum: number, temp: number, dist: number, hum2: number, light: number, alarm: boolean, co2: number, isRelayOneOn: boolean, isRelayTwoOn: boolean, isRelayThirdOn: boolean, isRelayFourthOn: boolean },
             {db, req}: { db: Database, req: Request }
         ): Promise<IPlantReturnType> => {
             // await authorize(req, db);
@@ -479,31 +598,39 @@ export const usersResolvers: IResolvers = {
 
             const plants = userResult.plants;
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == contrId));
-
+            const alarmHasJustTurnOn = !plants[index].alarm && alarm;
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
             } else {
                 plants[index].soil_humidity_1 = hum1;
                 plants[index].soil_humidity_2 = hum2;
-                plants[index].humidity_1 = airHum;
-                plants[index].tempeture_1 = temp;
+                if (airHum >= 0 && airHum <= 100) plants[index].humidity_1 = airHum;
+                if (temp >= 0 && temp <= 100) plants[index].tempeture_1 = temp;
                 plants[index].distance_1 = dist;
                 plants[index].light_1 = light;
+                plants[index].alarm_timestamp = alarmHasJustTurnOn ? new Date().toLocaleString('en-US', { timeZone }) : plants[index].alarm_timestamp;
+                plants[index].alarm = alarm;
+                plants[index].co2 = co2;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;
                 plants[index].isRelayFourthOn = isRelayFourthOn;
-                plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+                plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone });
             }
             // const a = {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "contrId": 30, "hum1": 109, "airHum": 0, "temp": 0, "dist": 1, "hum2": 85, "light": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
+            // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
-            console.log('BF check module:', plants[index])
             plants[index].sensors?.map(async (module: any, i: number) => {
-                plants[index] = await checkSensor(plants[index], i, userResult?.phones[0]?.number) 
+                
+                plants[index] = await checkSensorAndUpdateSettings(plants[index], i, userResult?.phones[0]?.number, timeZone) 
             })
-            console.log('AF check module:', plants[index])
-            // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
 
+            // if (fireWhatappAlarmIfIsOn(plants[index])) {
+            //     await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
+            //     if (userResult?.phones[1]?.number) await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
+            // }
+            // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
+            if (plants[index].isRelayOneOn?.length > 0) {console.log('isRelayOneOn', plants[index].isRelayOneOn, plants[index].timestamp, plants[index].humidity_1)} if (plants[index].isRelayTwoOn?.length > 0) {console.log('isRelayTwoOn', plants[index].isRelayTwoOn, plants[index].timestamp, plants[index].distance_1)}
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
                 {$set: {plants}}
@@ -907,9 +1034,9 @@ export const usersResolvers: IResolvers = {
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            if (userResult.delivery_address.length == 1) {
-                throw new Error("You are not allowed to delete your address.");
-            }
+            // if (userResult.delivery_address.length == 1) {
+            //     throw new Error("You are not allowed to delete your address.");
+            // }
 
 
             const addresses = [];

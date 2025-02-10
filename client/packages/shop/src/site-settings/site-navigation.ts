@@ -1,6 +1,7 @@
 
 import { initializeApollo } from 'utils/apollo';
 import { GET_TYPE } from 'graphql/query/type.query';
+import { Locales } from 'utils/constant';
 
 export const HOME_PAGE = '/';
 export const WORK_PAGE = '/work';
@@ -74,6 +75,12 @@ export const STAFF_MENU_ITEMS = [
   PROFILE_MENU_ITEM,
   ORDER_MENU_ITEM,
   WORK_PAGE_ITEM,
+  PLANTS_MENU_ITEM,
+]
+
+export const GROWER_MENU_ITEMS = [
+  PROFILE_MENU_ITEM,
+  ORDER_MENU_ITEM,
   PLANTS_MENU_ITEM,
 ]
 
@@ -218,15 +225,15 @@ export const LANGUAGE_MENU = [
   //   icon: 'CNFlag',
   // },
   {
-    id: 'es',
-    defaultMessage: 'Spanish',
-    icon: 'ESFlag',
-  },
-  {
-    id: 'en',
+    id: Locales.EN,
     defaultMessage: 'English',
     icon: 'USFlag',
   },
+  {
+    id: Locales.ES,
+    defaultMessage: 'Spanish',
+    icon: 'ESFlag',
+  }
   // {
   //   id: 'de',
   //   defaultMessage: 'German',

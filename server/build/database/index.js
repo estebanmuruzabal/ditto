@@ -48,6 +48,7 @@ const connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
         listings: db.collection('listings'),
         payment_options: db.collection('payment_options'),
         orders: db.collection('orders'),
+        shops: db.collection('shops'),
         settings: db.collection('settings'),
         coupons: db.collection('coupons'),
         home_cards: db.collection('home_cards'),

@@ -19,7 +19,7 @@ export const typeDefs = gql`
         name: String!
         soil_humidity_1: Int
         soil_humidity_2: Int
-        airHumidity: Int
+        humidity: Int
         tempeture: Int
         light: Int
         sensors: [ISensorSetting]
@@ -27,7 +27,11 @@ export const typeDefs = gql`
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
+        offline_notification: Boolean
         timestamp: String
+        alarm: Boolean
+        alarm_timestamp: String
+        timeZone: String
     }
 
     type ISensorSetting {
@@ -136,6 +140,7 @@ export const typeDefs = gql`
         discount_amount: Int
         products: [ProductInputOrder!]!
         payment_id: String
+        lenguageLocale: String
     }
 
     type Chat {
@@ -161,7 +166,11 @@ export const typeDefs = gql`
         plants: [Plant]
     }
 
-
+    type User2 {
+        phones: [Phone]
+        role: String
+        plants: [Plant]
+    }
 
     type Task {
         taskId: String
@@ -215,6 +224,7 @@ export const typeDefs = gql`
         type_id: String!
         parent_id: String
         name: String!
+        visible: Boolean
         banner_data: File
         banner: String
         icon: String!
@@ -235,6 +245,7 @@ export const typeDefs = gql`
         type_id: String
         parent_id: String
         name: String!
+        visible: Boolean
         slug: String!
         banner: String
         icon: String!
@@ -405,7 +416,7 @@ export const typeDefs = gql`
         delivery_method_id: String!
         payment_option_type: String!
         isWhatsappPurchase: Boolean!
-        delivery_address: String!
+        delivery_address: String
         delivery_date: String
         sub_total: Float
         total: Float
@@ -413,6 +424,7 @@ export const typeDefs = gql`
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale:  String
     }
 
     input OrderQuickInput {
@@ -430,6 +442,7 @@ export const typeDefs = gql`
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale: String
     }
     
     input OrderInputNotRequires {
@@ -451,6 +464,7 @@ export const typeDefs = gql`
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale: String
     }
     
     type OrderTracker {
@@ -573,7 +587,37 @@ export const typeDefs = gql`
         hasMore: Boolean
     }
     
+    input BoundsInput {
+        ne: CoordinatesInput!
+        sw: CoordinatesInput!
+    }
+    
+    input CoordinatesInput {
+        latitude: Float!
+        longitude: Float!
+    }
+    
+    type Shop {
+        id: ID!
+        userId: String!
+        shopPublicName: String!
+        shopUrl: String!
+        address: String!
+        latitude: Float!
+        longitude: Float!
+    }
+    
+    input ShopInput {
+        shopPublicName: String!
+        shopUrl: String!
+        address: String!
+        coordinates: CoordinatesInput!
+    }
+      
     type Query {
+        shop(id: String!): Shop
+        shops(bounds: BoundsInput!): [Shop!]!
+
         getUsers: [User!]!
         types(limit: Int = 12, offset: Int = 0, searchText: String): MainTypePaginationType!
         categories(type: String, limit: Int = 12, offset: Int = 0, searchText: String): CatetgoryPaginationType!
@@ -590,6 +634,7 @@ export const typeDefs = gql`
         getSetting(key: String!): Setting!
         getSiteSetting(key: String!): Setting!
         getUser: User!
+        getOfflineDittoBotsUsers: User
         getCustomer(phone: String!): UserAuthPayload!
         coupons(limit: Int = 12, offset: Int = 0, searchText: String): CouponPaginationType!
         validateCoupon(code: String!): CouponValid!
@@ -600,6 +645,7 @@ export const typeDefs = gql`
     }
     
     type Mutation {
+
         login(phone: String!, password: String!): UserAuthPayload!
         signUp(phone: String!, password: String!, name: String!): DefaultMessageType!
         staffSignUp(phone: String!, password: String!, role: String!): DefaultMessageType!
@@ -629,10 +675,10 @@ export const typeDefs = gql`
         createQuickOrder(input: OrderQuickInput): Order!
         updateUserShoppingCart(input: OrderInputNotRequires): DefaultMessageType!
         updateSiteSetting(key: String!, value: String!): Setting!
-        updateUserNameAndEmail(id: ID!, name: String!, email: String): DefaultMessageType!
+        updateUserNameEmailAndLenguage(id: ID!, name: String!, email: String, lenguage: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, plantId: Int!): DefaultMessageType!
-        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
+        addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String, offline_notification: Boolean): DefaultMessageType!
+        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, alarm: Boolean, co2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
         deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!

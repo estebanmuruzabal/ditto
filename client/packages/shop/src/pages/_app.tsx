@@ -19,6 +19,11 @@ import '@redq/reuse-modal/lib/index.css';
 import { GlobalStyle } from 'assets/styles/global.style';
 import 'react-phone-input-2/lib/material.css'
 
+ // import Font Awesome CSS
+ import "@fortawesome/fontawesome-svg-core/styles.css";
+ import { config } from "@fortawesome/fontawesome-svg-core";
+ config.autoAddCss = false;
+
 import 'react-time-picker/dist/TimePicker.css';
 // import 'react-clock/dist/Clock.css';
 

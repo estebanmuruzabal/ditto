@@ -27,6 +27,7 @@ export const categoriesResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonPaginationReturnType> => {
             let categories =  await db.categories.find({}).sort({_id: -1}).toArray();
+            let visibleCategories: any = [];
 
             if (type) {
                 categories = categories.filter((category) => {
@@ -34,12 +35,15 @@ export const categoriesResolvers: IResolvers = {
                 });
             }
 
+            categories.map((category) => {
+                if (category.visible) { visibleCategories.push(category) }
+            });
 
-            categories = search(categories, ['name', 'slug'], searchText);
-            const hasMore = categories.length > offset + limit;
+            visibleCategories = search(visibleCategories, ['name', 'slug'], searchText);
+            const hasMore = visibleCategories.length > offset + limit;
             return {
-                items: limit == 0 ? categories : categories.slice(offset, offset + limit),
-                totalCount: categories.length,
+                items: limit == 0 ? visibleCategories : visibleCategories.slice(offset, offset + limit),
+                totalCount: visibleCategories.length,
                 hasMore,
             }
         },
@@ -54,7 +58,6 @@ export const categoriesResolvers: IResolvers = {
             {db, req}: { db: Database, req: Request }
         ): Promise<ICommonPaginationReturnType> => {
             let categories =  await db.categories.find({parent_id: null}).sort({_id: -1}).toArray();
-
             if (type) {
                 const typeResult = await db.types.findOne({slug: type});
                 categories = categories.filter((category) => {
@@ -99,6 +102,7 @@ export const categoriesResolvers: IResolvers = {
                 type_id: input.type_id,
                 parent_id: input.parent_id ? input.parent_id : null,
                 name: input.name,
+                visible: input.visible,
                 slug: slugify(input.name),
                 banner: bannerImagePath,
                 icon: input.icon,
@@ -136,6 +140,7 @@ export const categoriesResolvers: IResolvers = {
                 name: input.name,
                 slug: slugify(input.name),
                 banner: bannerImagePath,
+                visible: input.visible,
                 icon: input.icon,
                 meta_title: input.meta_title,
                 meta_keyword: input.meta_keyword,

@@ -37,6 +37,7 @@ import { Label } from 'components/forms/label';
 import { ItemCount } from 'components/cart-popup/cart-popup.style';
 import Switch from 'components/switch/switch';
 import moment from 'moment';
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 type WorkContentProps = {
   deviceType?: {
@@ -107,7 +108,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     const user = state;
     if (!user.workInfo) user.workInfo = {};
     user.workInfo.isWorking = false;
-    user.workInfo.stoppedWorkTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+    user.workInfo.stoppedWorkTime = new Date().toLocaleString('en-US', { timeZone });
 
     const startedWorkTime = moment(new Date(user.workInfo.startedWorkTime));
     const stoppedWorkTime = moment(new Date(user.workInfo.stoppedWorkTime));
@@ -116,12 +117,12 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     const ratePerMinute = user.workInfo.ratePerHour / 60;
 
     user.workInfo.totalWorkingMinutesPerWeek += workedInMinutes;
-    user.workInfo.totalSalaryToPayWeekly = Number(user.workInfo.totalWorkingMinutesPerWeek) * Number(ratePerMinute) - Number(user.workInfo.advancedSalaryPaid);
+    user.workInfo.totalSalaryToPayWeekly = Number(user.workInfo.totalWorkingMinutesPerWeek) * Number(ratePerMinute) - Number(user.workInfo.advancedSalaryPaid || 0);
 
-    // user.logs.push({
-    //   logDescription: ,
-    //   timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
-    // });
+    user.logs.push({
+      logDescription: 'finished working',
+      timestamp: new Date().toLocaleString('en-US', { timeZone })
+    });
 
     dispatch({
       type: 'HANDLE_WORK_CHANGE',
@@ -134,14 +135,13 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
     const user = state;
     if (!user.workInfo) user.workInfo = {};
     user.workInfo.isWorking = true;
-    user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+    user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone });
     user.workInfo.stoppedWorkTime = null;
 
-    user.workInfo.ratePerHour = 300;
-    // user.logs.push({
-    //   logDescription: ,
-    //   timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
-    // })
+    user.logs.push({
+      logDescription: `started working.`,
+      timestamp: new Date().toLocaleString('en-US', { timeZone })
+    })
 
     dispatch({
       type: 'HANDLE_WORK_CHANGE',
@@ -160,7 +160,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
 
     switch (action) {
       case 'stop':
-        const finishDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+        const finishDate = new Date().toLocaleString('en-US', { timeZone });
         const workedHours = getDurationTimeInHours(task.startDate, finishDate);
 
         taskUpdated = {
@@ -177,7 +177,7 @@ const WorkContent: React.FC<WorkContentProps> = ({ deviceType }) => {
         }
         break;
       case 'start':
-        const startDate = new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' });
+        const startDate = new Date().toLocaleString('en-US', { timeZone });
         taskUpdated = {
           id,
           taskId: task.taskId,

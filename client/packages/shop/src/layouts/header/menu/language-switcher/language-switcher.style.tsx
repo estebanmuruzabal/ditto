@@ -11,7 +11,7 @@ export const Box = styled.div`
   }
 
   @media (max-width: 767px) {
-    margin-right: 10px;
+    margin-right: 0px;
   }
 `;
 

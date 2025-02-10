@@ -37,7 +37,7 @@ exports.client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: { headless: true, args: ["--no-sandbox"] }
 });
-// let sessionData: any;
+let sessionData;
 /**
  * Escuchamos cuando entre un mensaje
  */
@@ -113,27 +113,27 @@ const withOutSession = () => {
     exports.client.initialize();
     return exports.client;
 };
-// const withSession = () => {
-//     sessionData = require(SESSION_FILE_PATH);
-//     client = new Client({
-//         session: sessionData
-//     })
-//     client.on('ready', () => {
-//         console.log('Client is ready!');
-//     });
-//     client.on('message', (message: any) => {
-//         const {from, to, body } = message;
-//         // console.log('From:', from);
-//         // console.log('To:', to);
-//         // console.log('Message:', body);
-//         // if(message.body === 'ping') {
-//         //     message.reply('pong');
-//         // }
-//     });
-//     // client.sendMessage('+5493624951926', 'test');
-//     client.initialize();
-//     return client;
-// }
+const withSession = () => {
+    sessionData = require(SESSION_FILE_PATH);
+    exports.client = new Client({
+        session: sessionData
+    });
+    exports.client.on('ready', () => {
+        console.log('Client is ready!');
+    });
+    // client.on('message', (message: any) => {
+    //     const {from, to, body } = message;
+    //     // console.log('From:', from);
+    //     // console.log('To:', to);
+    //     // console.log('Message:', body);
+    //     // if(message.body === 'ping') {
+    //     //     message.reply('pong');
+    //     // }
+    // });
+    // client.sendMessage('+5493624951926', 'test');
+    exports.client.initialize();
+    return exports.client;
+};
 const mount = (app) => __awaiter(void 0, void 0, void 0, function* () {
     // client = fs.existsSync(SESSION_FILE_PATH) ? withSession() : withOutSession();
     exports.client = withOutSession();

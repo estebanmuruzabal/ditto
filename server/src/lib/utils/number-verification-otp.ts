@@ -3,8 +3,7 @@ import qs from "qs";
 import nodemailer from "nodemailer";
 import { IOrderInputArgs } from "../../graphql/resolvers/Orders/types";
 import { IProduct, IUser } from "../types";
-import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD, READ_MAIL_CONFIG } from "./constant";
-// const imaps = require('imap-simple');
+import { COMPANY_EMAIL, COMPANY_EMAIL_PASSWORD, Locales, READ_MAIL_CONFIG, timeZone } from "./constant";
 
 const fromNumber = process.env.OTP_FROM_NUMBER
 const apiToken = process.env.OTP_API_TOKEN
@@ -60,70 +59,170 @@ export const sendOtp = (sendToNumber: string, otpCode: string) => {
 //   }
 // };
 
-export const sendCompanyConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string) => {
 
+export const sendCompanyConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
     const transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        host: "live.smtp.mailtrap.io",
+        port: 587,
         auth: {
-            user: COMPANY_EMAIL,
-            pass: COMPANY_EMAIL_PASSWORD
+          user: "api",
+          pass: "fa6003645f3677f052161a6140ee5df3"
         }
     });
+    let template;
+    let emailTitle;
 
-    const template = `
-            <div>
-                <div>${customer.name}</div>
-                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })}</div>
-                <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
-                <div>Metodo de envio: ${deliveryMethod}</div>
-                <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
-                <div>Fecha de envio/pickup: ${input.delivery_date}</div>
-                <div>Metodo de pago: ${paymentMethod}</div>
-                <div>Monto total ${input.total}</div>
-                <div>Productos comprados</div>
-                ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
-            </div>
-        `;
+    const englishConfirmationTemplate = `
+        <div>Customer name: ${customer.name}</div><br>
+        <div>Date: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Contact Phone Number:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
+        <div>Delivery/pickup method: ${deliveryMethod}</div>
+        <div>Address of delivery/pickup: ${input?.delivery_address}</div>
+        <div>Date of delivery/pickup: ${input.delivery_date}</div>
+        <div>Payment Method: ${paymentMethod}</div>
+        <div>Purchased products</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Total Amount $${input.total}</div>
+    `;
+
+    const spanishConfirmationTemplate = `
+        <div>Nombre cliente: ${customer.name}</div><br> 
+        <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
+        <div>Metodo de envio: ${deliveryMethod}</div>
+        <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
+        <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+        <div>Metodo de pago: ${paymentMethod}</div>
+        <div>Productos comprados</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Monto total ${input.total}</div>
+    `;
+
+    const spanishTitle = 'Confirmación de compra';
+    const englishTitle = 'Purchase Confirmation';
+
+    switch (lenguageLocale) {
+        case Locales.ES: { template = spanishConfirmationTemplate; emailTitle = spanishTitle } break;
+        case Locales.EN: { template = englishConfirmationTemplate; emailTitle = englishTitle } break;
+        default: { console.log('sendCompanyConfirmationMail. no locale found at sendind confirmation email')} break;
+    }
 
     return transporter.sendMail({
-        from: COMPANY_EMAIL,
+        from: 'mailtrap@dittofarm.com',
         to: email,
-        subject: 'Confirmación de orden',
+        subject: emailTitle,
         text: template,
         html: template
     });
 }
 
-export const sendClientConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string) => {
-
+export const sendSellerConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
     const transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        host: "live.smtp.mailtrap.io",
+        port: 587,
         auth: {
-            user: COMPANY_EMAIL,
-            pass: COMPANY_EMAIL_PASSWORD
+          user: "api",
+          pass: "fa6003645f3677f052161a6140ee5df3"
         }
     });
+    let template;
+    let emailTitle;
 
-    const template = `
-            <div>
-                <div>Pedido Confirmado!</div>
-                <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
-                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })}</div>
-                <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
-                <div>Metodo de envio: ${deliveryMethod}</div>
-                <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
-                <div>Fecha de envio/pickup: ${input.delivery_date}</div>
-                <div>Metodo de pago: ${paymentMethod}</div>
-                <div>Productos comprados</div>
-                ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
-                <div>Monto total ${input.total}</div>
-            </div>
-        `;
+    const englishConfirmationTemplate = `
+        <div>Customer name: ${customer.name}</div><br>
+        <div>Date: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Delivery/pickup method: ${deliveryMethod}</div>
+        <div>Address of delivery/pickup: ${input?.delivery_address}</div>
+        <div>Date of delivery/pickup: ${input.delivery_date}</div>
+        <div>Payment Method: ${paymentMethod}</div>
+        <div>Purchased products</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Total Amount $${input.total}</div>
+    `;
+
+    const spanishConfirmationTemplate = `
+        <div>Nombre cliente: ${customer.name}</div><br> 
+        <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
+        <div>Metodo de envio: ${deliveryMethod}</div>
+        <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
+        <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+        <div>Metodo de pago: ${paymentMethod}</div>
+        <div>Productos comprados</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Monto total ${input.total}</div>
+    `;
+
+    const spanishTitle = 'Confirmación de compra';
+    const englishTitle = 'Purchase Confirmation';
+
+    switch (lenguageLocale) {
+        case Locales.ES: { template = spanishConfirmationTemplate; emailTitle = spanishTitle } break;
+        case Locales.EN: { template = englishConfirmationTemplate; emailTitle = englishTitle } break;
+        default: { console.log('sendCompanyConfirmationMail. no locale found at sendind confirmation email')} break;
+    }
 
     return transporter.sendMail({
-        from: COMPANY_EMAIL,
+        from: 'mailtrap@dittofarm.com',
         to: email,
-        subject: 'Confirmación de compra',
+        subject: emailTitle,
+        text: template,
+        html: template
+    });
+}
+
+export const sendClientConfirmationMail = (email: string, customer: any, input: any, deliveryMethod: string, paymentMethod: string, lenguageLocale: string) => {
+
+    const transporter = nodemailer.createTransport({
+        host: "live.smtp.mailtrap.io",
+        port: 587,
+        auth: {
+          user: "api",
+          pass: "fa6003645f3677f052161a6140ee5df3"
+        }
+    });
+    let template;
+    let emailTitle;
+    
+    const englishConfirmationTemplate = `
+        <div>Thank you ${customer.name}. Bellow you can check your order details.</div><br>
+        <div>Date: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Contact Phone Number:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
+        <div>Delivery/pickup method: ${deliveryMethod}</div>
+        <div>Address of delivery/pickup: ${input?.delivery_address}</div>
+        <div>Date of delivery/pickup: ${input.delivery_date}</div>
+        <div>Payment Method: ${paymentMethod}</div>
+        <div>Purchased products</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Total Amount $${input.total}</div>
+    `;
+
+    const spanishConfirmationTemplate = `
+        <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
+        <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone })}</div>
+        <div>Telefono:${customer.phones?.length > 0 ? customer?.phones[0]?.number : ''}</div>
+        <div>Metodo de envio: ${deliveryMethod}</div>
+        <div>Direccion de envio/pickup: ${input?.delivery_address}</div>
+        <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+        <div>Metodo de pago: ${paymentMethod}</div>
+        <div>Productos comprados</div>
+        ${input.products.map((product: { name: any; quantity: any; recicledQuantity: any; price: any }) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Monto total ${input.total}</div>
+    `;
+
+    const spanishTitle = 'Confirmación de compra';
+    const englishTitle = 'Purchase Confirmation';
+
+    switch (lenguageLocale) {
+        case Locales.ES: { template = spanishConfirmationTemplate; emailTitle = spanishTitle } break;
+        case Locales.EN: { template = englishConfirmationTemplate; emailTitle = englishTitle } break;
+        default: { console.log('no locale found at sendind confirmation email')} break;
+    }
+
+    return transporter.sendMail({
+        from: 'mailtrap@dittofarm.com',
+        to: email,
+        subject: emailTitle,
         text: template,
         html: template
     });

@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import Checkbox, {LABEL_PLACEMENT} from "../../components/CheckBox/CheckBox";
 import gql from 'graphql-tag';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import { useDrawerDispatch, useDrawerState } from '../../context/DrawerContext';
@@ -46,6 +47,7 @@ const UPDATE_CATEGORIES = gql`
       id
       type_id
       name
+      visible
       slug
       banner
       icon
@@ -91,11 +93,13 @@ const UpdateCategory: React.FC<Props> = props => {
   const [meta_description, setMetaDescription] = useState(itemData.meta_description ? itemData.meta_description : '');
   const [icon, setIcon] = useState([{ value: itemData.icon }]);
   const [type, setType] = useState([{ id: itemData ? itemData.type_id : '' }]);
+  const [visible, setVisible] = useState([{ visible: itemData.visible }]);
 
 
   React.useEffect(() => {
     register({ name: 'type_id' });
     register({ name: 'parent' });
+    register({ name: 'visible' });
     register({ name: 'banner_data' });
     register({ name: 'banner', required: true});
     register({ name: 'icon', required: true});
@@ -113,6 +117,7 @@ const UpdateCategory: React.FC<Props> = props => {
     const typeValue = {
       name: name,
       type_id: type ? type[0].id : itemData.type_id,
+      visible: itemData.visible,
       parent_id: itemData.parent_id,
       banner_data: banner_data,
       banner: banner,
@@ -287,6 +292,18 @@ const UpdateCategory: React.FC<Props> = props => {
                   />
                 </FormFields>
 
+                <FormFields>
+                  <FormLabel>Visible</FormLabel>
+                  <Checkbox
+                        checked={visible}
+                        onChange={e => {
+                          setValue('visible', e.target.checked)
+                          setVisible(e.target.checked)
+                        }}
+                        labelPlacement={LABEL_PLACEMENT.right}
+                    >
+                    </Checkbox>
+                </FormFields>
                 <FormFields>
                   <FormLabel>Icon</FormLabel>
                   <Select

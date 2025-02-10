@@ -69,6 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <ProductCardWrapper
       {...props}
       className="product-card"
+      onClick={openDrawer} style={{marginRight: '10px', cursor: 'pointer'}}
     >
       <ProductImageWrapper>
         <Image url={image} className="product-image" />
@@ -81,11 +82,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </ProductImageWrapper>
       <ProductInfo>
         <ProductTitle>{title}</ProductTitle>
-        <ProductWeight>{weight}</ProductWeight>
+        {/* <ProductWeight>{weight}</ProductWeight> */}
         <ProductMeta>
-          <ProductWeight>Quantity: {quantity}</ProductWeight>
-          <ProductWeight>Is visible: {isOnline ? 'true' : 'false'}</ProductWeight>
+          <ProductWeight>Stock: {quantity}</ProductWeight>
+          <ProductWeight>Visibilidad: {isOnline ? 'Online' : 'Offline'}</ProductWeight>
           <ProductPriceWrapper>
+            <ProductWeight>Precio: </ProductWeight>
             <ProductPrice>
               {currency}
               {salePrice && salePrice !== 0 ? salePrice : price}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import gql from 'graphql-tag';
 import {useMutation, useQuery} from '@apollo/react-hooks';
@@ -24,6 +24,7 @@ import MultiUploader from "../../components/Uploader/Multi-Uploader";
 import Checkbox, {LABEL_PLACEMENT} from "../../components/CheckBox/CheckBox";
 import {TYPE} from "baseui/select";
 import NumberInput from "../../components/Input/NumberInput";
+import { AuthContext } from '../../context/auth';
 
 const GET_PRODUCTS = gql`
   query GetProducts(
@@ -148,7 +149,8 @@ type Props = any;
 const AddProduct: React.FC<Props> = props => {
   const { data: typeData, error: typeError, refetch: typeRefetch, loading: typeLoading } = useQuery(GET_TYPES);
   const { data: categoryData, error: categoryError, refetch: categoryRefetch, loading: categoryLoading } = useQuery(GET_CATEGORIES);
-
+  const { user } = useContext(AuthContext);
+  
   if(!categoryLoading) {
     categoryRefetch();
   }
@@ -161,6 +163,7 @@ const AddProduct: React.FC<Props> = props => {
   const closeDrawer = useCallback(() => dispatch({ type: 'CLOSE_DRAWER' }), [
     dispatch,
   ]);
+
   const { register, handleSubmit, setValue } = useForm();
   const [type, setType] = useState([]);
   const [category, setCategory] = useState([]);
@@ -178,7 +181,7 @@ const AddProduct: React.FC<Props> = props => {
     register({ name: 'type' });
     register({ name: 'categories' });
     register({ name: 'images', required: true });
-    register({ name: 'slug', required: true });
+    register({ name: 'slug' });
     register({ name: 'packagePrice' });
     register({ name: 'description' });
     register({ name: 'is_featured' });
@@ -224,11 +227,11 @@ const AddProduct: React.FC<Props> = props => {
   };
 
   const handleTypeChange = ({ value }) => {
+    console.log('value',value)
     if (value) {
       setValue('type', {
         id: value[0].id,
-        name: value[0].name,
-        slug: value[0].slug
+        name: value[0].name
       });  
     }
     setType(value);
@@ -281,6 +284,7 @@ const AddProduct: React.FC<Props> = props => {
     const newProduct = {
       name: data.name,
       type: data.type,
+      user_owner_id: user.id,
       categories: data.categories,
       description: data.description,
       images_data: data.images_data,
@@ -399,10 +403,10 @@ const AddProduct: React.FC<Props> = props => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Unit</FormLabel>
                   <Input type="text" inputRef={register} name="unit" />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
                   <FormLabel>Price</FormLabel>
@@ -413,7 +417,7 @@ const AddProduct: React.FC<Props> = props => {
                   />
                 </FormFields>
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Package price</FormLabel>
                   <Input
                       name="packagePrice"
@@ -421,10 +425,10 @@ const AddProduct: React.FC<Props> = props => {
                       value={packagePrice}
                       onChange={handlePackagePriceChange}
                   />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
-                  <FormLabel>Product Quantity</FormLabel>
+                  <FormLabel>Stock</FormLabel>
                   <Input
                     type="number"
                     inputRef={register({ required: true })}
@@ -433,7 +437,7 @@ const AddProduct: React.FC<Props> = props => {
                 </FormFields>
 
 
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Sale Price</FormLabel>
                   <NumberInput
                       type="number"
@@ -449,7 +453,7 @@ const AddProduct: React.FC<Props> = props => {
                     inputRef={register}
                     name="discountInPercent"
                   />
-                </FormFields>
+                </FormFields> */}
 
                 <FormFields>
                   <FormLabel>Type</FormLabel>
@@ -558,11 +562,11 @@ const AddProduct: React.FC<Props> = props => {
                   <Input
                       name="slug"
                       value={slug}
-                      inputRef={register({ required: true })}
+                      inputRef={register()}
                       onChange={handleSlugTitleChange}
                   />
                 </FormFields>
-                <FormFields>
+                {/* <FormFields>
                   <FormLabel>Meta Title</FormLabel>
                   <Input
                       name="meta_title"
@@ -587,7 +591,7 @@ const AddProduct: React.FC<Props> = props => {
                       value={meta_description}
                       onChange={handleMetaDescriptionChange}
                   />
-                </FormFields>
+                </FormFields> */}
               </DrawerBox>
             </Col>
           </Row>

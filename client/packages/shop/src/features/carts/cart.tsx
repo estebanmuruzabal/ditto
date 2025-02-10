@@ -20,6 +20,8 @@ import {
   ProductQuantityExceededMsg,
   CouponCode,
   ErrorMsg,
+  CheckoutTitle,
+  MinOrderText,
 } from './cart.style';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { ShoppingBagLarge } from 'assets/icons/ShoppingBagLarge';
@@ -62,7 +64,7 @@ const Cart: React.FC<CartPropsType> = ({
   
   const [error, setError] = useState('');
   const { isRtl } = useLocale();
-
+  const totalPrice = calculatePrice();
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setCoupon(e.currentTarget.value);
   };
@@ -160,22 +162,44 @@ const Cart: React.FC<CartPropsType> = ({
       <CheckoutButtonWrapper>
 
         {cartItemsCount !== 0 ? (
-          <Link href='/checkout'>
-            <CheckoutButton onClick={onCloseBtnClick}>
-              <>
-                <Title>
-                  <FormattedMessage
-                    id='navlinkCheckout'
-                    defaultMessage='Checkout'
-                  />
-                </Title>
-                <PriceBox>
-                  {CURRENCY}
-                  {calculatePrice()}
-                </PriceBox>
-              </>
-            </CheckoutButton>
-          </Link>
+          <>
+          { totalPrice > 10 ? (
+               <Link href='/checkout'>
+                <CheckoutButton onClick={onCloseBtnClick}>
+                  <>
+                    <Title>
+                      <FormattedMessage
+                        id='navlinkCheckout'
+                        defaultMessage='Checkout'
+                      />
+                    </Title>
+                    <PriceBox>
+                      {CURRENCY}
+                      {totalPrice}
+                    </PriceBox>
+                  </>
+                </CheckoutButton>
+              </Link>
+          ) : (
+            <>
+            <MinOrderText>{`Add at least $${Number(10 - totalPrice).toFixed(2)} to reach the order minimum of $10.00`}</MinOrderText>
+              <CheckoutButton onClick={onCloseBtnClick}>
+                <>
+                  <Title>
+                    <FormattedMessage
+                      id='navlinkChecko'
+                      defaultMessage='Continue shopping'
+                    />
+                  </Title>
+                  <PriceBox>
+                    {CURRENCY}
+                    {totalPrice}
+                  </PriceBox>
+                </>
+              </CheckoutButton>
+            </>
+          )}
+          </>
         ) : (
           <CheckoutButton>
             <>
@@ -187,7 +211,7 @@ const Cart: React.FC<CartPropsType> = ({
               </TitleDisabled>
               <PriceBox>
                 {CURRENCY}
-                {calculatePrice()}
+                {totalPrice}
               </PriceBox>
             </>
           </CheckoutButton>

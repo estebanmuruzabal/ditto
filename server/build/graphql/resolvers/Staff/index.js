@@ -17,6 +17,7 @@ const mongodb_1 = require("mongodb");
 const utils_1 = require("../../../lib/utils");
 const User_1 = require("../User");
 const shortid_1 = __importDefault(require("shortid"));
+const constant_1 = require("../../../lib/utils/constant");
 exports.staffMethodsResolvers = {
     Query: {
         getStaffs: (_root, _args, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -82,7 +83,7 @@ exports.staffMethodsResolvers = {
             const logs = userResult.logs || [];
             logs.push({
                 logDescription: logDescription,
-                timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' })
+                timestamp: new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })
             });
             const workInfo = {
                 isWorking,

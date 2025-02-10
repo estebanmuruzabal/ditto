@@ -41,6 +41,19 @@ export default class CustomDocument extends Document {
             name="viewport"
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
           />
+          <script src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyDpRDwL7a-AuU5-8M0BwP4BJ8TH8-ZKcyc&libraries=places`}></script>
+          {/* <script src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyCF9VpJOtRX5yuh7lVb7aZ4DwAgWHuhb54&libraries=geometry`}></script> */}
+
+          {/* <script src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOLWnTDHvAxu7eftvpbiGT54bcOZgwS0&libraries=places`}></script> */}
+          <link
+            rel="stylesheet"
+            type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+            />
+          <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          />
         </Head>
         <body>
           <Main />

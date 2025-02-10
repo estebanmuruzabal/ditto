@@ -65,6 +65,7 @@ const CarouselWithCustomDots = ({
       className='product-image'
     />
   ));
+  
   const images = items.map((item: any, index: number) => (
     <img
       src={item.url}

@@ -1,5 +1,5 @@
 // import { saveMessage } from "../adapter";
-import { List } from "whatsapp-web.js";
+// import { List } from "whatsapp-web.js";
 import { getSettings, saveUserChatHistory, signUpUser } from "../api";
 import { IUser, TriggerGrowerSteps, TriggerStaffSteps, TriggerSteps } from "../lib/types";
 import { INITIAL_USER_USERNAME } from "../lib/utils/constant";
@@ -26,8 +26,8 @@ export const sendMedia = (client: any, number = null, fileName = null) => {
     try {
         const file = `${DIR_MEDIA}/${fileName}`;
         if (fs.existsSync(file)) {
-            const media = MessageMedia.fromFilePath(file);
-            client.sendMessage(number, media, { sendAudioAsVoice: true });
+            // const media = MessageMedia.fromFilePath(file);
+            // client.sendMessage(number, media, { sendAudioAsVoice: true });
         }
     } catch(e) {
         throw e;
@@ -45,8 +45,8 @@ export const sendMedia = (client: any, number = null, fileName = null) => {
      try { 
         const file = `${DIR_MEDIA}/${fileName}`;
         if (fs.existsSync(file)) {
-            const media = MessageMedia.fromFilePath(file);
-            client.sendMessage(number, media ,{ sendAudioAsVoice: true });
+            // const media = MessageMedia.fromFilePath(file);
+            // client.sendMessage(number, media ,{ sendAudioAsVoice: true });
 
         }
     } catch(e) {
@@ -79,11 +79,11 @@ const productSections = {
   ],
 };
 
-const list = new List(`/n Por favor, selecciona una opción en el siguiente menú:`,
-    'Ver menu',
-    [productSections],
-    'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
-    'footer');
+// const list = new List(`/n Por favor, selecciona una opción en el siguiente menú:`,
+//     'Ver menu',
+//     [productSections],
+//     'Hola! 🙋🏻 Muchas gracias por comunicarte con nosotros. Soy tu asistente virtual y estoy para ayudarte.',
+//     'footer');
             
 export const sendMessage = async (number: string, text: string, trigger?: TriggerSteps, token?: string) => {
     let settingResponse: any = await getSettings();
@@ -99,12 +99,12 @@ export const sendMessage = async (number: string, text: string, trigger?: Trigge
   
    setTimeout(async () => {
      const message: any = text
-     
+
     try {
         if (number[0] == '5' && number[1] === '4' && number[2] !== '9') number = '549' + number.substring(2, number.length);
-        if (!number.endsWith('@c.us')) number += '@c.us';
+        if (!number.endsWith('@c.us') && !number.endsWith('@g.us')) number += '@c.us';
         client.sendMessage(number, message);
-        console.log(`⚡⚡⚡ Enviando mensaje:`, message);
+        console.log(`⚡⚡⚡ Enviando mensaje:`, message, number);
     } catch (error) {
         console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error )
     }
@@ -120,8 +120,8 @@ export const sendMessage = async (number: string, text: string, trigger?: Trigge
  */
 export const sendMessageButton = async (client: any, number = null, text = null, actionButtons: any) => {
     const { title = null, message = null, footer = null, buttons = [] } = actionButtons;
-    let button = new Buttons(message,[...buttons], title, footer);
-    client.sendMessage(number, button);
+    // let button = new Buttons(message,[...buttons], title, footer);
+    // client.sendMessage(number, button);
 
     // console.log(`⚡⚡⚡ Enviando mensajes....`);
 }
@@ -145,7 +145,7 @@ export const lastGrowerTrigger = async (customer: IUser, userMessage: string) =>
 
 export const lastClientTrigger = async (customer: IUser, userMessage: string) => {
   userMessage = normalizeText(userMessage);
-  // if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+  if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
   let lastDittoMessageSent: any = { trigger: undefined };
 
   if (customer?.chatHistory?.length >= 1) lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1]

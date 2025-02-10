@@ -1,8 +1,11 @@
+import { Locales } from "../../../lib/utils/constant";
+
 export interface IOrderProductInput {
     product_id: string;
     name?: string;
     image?: string;
     quantity: number;
+    seller_id?: string;
     recicledQuantity: number;
     unit?: string;
     price: number;
@@ -28,6 +31,7 @@ export interface IOrderInput {
     deliveryFee?: number;
     products: Array<IOrderProductInput>;
     payment_id?:  string;
+    lenguageLocale: string;
 }
 
 export interface IOrderInputArgs {
@@ -48,7 +52,7 @@ export interface IOrderQuickInput {
     delivery_method_id?: string;
     selectedCategorySlug?: string;
     isWhatsappPurchase?: boolean;
-    delivery_address: string;
+    delivery_address?: string;
     payment_method_name?: string;
     payment_option_type?: string;
     delivery_method_name?: string;
@@ -60,4 +64,5 @@ export interface IOrderQuickInput {
     deliveryFee?: number;
     products: Array<IOrderProductInput>;
     payment_id?:  string;
+    lenguageLocale: Locales;
 }
