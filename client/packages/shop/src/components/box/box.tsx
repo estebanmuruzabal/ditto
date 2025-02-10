@@ -1,5 +1,5 @@
 import React from 'react';
-import BoxWrapper, { BoxContentWrapper, BoxHeading, TitleWrapper } from './Box.style';
+import BoxWrapper, { BoxContentWrapper, BoxHeading, TitleWrapper } from './box.style';
 
 
 type BoxTitleProps = {
