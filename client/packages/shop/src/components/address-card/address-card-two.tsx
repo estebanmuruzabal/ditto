@@ -77,11 +77,11 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
   const [searchResult, setSearchResult] = React.useState([]);
   const [deliveryAddress, setDeliveryAddress] = React.useState("");
   const [notInsideDeliveryAreas, setNotInsideDeliveryAreas] = React.useState(false);
-  
+
   const ID = item.id;
   let newAddressid = null;
   const addressItem = item.item;
-  console.log('addressItem:::', addressItem)
+
   const addressValue = {
     id: ID,
     addressId: addressItem.id, 
@@ -91,7 +91,7 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
     instructions: values.instructions,
     is_primary: false
   };
-  console.log('addressItem::', addressItem)
+
   const { state, dispatch } = useContext(ProfileContext);
   const intl = useIntl();
 
@@ -102,7 +102,8 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
     if (isValid) {
       const {id, addressId, title, address, location, instructions} = addressValue;
       // addressItem puede pre-cargar address solamente para luego el usuario completar el resto de los datos
-      if (Object.keys(addressItem).length === 0 || Object.keys(addressItem).length === 1) {
+
+      if (Object.keys(addressItem).length === 0 || Object.keys(addressItem).length === 2) {
         const {data}  = await addAddressMutation({
           variables: { 
             id,

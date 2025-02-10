@@ -20,7 +20,7 @@ const Header: React.FC<Props> = ({ className }) => {
     authDispatch,
   } = React.useContext<any>(AuthContext);
   const { pathname, query } = useRouter();
-  console.log('isStaff', isStaff, isAuthenticated, isGrower)
+
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('access_token');

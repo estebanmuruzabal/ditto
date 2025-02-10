@@ -64,7 +64,7 @@ const CarouselWithCustomDots = ({
     />
 
   ));
-  console.log('items',items)
+  
   const images = items.map((item: any, index: number) => (
     <img
       src={SHOP_IMAGE_HOST+item}
@@ -73,13 +73,14 @@ const CarouselWithCustomDots = ({
       style={{ width: '100%', height: '100%', position: 'relative' }}
     />
   ));
-
+  
   const CustomDot = ({
     index,
     onClick,
     active,
     carouselState: { currentSlide, deviceType },
   }: any) => {
+
     return (
       <SingleItem
         onClick={() => onClick()}
@@ -100,7 +101,7 @@ const CarouselWithCustomDots = ({
     <Carousel
       showDots
       ssr
-      infinite={true}
+      // infinite={true}
       slidesToSlide={1}
       containerClass='carousel-with-custom-dots'
       responsive={responsive}

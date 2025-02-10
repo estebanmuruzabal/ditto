@@ -83,6 +83,7 @@ export const TreeMenu: React.FC<Props> = ({
             icon={subOption.icon}
             depth="parent"
             onClick={() => onClick(subOption.slug)}
+            // onClick={() => subOption.children ? null : onClick(subOption.slug)}
             isOpen={
               active === subOption.slug ||
               subOption.children.some((item) => item.slug === active)

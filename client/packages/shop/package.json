@@ -3,7 +3,7 @@
   "version": "3.0.3",
   "private": true,
   "scripts": {
-    "dev": "next -p 9000",
+    "dev": "export NODE_OPTIONS=--openssl-legacy-provider; next -p 9000",
     "build": "next build",
     "start": "next -p 9000",
     "shop-dev": "next -p 9000",
@@ -108,5 +108,5 @@
     "imagemin-svgo": "^8.0.0",
     "typescript": "^3.9.5"
   },
-  "proxy": "http://52.67.123.15/api"
+  "proxy": "http://3.136.27.172/api"
 }

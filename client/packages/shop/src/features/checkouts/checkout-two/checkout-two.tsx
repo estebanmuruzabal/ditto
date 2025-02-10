@@ -222,7 +222,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     // setCookie(deliveryMethodCookieKeyName, null);
   };
 
-  const setDeliveryMethod =  (methodSelected) => {
+  const setDeliveryMethod =  (methodSelected, addressAlreadyAddedSelected) => {
     setDeliveryMethodSaved(methodSelected)
     // setCookie(deliveryMethodCookieKeyName, methodSelected);
     setSubmitResult({
@@ -230,16 +230,17 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       delivery_method_id: methodSelected.id, 
       // delivery_address: methodSelected.deliveryAddress?.split(",")[0]
     })
-    const addressValue = {
-      id: ID,
-      addressId: addressItem.id, 
-      title: values.title,
-      address: addressItem.address,
-      location: values.location,
-      instructions: values.instructions,
-      is_primary: false
-    };
-    handleEditDelete(methodSelected, null, 'edit', 'address');
+    if (addressAlreadyAddedSelected) {
+      handleModal(UpdateAddressTwo,  { item:{ address: methodSelected.deliveryAddress?.split(",")[0], location: methodSelected.deliveryAddress?.split(",")[1] }, id }, 'add-address-modal');
+    } else {
+      // setSubmitResult({
+      //   ...submitResult,
+      //   delivery_address:  `${item.title} -
+      //   ${item.address?.split(",")[0]} ${item.address?.split(",")[1]}, ${item.location}, ${item.instructions}
+      //   `});
+    }
+    
+    // handleEditDelete(addressValue, null, 'edit', 'address');
   };
 
   const [appliedCoupon] = useMutation(GET_COUPON);
@@ -265,6 +266,21 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     if (paymentOptionSelected?.name?.toLowerCase().includes('tarjeta') || paymentOptionSelected?.name?.toLowerCase().includes('card')) {
       const ccCharge = paymentOptionSelected?.name?.replace(/\D/g, '');
       const result = total * (ccCharge / 100);
+      return result;
+    }
+    return 0;
+  }
+
+  const calculateIfCashDiscount = () => {
+    const paymentOptionSelected = paymentMethods.find(paymentMethod => {
+      return submitResult?.payment_option_id === paymentMethod?.id;
+    });
+
+    const total = Number(calculateSubTotalPrice());
+
+    if (paymentOptionSelected?.name?.toLowerCase().includes('efectivo')) {
+      const cashDiscount = 5;
+      const result = total * (cashDiscount / 100);
       return result;
     }
     return 0;
@@ -470,6 +486,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const handleSubmit = async () => {
     const deliveryCharge: number = calculateDeliveryCharge(deliveryMethodSaved?.name);
     const ccCharge: number = calculateCCCharge();
+    const cashDiscount: number = calculateIfCashDiscount();
     const otherSubmitResult = {
       customer_id: id,
       sub_total: Number(calculateSubTotalPrice()),
@@ -653,8 +670,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       <DeliveryTypesOptions />
                     </Heading>
                     <ButtonGroup></ButtonGroup> */}
-                { !deliveryMethodSaved && deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && (
+                { selectedAddress && deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && (
                   <ButtonGroup>
+                    {"o selecciona una direccion"}
                     <RadioGroupTwo
                       items={delivery_address}
                         component={(item: any, index: any) => (
@@ -673,32 +691,33 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                               ${item.address?.split(",")[0]} ${item.address?.split(",")[1]}, ${item.location}, ${item.instructions}
                               `,
                               products: cartProduct
-                            }); setDeliveryMethod(item);}}
-                            onEdit={() => handleEditDelete(item, index, 'edit', 'address')}
-                            onDelete={() =>
-                              handleEditDelete(item, index, 'delete', 'address')
-                            }
+                            }); setDeliveryMethod(item, false);}}
+                            // onEdit={() => handleEditDelete(item, index, 'edit', 'address')}
+                            // onDelete={() =>
+                            //   handleEditDelete(item, index, 'delete', 'address')
+                            // }
                           />
                         )}
-                      secondaryComponent={
-                        <Button
-                          className='addButton'
-                          variant='text'
-                          type='button'
-                          onClick={() =>
-                            handleModal(UpdateAddressTwo,
-                              {
-                                item:{ address: deliveryMethodSaved?.deliveryAddress },
-                                id
-                              },
-                              'add-address-modal')
-                          }
-                        >
-                          <IconWrapper>
-                            <Plus width='10px' />
-                          </IconWrapper>
-                          <FormattedMessage id='completeAddress' defaultMessage='Add New' />
-                        </Button>
+                      secondaryComponent={ selectedAddress ? null :
+                        (<Button
+                        className='addButton'
+                        variant='text'
+                        type='button'
+                        onClick={() => resetDeliveryMethodAndDeleteSavedCookie()}
+                        // onClick={() =>
+                        //   handleModal(UpdateAddressTwo,
+                        //     {
+                        //       item:{ address: deliveryMethodSaved?.deliveryAddress },
+                        //       id
+                        //     },
+                        //     'add-address-modal')
+                        // }
+                      >
+                        <IconWrapper>
+                          <Plus width='10px' />
+                        </IconWrapper>
+                        <FormattedMessage id='completeAddress' defaultMessage='Add New' />
+                      </Button>)
                       }
                     />
                   </ButtonGroup>
