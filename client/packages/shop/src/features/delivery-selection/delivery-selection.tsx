@@ -33,7 +33,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   const setDeliveryMethodAndSaveCookie =  (deliveryOrPickupMethodSelected) => {
     const deliveryMethod = isPickUpSelected ? deliveryOrPickupMethodSelected : {...deliveryOrPickupMethodSelected, deliveryAddress};
     setDeliveryMethod(deliveryMethod)
-    props.setDeliveryMethodSaved(deliveryMethod)
+    props.setDeliveryMethodSaved(deliveryMethod, false)
 
     // setCookie(deliveryMethodCookieKeyName, deliveryMethod);
     // }

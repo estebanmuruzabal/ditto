@@ -1,7 +1,9 @@
 import React, { useReducer, useContext, createContext } from 'react';
 import { reducer, cartItemsTotalPrice, cartDiscountAmount } from './cart.reducer';
 import { useStorage } from 'utils/use-storage';
+
 const CartContext = createContext({} as any);
+
 const INITIAL_STATE = {
   isOpen: false,
   items: [],
@@ -20,7 +22,6 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
     dispatch({ type: 'ADD_ITEM_RECICLED', payload: { ...item, recicledQuantity } });
   };
 
-  
   const removeRecicledItemHandler = (item, recicledQuantity = 1) => {
     dispatch({ type: 'REMOVE_ITEM_RECICLED', payload: { ...item, recicledQuantity } });
   };
@@ -36,27 +37,35 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
   const clearCartHandler = () => {
     dispatch({ type: 'CLEAR_CART' });
   };
+
   const toggleCartHandler = () => {
     dispatch({ type: 'TOGGLE_CART' });
   };
+
   const couponHandler = (coupon) => {
     dispatch({ type: 'APPLY_COUPON', payload: coupon });
   };
+
   const removeCouponHandler = () => {
     dispatch({ type: 'REMOVE_COUPON' });
   };
+
   const rehydrateLocalState = (payload) => {
     dispatch({ type: 'REHYDRATE', payload });
   };
+
   const toggleRestaurant = () => {
     dispatch({ type: 'TOGGLE_RESTAURANT' });
   };
+
   const isInCartHandler = (id) => {
     return state.items?.some((item) => item.id === id);
   };
+
   const getItemHandler = (id) => {
     return state.items?.find((item) => item.id === id);
   };
+
   const getCartItemsPrice = () => cartItemsTotalPrice(state.items).toFixed(2);
 
   const getCartItemsTotalPrice = (deliveryCharge) =>
@@ -65,9 +74,10 @@ const useCartActions = (initialCart = INITIAL_STATE) => {
   const getDiscount = () => cartDiscountAmount(state.items, state.coupon).toFixed(2);
 
   const getItemsCount = state.items?.reduce(
-    (acc, item) => acc + item.quantity,
+    (acc, item) => acc + (item.quantity || 0),
     0
-  );
+  ) || 0;
+
   return {
     state,
     getItemsCount,
@@ -111,7 +121,9 @@ export const CartProvider = ({ children }) => {
     getDiscount,
     toggleRestaurant,
   } = useCartActions();
+
   const { rehydrated, error } = useStorage(state, rehydrateLocalState);
+
   return (
     <CartContext.Provider
       value={{
@@ -122,8 +134,8 @@ export const CartProvider = ({ children }) => {
         cartItemsCount: state.items?.length,
         itemsCount: getItemsCount,
         addItem: addItemHandler,
-        addRecicledItemHandler: addRecicledItemHandler,
-        removeRecicledItemHandler: removeRecicledItemHandler,
+        addRecicledItemHandler,
+        removeRecicledItemHandler,
         removeItem: removeItemHandler,
         removeItemFromCart: clearItemFromCartHandler,
         clearCart: clearCartHandler,
