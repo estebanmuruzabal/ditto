@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logTimeStampWithTimeFilter = void 0;
+exports.fireWhatappAlarmIfIsOn = exports.logTimeStampWithTimeFilter = void 0;
 const moment_1 = __importDefault(require("moment"));
 const logTimeStampWithTimeFilter = (setting, reading, timeZone, started, finished) => {
     var _a, _b, _c;
@@ -27,3 +27,15 @@ const logTimeStampWithTimeFilter = (setting, reading, timeZone, started, finishe
     return setting;
 };
 exports.logTimeStampWithTimeFilter = logTimeStampWithTimeFilter;
+const fireWhatappAlarmIfIsOn = (plant) => {
+    const { alarm, alarm_timestamp, timeZone } = plant;
+    if (!alarm)
+        return false;
+    const currentTimeMoment = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+    const lastTimeStamp = alarm_timestamp;
+    const lastTimeStampMoment = (0, moment_1.default)(new Date(lastTimeStamp));
+    const lastAlarmNotificationInMins = currentTimeMoment === null || currentTimeMoment === void 0 ? void 0 : currentTimeMoment.diff(lastTimeStampMoment, 'minutes');
+    // if it hasnt pass more than 30 mins, we dont log anything basically
+    return lastAlarmNotificationInMins <= 1;
+};
+exports.fireWhatappAlarmIfIsOn = fireWhatappAlarmIfIsOn;

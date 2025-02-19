@@ -30,12 +30,18 @@ const flows_1 = require("./controllers/flows");
 const api_1 = require("./api");
 const types_1 = require("./lib/types");
 const shoppingUtils_1 = require("./lib/utils/shoppingUtils");
+const cron_jobs_1 = require("./cron-jobs");
 const { Client, LocalAuth, List, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const SESSION_FILE_PATH = './session.json';
+const wwebVersion = '2.2412.54';
 exports.client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: { headless: true, args: ["--no-sandbox"] }
+    puppeteer: { headless: true, args: ["--no-sandbox"] },
+    webVersionCache: {
+        type: 'remote',
+        remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${wwebVersion}.html`,
+    },
 });
 let sessionData;
 /**
@@ -52,20 +58,13 @@ const listenMessage = () => exports.client.on('message', (msg) => __awaiter(void
     const settingValues = JSON.parse(settingResponse);
     if (!(settingValues === null || settingValues === void 0 ? void 0 : settingValues.whatsapp_bot_is_on))
         return;
-    console.log('from: ', from === null || from === void 0 ? void 0 : from.toString());
-    console.log('text msg: ', message === null || message === void 0 ? void 0 : message.toString());
-    if (!(0, handle_1.isValidNumber)(from) || message.trim === '' || from === 'status@broadcast')
+    // console.log('from: ', from?.toString()); console.log('text msg: ', message?.toString());
+    // if (!isValidNumber(from) || message.trim === '' || from === 'status@broadcast') return;
+    if (message.trim === '' || from === 'status@broadcast')
         return;
     const number = (0, handle_1.cleanNumber)(from);
     let user, access_token;
-    // ditto num
-    // if (number !== '5493624885763') return;
-    // if (number !== '5493624276159') return;
-    // juan numero
-    // if (number !== '5493624309309') return;
-    if (number !== '5493624951926')
-        return;
-    //   if (number !== '5493624651317') return;
+    // if (number !== '5493624951926') return;
     const res = yield (0, api_1.fetchCustomerAndToken)(number);
     if (!!(((_c = res === null || res === void 0 ? void 0 : res.data) === null || _c === void 0 ? void 0 : _c.getCustomer.user) && ((_d = res === null || res === void 0 ? void 0 : res.data) === null || _d === void 0 ? void 0 : _d.getCustomer.access_token))) {
         user = res.data.getCustomer.user;
@@ -153,6 +152,8 @@ const mount = (app) => __awaiter(void 0, void 0, void 0, function* () {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     app.use((0, cors_1.default)());
+    cron_jobs_1.offlineDittoBotsJobEvery5Min.start();
+    // scrapPaymentsReceivedEvery5Mins.start();
     server.applyMiddleware({
         app,
         path: '/api',

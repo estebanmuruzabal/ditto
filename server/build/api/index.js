@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addAddressToUser = exports.createQuickOrder = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateProductStock = exports.updateUserNameAndEmail = exports.updateUserWorkInfoMutation = exports.signUpUser = exports.fetchCustomerAndToken = exports.getSettings = void 0;
+exports.addAddressToUser = exports.createQuickOrder = exports.createOrder = exports.updateUserShoppingCart = exports.getUserShoppingCart = exports.getAvailableProducts = exports.getDeliveryMethods = exports.getPaymentMethods = exports.getProducts = exports.getCategories = exports.saveUserChatHistory = exports.updateProductStock = exports.updateUserNameEmailAndLenguage = exports.updateUserWorkInfoMutation = exports.signUpUser = exports.fetchOfflineDittoBotsUsers = exports.fetchCustomerAndToken = exports.getSettings = void 0;
 const handle_1 = require("../controllers/handle");
 const queries_1 = require("./queries");
 const { createApolloFetch } = require('apollo-fetch');
-// const uri = 'http://52.67.123.15/api';
+// const uri = 'http://3.136.27.172/api';
 const uri = 'http://localhost:7000/api';
 const apolloFetch = createApolloFetch({ uri });
 const getSettings = () => new Promise((resolve, reject) => {
@@ -41,6 +41,27 @@ const fetchCustomerAndToken = (phone) => new Promise((resolve, reject) => {
     });
 });
 exports.fetchCustomerAndToken = fetchCustomerAndToken;
+const fetchOfflineDittoBotsUsers = () => new Promise((resolve, reject) => {
+    apolloFetch({
+        query: queries_1.GET_DITTO_BOTS_OFFLINE_USERS,
+    }).then((res) => {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        if (((_a = res === null || res === void 0 ? void 0 : res.errors) === null || _a === void 0 ? void 0 : _a.length) > 0 && ((_d = (_c = (_b = res === null || res === void 0 ? void 0 : res.errors) === null || _b === void 0 ? void 0 : _b[0]) === null || _c === void 0 ? void 0 : _c.message) === null || _d === void 0 ? void 0 : _d.length)) {
+            console.log('[fetchOfflineDittoBotsUsers]', (_f = (_e = res === null || res === void 0 ? void 0 : res.errors) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.message);
+        }
+        else if ((_h = (_g = res === null || res === void 0 ? void 0 : res.data) === null || _g === void 0 ? void 0 : _g.getCustomer) === null || _h === void 0 ? void 0 : _h.user) {
+            console.log('[fetchOfflineDittoBotsUsers] User Fetched.');
+        }
+        else {
+            console.log('fetchOfflineDittoBotsUsers response:', res);
+        }
+        resolve(res);
+    }).catch((err) => {
+        console.log('fetchOfflineDittoBotsUsers error:', err);
+        resolve(err);
+    });
+});
+exports.fetchOfflineDittoBotsUsers = fetchOfflineDittoBotsUsers;
 const signUpUser = (name, phone, password) => new Promise((resolve, reject) => {
     apolloFetch({
         query: queries_1.signUpQuery,
@@ -89,27 +110,27 @@ const updateUserWorkInfoMutation = (user, logDescription) => new Promise((resolv
     });
 });
 exports.updateUserWorkInfoMutation = updateUserWorkInfoMutation;
-const updateUserNameAndEmail = (id, name, email, token) => new Promise((resolve, reject) => {
+const updateUserNameEmailAndLenguage = (id, name, email, token) => new Promise((resolve, reject) => {
     // @ts-ignore
     // apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
     apolloFetch({
-        query: queries_1.updateUserNameAndEmailQuery,
+        query: queries_1.updateUserNameEmailAndLenguageQuery,
         variables: { id, name, email },
     }).then((res) => {
         var _a, _b;
-        if (((_b = (_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.updateUserNameAndEmail) === null || _b === void 0 ? void 0 : _b.status) === true) {
-            console.log('updateUserNameAndEmail. Updated name Succesfully.', name);
+        if (((_b = (_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.updateUserNameEmailAndLenguageQuery) === null || _b === void 0 ? void 0 : _b.status) === true) {
+            console.log('updateUserNameEmailAndLenguageQuery. Updated name Succesfully.', name);
         }
         else {
-            console.log('updateUserNameAndEmail response:', res);
+            console.log('updateUserNameEmailAndLenguageQuery response:', res);
         }
         resolve(res);
     }).catch((err) => {
-        console.log('updateUserNameAndEmail error:', err);
+        console.log('updateUserNameEmailAndLenguageQuery error:', err);
         resolve(err);
     });
 });
-exports.updateUserNameAndEmail = updateUserNameAndEmail;
+exports.updateUserNameEmailAndLenguage = updateUserNameEmailAndLenguage;
 const updateProductStock = (productId, product) => new Promise((resolve, reject) => {
     // @ts-ignore
     // apolloFetch.use(({ options }, next: any) => { options.headers = { 'x-access-token': token }; next(); });
@@ -261,7 +282,8 @@ const updateUserShoppingCart = (input) => new Promise((resolve, reject) => {
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
-                products: input.products
+                products: input.products,
+                lenguageLocale: input.lenguageLocale
             }
         }
     }).then((res) => {
@@ -290,7 +312,8 @@ const createOrder = (input) => new Promise((resolve, reject) => {
                 total: input.total,
                 coupon_code: input.coupon_code,
                 discount_amount: input.discount_amount,
-                products: input.products
+                products: input.products,
+                lenguageLocale: input.lenguageLocale
             }
         }
     }).then((res) => {

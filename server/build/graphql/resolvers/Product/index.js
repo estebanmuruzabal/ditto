@@ -14,6 +14,7 @@ const mongodb_1 = require("mongodb");
 const utils_1 = require("../../../lib/utils");
 const search_1 = require("../../../lib/utils/search");
 const image_store_1 = require("../../../lib/utils/image-store");
+const slugify_1 = require("../../../lib/utils/slugify");
 exports.productsResolvers = {
     Query: {
         products: (_root, { type, category, limit, offset, searchText, filterUnstockProducts }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -21,16 +22,15 @@ exports.productsResolvers = {
             if (category) {
                 products = products.filter((product) => product.categories.find((category_item) => category_item.slug === category));
             }
-            if (type) {
-                products = products.filter((product) => product.type.slug === type);
-            }
-            products = products.filter((product) => product.is_online === true);
-            if (filterUnstockProducts)
-                products = products.filter((product) => product.product_quantity > 0);
+            // if (type) {
+            //     products = products.filter((product) => product.type.slug === type);
+            // }
+            // products = products.filter((product) => product.is_online === true);
+            // if (filterUnstockProducts) products = products.filter((product) =>  product.product_quantity > 0);
             products = (0, search_1.search)(products, ['name', 'slug'], searchText);
             const hasMore = products.length > offset + limit;
             return {
-                items: limit == 0 ? products : products.slice(offset, offset + limit),
+                items: products,
                 totalCount: products.length,
                 hasMore,
             };
@@ -71,7 +71,8 @@ exports.productsResolvers = {
                 type: input.type,
                 categories: JSON.parse(input.categories),
                 name: input.name,
-                slug: input.slug,
+                slug: (0, slugify_1.slugify)(input.name),
+                user_owner_id: input.user_owner_id,
                 description: input.description,
                 packagePrice: input.packagePrice,
                 images: imagesPath,

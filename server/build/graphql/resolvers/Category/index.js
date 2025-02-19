@@ -19,16 +19,22 @@ exports.categoriesResolvers = {
     Query: {
         categories: (_root, { type, limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let categories = yield db.categories.find({}).sort({ _id: -1 }).toArray();
+            let visibleCategories = [];
             if (type) {
                 categories = categories.filter((category) => {
                     return category.type_id === type;
                 });
             }
-            categories = (0, search_1.search)(categories, ['name', 'slug'], searchText);
-            const hasMore = categories.length > offset + limit;
+            categories.map((category) => {
+                if (category.visible) {
+                    visibleCategories.push(category);
+                }
+            });
+            visibleCategories = (0, search_1.search)(visibleCategories, ['name', 'slug'], searchText);
+            const hasMore = visibleCategories.length > offset + limit;
             return {
-                items: limit == 0 ? categories : categories.slice(offset, offset + limit),
-                totalCount: categories.length,
+                items: limit == 0 ? visibleCategories : visibleCategories.slice(offset, offset + limit),
+                totalCount: visibleCategories.length,
                 hasMore,
             };
         }),
@@ -70,6 +76,7 @@ exports.categoriesResolvers = {
                 type_id: input.type_id,
                 parent_id: input.parent_id ? input.parent_id : null,
                 name: input.name,
+                visible: input.visible,
                 slug: (0, slugify_1.slugify)(input.name),
                 banner: bannerImagePath,
                 icon: input.icon,
@@ -100,6 +107,7 @@ exports.categoriesResolvers = {
                 name: input.name,
                 slug: (0, slugify_1.slugify)(input.name),
                 banner: bannerImagePath,
+                visible: input.visible,
                 icon: input.icon,
                 meta_title: input.meta_title,
                 meta_keyword: input.meta_keyword,

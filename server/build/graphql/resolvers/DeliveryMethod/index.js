@@ -17,11 +17,20 @@ exports.deliveryMethodsResolvers = {
     Query: {
         deliveryMethods: (_root, { limit, offset, searchText }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             let data = yield db.delivery_methods.find({}).sort({ _id: -1 }).toArray();
-            data = (0, search_1.search)(data, ['name', 'details'], searchText);
-            const hasMore = data.length > offset + limit;
+            let visibleDeliveryMethods = [];
+            console.log('1', visibleDeliveryMethods);
+            data.map((deliMethod) => {
+                if (deliMethod === null || deliMethod === void 0 ? void 0 : deliMethod.visible) {
+                    visibleDeliveryMethods.push(deliMethod);
+                    console.log(deliMethod === null || deliMethod === void 0 ? void 0 : deliMethod.visible);
+                }
+            });
+            console.log('2', visibleDeliveryMethods);
+            visibleDeliveryMethods = (0, search_1.search)(data, ['name', 'details'], searchText);
+            const hasMore = visibleDeliveryMethods.length > offset + limit;
             return {
-                items: limit == 0 ? data : data.slice(offset, offset + limit),
-                totalCount: data.length,
+                items: limit == 0 ? visibleDeliveryMethods : visibleDeliveryMethods.slice(offset, offset + limit),
+                totalCount: visibleDeliveryMethods.length,
                 hasMore,
             };
         })

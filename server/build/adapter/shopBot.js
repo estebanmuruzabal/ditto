@@ -16,12 +16,30 @@ const types_1 = require("../lib/types");
 const constant_1 = require("../lib/utils/constant");
 const shoppingUtils_1 = require("../lib/utils/shoppingUtils");
 const customersMessages_1 = require("../messages/customersMessages");
-const lenguageLocale = 'en';
+const newShopPathMessages_1 = require("../messages/newShopPathMessages");
+const lenguageLocale = constant_1.Locales.ES;
+const fetchCategories = () => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    let categoriesRes = yield (0, api_1.getCategories)();
+    categoriesRes = (_b = (_a = categoriesRes === null || categoriesRes === void 0 ? void 0 : categoriesRes.data) === null || _a === void 0 ? void 0 : _a.categories) === null || _b === void 0 ? void 0 : _b.items;
+    if ((categoriesRes === null || categoriesRes === void 0 ? void 0 : categoriesRes.length) <= 0 || !!!categoriesRes)
+        throw new Error('Error fetchCategories: no available categories');
+    return (0, shoppingUtils_1.harcodedFilterOfUnusedCategories)(categoriesRes);
+});
+const fetchProducts = (selectedCategorySlug, noLengthCheck) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c, _d;
+    let availableProducts = yield (0, api_1.getProducts)(selectedCategorySlug);
+    availableProducts = (_d = (_c = availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.data) === null || _c === void 0 ? void 0 : _c.products) === null || _d === void 0 ? void 0 : _d.items;
+    if (!noLengthCheck)
+        if ((availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length) <= 0 || !!!availableProducts)
+            throw new Error('Error 1: no available products');
+    return availableProducts;
+});
 const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31, _32;
+        var _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20;
         let resData = { replyMessage: '', media: null, trigger: '' };
-        let availableProducts;
+        let products;
         let deliveryOpts;
         let userInputNumber;
         let productSelected;
@@ -30,35 +48,33 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
         let categories;
         let maxOptions;
         let productInShoppingCart;
-        let categoriesRes;
         const num = (0, handle_1.cleanNumber)(number);
         console.log('step in SHOP BOT Switch:', triggerStep);
         switch (triggerStep) {
             case types_1.TriggerSteps.INITIAL_UNAUTHENTICATED_USER:
-                const res = yield (0, api_1.signUpUser)(constant_1.INITIAL_USER_USERNAME, num, constant_1.INITIAL_USER_PASSWORD);
-                const registeredSuccessfully = (_b = (_a = res === null || res === void 0 ? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.signUp) === null || _b === void 0 ? void 0 : _b.status;
-                if (!registeredSuccessfully) {
-                    resData.replyMessage = (0, customersMessages_1.thereWasAProblemWaitForAssistance)();
-                    resData.trigger = types_1.TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
-                    resolve(resData);
-                }
-                categoriesRes = yield (0, api_1.getCategories)();
-                categories = (_d = (_c = categoriesRes === null || categoriesRes === void 0 ? void 0 : categoriesRes.data) === null || _c === void 0 ? void 0 : _c.categories) === null || _d === void 0 ? void 0 : _d.items;
-                categories = (0, shoppingUtils_1.harcodedFilterOfUnusedCategories)(categories);
-                resData.replyMessage = (0, customersMessages_1.mainMenuUnauthenticatedUser)(categories);
+                // const res: any = await signUpUser(INITIAL_USER_USERNAME, num, INITIAL_USER_PASSWORD);
+                // const registeredSuccessfully = res?.data?.signUp?.status;
+                // welcomeTextAndCategoriesOpts
+                // hereee
+                // if (!registeredSuccessfully) {
+                //     resData.replyMessage = thereWasAProblemWaitForAssistance();
+                //     resData.trigger = TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+                //     resolve(resData);
+                // }
+                categories = yield fetchCategories();
+                resData.replyMessage = (0, newShopPathMessages_1.mainMenuUnauthenticatedUser1)(categories, number);
+                // console.log('res',res)
                 resData.trigger = types_1.TriggerSteps.SELECT_CATEGORY;
+                // resData = getCategoriesButtons(resData, categories);
                 resolve(resData);
                 break;
             case types_1.TriggerSteps.UNBLOCK_CHAT:
             case types_1.TriggerSteps.AUTHENTICATED_USER_ALL_CATEGORIES:
-                categoriesRes = yield (0, api_1.getCategories)();
-                categories = (_f = (_e = categoriesRes === null || categoriesRes === void 0 ? void 0 : categoriesRes.data) === null || _e === void 0 ? void 0 : _e.categories) === null || _f === void 0 ? void 0 : _f.items;
-                categories = (0, shoppingUtils_1.harcodedFilterOfUnusedCategories)(categories);
-                if ((categories === null || categories === void 0 ? void 0 : categories.length) <= 0 || !!!categories)
-                    throw new Error('Error 2: no available categories');
+                categories = yield fetchCategories();
                 if ((user === null || user === void 0 ? void 0 : user.id) && (user === null || user === void 0 ? void 0 : user.name)) {
-                    resData.replyMessage = user.name !== constant_1.INITIAL_USER_USERNAME ? (0, customersMessages_1.mainMenuAuthenticatedUser)(user === null || user === void 0 ? void 0 : user.name, categories) : (0, customersMessages_1.mainMenuUnauthenticatedUser)(categories);
-                    resData.trigger = types_1.TriggerSteps.SELECT_CATEGORY;
+                    // resData.replyMessage = user.name !== INITIAL_USER_USERNAME ? mainMenuAuthenticatedUser(user?.name, categories) : mainMenuUnauthenticatedUser(categories);
+                    // resData.trigger = TriggerSteps.SELECT_CATEGORY;
+                    resData = (0, shoppingUtils_1.getCategoriesButtons)(resData, categories);
                     resolve(resData);
                 }
                 else {
@@ -71,11 +87,7 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
             case types_1.TriggerSteps.ALL_CATEGORIES:
                 // el usuario esta autenticado y respondio al menu inicial
                 userInputNumber = Number(userInput);
-                categoriesRes = yield (0, api_1.getCategories)();
-                categories = (_h = (_g = categoriesRes === null || categoriesRes === void 0 ? void 0 : categoriesRes.data) === null || _g === void 0 ? void 0 : _g.categories) === null || _h === void 0 ? void 0 : _h.items;
-                categories = (0, shoppingUtils_1.harcodedFilterOfUnusedCategories)(categories);
-                if ((categories === null || categories === void 0 ? void 0 : categories.length) <= 0 || !!!categories)
-                    throw new Error('Error 2: no available categories');
+                categories = yield fetchCategories();
                 resData.replyMessage = (0, customersMessages_1.listCategories)(categories);
                 resData.trigger = types_1.TriggerSteps.SELECT_CATEGORY;
                 resolve(resData);
@@ -84,10 +96,8 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                 userInputNumber = Number(userInput);
                 shoppingCart = user === null || user === void 0 ? void 0 : user.shoppingCart;
                 // if it doestn have a shopping cart we create an empty one
-                shoppingCart = (user === null || user === void 0 ? void 0 : user.shoppingCart) ? user === null || user === void 0 ? void 0 : user.shoppingCart : (0, shoppingUtils_1.getEmptyShoppingCart)(user);
-                categoriesRes = yield (0, api_1.getCategories)();
-                categories = (_k = (_j = categoriesRes === null || categoriesRes === void 0 ? void 0 : categoriesRes.data) === null || _j === void 0 ? void 0 : _j.categories) === null || _k === void 0 ? void 0 : _k.items;
-                categories = (0, shoppingUtils_1.harcodedFilterOfUnusedCategories)(categories);
+                shoppingCart = (user === null || user === void 0 ? void 0 : user.shoppingCart) ? user === null || user === void 0 ? void 0 : user.shoppingCart : (0, shoppingUtils_1.getEmptyShoppingCart)(user, lenguageLocale);
+                categories = yield fetchCategories();
                 maxOptions = (categories === null || categories === void 0 ? void 0 : categories.length) + 1;
                 // +1 because of the got to pay option
                 if ((0, shoppingUtils_1.isUserInputInvalid)(userInputNumber, maxOptions)) {
@@ -113,16 +123,17 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                 }
                 shoppingCart.selectedCategorySlug = selectedCategory.slug;
                 yield (0, api_1.updateUserShoppingCart)(shoppingCart);
-                availableProducts = yield (0, api_1.getProducts)(shoppingCart.selectedCategorySlug);
-                availableProducts = (_m = (_l = availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.data) === null || _l === void 0 ? void 0 : _l.products) === null || _m === void 0 ? void 0 : _m.items;
-                if ((availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length) <= 0 || !!!availableProducts) {
-                    resData.replyMessage = (0, customersMessages_1.noAvailableProducts)();
-                    resData.trigger = types_1.TriggerSteps.ALL_CATEGORIES;
+                const noLengthCheck = true;
+                products = yield fetchProducts(shoppingCart.selectedCategorySlug, noLengthCheck);
+                if ((products === null || products === void 0 ? void 0 : products.length) <= 0 || !!!products) {
+                    categories = yield fetchCategories();
+                    resData.replyMessage = (0, customersMessages_1.noProductsAvailableListCategoriesAgain)(categories);
+                    resData.trigger = types_1.TriggerSteps.SELECT_CATEGORY;
                     // do we trigger a msj to admin phone?
                     resolve(resData);
                     break;
                 }
-                resData.replyMessage = (0, customersMessages_1.listAvailableProducts)(availableProducts);
+                resData.replyMessage = (0, customersMessages_1.listAvailableProducts)(products);
                 resData.trigger = types_1.TriggerSteps.ADD_PRODUCT_TO_CART;
                 resolve(resData);
                 break;
@@ -130,11 +141,29 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
             case types_1.TriggerSteps.ADD_PRODUCT_TO_CART:
                 userInputNumber = Number(userInput);
                 shoppingCart = user === null || user === void 0 ? void 0 : user.shoppingCart;
-                availableProducts = yield (0, api_1.getProducts)(shoppingCart.selectedCategorySlug);
-                availableProducts = (_p = (_o = availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.data) === null || _o === void 0 ? void 0 : _o.products) === null || _p === void 0 ? void 0 : _p.items;
-                if ((availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length) <= 0 || !!!availableProducts)
-                    throw new Error('Error 1: no available products');
-                maxOptions = ((_q = shoppingCart === null || shoppingCart === void 0 ? void 0 : shoppingCart.products) === null || _q === void 0 ? void 0 : _q.length) > 0 ? (availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length) + 1 : availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length;
+                products = yield fetchProducts(shoppingCart.selectedCategorySlug);
+                const goBackToMainMenu = userInputNumber === (products === null || products === void 0 ? void 0 : products.length) + 1;
+                if (goBackToMainMenu) {
+                    categories = yield fetchCategories();
+                    resData.replyMessage = (0, customersMessages_1.listCategories)(categories);
+                    resData.trigger = types_1.TriggerSteps.SELECT_CATEGORY;
+                    resolve(resData);
+                    break;
+                }
+                // go to checkout is the option but we first take them to set delivery method step!
+                const goToSetDeliveryStepSelected = userInputNumber === (products === null || products === void 0 ? void 0 : products.length) + 2;
+                if (goToSetDeliveryStepSelected) {
+                    deliveryOpts = yield (0, api_1.getDeliveryMethods)();
+                    if (((_g = (_f = (_e = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _e === void 0 ? void 0 : _e.deliveryMethods) === null || _f === void 0 ? void 0 : _f.items) === null || _g === void 0 ? void 0 : _g.length) <= 0 || !!!((_j = (_h = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _h === void 0 ? void 0 : _h.deliveryMethods) === null || _j === void 0 ? void 0 : _j.items)) {
+                        throw new Error('No delivery methods set');
+                    }
+                    ;
+                    resData.replyMessage = (0, customersMessages_1.deliveryOptions)((_l = (_k = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _k === void 0 ? void 0 : _k.deliveryMethods) === null || _l === void 0 ? void 0 : _l.items, lenguageLocale);
+                    resData.trigger = types_1.TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
+                    resolve(resData);
+                    break;
+                }
+                maxOptions = ((_m = shoppingCart === null || shoppingCart === void 0 ? void 0 : shoppingCart.products) === null || _m === void 0 ? void 0 : _m.length) > 0 ? (products === null || products === void 0 ? void 0 : products.length) + 1 : products === null || products === void 0 ? void 0 : products.length;
                 // +1 because of the got to pay option
                 if ((0, shoppingUtils_1.isUserInputInvalid)(userInputNumber, maxOptions)) {
                     resData.trigger = types_1.TriggerSteps.ADD_PRODUCT_TO_CART;
@@ -142,22 +171,10 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                     resolve(resData);
                     break;
                 }
-                const goToSetDeliveryStepSelected = userInputNumber === (availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length) + 1;
-                if (goToSetDeliveryStepSelected) {
-                    deliveryOpts = yield (0, api_1.getDeliveryMethods)();
-                    if (((_t = (_s = (_r = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _r === void 0 ? void 0 : _r.deliveryMethods) === null || _s === void 0 ? void 0 : _s.items) === null || _t === void 0 ? void 0 : _t.length) <= 0 || !!!((_v = (_u = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _u === void 0 ? void 0 : _u.deliveryMethods) === null || _v === void 0 ? void 0 : _v.items)) {
-                        throw new Error('No delivery methods set');
-                    }
-                    ;
-                    resData.replyMessage = (0, customersMessages_1.deliveryOptions)((_x = (_w = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _w === void 0 ? void 0 : _w.deliveryMethods) === null || _x === void 0 ? void 0 : _x.items);
-                    resData.trigger = types_1.TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
-                    resolve(resData);
-                    break;
-                }
-                productSelected = availableProducts[userInputNumber - 1];
+                productSelected = products[userInputNumber - 1];
                 if (!productSelected) {
                     resData.trigger = types_1.TriggerSteps.ALL_CATEGORIES;
-                    resData.replyMessage = (0, customersMessages_1.invalidNumberInput)(availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length);
+                    resData.replyMessage = (0, customersMessages_1.invalidNumberInput)(products === null || products === void 0 ? void 0 : products.length);
                     resolve(resData);
                     break;
                 }
@@ -168,7 +185,7 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                     recicledQuantity: 0,
                     sale_price: productSelected.sale_price,
                     price: productSelected.price,
-                    image: ((_y = productSelected === null || productSelected === void 0 ? void 0 : productSelected.images) === null || _y === void 0 ? void 0 : _y.length) >= 0 ? productSelected === null || productSelected === void 0 ? void 0 : productSelected.images[0] : null,
+                    image: ((_o = productSelected === null || productSelected === void 0 ? void 0 : productSelected.images) === null || _o === void 0 ? void 0 : _o.length) >= 0 ? productSelected === null || productSelected === void 0 ? void 0 : productSelected.images[0] : null,
                     name: productSelected.name,
                 };
                 // still fix case when trying to add a product were it was added in cart with all the possible stock available
@@ -184,19 +201,16 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
             case types_1.TriggerSteps.SELECT_QUANTITY_OF_PRODUCT:
                 userInputNumber = Number(userInput);
                 shoppingCart = user === null || user === void 0 ? void 0 : user.shoppingCart;
-                availableProducts = yield (0, api_1.getProducts)(shoppingCart.selectedCategorySlug);
-                availableProducts = (_0 = (_z = availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.data) === null || _z === void 0 ? void 0 : _z.products) === null || _0 === void 0 ? void 0 : _0.items;
+                products = yield fetchProducts(shoppingCart.selectedCategorySlug);
                 const prodSelectedIndex = shoppingCart.products.length - 1;
-                if ((availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length) <= 0 || !!!availableProducts)
-                    throw new Error('Error 3: no available products');
-                productInShoppingCart = ((_1 = shoppingCart === null || shoppingCart === void 0 ? void 0 : shoppingCart.products) === null || _1 === void 0 ? void 0 : _1.length) > 0 ? shoppingCart.products[prodSelectedIndex] : null;
+                productInShoppingCart = ((_p = shoppingCart === null || shoppingCart === void 0 ? void 0 : shoppingCart.products) === null || _p === void 0 ? void 0 : _p.length) > 0 ? shoppingCart.products[prodSelectedIndex] : null;
                 if (!productInShoppingCart) {
                     resData.trigger = types_1.TriggerSteps.ALL_CATEGORIES;
-                    resData.replyMessage = (0, customersMessages_1.invalidNumberInput)(availableProducts === null || availableProducts === void 0 ? void 0 : availableProducts.length);
+                    resData.replyMessage = (0, customersMessages_1.invalidNumberInput)(products === null || products === void 0 ? void 0 : products.length);
                     resolve(resData);
                     break;
                 }
-                const product = availableProducts.find(((prod) => prod.id === productInShoppingCart.product_id));
+                const product = products.find(((prod) => prod.id === productInShoppingCart.product_id));
                 if (!product) {
                     resolve(resData);
                     break;
@@ -211,14 +225,14 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                 shoppingCart.products[prodSelectedIndex].quantity = userInputNumber;
                 const updateShoppingCartResponse = yield (0, api_1.updateUserShoppingCart)(shoppingCart);
                 // one last check, just in case:
-                if ((_4 = (_3 = (_2 = updateShoppingCartResponse === null || updateShoppingCartResponse === void 0 ? void 0 : updateShoppingCartResponse.errors) === null || _2 === void 0 ? void 0 : _2[0]) === null || _3 === void 0 ? void 0 : _3.message) === null || _4 === void 0 ? void 0 : _4.includes("No hay suficiente cantidad de este producto")) {
+                if ((_s = (_r = (_q = updateShoppingCartResponse === null || updateShoppingCartResponse === void 0 ? void 0 : updateShoppingCartResponse.errors) === null || _q === void 0 ? void 0 : _q[0]) === null || _r === void 0 ? void 0 : _r.message) === null || _s === void 0 ? void 0 : _s.includes("No hay suficiente cantidad de este producto")) {
                     resData.replyMessage = (0, customersMessages_1.invalidProductQuantity)(product.product_quantity);
                     resData.trigger = types_1.TriggerSteps.SELECT_QUANTITY_OF_PRODUCT;
                     resolve(resData);
                 }
                 else {
                     // added success case, we relist the products again
-                    resData.replyMessage = (0, customersMessages_1.reListingAvailableProducts)(shoppingCart.products, availableProducts);
+                    resData.replyMessage = (0, customersMessages_1.reListingAvailableProducts)(shoppingCart.products, products);
                     resData.trigger = types_1.TriggerSteps.ADD_MORE_PRODUCTS_STEP;
                     resolve(resData);
                 }
@@ -227,11 +241,11 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                 userInputNumber = Number(userInput);
                 deliveryOpts = yield (0, api_1.getDeliveryMethods)();
                 shoppingCart = user === null || user === void 0 ? void 0 : user.shoppingCart;
-                if (((_7 = (_6 = (_5 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _5 === void 0 ? void 0 : _5.deliveryMethods) === null || _6 === void 0 ? void 0 : _6.items) === null || _7 === void 0 ? void 0 : _7.length) <= 0 || !!!((_9 = (_8 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _8 === void 0 ? void 0 : _8.deliveryMethods) === null || _9 === void 0 ? void 0 : _9.items)) {
+                if (((_v = (_u = (_t = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _t === void 0 ? void 0 : _t.deliveryMethods) === null || _u === void 0 ? void 0 : _u.items) === null || _v === void 0 ? void 0 : _v.length) <= 0 || !!!((_x = (_w = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _w === void 0 ? void 0 : _w.deliveryMethods) === null || _x === void 0 ? void 0 : _x.items)) {
                     throw new Error('Error1: No delivery methods set');
                 }
                 ;
-                deliveryOpts = (_11 = (_10 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _10 === void 0 ? void 0 : _10.deliveryMethods) === null || _11 === void 0 ? void 0 : _11.items;
+                deliveryOpts = (_z = (_y = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _y === void 0 ? void 0 : _y.deliveryMethods) === null || _z === void 0 ? void 0 : _z.items;
                 // el usuario selecciona metodo de envio y si es valido, preguntamos direccion, o 
                 if ((0, shoppingUtils_1.isUserInputInvalid)(userInputNumber, deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.length)) {
                     resData.replyMessage = (0, customersMessages_1.invalidNumberInput)(deliveryOpts.length);
@@ -244,22 +258,22 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                     // encontramos que opcion eligio el usuario y setteamos en el shoppingCart con ese delivery method seleccionado
                     shoppingCart.delivery_method_id = delyOptSelected.id;
                     // arreglar aca abajo::
-                    shoppingCart.delivery_date = (0, shoppingUtils_1.getDeliveryOrPickUpDatetime)(delyOptSelected.details);
+                    shoppingCart.delivery_date = (0, shoppingUtils_1.getDeliveryOrPickUpDatetime)(delyOptSelected.details, lenguageLocale);
                     shoppingCart.delivery_method_name = delyOptSelected.name;
                     shoppingCart.delivery_address = delyOptSelected.pickUpAddress;
                     yield (0, api_1.updateUserShoppingCart)(shoppingCart);
                     paymentMethodsResponse = yield (0, api_1.getPaymentMethods)();
-                    if (!((_13 = (_12 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _12 === void 0 ? void 0 : _12.paymentOptions) === null || _13 === void 0 ? void 0 : _13.items)) {
+                    if (!((_1 = (_0 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _0 === void 0 ? void 0 : _0.paymentOptions) === null || _1 === void 0 ? void 0 : _1.items)) {
                         resData.replyMessage = (0, customersMessages_1.unknownUserInput)();
                         resData.trigger = types_1.TriggerSteps.ALL_CATEGORIES;
                         resolve(resData);
                     }
-                    resData.replyMessage = (delyOptSelected === null || delyOptSelected === void 0 ? void 0 : delyOptSelected.isPickUp) ? (0, customersMessages_1.getDeliveryOrPickupOptSelectedAndGetPaymentMethodText)(delyOptSelected, (_14 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _14 === void 0 ? void 0 : _14.paymentOptions.items, shoppingCart.delivery_address) : (0, customersMessages_1.getDeliveryAddress)();
+                    resData.replyMessage = (delyOptSelected === null || delyOptSelected === void 0 ? void 0 : delyOptSelected.isPickUp) ? (0, customersMessages_1.getDeliveryOrPickupOptSelectedAndGetPaymentMethodText)(delyOptSelected, (_2 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _2 === void 0 ? void 0 : _2.paymentOptions.items, shoppingCart.delivery_address) : (0, customersMessages_1.getDeliveryAddress)();
                     resData.trigger = (delyOptSelected === null || delyOptSelected === void 0 ? void 0 : delyOptSelected.isPickUp) ? types_1.TriggerSteps.SELECT_PAYMENT_METHOD : types_1.TriggerSteps.DELIVERY_OPT_SELECTED;
                     resolve(resData);
                     break;
                 }
-                resData.replyMessage = (0, customersMessages_1.unknownDeliPickUpOptInput)(deliveryOpts);
+                resData.replyMessage = (0, customersMessages_1.unknownDeliPickUpOptInput)(deliveryOpts, lenguageLocale);
                 resData.trigger = types_1.TriggerSteps.DELIVERY_OR_PICKUP_OPT_SELECTED;
                 resolve(resData);
                 break;
@@ -279,9 +293,9 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                 const addressAddResponse = yield (0, api_1.addAddressToUser)(user.id, newAddress.address, newAddress.title, newAddress.location, newAddress.instructions, newAddress.is_primary);
                 // now we ask for the payment method
                 paymentMethodsResponse = yield (0, api_1.getPaymentMethods)();
-                paymentMethodsResponse = (_16 = (_15 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _15 === void 0 ? void 0 : _15.paymentOptions) === null || _16 === void 0 ? void 0 : _16.items;
+                paymentMethodsResponse = (_4 = (_3 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _3 === void 0 ? void 0 : _3.paymentOptions) === null || _4 === void 0 ? void 0 : _4.items;
                 deliveryOpts = yield (0, api_1.getDeliveryMethods)();
-                deliveryOpts = (_18 = (_17 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _17 === void 0 ? void 0 : _17.deliveryMethods) === null || _18 === void 0 ? void 0 : _18.items;
+                deliveryOpts = (_6 = (_5 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _5 === void 0 ? void 0 : _5.deliveryMethods) === null || _6 === void 0 ? void 0 : _6.items;
                 if (!paymentMethodsResponse || !deliveryOpts) {
                     resData.replyMessage = (0, customersMessages_1.unknownUserInput)();
                     resData.trigger = types_1.TriggerSteps.ALL_CATEGORIES;
@@ -295,13 +309,13 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
             case types_1.TriggerSteps.SELECT_PAYMENT_METHOD:
                 userInputNumber = Number(userInput);
                 paymentMethodsResponse = yield (0, api_1.getPaymentMethods)();
-                if (!((_20 = (_19 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _19 === void 0 ? void 0 : _19.paymentOptions) === null || _20 === void 0 ? void 0 : _20.items)) {
+                if (!((_8 = (_7 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _7 === void 0 ? void 0 : _7.paymentOptions) === null || _8 === void 0 ? void 0 : _8.items)) {
                     resData.replyMessage = (0, customersMessages_1.unknownUserInput)();
                     resData.trigger = types_1.TriggerSteps.ALL_CATEGORIES;
                     resolve(resData);
                 }
                 shoppingCart = user === null || user === void 0 ? void 0 : user.shoppingCart;
-                const paymentMethodsOpts = (_22 = (_21 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _21 === void 0 ? void 0 : _21.paymentOptions) === null || _22 === void 0 ? void 0 : _22.items;
+                const paymentMethodsOpts = (_10 = (_9 = paymentMethodsResponse === null || paymentMethodsResponse === void 0 ? void 0 : paymentMethodsResponse.data) === null || _9 === void 0 ? void 0 : _9.paymentOptions) === null || _10 === void 0 ? void 0 : _10.items;
                 // el usuario selecciona metodo de envio y si es valido, preguntamos direccion, o 
                 if ((0, shoppingUtils_1.isUserInputInvalid)(userInputNumber, paymentMethodsOpts === null || paymentMethodsOpts === void 0 ? void 0 : paymentMethodsOpts.length)) {
                     resData.replyMessage = (0, customersMessages_1.invalidNumberInput)(paymentMethodsOpts.length);
@@ -313,8 +327,8 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                 if (paymentSelected) {
                     // encuentra que opcion eligio el usuario y setteamos el shoppingCart con ese metodo
                     deliveryOpts = yield (0, api_1.getDeliveryMethods)();
-                    const deliveryMethodSelected = (_25 = (_24 = (_23 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _23 === void 0 ? void 0 : _23.deliveryMethods) === null || _24 === void 0 ? void 0 : _24.items) === null || _25 === void 0 ? void 0 : _25.find((deliOpt) => deliOpt.id === shoppingCart.delivery_method_id);
-                    if (((_28 = (_27 = (_26 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _26 === void 0 ? void 0 : _26.deliveryMethods) === null || _27 === void 0 ? void 0 : _27.items) === null || _28 === void 0 ? void 0 : _28.length) <= 0 || !deliveryMethodSelected) {
+                    const deliveryMethodSelected = (_13 = (_12 = (_11 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _11 === void 0 ? void 0 : _11.deliveryMethods) === null || _12 === void 0 ? void 0 : _12.items) === null || _13 === void 0 ? void 0 : _13.find((deliOpt) => deliOpt.id === shoppingCart.delivery_method_id);
+                    if (((_16 = (_15 = (_14 = deliveryOpts === null || deliveryOpts === void 0 ? void 0 : deliveryOpts.data) === null || _14 === void 0 ? void 0 : _14.deliveryMethods) === null || _15 === void 0 ? void 0 : _15.items) === null || _16 === void 0 ? void 0 : _16.length) <= 0 || !deliveryMethodSelected) {
                         throw new Error('No delivery methods set or deliveryMethodSelected');
                     }
                     ;
@@ -331,7 +345,7 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                     shoppingCart.deliveryFee = deliveryFee;
                     shoppingCart.total = totalItemsAmount + ccCharge + deliveryFee;
                     yield (0, api_1.updateUserShoppingCart)(shoppingCart);
-                    resData.replyMessage = (user === null || user === void 0 ? void 0 : user.name) !== constant_1.INITIAL_USER_USERNAME ? (0, customersMessages_1.paymentMethodSelectedAndOrderConfirmationMsj)(shoppingCart) : (0, customersMessages_1.enterValidName)();
+                    resData.replyMessage = (user === null || user === void 0 ? void 0 : user.name) !== constant_1.INITIAL_USER_USERNAME ? (0, customersMessages_1.paymentMethodSelectedAndOrderConfirmationMsj)(shoppingCart) : (0, customersMessages_1.enterValidName)(lenguageLocale);
                     resData.trigger = (user === null || user === void 0 ? void 0 : user.name) !== constant_1.INITIAL_USER_USERNAME ? types_1.TriggerSteps.ORDER_CHECK_CONFIRMATION : types_1.TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
                     resolve(resData);
                     break;
@@ -347,9 +361,8 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                     resData.trigger = types_1.TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
                     resolve(resData);
                 }
-                const response = yield (0, api_1.updateUserNameAndEmail)(user.id, userName, user.email, access_token);
-                if (!((_30 = (_29 = response === null || response === void 0 ? void 0 : response.data) === null || _29 === void 0 ? void 0 : _29.updateUserNameAndEmail) === null || _30 === void 0 ? void 0 : _30.status)) {
-                    console.log('coulnt updateUserNameAndEmail ', response);
+                const response = yield (0, api_1.updateUserNameEmailAndLenguage)(user.id, userName, user.email, access_token);
+                if (!((_18 = (_17 = response === null || response === void 0 ? void 0 : response.data) === null || _17 === void 0 ? void 0 : _17.updateUserNameEmailAndLenguage) === null || _18 === void 0 ? void 0 : _18.status)) {
                     resData.replyMessage = (0, customersMessages_1.purchaseErrorMsg)();
                     resData.trigger = types_1.TriggerSteps.ASK_USER_NAME_TO_SIGN_UP_USER_BEFORE_PURCHASE;
                     resolve(resData);
@@ -365,7 +378,7 @@ const getReplyFromShopBot = (triggerStep, user, userInput, number, access_token)
                 switch (userInputNumber) {
                     case 1:
                         const res = yield (0, api_1.createOrder)(shoppingCart);
-                        if ((_32 = (_31 = res === null || res === void 0 ? void 0 : res.data) === null || _31 === void 0 ? void 0 : _31.createOrder) === null || _32 === void 0 ? void 0 : _32.customer_id) {
+                        if ((_20 = (_19 = res === null || res === void 0 ? void 0 : res.data) === null || _19 === void 0 ? void 0 : _19.createOrder) === null || _20 === void 0 ? void 0 : _20.customer_id) {
                             // @ts-ignore
                             resData.replyMessage = (0, shoppingUtils_1.getOrderConfirmationMsgText)(shoppingCart, user === null || user === void 0 ? void 0 : user.name, lenguageLocale);
                             resData.trigger = types_1.TriggerSteps.RESET_CHAT_HISTORY_AND_SHOPPING_CART;

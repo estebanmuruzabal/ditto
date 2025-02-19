@@ -26,6 +26,7 @@ const getReplyFromStaffBot = (triggerStep, user, userInput, number, access_token
         let productSelected;
         let shoppingCart;
         const num = (0, handle_1.cleanNumber)(number);
+        const englishUser = true;
         console.log('nextTriggerStep received in Switch Staff:', triggerStep);
         switch (triggerStep) {
             case types_1.TriggerStaffSteps.SUCCESS_SALE_AND_MAIN_MENU:
@@ -110,7 +111,7 @@ const getReplyFromStaffBot = (triggerStep, user, userInput, number, access_token
                     resolve(resData);
                     break;
                 }
-                shoppingCart = (0, shoppingUtils_1.getEmptyShoppingCart)(user);
+                shoppingCart = (0, shoppingUtils_1.getEmptyShoppingCart)(user, shoppingCart.lenguageLocale);
                 shoppingCart.products.push({
                     product_id: productSelected.id
                 });

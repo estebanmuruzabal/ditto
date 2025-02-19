@@ -21,7 +21,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         name: String!
         soil_humidity_1: Int
         soil_humidity_2: Int
-        airHumidity: Int
+        humidity: Int
         tempeture: Int
         light: Int
         sensors: [ISensorSetting]
@@ -29,7 +29,10 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         isRelayTwoOn: Boolean
         isRelayThirdOn: Boolean
         isRelayFourthOn: Boolean
+        offline_notification: Boolean
         timestamp: String
+        alarm: Boolean
+        alarm_timestamp: String
         timeZone: String
     }
 
@@ -139,6 +142,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         discount_amount: Int
         products: [ProductInputOrder!]!
         payment_id: String
+        lenguageLocale: String
     }
 
     type Chat {
@@ -164,7 +168,11 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         plants: [Plant]
     }
 
-
+    type User2 {
+        phones: [Phone]
+        role: String
+        plants: [Plant]
+    }
 
     type Task {
         taskId: String
@@ -218,6 +226,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         type_id: String!
         parent_id: String
         name: String!
+        visible: Boolean
         banner_data: File
         banner: String
         icon: String!
@@ -238,6 +247,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         type_id: String
         parent_id: String
         name: String!
+        visible: Boolean
         slug: String!
         banner: String
         icon: String!
@@ -408,7 +418,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         delivery_method_id: String!
         payment_option_type: String!
         isWhatsappPurchase: Boolean!
-        delivery_address: String!
+        delivery_address: String
         delivery_date: String
         sub_total: Float
         total: Float
@@ -434,6 +444,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale: String
     }
     
     input OrderInputNotRequires {
@@ -455,6 +466,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         discount_amount: Float
         products: [OrderProductInput!]!
         payment_id:  String
+        lenguageLocale: String
     }
     
     type OrderTracker {
@@ -624,6 +636,7 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         getSetting(key: String!): Setting!
         getSiteSetting(key: String!): Setting!
         getUser: User!
+        getOfflineDittoBotsUsers: User
         getCustomer(phone: String!): UserAuthPayload!
         coupons(limit: Int = 12, offset: Int = 0, searchText: String): CouponPaginationType!
         validateCoupon(code: String!): CouponValid!
@@ -666,8 +679,8 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         updateSiteSetting(key: String!, value: String!): Setting!
         updateUserNameEmailAndLenguage(id: ID!, name: String!, email: String, lenguage: String): DefaultMessageType!
         addPhoneNumber(id: ID!, number: String!): Phone!
-        addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String): DefaultMessageType!
-        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
+        addPlant(id: ID!, name: String!, plantId: Int!, timeZone: String, offline_notification: Boolean): DefaultMessageType!
+        updatePlant(id: ID!, contrId: Int!, hum1: Int, airHum: Int, temp: Int, dist: Int, hum2: Int, light: Int, alarm: Boolean, co2: Int, isRelayOneOn: Boolean, isRelayTwoOn: Boolean, isRelayThirdOn: Boolean, isRelayFourthOn: Boolean): IPlantReturnType!
         updateSetting(id: ID!, plantId: Int!, input: InputSettings): DefaultMessageType!
         deleteSetting(id: ID!, plantId: Int!, settingName: String!): DefaultMessageType!
         updatePhoneNumber(id: ID!, phoneId: String!, number: String!): Phone!

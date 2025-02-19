@@ -9,6 +9,7 @@ const fs = require('fs');
 const MULTI_DEVICE = process.env.MULTI_DEVICE || 'true';
 const cleanNumber = (number) => {
     number = number.replace('@c.us', '');
+    number = number.replace('@c.us', '');
     return number;
 };
 exports.cleanNumber = cleanNumber;
@@ -73,7 +74,8 @@ const checkEnvFile = () => {
 // }
 const isValidNumber = (rawNumber) => {
     const regexGroup = /\@g.us\b/gm;
-    const exist = rawNumber.match(regexGroup);
+    const regexCGroup = /\@c.us\b/gm;
+    const exist = rawNumber.match(regexGroup) || rawNumber.match(regexCGroup);
     return !exist;
 };
 exports.isValidNumber = isValidNumber;

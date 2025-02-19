@@ -107,14 +107,13 @@ const sendMessage = (number, text, trigger, token) => __awaiter(void 0, void 0, 
     }
     setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
         const message = text;
-        // @41252 arreglar numero aca
         try {
             if (number[0] == '5' && number[1] === '4' && number[2] !== '9')
                 number = '549' + number.substring(2, number.length);
-            if (!number.endsWith('@c.us'))
+            if (!number.endsWith('@c.us') && !number.endsWith('@g.us'))
                 number += '@c.us';
             __1.client.sendMessage(number, message);
-            console.log(`⚡⚡⚡ Enviando mensaje:`, message);
+            console.log(`⚡⚡⚡ Enviando mensaje:`, message, number);
         }
         catch (error) {
             console.log('Error tratando de enviar el siguiente whatsapp [message, number, trigger, error]', message, number, trigger, error);
@@ -156,7 +155,8 @@ exports.lastGrowerTrigger = lastGrowerTrigger;
 const lastClientTrigger = (customer, userMessage) => __awaiter(void 0, void 0, void 0, function* () {
     var _d;
     userMessage = (0, shoppingUtils_1.normalizeText)(userMessage);
-    // if (!customer) return TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
+    if (!customer)
+        return types_1.TriggerSteps.INITIAL_UNAUTHENTICATED_USER;
     let lastDittoMessageSent = { trigger: undefined };
     if (((_d = customer === null || customer === void 0 ? void 0 : customer.chatHistory) === null || _d === void 0 ? void 0 : _d.length) >= 1)
         lastDittoMessageSent = customer.chatHistory[customer.chatHistory.length - 1];

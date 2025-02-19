@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TriggerSteps = exports.TriggerStaffSteps = exports.TriggerGrowerSteps = exports.DistanceSensorMode = exports.LightSensorMode = exports.HumiditySensorMode = exports.Roles = void 0;
+exports.TriggerSteps = exports.TriggerStaffSteps = exports.TriggerGrowerSteps = exports.AirTemperatureSensorMode = exports.C02SensorMode = exports.AirHumiditySensorMode = exports.DistanceSensorMode = exports.LightSensorMode = exports.HumiditySensorMode = exports.Roles = void 0;
 var Roles;
 (function (Roles) {
     Roles["ADMIN"] = "ADMIN";
@@ -14,11 +14,14 @@ var Roles;
 var HumiditySensorMode;
 (function (HumiditySensorMode) {
     HumiditySensorMode["IRRIGATE_ON_DEMAND"] = "IRRIGATE_ON_DEMAND";
+    HumiditySensorMode["INTERMITTENT_IRRIGATION"] = "INTERMITTENT_IRRIGATION";
     HumiditySensorMode["IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION"] = "IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION";
     HumiditySensorMode["IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND"] = "IRRIGATE_SPECIFICT_AMOUNT_ON_DEMAND";
     HumiditySensorMode["SEEDS_POOL_IRRIGATION"] = "SEEDS_POOL_IRRIGATION";
     HumiditySensorMode["MANUAL"] = "HUMIDITY_MANUAL";
     HumiditySensorMode["SCHEDULE"] = "HUMIDITY_SCHEDULE";
+    HumiditySensorMode["MIN_WARNING"] = "HUMIDITY_MIN_WARNING";
+    HumiditySensorMode["MAX_WARNING"] = "HUMIDITY_MAX_WARNING";
     HumiditySensorMode["SCHEDULE_DOUBLE_ACTION"] = "HUMIDITY_SCHEDULE_DOUBLE_ACTION";
     HumiditySensorMode["NONE"] = "NONE";
 })(HumiditySensorMode || (exports.HumiditySensorMode = HumiditySensorMode = {}));
@@ -28,7 +31,7 @@ var LightSensorMode;
     LightSensorMode["SCHEDULE"] = "LIGHT_SCHEDULE";
     LightSensorMode["NONE"] = "NONE";
 })(LightSensorMode || (exports.LightSensorMode = LightSensorMode = {}));
-// THIS SHOULD MATCH FRONTEND 'distanceModeOptions' enum 
+// THIS SHOULD MATCH FRONTEND 
 var DistanceSensorMode;
 (function (DistanceSensorMode) {
     DistanceSensorMode["WHEN_EMPTY_ACTION_CUSTOM"] = "WHEN_EMPTY_ACTION_CUSTOM";
@@ -39,6 +42,31 @@ var DistanceSensorMode;
     DistanceSensorMode["MAX_WARNING"] = "MAX_WARNING";
     DistanceSensorMode["NONE"] = "NONE";
 })(DistanceSensorMode || (exports.DistanceSensorMode = DistanceSensorMode = {}));
+var AirHumiditySensorMode;
+(function (AirHumiditySensorMode) {
+    AirHumiditySensorMode["MANUAL"] = "AIR_HUM_MANUAL";
+    AirHumiditySensorMode["SCHEDULE"] = "AIR_HUM_SCHEDULE";
+    AirHumiditySensorMode["WHEN_MIN_ACTION_AUTOMATED"] = "AIR_HUM_WHEN_MIN_ACTION_AUTOMATED";
+    AirHumiditySensorMode["WHEN_MAX_ACTION_AUTOMATED"] = "AIR_HUM_WHEN_MAX_ACTION_AUTOMATED";
+    AirHumiditySensorMode["NONE"] = "NONE";
+})(AirHumiditySensorMode || (exports.AirHumiditySensorMode = AirHumiditySensorMode = {}));
+var C02SensorMode;
+(function (C02SensorMode) {
+    C02SensorMode["MANUAL"] = "C02_MANUAL";
+    C02SensorMode["SCHEDULE"] = "C02_SCHEDULE";
+    C02SensorMode["WHEN_MIN_ACTION_AUTOMATED"] = "C02_WHEN_MIN_ACTION_AUTOMATED";
+    C02SensorMode["WHEN_MAX_ACTION_AUTOMATED"] = "C02_WHEN_MAX_ACTION_AUTOMATED";
+    C02SensorMode["NONE"] = "NONE";
+})(C02SensorMode || (exports.C02SensorMode = C02SensorMode = {}));
+var AirTemperatureSensorMode;
+(function (AirTemperatureSensorMode) {
+    AirTemperatureSensorMode["MANUAL"] = "AIR_TEMP_MANUAL";
+    AirTemperatureSensorMode["SCHEDULE"] = "AIR_TEMP_SCHEDULE";
+    AirTemperatureSensorMode["WHEN_MIN_ACTION_AUTOMATED"] = "AIR_TEMP_WHEN_MIN_ACTION_AUTOMATED";
+    AirTemperatureSensorMode["WHEN_MAX_ACTION_AUTOMATED"] = "AIR_TEMP_WHEN_MAX_ACTION_AUTOMATED";
+    AirTemperatureSensorMode["NONE"] = "NONE";
+})(AirTemperatureSensorMode || (exports.AirTemperatureSensorMode = AirTemperatureSensorMode = {}));
+// END THIS SHOULD MATCH FRONTEND
 var TriggerGrowerSteps;
 (function (TriggerGrowerSteps) {
     TriggerGrowerSteps["SHOW_ALL_PLANTS"] = "SHOW_ALL_PLANTS";

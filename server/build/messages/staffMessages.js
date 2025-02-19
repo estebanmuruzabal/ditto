@@ -18,21 +18,40 @@ const types_1 = require("../lib/types");
 const api_1 = require("../api");
 const whatsAppUtils_1 = require("../lib/utils/whatsAppUtils");
 const constant_1 = require("../lib/utils/constant");
+const isEnglish = true;
 const getStuffMainMenuOptions = (resData, user, showSuccessChanged) => {
-    resData.replyMessage = showSuccessChanged ?
-        `Venta exitosa!
+    if (isEnglish) {
+        resData.replyMessage = showSuccessChanged ?
+            `Venta exitosa!
+        
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`
+            :
+                `Hola ${user === null || user === void 0 ? void 0 : user.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
+        
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`;
+    }
+    else {
+        resData.replyMessage = showSuccessChanged ?
+            `Venta exitosa!
 
-${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
-2️⃣ - Actualizar stock
-3️⃣ - Ver su informacion
-4️⃣ - Venta rapida`
-        :
-            `Hola ${user === null || user === void 0 ? void 0 : user.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
-
-${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
-2️⃣ - Actualizar stock
-3️⃣ - Ver su informacion
-4️⃣ - Venta rapida`;
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`
+            :
+                `Hola ${user === null || user === void 0 ? void 0 : user.name} 🙋🏻, bienvenido al pokemenú de Ditto Farm
+        
+        ${user.workInfo.isWorking ? '1️⃣ - Terminar de trabajar ⛔️🙅‍♂️⛔️' : '1️⃣ - Empezar a trabajar  🟢🧰⚒'}
+        2️⃣ - Actualizar stock
+        3️⃣ - Ver su informacion
+        4️⃣ - Venta rapida`;
+    }
     resData.trigger = types_1.TriggerStaffSteps.ALL_CATEGORIES_ANSWER;
     return resData;
 };
@@ -122,7 +141,6 @@ const startWorking = (user) => __awaiter(void 0, void 0, void 0, function* () {
     user.workInfo.isWorking = true;
     user.workInfo.startedWorkTime = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
     user.workInfo.stoppedWorkTime = null;
-    user.workInfo.ratePerHour = 375;
     yield (0, api_1.updateUserWorkInfoMutation)(user, `started working.`);
 });
 exports.startWorking = startWorking;

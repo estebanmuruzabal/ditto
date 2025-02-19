@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readInboxContent = exports.sendClientConfirmationMail = exports.sendCompanyConfirmationMail = exports.sendOtp = void 0;
+exports.readInboxContent = exports.sendClientConfirmationMail = exports.sendSellerConfirmationMail = exports.sendCompanyConfirmationMail = exports.sendOtp = void 0;
 const axios_1 = __importDefault(require("axios"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const constant_1 = require("./constant");
-// const imaps = require('imap-simple');
 const fromNumber = process.env.OTP_FROM_NUMBER;
 const apiToken = process.env.OTP_API_TOKEN;
 // const path = require('path');
@@ -62,37 +61,136 @@ exports.sendOtp = sendOtp;
 //   }
 // };
 const sendCompanyConfirmationMail = (email, customer, input, deliveryMethod, paymentMethod, lenguageLocale) => {
-    var _a, _b;
+    var _a, _b, _c, _d;
     const transporter = nodemailer_1.default.createTransport({
-        service: 'Gmail',
+        host: "live.smtp.mailtrap.io",
+        port: 587,
         auth: {
-            user: constant_1.COMPANY_EMAIL,
-            pass: constant_1.COMPANY_EMAIL_PASSWORD
+            user: "api",
+            pass: "fa6003645f3677f052161a6140ee5df3"
         }
     });
-    const template = `
-            <div>
-                <div>${customer.name}</div>
-                <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
-                <div>Telefono:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
-                <div>Metodo de envio: ${deliveryMethod}</div>
-                <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
-                <div>Fecha de envio/pickup: ${input.delivery_date}</div>
-                <div>Metodo de pago: ${paymentMethod}</div>
-                <div>Monto total ${input.total}</div>
-                <div>Productos comprados</div>
-                ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
-            </div>
-        `;
+    let template;
+    let emailTitle;
+    const englishConfirmationTemplate = `
+        <div>Customer name: ${customer.name}</div><br>
+        <div>Date: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+        <div>Contact Phone Number:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
+        <div>Delivery/pickup method: ${deliveryMethod}</div>
+        <div>Address of delivery/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+        <div>Date of delivery/pickup: ${input.delivery_date}</div>
+        <div>Payment Method: ${paymentMethod}</div>
+        <div>Purchased products</div>
+        ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Total Amount $${input.total}</div>
+    `;
+    const spanishConfirmationTemplate = `
+        <div>Nombre cliente: ${customer.name}</div><br> 
+        <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+        <div>Telefono:${((_c = customer.phones) === null || _c === void 0 ? void 0 : _c.length) > 0 ? (_d = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _d === void 0 ? void 0 : _d.number : ''}</div>
+        <div>Metodo de envio: ${deliveryMethod}</div>
+        <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+        <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+        <div>Metodo de pago: ${paymentMethod}</div>
+        <div>Productos comprados</div>
+        ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Monto total ${input.total}</div>
+    `;
+    const spanishTitle = 'Confirmación de compra';
+    const englishTitle = 'Purchase Confirmation';
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            {
+                template = spanishConfirmationTemplate;
+                emailTitle = spanishTitle;
+            }
+            break;
+        case constant_1.Locales.EN:
+            {
+                template = englishConfirmationTemplate;
+                emailTitle = englishTitle;
+            }
+            break;
+        default:
+            {
+                console.log('sendCompanyConfirmationMail. no locale found at sendind confirmation email');
+            }
+            break;
+    }
     return transporter.sendMail({
-        from: constant_1.COMPANY_EMAIL,
+        from: 'mailtrap@dittofarm.com',
         to: email,
-        subject: 'Confirmación de orden',
+        subject: emailTitle,
         text: template,
         html: template
     });
 };
 exports.sendCompanyConfirmationMail = sendCompanyConfirmationMail;
+const sendSellerConfirmationMail = (email, customer, input, deliveryMethod, paymentMethod, lenguageLocale) => {
+    var _a, _b;
+    const transporter = nodemailer_1.default.createTransport({
+        host: "live.smtp.mailtrap.io",
+        port: 587,
+        auth: {
+            user: "api",
+            pass: "fa6003645f3677f052161a6140ee5df3"
+        }
+    });
+    let template;
+    let emailTitle;
+    const englishConfirmationTemplate = `
+        <div>Customer name: ${customer.name}</div><br>
+        <div>Date: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+        <div>Delivery/pickup method: ${deliveryMethod}</div>
+        <div>Address of delivery/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+        <div>Date of delivery/pickup: ${input.delivery_date}</div>
+        <div>Payment Method: ${paymentMethod}</div>
+        <div>Purchased products</div>
+        ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Total Amount $${input.total}</div>
+    `;
+    const spanishConfirmationTemplate = `
+        <div>Nombre cliente: ${customer.name}</div><br> 
+        <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+        <div>Telefono:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
+        <div>Metodo de envio: ${deliveryMethod}</div>
+        <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+        <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+        <div>Metodo de pago: ${paymentMethod}</div>
+        <div>Productos comprados</div>
+        ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Monto total ${input.total}</div>
+    `;
+    const spanishTitle = 'Confirmación de compra';
+    const englishTitle = 'Purchase Confirmation';
+    switch (lenguageLocale) {
+        case constant_1.Locales.ES:
+            {
+                template = spanishConfirmationTemplate;
+                emailTitle = spanishTitle;
+            }
+            break;
+        case constant_1.Locales.EN:
+            {
+                template = englishConfirmationTemplate;
+                emailTitle = englishTitle;
+            }
+            break;
+        default:
+            {
+                console.log('sendCompanyConfirmationMail. no locale found at sendind confirmation email');
+            }
+            break;
+    }
+    return transporter.sendMail({
+        from: 'mailtrap@dittofarm.com',
+        to: email,
+        subject: emailTitle,
+        text: template,
+        html: template
+    });
+};
+exports.sendSellerConfirmationMail = sendSellerConfirmationMail;
 const sendClientConfirmationMail = (email, customer, input, deliveryMethod, paymentMethod, lenguageLocale) => {
     var _a, _b, _c, _d;
     const transporter = nodemailer_1.default.createTransport({
@@ -106,34 +204,28 @@ const sendClientConfirmationMail = (email, customer, input, deliveryMethod, paym
     let template;
     let emailTitle;
     const englishConfirmationTemplate = `
-        <>
-            <div>Pedido Confirmado!</div>
-            <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
-            <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
-            <div>Telefono:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
-            <div>Metodo de envio: ${deliveryMethod}</div>
-            <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
-            <div>Fecha de envio/pickup: ${input.delivery_date}</div>
-            <div>Metodo de pago: ${paymentMethod}</div>
-            <div>Productos comprados</div>
-            ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
-            <div>Monto total ${input.total}</div>
-        </>
+        <div>Thank you ${customer.name}. Bellow you can check your order details.</div><br>
+        <div>Date: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+        <div>Contact Phone Number:${((_a = customer.phones) === null || _a === void 0 ? void 0 : _a.length) > 0 ? (_b = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _b === void 0 ? void 0 : _b.number : ''}</div>
+        <div>Delivery/pickup method: ${deliveryMethod}</div>
+        <div>Address of delivery/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+        <div>Date of delivery/pickup: ${input.delivery_date}</div>
+        <div>Payment Method: ${paymentMethod}</div>
+        <div>Purchased products</div>
+        ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Total Amount $${input.total}</div>
     `;
     const spanishConfirmationTemplate = `
-        <>
-            <div>Pedido Confirmado!</div>
-            <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
-            <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
-            <div>Telefono:${((_c = customer.phones) === null || _c === void 0 ? void 0 : _c.length) > 0 ? (_d = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _d === void 0 ? void 0 : _d.number : ''}</div>
-            <div>Metodo de envio: ${deliveryMethod}</div>
-            <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
-            <div>Fecha de envio/pickup: ${input.delivery_date}</div>
-            <div>Metodo de pago: ${paymentMethod}</div>
-            <div>Productos comprados</div>
-            ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
-            <div>Monto total ${input.total}</div>
-        </>
+        <div>Muchas gracias por su pedido ${customer.name}. A continuacion le enviamos los datos de tu compra.</div><br>
+        <div>Fecha: ${new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone })}</div>
+        <div>Telefono:${((_c = customer.phones) === null || _c === void 0 ? void 0 : _c.length) > 0 ? (_d = customer === null || customer === void 0 ? void 0 : customer.phones[0]) === null || _d === void 0 ? void 0 : _d.number : ''}</div>
+        <div>Metodo de envio: ${deliveryMethod}</div>
+        <div>Direccion de envio/pickup: ${input === null || input === void 0 ? void 0 : input.delivery_address}</div>
+        <div>Fecha de envio/pickup: ${input.delivery_date}</div>
+        <div>Metodo de pago: ${paymentMethod}</div>
+        <div>Productos comprados</div>
+        ${input.products.map((product) => (`<div>${product.quantity + product.recicledQuantity} - ${product.name} - $${product.price}</div>`))}
+        <div>Monto total ${input.total}</div>
     `;
     const spanishTitle = 'Confirmación de compra';
     const englishTitle = 'Purchase Confirmation';

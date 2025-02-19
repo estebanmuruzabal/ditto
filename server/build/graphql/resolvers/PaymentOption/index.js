@@ -56,7 +56,7 @@ exports.paymentOptionsResolvers = {
             if (!existsData) {
                 throw new Error("Resource not found.");
             }
-            image_data = JSON.parse(image_data);
+            // image_data = JSON.parse(image_data);
             let imagePath = '';
             // disabling new photo update so that the frontend doesnt have to do the inverse process of creating the image_data property
             // if (image_data) {

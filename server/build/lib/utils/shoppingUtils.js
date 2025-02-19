@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.normalizeText = exports.endConversationKeys = exports.initialConversationKeys = exports.getTotalAmount = exports.calculateCCCharge = exports.calculateSubTotalPrice = exports.calculateDeliveryCharge = exports.getOrderConfirmationButtons = exports.getPaymentButtons = exports.getInputDeliveryAddress = exports.getDeliveryMethodsButtons = exports.getProductsList = exports.confirmNameOrNewNameButtons = exports.getAddQuantityButtons = exports.getCategoriesButtons = exports.addTalkToRepresentativeOptToButtons = exports.addTalkToRepresentativeOptToList = exports.getDeliveryOrPickUpDatetime = exports.isGrower = exports.isUserStaff = exports.getCustomerPrimaryNumber = exports.containsValidName = exports.getCleanNumber = exports.getOrderConfirmationMsgText = exports.getEmptyAddress = exports.getQuickSaleShoppingCart = exports.getEmptyShoppingCart = exports.harcodedFilterOfUnusedCategories = exports.getDeliveryPickUpDate = exports.isUserInputInvalid = void 0;
+exports.normalizeText = exports.endConversationKeys = exports.initialConversationKeys = exports.getTotalAmount = exports.calculateCCCharge = exports.calculateSubTotalPrice = exports.calculateDeliveryCharge = exports.getDeliverySchedule = exports.getOrderConfirmationButtons = exports.getPaymentButtons = exports.getInputDeliveryAddress = exports.getDeliveryMethodsButtons = exports.getProductsList = exports.confirmNameOrNewNameButtons = exports.getAddQuantityButtons = exports.getCategoriesButtons = exports.addTalkToRepresentativeOptToButtons = exports.addTalkToRepresentativeOptToList = exports.getDeliveryOrPickUpDatetime = exports.isGrower = exports.isUserStaff = exports.getCustomerPrimaryNumber = exports.containsValidName = exports.getCleanNumber = exports.getOrderConfirmationMsgText = exports.getEmptyAddress = exports.getQuickSaleShoppingCart = exports.getEmptyShoppingCart = exports.harcodedFilterOfUnusedCategories = exports.getDeliveryPickUpDate = exports.isUserInputInvalid = void 0;
 const types_1 = require("../types");
 const constant_1 = require("./constant");
 const whatsAppUtils_1 = require("./whatsAppUtils");
@@ -14,7 +14,7 @@ exports.getDeliveryPickUpDate = getDeliveryPickUpDate;
 const unusedCategories = ['hortalizas-de-hojas', 'remedios-naturales', 'plaguicida', 'repelente', 'bioestimulante', 'fertilizantes', 'todos-los-productos', 'insumos-para-cultivos'];
 const harcodedFilterOfUnusedCategories = (categories) => categories.filter((category) => !unusedCategories.includes(category.slug));
 exports.harcodedFilterOfUnusedCategories = harcodedFilterOfUnusedCategories;
-const getEmptyShoppingCart = (user) => {
+const getEmptyShoppingCart = (user, lenguageLocale) => {
     return {
         products: [],
         customer_id: user.id,
@@ -28,7 +28,8 @@ const getEmptyShoppingCart = (user) => {
         total: null,
         coupon_code: null,
         discount_amount: null,
-        payment_id: null
+        payment_id: null,
+        lenguageLocale
     };
 };
 exports.getEmptyShoppingCart = getEmptyShoppingCart;
@@ -64,23 +65,19 @@ exports.getEmptyAddress = getEmptyAddress;
 const getOrderConfirmationMsgText = (input, user = null, lenguageLocale) => {
     /// aca papa metele codigo
     const purchasedDate = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
+    const pickupMethoSelected = lenguageLocale === 'en' ? (constant_1.PICKUP_LAJOLLA_DELIVERY_METHOD === input.delivery_method_name || constant_1.PICKUP_OB_DELIVERY_METHOD === input.delivery_method_name) : (constant_1.PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || constant_1.PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name);
+    // const deliveryMethodSelected = lenguageLocale === 'en' ? normalizeText(input.delivery_method_name).includes(normalizeText(DELIVERY_METHOD_SELECTED)) : normalizeText(input.delivery_method_name).includes(normalizeText(CUSTOMER_ADDRESS_DELIVERY_METHOD));
     switch (input.payment_option_type) {
         case constant_1.BANK_TRANSFER_PAYMENT_OPTION:
-            if (constant_1.PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || constant_1.PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
-                return (0, customersMessages_1.pickUpPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
-            }
-            else if ((0, exports.normalizeText)(input.delivery_method_name).includes((0, exports.normalizeText)(constant_1.CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
-                return (0, customersMessages_1.deliveryPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
-            }
+            return pickupMethoSelected
+                ? (0, customersMessages_1.pickUpPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale)
+                : (0, customersMessages_1.deliveryPurchaseWithTransferPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
             break;
         case constant_1.CASH_PAYMENT_OPTION:
         case constant_1.CC_PAYMENT_OPTION:
-            if (constant_1.PICKUP_GUEMES_DELIVERY_METHOD === input.delivery_method_name || constant_1.PICKUP_GRANJA_DELIVERY_METHOD === input.delivery_method_name) {
-                return (0, customersMessages_1.pickUpPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
-            }
-            else if ((0, exports.normalizeText)(input.delivery_method_name).includes((0, exports.normalizeText)(constant_1.CUSTOMER_ADDRESS_DELIVERY_METHOD))) {
-                return (0, customersMessages_1.deliveryPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
-            }
+            return pickupMethoSelected
+                ? (0, customersMessages_1.pickUpPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale)
+                : (0, customersMessages_1.deliveryPurchaseWithCashPayment)(purchasedDate, input === null || input === void 0 ? void 0 : input.delivery_address, input.total, user === null || user === void 0 ? void 0 : user.name, input.delivery_method_name, input.payment_method_name, input === null || input === void 0 ? void 0 : input.products, input.delivery_date, lenguageLocale);
             break;
         default:
             console.log('no case found in: switch (input.payment_option_type)::', input.payment_option_type);
@@ -109,11 +106,13 @@ const isUserStaff = (customer) => (customer === null || customer === void 0 ? vo
 exports.isUserStaff = isUserStaff;
 const isGrower = (customer) => (customer === null || customer === void 0 ? void 0 : customer.role) === types_1.Roles.GROWER;
 exports.isGrower = isGrower;
-const getDeliveryOrPickUpDatetime = (detailsText) => {
+const getDeliveryOrPickUpDatetime = (detailsText, lenguageLocale) => {
     // if modify this, also modify server utils with these functions logic
-    const timeText = geTimeScheduleOnly(detailsText);
+    const timeText = (0, exports.getDeliverySchedule)(detailsText, lenguageLocale);
     const dateText = geDateScheduleOnly(detailsText);
-    return `${dateText} ${timeText}`;
+    // solo por el evento saco esto
+    // return `${dateText} ${timeText}`;
+    return detailsText;
 };
 exports.getDeliveryOrPickUpDatetime = getDeliveryOrPickUpDatetime;
 const addTalkToRepresentativeOptToList = (section) => {
@@ -268,14 +267,15 @@ const getProductRowsFrom = (items) => items.map((item, idx) => {
         id: item.id
     };
 });
-const geTimeScheduleOnly = (details) => {
+const getDeliverySchedule = (details, intLocale) => {
     if (!details)
         return '';
-    const word = 'Horario: ';
+    const word = intLocale === 'en' ? 'Time: ' : 'Horario: ';
     const index = details.indexOf(word); // 8
     const length = word.length; // 7
     return details.slice(index + length);
 };
+exports.getDeliverySchedule = getDeliverySchedule;
 const geDateScheduleOnly = (detailsText) => {
     const contentDivided = detailsText === null || detailsText === void 0 ? void 0 : detailsText.split(' | ');
     return `${contentDivided[1] && contentDivided[1]}`;
@@ -299,10 +299,10 @@ const calculateSubTotalPrice = (delivery_method) => {
 };
 exports.calculateSubTotalPrice = calculateSubTotalPrice;
 const calculateCCCharge = (paymentOptionSelected, totalAmount) => {
-    var _a, _b;
-    if ((_a = paymentOptionSelected === null || paymentOptionSelected === void 0 ? void 0 : paymentOptionSelected.name) === null || _a === void 0 ? void 0 : _a.toLowerCase().includes('tarjeta')) {
-        const ccCharge = (_b = paymentOptionSelected === null || paymentOptionSelected === void 0 ? void 0 : paymentOptionSelected.name) === null || _b === void 0 ? void 0 : _b.replace(/\D/g, '');
-        return totalAmount * (ccCharge / 100);
+    var _a, _b, _c;
+    if (((_a = paymentOptionSelected === null || paymentOptionSelected === void 0 ? void 0 : paymentOptionSelected.name) === null || _a === void 0 ? void 0 : _a.toLowerCase().includes('tarjeta')) || ((_b = paymentOptionSelected === null || paymentOptionSelected === void 0 ? void 0 : paymentOptionSelected.name) === null || _b === void 0 ? void 0 : _b.toLowerCase().includes('card'))) {
+        const ccCharge = (_c = paymentOptionSelected === null || paymentOptionSelected === void 0 ? void 0 : paymentOptionSelected.name) === null || _c === void 0 ? void 0 : _c.replace(/\D/g, '');
+        return totalAmount * (Number(ccCharge) / 100);
     }
     return 0;
 };

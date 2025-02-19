@@ -97,6 +97,25 @@ exports.usersResolvers = {
             // @ts-ignore
             return yield (0, utils_1.authorize)(req, db);
         }),
+        getOfflineDittoBotsUsers: (_root, {}, { db, req }
+        // change any
+        ) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db.users.find({ role: types_1.Roles.GROWER }).toArray();
+            // if (!growerUsersList) {
+            //     throw new Error("User grogers not found.");
+            // } 
+            // // else {
+            // //     growerUsersList = growerUsersList.filter((category: any) => {
+            // //         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // //         // @ts-ignore
+            // //         return category.type_id === typeResult._id.toString();
+            // //     });
+            // // }
+            //  console.log('growerUsersList::', growerUsersList)
+            //  return {
+            //     growerUsersList
+            //  };
+        }),
         // updateShop: async (
         //     _root: undefined,
         //     {id, input}: IShopInputArgs,
@@ -198,13 +217,16 @@ exports.usersResolvers = {
             };
         }),
         signUp: (_root, { phone, password, name }, { db }) => __awaiter(void 0, void 0, void 0, function* () {
+            if (phone[0] !== '5' || phone[1] !== '4') {
+                throw new Error("Anteponer el número 54");
+            }
             const phoneFormatted = (0, utils_1.takeNineOutIfItHasIt)(phone);
             const userResult = yield db.users.findOne({ "phones.number": phoneFormatted });
             if (userResult) {
-                throw new Error("User already registered.");
+                throw new Error("Usuario ya registrado.");
             }
             if (!phone || !password || !name) {
-                throw new Error("Every field is required");
+                throw new Error("Todos los campos son requeridos");
             }
             if (password.length < 6) {
                 throw new Error("Incorrect length");
@@ -299,7 +321,7 @@ exports.usersResolvers = {
             if (!userResult) {
                 throw new Error("User does not exits.");
             }
-            // if (userResult.otp != verification_code) {
+            // if (userResult.otp != '123456') {
             //     throw new Error("Verification code dose not match.");
             // }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -395,7 +417,7 @@ exports.usersResolvers = {
                 message: "updated successfully."
             };
         }),
-        addPlant: (_root, { id, name, plantId, timeZone }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        addPlant: (_root, { id, name, plantId, timeZone, offline_notification }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             var _b;
             // await authorize(req, db);
             // we use this very same method to update the ditto bot name!
@@ -404,8 +426,9 @@ exports.usersResolvers = {
                 throw new Error("User does not exits.");
             }
             const index = (_b = userResult.plants) === null || _b === void 0 ? void 0 : _b.findIndex((plant) => (plant.plantId == plantId));
+            let message = "Created plant successfully.";
             if (index < 0) {
-                if (userResult.plants.length === 3)
+                if (userResult.plants.length === 10)
                     throw new Error("Already added three plants. You are not allowed to add more than three.");
                 const plantObject = {
                     id: shortid_1.default.generate(),
@@ -413,14 +436,17 @@ exports.usersResolvers = {
                     plantId,
                     soil_humidity_1: 0,
                     soil_humidity_2: 0,
-                    humidity_1: 0,
-                    tempeture_1: 0,
+                    humidity: 0,
+                    tempeture: 0,
                     distance_cm: 0,
                     light_1: 0,
+                    alarm: false,
+                    co2: 0,
                     isRelayOneOn: false,
                     isRelayTwoOn: false,
                     isRelayThirdOn: false,
                     isRelayFourthOn: false,
+                    offline_notification: false,
                     timestamp: null,
                     timeZone,
                     sensors: []
@@ -434,14 +460,17 @@ exports.usersResolvers = {
                 plants[index].name = name;
                 if (timeZone)
                     plants[index].timeZone = timeZone;
+                plants[index].offline_notification = offline_notification;
+                message = 'Updated plants name and timezone';
+                console.log(plants[index]);
                 yield db.users.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: { plants } });
             }
             return {
                 status: true,
-                message: "Created plant successfully."
+                message
             };
         }),
-        updatePlant: (_root, { id, contrId, hum1, airHum, temp, dist, hum2, light, isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
+        updatePlant: (_root, { id, contrId, hum1, airHum, temp, dist, hum2, light, alarm, co2, isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }, { db, req }) => __awaiter(void 0, void 0, void 0, function* () {
             // await authorize(req, db);
             var _c, _d, _e, _f;
             const userResult = yield db.users.findOne({ _id: new mongodb_1.ObjectId(id) });
@@ -450,28 +479,38 @@ exports.usersResolvers = {
             }
             const plants = userResult.plants;
             const index = (_c = userResult.plants) === null || _c === void 0 ? void 0 : _c.findIndex((plant) => (plant.plantId == contrId));
+            const alarmHasJustTurnOn = !plants[index].alarm && alarm;
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
             }
             else {
                 plants[index].soil_humidity_1 = hum1;
                 plants[index].soil_humidity_2 = hum2;
-                plants[index].humidity_1 = airHum;
-                plants[index].tempeture_1 = temp;
+                if (airHum >= 0 && airHum <= 100)
+                    plants[index].humidity_1 = airHum;
+                if (temp >= 0 && temp <= 100)
+                    plants[index].tempeture_1 = temp;
                 plants[index].distance_1 = dist;
                 plants[index].light_1 = light;
+                plants[index].alarm_timestamp = alarmHasJustTurnOn ? new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone }) : plants[index].alarm_timestamp;
+                plants[index].alarm = alarm;
+                plants[index].co2 = co2;
                 plants[index].isRelayOneOn = isRelayOneOn;
                 plants[index].isRelayTwoOn = isRelayTwoOn;
                 plants[index].isRelayThirdOn = isRelayThirdOn;
                 plants[index].isRelayFourthOn = isRelayFourthOn;
-                plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone: plants[index].timeZone });
+                plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone: constant_1.timeZone });
             }
             // const a = {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "contrId": 30, "hum1": 109, "airHum": 0, "temp": 0, "dist": 1, "hum2": 85, "light": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             (_d = plants[index].sensors) === null || _d === void 0 ? void 0 : _d.map((module, i) => __awaiter(void 0, void 0, void 0, function* () {
                 var _g;
-                plants[index] = yield (0, plants_1.checkSensor)(plants[index], i, (_g = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _g === void 0 ? void 0 : _g.number, plants[index].timeZone);
+                plants[index] = yield (0, plants_1.checkSensorAndUpdateSettings)(plants[index], i, (_g = userResult === null || userResult === void 0 ? void 0 : userResult.phones[0]) === null || _g === void 0 ? void 0 : _g.number, constant_1.timeZone);
             }));
+            // if (fireWhatappAlarmIfIsOn(plants[index])) {
+            //     await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
+            //     if (userResult?.phones[1]?.number) await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
+            // }
             // console.log(`Relays AF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             if (((_e = plants[index].isRelayOneOn) === null || _e === void 0 ? void 0 : _e.length) > 0) {
                 console.log('isRelayOneOn', plants[index].isRelayOneOn, plants[index].timestamp, plants[index].humidity_1);
@@ -760,9 +799,9 @@ exports.usersResolvers = {
             }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            if (userResult.delivery_address.length == 1) {
-                throw new Error("You are not allowed to delete your address.");
-            }
+            // if (userResult.delivery_address.length == 1) {
+            //     throw new Error("You are not allowed to delete your address.");
+            // }
             const addresses = [];
             const userAddresses = userResult.delivery_address;
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -5,10 +5,11 @@
     "rootDir": "./src",
     "outDir": "./build",
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "strict": true
 //    "sourceMap": true
   },
   "exclude": [
-//    "node_modules"
+    // "node_modules"
   ]
 }

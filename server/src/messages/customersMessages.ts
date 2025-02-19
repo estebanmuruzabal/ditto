@@ -11,7 +11,6 @@ switch (lenguageLocale) {
 case Locales.ES:
 return (
 `📢 *Importante* 📢
-- Te recordamos llevar bolsas para retirar tus productos!
 - Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Método de envío o retiro seleccionado:*

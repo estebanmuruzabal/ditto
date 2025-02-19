@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGrowerMainMenuButtons = void 0;
+exports.getGrowerMainMenuButtons = exports.hasDittoBotUpdatedInLast3Minute = void 0;
+const moment_1 = __importDefault(require("moment"));
 const whatsAppUtils_1 = require("./whatsAppUtils");
 // export const getSensorsMenuList = (resData: any, user: IUser, plant: Plant, trigger: TriggerGrowerSteps, title: string, buttonText: string) => {
 //     //  dependiendo del modo, 
@@ -128,11 +132,21 @@ const whatsAppUtils_1 = require("./whatsAppUtils");
 //     resData.trigger = trigger;
 //     return resData;
 // };
+const hasDittoBotUpdatedInLast3Minute = (lastTimeStamp, timeZone) => {
+    const currentTimeMoment = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+    // console.log('currentTimeMoment', currentTimeMoment)
+    const lastTimeStampMoment = (0, moment_1.default)(new Date(lastTimeStamp));
+    // console.log('lastTimeStampMoment', lastTimeStampMoment)
+    const lastTimestampInMins = currentTimeMoment === null || currentTimeMoment === void 0 ? void 0 : currentTimeMoment.diff(lastTimeStampMoment, 'minutes');
+    // we are updating acutally every 5 seconds, but just in case we check if in the last minute there was any conection
+    return lastTimestampInMins < 3;
+};
+exports.hasDittoBotUpdatedInLast3Minute = hasDittoBotUpdatedInLast3Minute;
 const getGrowerMainMenuButtons = (resData, user, plant, trigger, title, buttonText) => {
     const buttons = [{ body: '1 - Editar configuración' }, { body: '2 - Agregar module' }];
     const bodyContent = `Controller ID: ${plant.plantId}
 Humedad del suelo: ${plant.soil_humidity_1}
-Humedad del aire: ${plant.airHumidity}
+Humedad del aire: ${plant.humidity}
 Temperatura: ${plant.tempeture}
 Relay 1: ${plant.isRelayOneOn}
 Relay 2: ${plant.isRelayTwoOn}

@@ -1,12 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ADD_ADDRESS = exports.createQuickOrderQuery = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameAndEmailQuery = exports.UPDATE_PRODUCT = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.GET_SETTINGS = void 0;
+exports.ADD_ADDRESS = exports.createQuickOrderQuery = exports.createOrderQuery = exports.updateUserShoppingCartQuery = exports.getUserShoppingCartsQuery = exports.GET_PRODUCTS = exports.getAvailableProductsQuery = exports.getDeliveryMethodsQuery = exports.GET_CATEGORIES = exports.updateUserChatQuery = exports.updateUserNameEmailAndLenguageQuery = exports.UPDATE_PRODUCT = exports.signUpQuery = exports.getPaymentMethodsQuery = exports.getCustomerQuery = exports.UPDATE_USER_WORK_INFO = exports.GET_DITTO_BOTS_OFFLINE_USERS = exports.GET_SETTINGS = void 0;
 exports.GET_SETTINGS = `
   query GetSetting {
     getSiteSetting(key: "site-settings") {
       id
       key
       value
+    }
+  }
+`;
+exports.GET_DITTO_BOTS_OFFLINE_USERS = `
+  query GetOfflineDittoBotsUsers {
+    getOfflineDittoBotsUsers {
+        role
+        plants {
+            name
+            offline_notification
+            timestamp
+        }
+        phones {
+            number
+        }
     }
   }
 `;
@@ -59,7 +74,7 @@ exports.getCustomerQuery = `
                     name
                     soil_humidity_1
                     soil_humidity_2
-                    airHumidity
+                    humidity
                     tempeture
                     light
                     isRelayOneOn
@@ -67,7 +82,8 @@ exports.getCustomerQuery = `
                     isRelayThirdOn
                     isRelayFourthOn
                     timestamp
-                    timezone
+                    timeZone
+                    offline_notification
                     sensors {
                         name
                         whatsappWarningsOn
@@ -126,6 +142,7 @@ exports.getCustomerQuery = `
                     coupon_code
                     discount_amount
                     payment_id
+                    lenguageLocale
                     products {
                         product_id
                         name
@@ -202,7 +219,7 @@ exports.UPDATE_PRODUCT = `
     }
   }
 `;
-exports.updateUserNameAndEmailQuery = `
+exports.updateUserNameEmailAndLenguageQuery = `
     mutation UpdateUser(
         $id: ID!, 
         $name: String!,

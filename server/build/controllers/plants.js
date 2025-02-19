@@ -12,15 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkSensor = void 0;
+exports.checkSensorAndUpdateSettings = void 0;
 // import { playintegrity } from "googleapis/build/src/apis/playintegrity";
 const moment_1 = __importDefault(require("moment"));
 const types_1 = require("../lib/types");
 const send_1 = require("./send");
 const logsUtils_1 = require("../utils/logsUtils");
 require("moment-timezone");
-const checkSensor = (plant, sensorIndex, phoneNumber, timeZone) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+const checkSensorAndUpdateSettings = (plant, sensorIndex, phoneNumber, timeZone) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d, _e, _f, _g;
     if (!(plant === null || plant === void 0 ? void 0 : plant.sensors[sensorIndex])) {
         console.log('NO MODULE FOUND', plant === null || plant === void 0 ? void 0 : plant.sensors[sensorIndex]);
         return plant;
@@ -79,6 +79,60 @@ const checkSensor = (plant, sensorIndex, phoneNumber, timeZone) => __awaiter(voi
                 break;
             }
             plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.HumiditySensorMode.INTERMITTENT_IRRIGATION:
+            (_b = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _b === void 0 ? void 0 : _b.map((schedule, i) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let startTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0]));
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1]));
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0]));
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1]));
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    if (isInsideTimeFrame) {
+                        // relayOneAutomatedTimeToRun : original cycles num
+                        // relayTwoAutomatedTimeToRun : current cycles num
+                        const originalIrrigationCycles = Number(relayOneAutomatedTimeToRun);
+                        const currentIrrigationCycles = Number(relayTwoAutomatedTimeToRun);
+                        // const currentIrrigationCycles = Number(relayOneAutomatedStartedTime);
+                        const lastIrrigationMinuteStamp = Number(relayTwoAutomatedStartedTime);
+                        if (currentIrrigationCycles > 0 && setting.relayOneWorking) {
+                            // @ts-ignore
+                            plant[relayOneIdRelated] = !setting.relayOneWorking;
+                            setting.relayOneWorking = !setting.relayOneWorking;
+                            // @ts-ignore
+                            plant[relayTwoIdRelated] = !setting.relayTwoWorking;
+                            setting.relayTwoWorking = !setting.relayTwoWorking;
+                            console.log(1);
+                        }
+                        else if (currentIrrigationCycles > 0 && !setting.relayOneWorking && currentTime.minutes() !== lastIrrigationMinuteStamp) {
+                            setting.relayTwoAutomatedTimeToRun = String(currentIrrigationCycles - 1);
+                            setting.relayTwoAutomatedStartedTime = String(currentTime.minutes());
+                            // @ts-ignore
+                            plant[relayOneIdRelated] = !setting.relayOneWorking;
+                            setting.relayOneWorking = !setting.relayOneWorking;
+                            // @ts-ignore
+                            plant[relayTwoIdRelated] = !setting.relayTwoWorking;
+                            setting.relayTwoWorking = !setting.relayTwoWorking;
+                            console.log(2);
+                        }
+                        else if (currentIrrigationCycles === 0) {
+                            // @ts-ignore
+                            plant[relayOneIdRelated] = false;
+                            setting.relayOneWorking = false;
+                            // @ts-ignore
+                            plant[relayTwoIdRelated] = false;
+                            setting.relayTwoWorking = false;
+                            setting.relayOneAutomatedStartedTime = String(relayOneAutomatedTimeToRun);
+                            setting.relayTwoAutomatedStartedTime = String(relayTwoAutomatedTimeToRun);
+                            console.log(3);
+                        }
+                    }
+                }
+            });
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
             break;
         case types_1.HumiditySensorMode.IRRIGATE_SPECIFICT_AMOUNT_WITH_DOUBLE_ACTION:
             if (!minReading || !relayOneIdRelated || !relayTwoIdRelated) {
@@ -248,29 +302,276 @@ const checkSensor = (plant, sensorIndex, phoneNumber, timeZone) => __awaiter(voi
             break;
         case types_1.HumiditySensorMode.SCHEDULE_DOUBLE_ACTION:
         case types_1.HumiditySensorMode.SCHEDULE:
-            scheduledOnTimes === null || scheduledOnTimes === void 0 ? void 0 : scheduledOnTimes.map((schedule, i) => {
-                var _a;
-                (_a = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _a === void 0 ? void 0 : _a.map((schedule, i) => {
-                    if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
-                        const format = 'hh:mm:ss';
-                        const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
-                        let startTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
-                        let endTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
-                        startTime = (0, moment_1.default)(schedule.startTime, format);
-                        endTime = (0, moment_1.default)(schedule.endTime, format);
-                        const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+            (_c = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _c === void 0 ? void 0 : _c.some((schedule, i) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let startTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0]));
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1]));
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0]));
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1]));
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    // const soilIsStillHumid = reading >= minReading && schedule.smartLight;
+                    const smartLightOn = schedule.smartLight;
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
+                    if (isInsideTimeFrame)
+                        return;
+                    if (mode === types_1.HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
                         // @ts-ignore
-                        plant[relayOneIdRelated] = isInsideTimeFrame;
-                        setting.relayOneWorking = isInsideTimeFrame;
-                        if (mode === types_1.HumiditySensorMode.SCHEDULE_DOUBLE_ACTION) {
-                            // @ts-ignore
-                            plant[relayTwoIdRelated] = isInsideTimeFrame;
-                            setting.relayTwoWorking = isInsideTimeFrame;
-                        }
+                        plant[relayTwoIdRelated] = smartLightOn ? false : isInsideTimeFrame;
+                        setting.relayTwoWorking = smartLightOn ? false : isInsideTimeFrame;
                     }
-                    setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
-                });
+                }
             });
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirTemperatureSensorMode.MANUAL:
+            if (reading < 0 || reading > 100)
+                break;
+            if (!relayOneIdRelated) {
+                console.log('No relayOneIdRelated in manual mode. [please set one] ', setting);
+                break;
+            }
+            // @ts-ignore
+            plant[relayOneIdRelated] = setting.relayOneWorking;
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.C02SensorMode.MANUAL:
+            if (!relayOneIdRelated) {
+                console.log('No relayOneIdRelated in manual mode. [please set one] ', setting);
+                break;
+            }
+            // @ts-ignore
+            plant[relayOneIdRelated] = setting.relayOneWorking;
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.C02SensorMode.SCHEDULE:
+            (_d = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _d === void 0 ? void 0 : _d.map((schedule, i) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let startTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0]));
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1]));
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0]));
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1]));
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
+                }
+            });
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.C02SensorMode.WHEN_MIN_ACTION_AUTOMATED:
+            if (!minReading || !relayOneIdRelated) {
+                console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]);
+                break;
+            }
+            if (reading < minReading && !relayOneWorking) {
+                plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+                if (whatsappWarningsOn)
+                    (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya activamos tu accion asociada!`);
+                break;
+            }
+            else if (reading >= minReading && relayOneWorking) {
+                setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone, false, true);
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn)
+                    yield (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya desactivamos tu accion asociada!`);
+                break;
+            }
+            plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.C02SensorMode.WHEN_MAX_ACTION_AUTOMATED:
+            if (!maxReading || !relayOneIdRelated) {
+                console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]);
+                break;
+            }
+            if (reading > maxReading && !relayOneWorking) {
+                plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+                if (whatsappWarningsOn)
+                    (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya activamos tu accion asociada!`);
+                break;
+            }
+            else if (reading < maxReading && relayOneWorking) {
+                setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone, false, true);
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn)
+                    yield (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya desactivamos tu accion asociada!`);
+                break;
+            }
+            plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirTemperatureSensorMode.SCHEDULE:
+            if (reading < 0 || reading > 100)
+                break;
+            (_e = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _e === void 0 ? void 0 : _e.map((schedule, i) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let startTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0]));
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1]));
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0]));
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1]));
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    // if there is natural light we dont turn the lights on
+                    const thereIsNaturalLight = reading > 50 && schedule.smartLight;
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
+                }
+            });
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED:
+            if (reading < 0 || reading > 100)
+                break;
+            if (!minReading || !relayOneIdRelated) {
+                console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]);
+                break;
+            }
+            if (reading < minReading && !relayOneWorking) {
+                plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+                if (whatsappWarningsOn)
+                    (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya activamos tu accion asociada!`);
+                break;
+            }
+            else if (reading >= minReading && relayOneWorking) {
+                setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone, false, true);
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn)
+                    yield (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos tu accion asociada!`);
+                break;
+            }
+            plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED:
+            if (reading < 0 || reading > 100)
+                break;
+            if (!maxReading || !relayOneIdRelated) {
+                console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]);
+                break;
+            }
+            if (reading > maxReading && !relayOneWorking) {
+                plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+                if (whatsappWarningsOn)
+                    (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya activamos tu accion asociada!`);
+                break;
+            }
+            else if (reading < maxReading && relayOneWorking) {
+                setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone, false, true);
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn)
+                    yield (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos tu accion asociada!`);
+                break;
+            }
+            plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirHumiditySensorMode.MANUAL:
+            if (!relayOneIdRelated) {
+                console.log('No relayOneIdRelated in manual mode. [please set one] ', setting);
+                break;
+            }
+            // @ts-ignore
+            plant[relayOneIdRelated] = setting.relayOneWorking;
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirTemperatureSensorMode.SCHEDULE:
+            (_f = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _f === void 0 ? void 0 : _f.map((schedule, i) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let startTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0]));
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1]));
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0]));
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1]));
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
+                }
+            });
+            setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED:
+            if (reading < 0 || reading > 100)
+                break;
+            if (!minReading || !relayOneIdRelated) {
+                console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]);
+                break;
+            }
+            if (reading < minReading && !relayOneWorking) {
+                plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+                if (whatsappWarningsOn)
+                    (0, send_1.sendMessage)(phoneNumber, `[${plant.name}] llego a ${reading}% de temperatura, ya activamos el ${setting.name}!`);
+                break;
+            }
+            else if (reading >= minReading && relayOneWorking) {
+                setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone, false, true);
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn)
+                    yield (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos el ${setting.name}!`);
+                break;
+            }
+            plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+            break;
+        case types_1.AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED:
+            if (reading < 0 || reading > 100)
+                return;
+            if (!maxReading || !relayOneIdRelated) {
+                console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]);
+                break;
+            }
+            if (reading > maxReading && !relayOneWorking) {
+                plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+                if (whatsappWarningsOn)
+                    (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya activamos tu accion asociada!`);
+                break;
+            }
+            else if (reading < maxReading && relayOneWorking) {
+                setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone, false, true);
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn)
+                    yield (0, send_1.sendMessage)(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos tu accion asociada!`);
+                break;
+            }
+            plant.sensors[sensorIndex] = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
             break;
         case types_1.LightSensorMode.MANUAL:
             if (!relayOneIdRelated) {
@@ -282,27 +583,23 @@ const checkSensor = (plant, sensorIndex, phoneNumber, timeZone) => __awaiter(voi
             setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
             break;
         case types_1.LightSensorMode.SCHEDULE:
-            (_b = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _b === void 0 ? void 0 : _b.map((schedule, i) => {
+            (_g = setting === null || setting === void 0 ? void 0 : setting.scheduledOnTimes) === null || _g === void 0 ? void 0 : _g.map((schedule, i) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
-                    const format = 'hh:mm:ss';
                     const currentTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
                     let startTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
                     let endTime = (0, moment_1.default)(new Date().toLocaleString('en-US', { timeZone }));
-                    startTime = (0, moment_1.default)(schedule.startTime, format);
-                    endTime = (0, moment_1.default)(schedule.endTime, format);
-                    // console.log('currentTime.isBetween(startTime, endTime):', currentTime.isBetween(startTime, endTime))
-                    // console.log('startTime', startTime)
-                    // console.log('endTime', endTime)
-                    if (currentTime.isBetween(startTime, endTime)) {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = schedule.smartLight ? false : true;
-                        setting.relayOneWorking = schedule.smartLight ? false : true;
-                    }
-                    else {
-                        // @ts-ignore
-                        plant[relayOneIdRelated] = false;
-                        setting.relayOneWorking = false;
-                    }
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0]));
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1]));
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0]));
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1]));
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+                    // if there is natural light we dont turn the lights on
+                    // const thereIsNaturalLight = reading > 50 && schedule.smartLight;
+                    // @ts-ignore
+                    // plant[relayOneIdRelated] = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    // setting.relayOneWorking = thereIsNaturalLight ? false : isInsideTimeFrame;
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
                 }
             });
             setting = (0, logsUtils_1.logTimeStampWithTimeFilter)(setting, reading, timeZone);
@@ -488,4 +785,4 @@ const checkSensor = (plant, sensorIndex, phoneNumber, timeZone) => __awaiter(voi
     }
     return plant;
 });
-exports.checkSensor = checkSensor;
+exports.checkSensorAndUpdateSettings = checkSensorAndUpdateSettings;
