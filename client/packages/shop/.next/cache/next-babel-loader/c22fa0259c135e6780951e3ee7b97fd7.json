@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var defaultLocale = 'en';\nexport var locales = ['en', 'ar', 'es', 'de', 'zh', 'he'];\nexport var rtlLocales = ['ar', 'he']; // need to customize later\n\nexport var languageNames = {\n  en: 'English',\n  fr: 'français',\n  pl: 'polski'\n};","map":null,"metadata":{},"sourceType":"module"}

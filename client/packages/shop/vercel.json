@@ -2,7 +2,7 @@
   "build": {
     "env": {
       "NEXT_PUBLIC_STRIPE_PUBLIC_KEY": "put_your_stripe_public_key_here",
-      "NEXT_PUBLIC_GRAPHQL_API_ENDPOINT": "http://3.136.27.172/api",
+      "NEXT_PUBLIC_GRAPHQL_API_ENDPOINT": "http://3.134.177.166/api",
       "PROXY_URL": "put_your_proxy_url_here"
     }
   }

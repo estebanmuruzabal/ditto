@@ -88,23 +88,20 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "TpR7");
+/******/ 	return __webpack_require__(__webpack_require__.s = "../../node_modules/next/dist/build/webpack/loaders/next-plugin-loader.js?middleware=on-error-server!./");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "TpR7":
+/***/ "../../node_modules/next/dist/build/webpack/loaders/next-plugin-loader.js?middleware=on-error-server!./":
+/*!************************************************************************************************************************************************!*\
+  !*** /Users/virginiamuruzabal/work/ditto/client/node_modules/next/dist/build/webpack/loaders/next-plugin-loader.js?middleware=on-error-server ***!
+  \************************************************************************************************************************************************/
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-
-    
-
-    /* harmony default export */ __webpack_exports__["default"] = (function (ctx) {
-      return Promise.all([])
-    });
-  
+eval("__webpack_require__.r(__webpack_exports__);\n\n    \n\n    /* harmony default export */ __webpack_exports__[\"default\"] = (function (ctx) {\n      return Promise.all([])\n    });\n  //# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vL1VzZXJzL3ZpcmdpbmlhbXVydXphYmFsL3dvcmsvZGl0dG8vY2xpZW50L25vZGVfbW9kdWxlcy9uZXh0L2Rpc3QvYnVpbGQvd2VicGFjay9sb2FkZXJzL25leHQtcGx1Z2luLWxvYWRlci5qcz9lOGE4Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7QUFHQSxJQUFtQjtBQUNuQjtBQUNBLEtBQUsiLCJmaWxlIjoiLi4vLi4vbm9kZV9tb2R1bGVzL25leHQvZGlzdC9idWlsZC93ZWJwYWNrL2xvYWRlcnMvbmV4dC1wbHVnaW4tbG9hZGVyLmpzP21pZGRsZXdhcmU9b24tZXJyb3Itc2VydmVyIS4vLmpzIiwic291cmNlc0NvbnRlbnQiOlsiXG4gICAgXG5cbiAgICBleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiAoY3R4KSB7XG4gICAgICByZXR1cm4gUHJvbWlzZS5hbGwoW10pXG4gICAgfVxuICAiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///../../node_modules/next/dist/build/webpack/loaders/next-plugin-loader.js?middleware=on-error-server!./\n");
 
 /***/ })
 
