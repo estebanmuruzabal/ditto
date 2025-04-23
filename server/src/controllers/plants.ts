@@ -40,7 +40,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     const currentTimeWithoutNotifing = currentTime?.diff(actionStartedTime, 'minutes');
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
     const actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
-
+    console.log('bf',plant)
     // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -321,7 +321,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.MANUAL:
-            if (reading < 0 || reading > 100) break;
             if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
             // @ts-ignore
             plant[relayOneIdRelated] = setting.relayOneWorking;
@@ -406,7 +405,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.SCHEDULE:
-            if (reading < 0 || reading > 100) break;
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
@@ -430,7 +428,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED:
-            if (reading < 0 || reading > 100) break;
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
@@ -455,7 +452,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED:
-            if (reading < 0 || reading > 100) break;
             if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading > maxReading && !relayOneWorking) {
@@ -509,7 +505,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED:
-            if (reading < 0 || reading > 100) break;
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading < minReading && !relayOneWorking) {
@@ -534,7 +529,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED:
-            if (reading < 0 || reading > 100) return;
             if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
             if (reading > maxReading && !relayOneWorking) {
@@ -772,6 +766,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
         default:
             break;
     }
+    console.log('af',plant)
     return plant;
 };
 
