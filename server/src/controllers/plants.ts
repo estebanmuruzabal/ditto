@@ -482,7 +482,31 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
+        case AirHumiditySensorMode.SCHEDULE:
+            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
+            setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
+                if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
+                    const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+
+                    let startTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    let endTime = moment(new Date().toLocaleString('en-US', { timeZone }));
+                    startTime.set('hour', Number(schedule.startTime.split(':')[0])); 
+                    startTime.set('minute', Number(schedule.startTime.split(':')[1])); 
+                    endTime.set('hour', Number(schedule.endTime.split(':')[0])); 
+                    endTime.set('minute', Number(schedule.endTime.split(':')[1])); 
+
+                    const isInsideTimeFrame = currentTime.isBetween(startTime, endTime);
+
+                    // @ts-ignore
+                    plant[relayOneIdRelated] = isInsideTimeFrame;
+                    setting.relayOneWorking = isInsideTimeFrame;
+
+                }
+            })
+            setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
+            break;
         case AirTemperatureSensorMode.SCHEDULE:
+            if (!relayOneIdRelated) { console.log('No relayOneIdRelated in manual mode. [please set one] ', setting); break; }
             setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                 if (schedule.daysToRepeat.includes(today) && schedule.enabled) {
                     const currentTime = moment(new Date().toLocaleString('en-US', { timeZone }));
