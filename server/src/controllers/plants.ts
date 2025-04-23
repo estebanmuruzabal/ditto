@@ -40,7 +40,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     const currentTimeWithoutNotifing = currentTime?.diff(actionStartedTime, 'minutes');
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
     const actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
-    console.log('bf',plant)
+
     // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -766,7 +766,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
         default:
             break;
     }
-    console.log('af',plant)
     return plant;
 };
 
