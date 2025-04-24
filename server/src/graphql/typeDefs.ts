@@ -19,8 +19,8 @@ export const typeDefs = gql`
         name: String!
         soil_humidity_1: Int
         soil_humidity_2: Int
-        humidity: Int
-        tempeture: Int
+        humidity_1: Int
+        tempeture_1: Int
         light: Int
         sensors: [ISensorSetting]
         isRelayOneOn: Boolean

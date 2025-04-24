@@ -11,8 +11,8 @@ export interface Plant {
     soil_humidity_1: number;
     soil_humidity_2: number;
     distance_cm: number;
-    humidity: number;
-    tempeture: number;
+    humidity_1: number;
+    tempeture_1: number;
     light: number;
     alarm: boolean;
     alarm_timestamp: string;

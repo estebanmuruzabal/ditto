@@ -21,8 +21,8 @@ exports.typeDefs = (0, apollo_server_express_1.gql) `
         name: String!
         soil_humidity_1: Int
         soil_humidity_2: Int
-        airHumidity: Int
-        tempeture: Int
+        airHumidity_1: Int
+        tempeture_1: Int
         light: Int
         sensors: [ISensorSetting]
         isRelayOneOn: Boolean
