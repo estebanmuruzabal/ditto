@@ -429,9 +429,9 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
         case AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED:
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
-
+            console.log('A: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName);
             if (reading < minReading && !relayOneWorking) {
-                console.log('C: reading', reading, 'maxReading', maxReading, 'relayOneWorking', relayOneWorking, 'relayOneIdRelated', relayOneIdRelated);
+
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
@@ -453,7 +453,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
         case AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED:
             if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
-
+            console.log('B: maxReading', maxReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName);
             if (reading > maxReading && !relayOneWorking) {
 
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
