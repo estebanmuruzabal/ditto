@@ -14,8 +14,8 @@ query GetUser{
       soil_humidity_1
       soil_humidity_2
       light
-      humidity
-      tempeture
+      humidity_1
+      tempeture_1
       isRelayOneOn
       isRelayTwoOn
       isRelayThirdOn

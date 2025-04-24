@@ -359,6 +359,77 @@ const AirHumidity: React.FC<Props> = ({ errorId, plant, settingType, handleSetti
                 </>
                 )}
 
+                 { setting.mode === AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED && (
+                <>
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id='maxHumidityId'
+                                defaultMessage='maxHumidityId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Row>
+                                    <Input
+                                        type='number'
+                                        name='maxWarning'
+                                        value={setting.maxWarning}
+                                        onChange={(e: any) => handleSettingsChange(plant, 'maxWarning', e.target.value, settingType)}
+                                        backgroundColor='#F7F7F7'
+                                        height='34.5px'
+                                        width='45px'
+                                    />
+                                    <Porcentage>%</Porcentage>
+                                </Row>
+                            ) : (
+                                <Text bold>{(setting.maxWarning >= 0 && setting.maxWarning <= 100) ? setting?.maxWarning : '-'} °</Text>
+                            )}
+                            {errorId === 'maxWarning' && (
+                                <ErrorMsg>
+                                    <FormattedMessage id="minMaxWarningId" defaultMessage="minMaxWarningId" />
+                                </ErrorMsg>
+                            )}
+                        </ListDes>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListTitle>
+                            <Text>
+                            <FormattedMessage
+                                id={relayOneSelected?.value?.length > 0 ? 'asociatedToId' : 'asociateRelayToId'}
+                                defaultMessage='asociateRelayToId'
+                            />
+                            </Text>
+                        </ListTitle>
+                        <ListDes>
+                            { editIsOn ? (
+                                <Select 
+                                    onChange={(e: any) => handleSettingsChange(plant, 'relayOneIdRelated', e.value, settingType)}
+                                    value={relayOneSelected}
+                                    options={fourRelaysOptions}
+                                    // inputFocusOnClick={false}
+                                    // focusInputOnMenuOpen={false}
+                                    isSearchable={false}
+                                    styles={selectStyle}
+                                    menuPosition={'fixed'}
+                                />
+                            ) : (
+                                <>
+                            {/* <Reading> */}
+                            {/* <Reading> */}
+                                    <Text bold>{setting?.relayOneIdRelated.length > 1 ? getRelayNameText(setting?.relayOneIdRelated) : '-'}  {setting?.relayOneWorking ? '[ON]' : '[OFF]'}</Text>
+                                    {/* <Reading> */}
+                            {/* <Reading> */}
+                                </>
+                            )}
+                        </ListDes>
+                    </ListItem>
+                </>
+            )}
+
             { (setting?.logs?.length > 0 && hasRelayAsociated) && ( <HumidityLogsGraph data={setting.logs} /> )}
         </PlantsSensorContainer>
       )

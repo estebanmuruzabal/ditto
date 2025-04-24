@@ -185,29 +185,31 @@ const AirTemperature: React.FC<Props> = ({ errorId, plant, settingType, handleSe
             </ListItem>
           )}
 
-  
-          { (setting?.mode === AirTemperatureSensorMode.MANUAL) && (
-            <>
-                <ListItem style={{ justifyContent: 'flex-start' }}>
-                        <ListTitle>
-                            <Text>
-                            <FormattedMessage
-                                id='manualModeStateId'
-                                defaultMessage='manualModeStateId'
-                            />
-                            </Text>
-                        </ListTitle>
-                        <ListDes>
-                            <Switch 
-                                disabled={false}
-                                checked={setting.relayOneWorking}
-                                labelPosition={'right'}
-                                // className,
-                                onUpdate={() => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
-                            />
+        { (setting?.mode === AirTemperatureSensorMode.MANUAL) && (
+            <ListItem style={{ justifyContent: 'flex-start' }}>
+                <ListTitle>
+                    <Text>
+                        <FormattedMessage
+                        id="manualModeStateId"
+                        defaultMessage="manualModeStateId"
+                        />
+                    </Text>
+                    </ListTitle>
+                    <ListDes>
+                    <Switch 
+                        disabled={false}
+                        checked={setting.relayOneWorking}
+                        labelPosition={'right'}
+                        // className,
+                        onUpdate={() => handleSettingsChange(plant, 'relayOneWorking', !setting.relayOneWorking, settingType)}
+                    />
+                </ListDes>
+            </ListItem>
+          )}
 
-                        </ListDes>
-                    </ListItem>
+
+        { (setting?.mode === AirTemperatureSensorMode.MANUAL || setting?.mode === AirTemperatureSensorMode.SCHEDULE) && (
+            <>
                     <ListItem>
                         <ListTitle>
                             <Text>
@@ -236,45 +238,6 @@ const AirTemperature: React.FC<Props> = ({ errorId, plant, settingType, handleSe
 
           { ((setting.mode === AirTemperatureSensorMode.SCHEDULE) && hasRelayAsociated) && (
             <>
-              <ListItem style={{ justifyContent: 'flex-start' }}>
-                <ListTitle>
-                <Text>
-                    <FormattedMessage
-                    id="manualModeStateId"
-                    defaultMessage="manualModeStateId"
-                    />
-                </Text>
-                </ListTitle>
-                <ListDes>
-                    <Text  bold> 
-                        <FormattedMessage
-                        id={setting.relayOneWorking ? 'manualModeStateOnId' : 'manualModeStateOffId'}
-                        defaultMessage='noDefaultOnOffMsg'
-                        />
-                    </Text>
-                    </ListDes>
-                </ListItem>
-
-                <ListItem style={{ justifyContent: 'flex-start' }}>
-                    <ListTitle>
-                    <Text>
-                        <FormattedMessage
-                        id="notifyChangesId"
-                        defaultMessage="notifyChangesId"
-                        />
-                    </Text>
-                    </ListTitle>
-                    <ListDes>
-                        <Switch 
-                            disabled={false}
-                            checked={setting.whatsappWarningsOn}
-                            labelPosition={'right'}
-                            // className,
-                            onUpdate={() => handleSettingsChange(plant, 'whatsappWarningsOn', !setting.whatsappWarningsOn, settingType)}
-                        />
-                    </ListDes>
-                </ListItem>
-
                 { setting?.scheduledOnTimes?.map((schedule: any, i: number) => {
                     return (
                         <WeekContainer>
