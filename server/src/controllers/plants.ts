@@ -789,10 +789,10 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 break;
             }
-            console.log('END: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, setting.relayOneWorking);
+            
         default:
             break;
-    }
+    }console.log('END: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, setting.relayOneWorking);
     return plant;
 };
 
