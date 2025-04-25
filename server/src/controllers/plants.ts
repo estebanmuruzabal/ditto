@@ -40,7 +40,8 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     const currentTimeWithoutNotifing = currentTime?.diff(actionStartedTime, 'minutes');
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
     const actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
-
+    // @ts-ignore
+    console.log('START: minReading', minReading, 'reading', reading, 'maxReading', maxReading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
     // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -383,7 +384,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
         case C02SensorMode.WHEN_MAX_ACTION_AUTOMATED:
             if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
-            if (reading > maxReading && !relayOneWorking) {
+            if (reading < maxReading && !relayOneWorking) {
 
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
                 // @ts-ignore
@@ -392,7 +393,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading} ppm de co2, ya activamos tu accion asociada!`);
                 break;
-            } else if (reading < maxReading && relayOneWorking) {
+            } else if (reading >= maxReading && relayOneWorking) {
                 setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
 
                 // @ts-ignore
@@ -429,8 +430,8 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
         case AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED:
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
-            console.log('A: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName);
-            if (reading < minReading && !relayOneWorking) {
+
+            if (reading > minReading && !relayOneWorking) {
 
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
                 // @ts-ignore
@@ -439,9 +440,9 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya activamos tu accion asociada!`);
                 break;
-            } else if (reading >= minReading && relayOneWorking) {
+            } else if (reading <= minReading && relayOneWorking) {
                 setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
-                console.log('D: reading', reading, 'maxReading', maxReading, 'relayOneWorking', relayOneWorking, 'relayOneIdRelated', relayOneIdRelated);
+
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
                 setting.relayOneWorking = false;
@@ -454,7 +455,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
         case AirTemperatureSensorMode.WHEN_MAX_ACTION_AUTOMATED:
             if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
-            if (reading > maxReading && !relayOneWorking) {
+            if (reading < maxReading && !relayOneWorking) {
 
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
                 // @ts-ignore
@@ -464,7 +465,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya activamos tu accion asociada!`);
                 break;
-            } else if (reading <= maxReading && relayOneWorking) {
+            } else if (reading >= maxReading && relayOneWorking) {
                 setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
 
                 // @ts-ignore
