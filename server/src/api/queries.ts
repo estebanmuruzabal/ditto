@@ -74,8 +74,8 @@ export const getCustomerQuery = `
                     name
                     soil_humidity_1
                     soil_humidity_2
-                    humidity
-                    tempeture
+                    humidity_1
+                    tempeture_1
                     light
                     isRelayOneOn
                     isRelayTwoOn
