@@ -611,10 +611,10 @@ export const usersResolvers: IResolvers = {
                 plants[index].alarm_timestamp = alarmHasJustTurnOn ? new Date().toLocaleString('en-US', { timeZone }) : plants[index].alarm_timestamp;
                 plants[index].alarm = alarm;
                 plants[index].co2 = co2;
-                // plants[index].isRelayOneOn = isRelayOneOn;
-                // plants[index].isRelayTwoOn = isRelayTwoOn;
-                // plants[index].isRelayThirdOn = isRelayThirdOn;
-                // plants[index].isRelayFourthOn = isRelayFourthOn;
+                plants[index].isRelayOneOn = isRelayOneOn;
+                plants[index].isRelayTwoOn = isRelayTwoOn;
+                plants[index].isRelayThirdOn = isRelayThirdOn;
+                plants[index].isRelayFourthOn = isRelayFourthOn;
                 plants[index].timestamp = new Date().toLocaleString('en-US', { timeZone });
             }
             // const a = {"operationName": "UpdatePlant","variables":{"id": "64558a8356b560e1c8172407", "contrId": 30, "hum1": 109, "airHum": 0, "temp": 0, "dist": 1, "hum2": 85, "light": 0, "isRelayOneOn": false, "isRelayTwoOn": false, "isRelayThirdOn": false, "isRelayFourthOn": false},"query":"mutation UpdatePlant($id: ID!, $contrId: Int!, $hum1: Int, $airHum: Int, $temp: Int, $dist: Int, $hum2: Int, $light: Int, $isRelayOneOn: Boolean, $isRelayTwoOn: Boolean, $isRelayThirdOn: Boolean, $isRelayFourthOn: Boolean) { updatePlant(id: $id, contrId: $contrId, hum1: $hum1, airHum: $airHum, temp: $temp, dist: $dist, hum2: $hum2, light: $light, isRelayOneOn: $isRelayOneOn, isRelayTwoOn: $isRelayTwoOn, isRelayThirdOn: $isRelayThirdOn, isRelayFourthOn: $isRelayFourthOn) { isRelayOneOn, isRelayTwoOn, isRelayThirdOn, isRelayFourthOn }}"}
