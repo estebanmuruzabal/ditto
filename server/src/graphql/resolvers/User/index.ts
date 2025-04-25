@@ -598,7 +598,7 @@ export const usersResolvers: IResolvers = {
 
             const plants = userResult.plants;
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == contrId));
-            const alarmHasJustTurnOn = !plants[index]?.alarm && alarm;
+            const alarmHasJustTurnOn = !plants[index].alarm && alarm;
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
             } else {
@@ -621,11 +621,11 @@ export const usersResolvers: IResolvers = {
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             // console.log(`Relays AF: ${isRelayOneOn ? '1:ON' : '1:OFF'} ${isRelayTwoOn ? '2:ON' : '2:OFF'} ${isRelayThirdOn ? '3:ON' : '3:OFF'} ${isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             console.log('BF',plants[index].sensors)
-            plants[index].sensors?.map((module: any, i: number) => {
+            plants[index].sensors?.map(async (module: any, i: number) => {
                 
-                plants[index] = checkSensorAndUpdateSettings(plants[index], i, userResult?.phones[0]?.number, timeZone) 
+                plants[index] = await checkSensorAndUpdateSettings(plants[index], i, userResult?.phones[0]?.number, timeZone) 
             })
-            console.log('AF',plants[index].sensors)
+            console.log('BF',plants[index].sensors)
             // if (fireWhatappAlarmIfIsOn(plants[index])) {
             //     await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
             //     if (userResult?.phones[1]?.number) await sendMessage(userResult?.phones[0]?.number, `Alarma Activada en ${plants[index].name}`)
