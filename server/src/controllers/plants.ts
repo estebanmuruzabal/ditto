@@ -12,11 +12,9 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
-    
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     // @ts-ignore
-    reading = plant[sensorReadingName];
-
+    setting.reading = plant[sensorReadingName];
     const minReading = Number(minWarning);
     const maxReading = Number(maxWarning);
     const secondActionTimeInMins = Number(relayTwoAutomatedTimeToRun);
@@ -435,7 +433,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
             // @ts-ignore
             console.log('C: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
-            if (reading > minReading && !relayOneWorking) {
+            if (reading > minReading) {
 
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
                 // @ts-ignore
@@ -444,7 +442,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `[${plant.name}] llego a ${reading}% de temperatura, ya activamos el ${setting.name}!`);
                 break;
-            } else if (reading <= minReading && relayOneWorking) {
+            } else if (reading <= minReading) {
                 setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
 
                 // @ts-ignore
@@ -799,7 +797,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     }
     // @ts-ignore
     console.log('END: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
-    console.log('AF',plant)
     return plant;
 };
 
