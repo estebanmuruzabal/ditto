@@ -532,7 +532,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
         case AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED:
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
             
-            console.log('C: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName);
+            console.log('C: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, setting.relayOneWorking);
             if (reading < minReading && !relayOneWorking) {
 
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
@@ -789,6 +789,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 setting.relayOneAutomatedStartedTime = new Date().toLocaleString('en-US', { timeZone });
                 break;
             }
+            console.log('END: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, setting.relayOneWorking);
         default:
             break;
     }
