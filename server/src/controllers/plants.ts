@@ -8,6 +8,7 @@ import { fireWhatappAlarmIfIsOn, logTimeStampWithTimeFilter } from "../utils/log
 import 'moment-timezone';
 
 export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: number, phoneNumber: string, timeZone: string) => {
+    console.log('BF',plant)
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
@@ -796,6 +797,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     }
     // @ts-ignore
     console.log('END: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
+    console.log('AF',plant)
     return plant;
 };
 
