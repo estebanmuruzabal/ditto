@@ -428,6 +428,31 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             })
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
+        case AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED:
+            if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
+            // @ts-ignore
+            console.log('C: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
+            if (reading > minReading && !relayOneWorking) {
+
+                plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+                // @ts-ignore
+                plant[relayOneIdRelated] = true;
+                setting.relayOneWorking = true;
+
+                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${plant.name}] llego a ${reading}% de temperatura, ya activamos el ${setting.name}!`);
+                break;
+            } else if (reading <= minReading && relayOneWorking) {
+                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
+
+                // @ts-ignore
+                plant[relayOneIdRelated] = false;
+                setting.relayOneWorking = false;
+                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos el ${setting.name}!`);
+                break;
+            }
+
+            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
+            break;
         case AirTemperatureSensorMode.WHEN_MIN_ACTION_AUTOMATED:
             if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
 
@@ -529,31 +554,6 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 }
             })
             setting = logTimeStampWithTimeFilter(setting, reading, timeZone);
-            break;
-        case AirHumiditySensorMode.WHEN_MIN_ACTION_AUTOMATED:
-            if (!minReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
-            // @ts-ignore
-            console.log('C: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
-            if (reading > minReading && !relayOneWorking) {
-
-                plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
-                // @ts-ignore
-                plant[relayOneIdRelated] = true;
-                setting.relayOneWorking = true;
-
-                if (whatsappWarningsOn) sendMessage(phoneNumber, `[${plant.name}] llego a ${reading}% de temperatura, ya activamos el ${setting.name}!`);
-                break;
-            } else if (reading <= minReading && relayOneWorking) {
-                setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
-
-                // @ts-ignore
-                plant[relayOneIdRelated] = false;
-                setting.relayOneWorking = false;
-                if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos el ${setting.name}!`);
-                break;
-            }
-
-            plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
             break;
         case AirHumiditySensorMode.WHEN_MAX_ACTION_AUTOMATED:
             if (!maxReading || !relayOneIdRelated) { console.log('No relayOneIdRelated, or no minWarning setted: [please set one] ', plant.sensors[sensorIndex]); break; }
