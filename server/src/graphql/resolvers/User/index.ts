@@ -621,9 +621,9 @@ export const usersResolvers: IResolvers = {
             // console.log(`Relays BF: ${plants[index].isRelayOneOn ? '1:ON' : '1:OFF'} ${plants[index].isRelayTwoOn ? '2:ON' : '2:OFF'} ${plants[index].isRelayThirdOn ? '3:ON' : '3:OFF'} ${plants[index].isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             // console.log(`Relays AF: ${isRelayOneOn ? '1:ON' : '1:OFF'} ${isRelayTwoOn ? '2:ON' : '2:OFF'} ${isRelayThirdOn ? '3:ON' : '3:OFF'} ${isRelayFourthOn ? '4:ON' : '4:OFF'}`)
             console.log('BF',plants[index].sensors)
-            plants[index].sensors?.map(async (module: any, i: number) => {
+            plants[index].sensors?.map((module: any, i: number) => {
                 
-                plants[index] = await checkSensorAndUpdateSettings(plants[index], i, userResult?.phones[0]?.number, timeZone) 
+                plants[index] = checkSensorAndUpdateSettings(plants[index], i, userResult?.phones[0]?.number, timeZone) 
             })
             console.log('AF',plants[index].sensors)
             // if (fireWhatappAlarmIfIsOn(plants[index])) {
