@@ -15,6 +15,8 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
     // @ts-ignore
+    const relayOneIdRelated = plant[relayOneIdRelated];
+    // @ts-ignore
     const reading = plant[sensorReadingName];
     const minReading = Number(minWarning);
     const maxReading = Number(maxWarning);
@@ -435,22 +437,21 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             // @ts-ignore
             console.log('C: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
             // @ts-ignore
-            if (reading > minReading && !plant[relayOneIdRelated]) {
+            if (reading > minReading && !relayOneIdRelated) {
 
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
-                setting.relayOneWorking = true;
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `[${plant.name}] llego a ${reading}% de temperatura, ya activamos el ${setting.name}!`);
                 break;
                 // @ts-ignore
-            } else if (reading <= minReading && plant[relayOneIdRelated]) {
+            } else if (reading <= minReading && relayOneIdRelated) {
                 setting = logTimeStampWithTimeFilter(setting, reading, timeZone, false, true);
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
-                setting.relayOneWorking = false;
+
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos el ${setting.name}!`);
                 break;
             }
