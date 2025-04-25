@@ -598,7 +598,7 @@ export const usersResolvers: IResolvers = {
 
             const plants = userResult.plants;
             const index = userResult.plants?.findIndex((plant: any) => (plant.plantId == contrId));
-            const alarmHasJustTurnOn = !plants[index].alarm && alarm;
+            const alarmHasJustTurnOn = !plants[index]?.alarm && alarm;
             if (index < 0) {
                 throw new Error(`Controller id does not exists: ${contrId})`);
             } else {
