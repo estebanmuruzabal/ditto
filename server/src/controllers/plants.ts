@@ -10,7 +10,7 @@ import 'moment-timezone';
 export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: number, phoneNumber: string, timeZone: string) => {
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
-    let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
+    let { minWarning, maxWarning, relayTwoIdRelated, whatsappWarningsOn, mode, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
