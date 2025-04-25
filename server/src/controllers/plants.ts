@@ -14,6 +14,8 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     const sensorReadingName = plant.sensors[sensorIndex].settingType?.toLocaleLowerCase();
     // @ts-ignore
     setting.reading = plant[sensorReadingName];
+    // @ts-ignore
+    const reading = plant[sensorReadingName];
     const minReading = Number(minWarning);
     const maxReading = Number(maxWarning);
     const secondActionTimeInMins = Number(relayTwoAutomatedTimeToRun);
