@@ -8,7 +8,7 @@ import { fireWhatappAlarmIfIsOn, logTimeStampWithTimeFilter } from "../utils/log
 import 'moment-timezone';
 
 export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: number, phoneNumber: string, timeZone: string) => {
-    console.log('BF',plant)
+    // console.log('BF',plant)
     if (!plant?.sensors[sensorIndex]) { console.log('NO MODULE FOUND', plant?.sensors[sensorIndex]); return plant; }
     let setting = plant.sensors[sensorIndex];
     let { minWarning, maxWarning, relayOneIdRelated, relayTwoIdRelated, whatsappWarningsOn, mode, reading, logs, relayOneWorking, relayOneAutomatedTimeToRun, relayTwoAutomatedTimeToRun, relayOneAutomatedStartedTime, relayTwoAutomatedStartedTime, relayTwoWorking, scheduledOnTimes } = setting;
@@ -42,7 +42,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
     const timeInMinutesThatShouldntNotify = Number(relayTwoAutomatedStartedTime);
     const actionShouldStart = Number(reading) >= minReading && !relayOneWorking && !!!relayOneAutomatedStartedTime.length;
     // @ts-ignore
-    console.log('START: minReading', minReading, 'reading', reading, 'maxReading', maxReading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
+    // console.log('START: minReading', minReading, 'reading', reading, 'maxReading', maxReading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
     // refactor: WE SHOULD ADD A SWITH FOR MODULE TYPE, AND FROM THERE A SWITCH FOR MODE, is still working fine cause each mode for each sensor is unique
     switch (mode) {
         case HumiditySensorMode.IRRIGATE_ON_DEMAND:
@@ -487,7 +487,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
                 setting.relayOneWorking = true;
-                console.log('A: reading', reading, 'maxReading', maxReading, 'relayOneWorking', relayOneWorking, 'relayOneIdRelated', relayOneIdRelated);
+                // console.log('A: reading', reading, 'maxReading', maxReading, 'relayOneWorking', relayOneWorking, 'relayOneIdRelated', relayOneIdRelated);
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya activamos tu accion asociada!`);
                 break;
@@ -796,7 +796,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
             break;
     }
     // @ts-ignore
-    console.log('END: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
+    // console.log('END: minReading', minReading, 'reading', reading, 'relayOneIdRelated', relayOneIdRelated, 'relayOneWorking', relayOneWorking, sensorReadingName, plant[relayOneIdRelated]);
     return plant;
 };
 
