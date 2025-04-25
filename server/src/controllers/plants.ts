@@ -438,7 +438,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
                 plant.sensors[sensorIndex] = logTimeStampWithTimeFilter(setting, reading, timeZone);
                 // @ts-ignore
                 plant[relayOneIdRelated] = true;
-                setting.relayOneWorking = true;
+                plant.sensors[sensorIndex]['relayOneWorking'] = true;
 
                 if (whatsappWarningsOn) sendMessage(phoneNumber, `[${plant.name}] llego a ${reading}% de temperatura, ya activamos el ${setting.name}!`);
                 break;
@@ -447,7 +447,7 @@ export const checkSensorAndUpdateSettings = async (plant: Plant, sensorIndex: nu
 
                 // @ts-ignore
                 plant[relayOneIdRelated] = false;
-                setting.relayOneWorking = false;
+                plant.sensors[sensorIndex]['relayOneWorking'] = false;
                 if (whatsappWarningsOn) await sendMessage(phoneNumber, `[${setting.name}] llego a ${reading}% de temperatura, ya desactivamos el ${setting.name}!`);
                 break;
             }
