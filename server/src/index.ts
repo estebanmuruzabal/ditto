@@ -70,7 +70,8 @@ const listenMessage = () => client.on('message', async (msg: any) => {
 
     if (isGrower(user)) nextTrigger = await lastGrowerTrigger(user, message);
     if (isUserStaff(user)) nextTrigger = await lastStaffTrigger(user, message);
-    else nextTrigger = await lastClientTrigger(user, message);
+    else return;
+    // else nextTrigger = await lastClientTrigger(user, message);
 
     const isChatBlocked = nextTrigger === TriggerSteps.BLOCK_CHAT;
 
@@ -79,7 +80,7 @@ const listenMessage = () => client.on('message', async (msg: any) => {
     const userIsRegistered = !!access_token;
 
     if (userIsRegistered) await saveUserChatHistory(message, number, nextTrigger, access_token)
-    // const messages = await findResponseMsg(nextTrigger, user, message, number, access_token);
+
     const msgResponse = await findResponseMsg(nextTrigger, user, message, number, access_token);
 
 

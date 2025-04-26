@@ -65,7 +65,8 @@ export const getReplyFromShopBot = async (triggerStep: string, user: IUser | any
             if (user?.id && user?.name) {
                 // resData.replyMessage = user.name !== INITIAL_USER_USERNAME ? mainMenuAuthenticatedUser(user?.name, categories) : mainMenuUnauthenticatedUser(categories);
                 // resData.trigger = TriggerSteps.SELECT_CATEGORY;
-                resData = getCategoriesButtons(resData, categories);
+                // resData = getCategoriesButtons(resData, categories);
+                resData.replyMessage = mainMenuUnauthenticatedUser1(categories, number);
                 resolve(resData);
             } else {
                 resData.replyMessage = thereWasAProblemWaitForAssistance2();

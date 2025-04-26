@@ -12,7 +12,7 @@ case Locales.ES:
 return (
 `📢 *Importante* 📢
 - Te recordamos llevar bolsas para retirar tus productos!
-- Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
+- Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Método de envío o retiro seleccionado:*
 ${deliveryMethod}
@@ -25,7 +25,7 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
+Para mas info seguinos en IG https://www.instagram.com/dittofarms.rcia
 `)
 case Locales.EN:
 return (
@@ -51,8 +51,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Thank you! Your help is very much appreciated it!
-You can also make your orders at http://www.dittofarms.com
-And keep yourself posted at our IG: https://www.instagram.com/dittofarms.sd`)
+You can also make your orders at http://www.dittofarms.store
+And keep yourself posted at our IG: https://www.instagram.com/dittofarms.rcia`)
 default: console.log('pickUpPurchaseWithTransferPayment defaulted. lenguageLocale not found:', lenguageLocale)
 }};
 
@@ -76,7 +76,7 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
+Para mas info seguinos en IG https://www.instagram.com/dittofarms.rcia
 `)
 case Locales.EN:
 return (
@@ -101,8 +101,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Thank you! Your help is very much appreciated it!
-You can also make your orders at http://www.dittofarms.com
-And keep yourself posted at our IG: https://www.instagram.com/dittofarms.sd`)
+You can also make your orders at http://www.dittofarms.store
+And keep yourself posted at our IG: https://www.instagram.com/dittofarms.rcia`)
 default: console.log('pickUpPurchaseWithCashPayment defaulted. lenguageLocale not found:', lenguageLocale)
 }};
 
@@ -112,7 +112,7 @@ case Locales.ES:
 return (
 `📢 *Importante* 📢
 - Te vamos a escribir una hora antes de llevar tu pedido.
-- Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* o cbu ${BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
+- Para pagar, enviános una transferencia por *${CURRENCY}${total}* al alias *${BANK_TRANSFER_ALIAS}* y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Método de envío o retiro seleccionado:*
 ${deliveryMethod}
@@ -127,7 +127,7 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
+Para mas info seguinos en IG https://www.instagram.com/dittofarms.rcia
 `)
 case Locales.EN:
 return (
@@ -153,8 +153,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Thank you! Your help is very much appreciated it!
-You can also make your orders at http://www.dittofarms.com
-And keep yourself posted at our IG: https://www.instagram.com/dittofarms.sd`)
+You can also make your orders at http://www.dittofarms.store
+And keep yourself posted at our IG: https://www.instagram.com/dittofarms.rcia`)
 default: console.log('deliveryPurchaseWithTransferPayment defaulted. lenguageLocale not found:', lenguageLocale)
 }};
 
@@ -179,7 +179,7 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 *Monton total:*
 ${CURRENCY}${total}
 
-Para mas info seguinos en IG https://www.instagram.com/dittofarms.sd
+Para mas info seguinos en IG https://www.instagram.com/dittofarms.rcia
 `)
 case Locales.EN:
 return (
@@ -202,8 +202,8 @@ ${products.map((product: any) => (`${product.quantity + product.recicledQuantity
 ${CURRENCY}${total}
 
 Thank you! Your help is very much appreciated it!
-You can also make your orders at http://www.dittofarms.com
-And keep yourself posted at our IG: https://www.instagram.com/dittofarms.sd`)
+You can also make your orders at http://www.dittofarms.store
+And keep yourself posted at our IG: https://www.instagram.com/dittofarms.rcia`)
 default: console.log('deliveryPurchaseWithCashPayment defaulted. lenguageLocale not found:', lenguageLocale)
 }};
 
@@ -665,13 +665,13 @@ const thanksMsg = () =>
 
 const thanksMsgNoPurchase = () => {
     return isEnglish ? 
-`Hope you have a nice day ☀ and remember you can order from our website as well, http://www.dittofarms.com
-And you can also follow us on Instagram to see what we are up to 😊: https://www.instagram.com/dittofarms.sd
+`Hope you have a nice day ☀ and remember you can order from our website as well, http://www.dittofarms.store
+And you can also follow us on Instagram to see what we are up to 😊: https://www.instagram.com/dittofarms.rcia
 
 Thanks for your time and you are welcome back anytime you wish.`
 : 
 `Qué tengas un excelente día ☀ y acordate que también podes pedir por nuestra pagina web!
-Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarms.sd
+Aprovecho para invitarte a que nos sigas en Instagram 😊: https://www.instagram.com/dittofarms.rcia
 
 Gracias por tu tiempo, te invitamos a que vuelvas en el momento que desees.`
 };

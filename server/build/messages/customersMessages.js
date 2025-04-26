@@ -11,7 +11,7 @@ const pickUpPurchaseWithTransferPayment = (purchasedDate, address, total, custom
 
 📢 *Importante* 📢
  - Te recordamos llevar bolsas para retirar tus productos!
- - Para pagar, enviános una transferencia por *${constant_1.CURRENCY}${total}* al alias *${constant_1.BANK_TRANSFER_ALIAS}* o cbu ${constant_1.BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
+ - Para pagar, enviános una transferencia por *${constant_1.CURRENCY}${total}* al alias *${constant_1.BANK_TRANSFER_ALIAS}* y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Detalle:*
 *Fecha de compra:*
@@ -127,7 +127,7 @@ const deliveryPurchaseWithTransferPayment = (purchasedDate, address, total, cust
 
 📢 *Importante* 📢
     - Te vamos a escribir una hora antes de llevar tu pedido.
-    - Para pagar, enviános una transferencia por *${constant_1.CURRENCY}${total}* al alias *${constant_1.BANK_TRANSFER_ALIAS}* o cbu ${constant_1.BANK_TRANSFER_CBU} y compartinos el comprobante por aquí antes de retirar tu pedido. 
+    - Para pagar, enviános una transferencia por *${constant_1.CURRENCY}${total}* al alias *${constant_1.BANK_TRANSFER_ALIAS}* y compartinos el comprobante por aquí antes de retirar tu pedido. 
 
 *Detalle:*
 *Fecha de compra:*
