@@ -4,7 +4,7 @@ import Button from '../../../components/Button/Button';
 import Popover, { PLACEMENT } from '../../../components/Popover/Popover';
 import Notification from '../../../components/Notification/Notification';
 import { AuthContext } from '../../../context/auth';
-import { STAFF_MEMBERS, SETTINGS } from '../../../settings/constants';
+import { STAFF_MEMBERS, SETTINGS, DASHBOARD } from '../../../settings/constants';
 import { NotificationIcon } from '../../../assets/icons/NotificationIcon';
 import { AlertDotIcon } from '../../../assets/icons/AlertDotIcon';
 import { ArrowLeftRound } from '../../../assets/icons/ArrowLeftRound';
@@ -122,7 +122,7 @@ const Topbar = ({ refs }: any) => {
       </DrawerWrapper>
 
       <Logo>
-        <Link to='/'>
+        <Link to={DASHBOARD}>
           <LogoImage src={siteSettingData ? ADMIN_IMAGE_HOST+siteSettingData.image : ''} alt={siteSettingData ? siteSettingData.site_title : ''} />
         </Link>
       </Logo>

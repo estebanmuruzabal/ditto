@@ -187,7 +187,7 @@ const SiteSettingsForm: React.FC<Props> = () => {
       longitude: longitude,
       latitude: latitude
     };
-    console.log('settingsValue:::', settingsValue)
+
     updateSiteSetting({
       variables: { key: 'site-settings', value: JSON.stringify(settingsValue) },
     });
