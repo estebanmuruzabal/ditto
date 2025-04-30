@@ -89,7 +89,7 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
     address: addressItem.address,
     location: values.location,
     instructions: values.instructions,
-    is_primary: false
+    is_primary: true
   };
 
   const { state, dispatch } = useContext(ProfileContext);

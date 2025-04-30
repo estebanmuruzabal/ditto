@@ -14,8 +14,8 @@ import { ADD_ADDRESS } from 'graphql/mutation/address';
 import DeliveryIcon from 'assets/images/locationIcon.webp';
 
 interface Props {
-  deliveryMethodSaved: any
-  setDeliveryMethodSaved: any
+  deliveryMethodSelected: any
+  setDeliveryMethodSelected: any
   deliveryMethodTypeSelected: any
   setDeliveryMethodType: any
 }
@@ -33,7 +33,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   const setDeliveryMethodAndSaveCookie =  (deliveryOrPickupMethodSelected) => {
     const deliveryMethod = isPickUpSelected ? deliveryOrPickupMethodSelected : {...deliveryOrPickupMethodSelected, deliveryAddress};
     setDeliveryMethod(deliveryMethod)
-    props.setDeliveryMethodSaved(deliveryMethod, false)
+    props.setDeliveryMethodSelected(deliveryMethod, false)
 
     // setCookie(deliveryMethodCookieKeyName, deliveryMethod);
     // }
@@ -75,7 +75,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   const setDelivery =  (e, deli: DeliveryMethodsConstants) => {
     // if (deli === DeliveryMethodsConstants.DELIVERY) {
     //   setDeliveryMethodType(deli)
-    //   props.setDeliveryMethodSaved(DeliveryMethodsConstants.DELIVERY)
+    //   props.setDeliveryMethodSelected(DeliveryMethodsConstants.DELIVERY)
     //   return;  
     // }
     e.stopPropagation();

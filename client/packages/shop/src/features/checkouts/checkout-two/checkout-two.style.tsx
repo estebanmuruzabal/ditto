@@ -84,7 +84,7 @@ export const HeadingWider = styled.h3`
   }
 `;
 
-export const DeliveryTypesOptions = styled.h3`
+export const SectionNumber = styled.div`
   display: flex;
   border-radius: 0.5rem;
   align-items: center;
@@ -178,7 +178,7 @@ export const TotalPrice = styled.div`
   padding-left: 60px;
 `;
 
-export const DeliverySchedule = styled.div`
+export const DeliveryAddressSection = styled.div`
   .radioGroup {
     justify-content: space-between;
     > label {

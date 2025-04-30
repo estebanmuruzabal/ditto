@@ -45,7 +45,7 @@ export const BANK_TRANSFER_ALIAS = 'dittofarm';
 export const BANK_TRANSFER_CBU = '0000003100030458924685';
 export const COMPANY_EMAIL = 'dittofarmresistencia@gmail.com';
 
-export const deliveryMethodCookieKeyName = 'deliveryMethodSaved';
+export const deliveryMethodCookieKeyName = 'deliveryMethodSelected';
 
 // **************** Delivery CONSTANT Start **************************
 export enum DeliveryMethodsConstants {

@@ -24,7 +24,6 @@ import CheckoutWrapper, {
   CheckoutContainer,
   CheckoutInformation,
   InformationBox,
-  DeliverySchedule,
   Heading,
   ButtonGroup,
   CheckoutSubmit,
@@ -54,7 +53,7 @@ import CheckoutWrapper, {
   NoProductMsg,
   NoProductImg,
   IconWrapper,
-  DeliveryTypesOptions,
+  SectionNumber
 } from './checkout-two.style';
 import CouponBox from 'components/coupon-box/coupon-box';
 
@@ -73,9 +72,11 @@ import { useWindowSize } from 'utils/useWindowSize';
 import UpdateAddressTwo from 'components/address-card/address-card-two';
 import moment from 'moment';
 import { calculateDeliveryCharge, capitalizeFirstLetter } from 'utils/shop-helper';
-import DeliverySelection from 'features/delivery-selection/delivery-selection';
 import { getCookie, setCookie } from 'utils/session';
 import { DeliveryIcon } from 'assets/icons/DeliveryIcon';
+import DeliverySelection from '../checkout-two-sections/delivery-selection';
+import DeliverySchedule from '../checkout-two-sections/delivery-schedule';
+
 
 
 // The type of props Checkout Form receives
@@ -175,6 +176,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     payment_option_id: '',
     payment_option_type: '',
     delivery_method_id: '',
+    delivery_date: '',
     coupon_code: '',
     delivery_address: null,
     products: null
@@ -203,44 +205,33 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [deletePaymentCardMutation] = useMutation(DELETE_CARD);
   const size = useWindowSize();
   const [deliveryMethodsSelected, setDeliveryMethodsSelected] = React.useState(null);
-  const [deliveryMethodSaved, setDeliveryMethodSaved] = React.useState();
+  const [deliveryMethodSelected, setDeliveryMethodSelected] = React.useState();
+  console.log('deliveryMethodSelected:::', deliveryMethodSelected)
 
-  // useEffect(() => {
-  //   if (getCookie(deliveryMethodCookieKeyName) && !deliveryMethodSaved) {
-  //     const deliveryMethodSaved: any = JSON.parse(getCookie(deliveryMethodCookieKeyName));
-  //     setDeliveryMethodSaved(deliveryMethodSaved)
-  //     console.log('seyed: deliveryMethodSaved', deliveryMethodSaved)
-  //     setSubmitResult({
-  //       ...submitResult,
-  //       delivery_method_id: deliveryMethodSaved?.id || '', 
-  //     })
-  //   }
-  // }, [deliveryMethodSaved]);
+  const setDeliveryAddress =  (deliveryAddress, addressAlreadyAdded) => { 
 
-  const resetDeliveryMethodAndDeleteSavedCookie =  () => {
-    setDeliveryMethodSaved(null)
-    // setCookie(deliveryMethodCookieKeyName, null);
+    setSubmitResult({
+      ...submitResult,
+      delivery_address: deliveryAddress,
+      products: cartProduct
+    })
+
+    if (!addressAlreadyAdded) {
+      handleModal(UpdateAddressTwo,  { item:{ address: deliveryAddress?.split(",")[0], location: deliveryAddress?.split(",")[1] }, id }, 'add-address-modal');
+    }
   };
 
-  const setDeliveryMethod =  (methodSelected, addressAlreadyAddedSelected) => {
-    setDeliveryMethodSaved(methodSelected)
-    // setCookie(deliveryMethodCookieKeyName, methodSelected);
+  const setDeliveryMethodSchedule =  (methodSelected, addressAlreadyAddedSelected) => {
+    console.log('methodSelected', methodSelected)
+    const delivery_date = methodSelected?.isPickUp ? methodSelected?.details.split("|")[1]?.trim() : `${methodSelected?.details.split("|")[0]?.trim()} ${methodSelected?.details.split("|")[1]?.trim()}`;
+    // const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethodSelected?.details)} - ${moment(deliveryDate).format('DD MMM')}`;
+    setDeliveryMethodSelected(methodSelected)
+
     setSubmitResult({
       ...submitResult,
       delivery_method_id: methodSelected.id, 
-      // delivery_address: methodSelected.deliveryAddress?.split(",")[0]
+      delivery_date, 
     })
-    if (addressAlreadyAddedSelected) {
-      handleModal(UpdateAddressTwo,  { item:{ address: methodSelected.deliveryAddress?.split(",")[0], location: methodSelected.deliveryAddress?.split(",")[1] }, id }, 'add-address-modal');
-    } else {
-      // setSubmitResult({
-      //   ...submitResult,
-      //   delivery_address:  `${item.title} -
-      //   ${item.address?.split(",")[0]} ${item.address?.split(",")[1]}, ${item.location}, ${item.instructions}
-      //   `});
-    }
-    
-    // handleEditDelete(addressValue, null, 'edit', 'address');
   };
 
   const [appliedCoupon] = useMutation(GET_COUPON);
@@ -286,19 +277,19 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     return 0;
   }
 
-  const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && capitalizeFirstLetter(selectedAddress.address)}, ${selectedAddress && selectedAddress.instructions}` : null;
+  // const selectedAddressText = selectedAddress?.address ? `${selectedAddress && capitalizeFirstLetter(selectedAddress.title)} - ${selectedAddress && capitalizeFirstLetter(selectedAddress.address)}, ${selectedAddress && selectedAddress.instructions}` : null;
 
   useEffect(() => {
     removeCoupon();
     setHasCoupon(false);
     
-    deliveryCharge = calculateDeliveryCharge(deliveryMethodSaved?.name);
+    deliveryCharge = calculateDeliveryCharge(deliveryMethodSelected?.name);
     // // const deliveryAddress = pickUpOptionSelected ? pickUpAddress : selectedAddressText;
-    // console.log('here',deliveryMethodSaved?.deliveryAddress)
+    // console.log('here',deliveryMethodSelected?.deliveryAddress)
     setSubmitResult({
       ...submitResult,
-      // delivery_address: deliveryMethodSaved?.deliveryAddress,
-      // delivery_method_id: deliveryMethodSaved?.id,
+      // delivery_address: deliveryMethodSelected?.deliveryAddress,
+      // delivery_method_id: deliveryMethodSelected?.id,
       products: cartProduct,
       contact_number: selectedContact.number
     })
@@ -311,7 +302,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     ) {
       setIsValid(true);
     }
-  }, [state, deliveryMethodSaved]);
+  }, [state, deliveryMethodSelected]);
 
   // Add or edit modal
   const handleModal = (
@@ -484,7 +475,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   }
 
   const handleSubmit = async () => {
-    const deliveryCharge: number = calculateDeliveryCharge(deliveryMethodSaved?.name);
+    const deliveryCharge: number = calculateDeliveryCharge(deliveryMethodSelected?.name);
     const ccCharge: number = calculateCCCharge();
     const cashDiscount: number = calculateIfCashDiscount();
     const otherSubmitResult = {
@@ -500,6 +491,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       payment_option_type,
       delivery_method_id,
       delivery_address,
+      delivery_date,
       coupon_code,
       products
     } = submitResult;
@@ -512,7 +504,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     } = otherSubmitResult;
     console.log('delivery_method_id',delivery_method_id)
     if (!delivery_method_id) { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
-    if (!deliveryMethodSaved?.isPickUp && !selectedAddress) { setErrorFor5Sec('checkoutDeliveryAddressNotComplete');return; }
+    if (!deliveryMethodSelected?.isPickUp && !selectedAddress) { setErrorFor5Sec('checkoutDeliveryAddressNotComplete');return; }
     if (!contact_number) { setErrorFor5Sec('checkoutContactNumberInvalid');return; }
     if (!payment_option_id) { setErrorFor5Sec(pickUpAddress ? 'checkoutPaymentMethodInvalidOption3' : 'checkoutPaymentMethodInvalidOption4');return; }
 
@@ -521,8 +513,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       return null;
     }
     setLoading(true);
-    const delivery_date = deliveryMethodSaved?.isPickUp ? deliveryMethodSaved?.details.split("|")[1]?.trim() : `${deliveryMethodSaved?.details.split("|")[0]?.trim()} ${deliveryMethodSaved?.details.split("|")[1]?.trim()}`;
-    // const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethodSaved?.details)} - ${moment(deliveryDate).format('DD MMM')}`;
+    
     // if (confirm('Are you sure? You want to place this order?')) {
       try {
         const {errors: orderCreateError} = await setOrderMutation({
@@ -582,158 +573,63 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     setHasCoupon(false);
     Router.push({ pathname: '/' })
   }
-
-  const pickedUpOptionIds = deliveryMethods.map(deliveryMethod => {
-    return deliveryMethod.isPickUp ? deliveryMethod.id : null;
-  });
-  const deliveryOptionIds = deliveryMethods.map(deliveryMethod => {
-    return !deliveryMethod.isPickUp ? deliveryMethod.id : null;
-  });
-  const pickUpOptionSelected = pickedUpOptionIds.includes(submitResult.delivery_method_id)
-  console.log('deliveryMethodSaved,',deliveryMethodSaved)
-  console.log('selectedAddress,',selectedAddress)
+  console.log(deliveryMethodsSelected)
   return (
     <form>
       <CheckoutWrapper>
         <CheckoutContainer>
           <CheckoutInformation>
 
-            {/* DeliverySchedule */}
-            <InformationBox>
+          <InformationBox>
             <Heading>
+                <SectionNumber />
                 <FormattedMessage
-                   id={(deliveryMethodSaved) ? 'selectDeliveryMethodSelected' : 'selectDeliveryMethod'}
+                   id={(deliveryMethodSelected) ? 'selectDeliveryMethodSelected' : 'selectDeliveryMethod'}
                    defaultMessage='Select Your Delivery Type'
                 />
-                <DeliveryTypesOptions />
               </Heading>
-              <DeliverySchedule>
-                { deliveryMethodSaved ? (
-                   <ButtonGroup>
-                   <RadioGroupThree
-                      items={[deliveryMethodSaved]}
-                      component={(item: any, index: any) => (
-                        <RadioCard
-                          id={item.id}
-                          key={item.id}
-                          title={deliveryMethodSaved?.isPickUp ? `PICKUP ${item.name}` : `DELIVERY`} //  ${item.name} ${deliveryMethodSaved?.deliveryAddress?.split(",")[0]}
-                          // title={item.name}
-                          details={item.details}
-                          link={item.isPickUp && item.pickUpAddress ? item.pickUpAddress : null}
-                          name='schedule'
-                          checked={true}
-                          withActionButtons={false}
-                          onClick={() => setSubmitResult({
-                            ...submitResult,
-                            delivery_method_id: item.id, 
-                            products: cartProduct
-                          })}
-                          onChange={() =>{
-                            return(dispatch({
-                              type: 'SET_PRIMARY_SCHEDULE',
-                              payload: item.id.toString(),
-                            }))
-                            }
-                          }
-                        />
-                      )}
-                     secondaryComponent={ deliveryMethodSaved ? (
-                      <Button
-                        className='changeButton'
-                        variant='text'
-                        type='button'
-                        onClick={resetDeliveryMethodAndDeleteSavedCookie}
-                      >
-                        <IconWrapper>
-                            <Plus width='10px' />
-                          </IconWrapper>
-                        <FormattedMessage id='changeDeliveryMethod' defaultMessage='changeDeliveryMethod' />
-                      </Button>
-                     ) : (null)
-                     }
-                   />
-                 </ButtonGroup>
-                ) : (
-                  <DeliverySelection
-                    deliveryMethodSaved={deliveryMethodSaved}
-                    setDeliveryMethodSaved={setDeliveryMethod}
-                    deliveryMethodTypeSelected={deliveryMethodTypeSelected}
-                    setDeliveryMethodType={setDeliveryMethodType}  
-                  />
-                )}
-                {/* <InformationBox>
-                    <Heading>
-                      <FormattedMessage
-                        id='checkoutDeliveryAddress'
-                        defaultMessage='Delivery Address'
-                      />
-                      <DeliveryTypesOptions />
-                    </Heading>
-                    <ButtonGroup></ButtonGroup> */}
-                { selectedAddress && deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && (
-                  <ButtonGroup>
-                    {"o selecciona una direccion"}
-                    <RadioGroupTwo
-                      items={delivery_address}
-                        component={(item: any, index: any) => (
-                          <RadioCardTWO 
-                            id={index}
-                            key={index}
-                            address={item.address}
-                            location={item.location}
-                            instructions={item.instructions}
-                            title={item.title}
-                            name='address'
-                            isChecked={item.id === deliveryMethodSaved?.id}
-                            onClick={() => {setSubmitResult({
-                              ...submitResult,
-                              delivery_address:  `${item.title} -
-                              ${item.address?.split(",")[0]} ${item.address?.split(",")[1]}, ${item.location}, ${item.instructions}
-                              `,
-                              products: cartProduct
-                            }); setDeliveryMethod(item, false);}}
-                            // onEdit={() => handleEditDelete(item, index, 'edit', 'address')}
-                            // onDelete={() =>
-                            //   handleEditDelete(item, index, 'delete', 'address')
-                            // }
-                          />
-                        )}
-                      secondaryComponent={ selectedAddress ? null :
-                        (<Button
-                        className='addButton'
-                        variant='text'
-                        type='button'
-                        onClick={() => resetDeliveryMethodAndDeleteSavedCookie()}
-                        // onClick={() =>
-                        //   handleModal(UpdateAddressTwo,
-                        //     {
-                        //       item:{ address: deliveryMethodSaved?.deliveryAddress },
-                        //       id
-                        //     },
-                        //     'add-address-modal')
-                        // }
-                      >
-                        <IconWrapper>
-                          <Plus width='10px' />
-                        </IconWrapper>
-                        <FormattedMessage id='completeAddress' defaultMessage='Add New' />
-                      </Button>)
-                      }
+              <DeliverySelection
+                deliveryMethodSelected={deliveryMethodSelected}
+                setDeliveryMethodsSelected={setDeliveryMethodsSelected}
+                deliveryMethodsSelected={deliveryMethodsSelected}
+                setDeliveryAddress={setDeliveryAddress}
+                deliveryMethodTypeSelected={deliveryMethodTypeSelected}
+                setDeliveryMethodType={setDeliveryMethodType}
+                deliveryMethods={deliveryMethods}
+                setSubmitResult={setSubmitResult}
+                userSavedAddresses={delivery_address}
+                submitResult={submitResult}
+                handleEditDelete={handleEditDelete}
+                handlePrimary={handlePrimary}
+                cartProduct={cartProduct}
+              />
+          </InformationBox>
+            
+          { deliveryMethodsSelected && (
+            <InformationBox>
+              <Heading>
+                  <SectionNumber />
+                  <FormattedMessage
+                      id='deliveryDateId'
+                      defaultMessage='deliveryDateId'
                     />
-                  </ButtonGroup>
-                )}
-                
-              </DeliverySchedule>
+                </Heading>
+                <DeliverySchedule
+                  setDeliverySchedule={setDeliveryMethodSchedule}
+                  schedulesOfDeliveryMethodSelected={deliveryMethodsSelected}
+                  deliveryMethodSelected={deliveryMethodSelected}
+                />
             </InformationBox>
-
+          )}
+            
             {/* Contact number */}
             <InformationBox>
               <Heading>
+                <SectionNumber />
                 <FormattedMessage
                   id='contactNumberText'
                   defaultMessage='Select Your Contact Number'
                 />
-                <DeliveryTypesOptions />
               </Heading>
               <ButtonGroup>
                 <RadioGroupThree
@@ -795,7 +691,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   id='ownBagText'
                   defaultMessage=''
                 />
-                <DeliveryTypesOptions />
+                <SectionNumber />
               </Heading>
               <ButtonGroup>
                    <RadioGroupThree
@@ -824,7 +720,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                           }
                         />
                       )}
-                     secondaryComponent={ deliveryMethodSaved ? (
+                     secondaryComponent={ deliveryMethodSelected ? (
                       <Button
                         className='changeButton'
                         variant='text'
@@ -848,11 +744,11 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
               style={{ paddingBottom: 30 }}
             >
               <Heading>
+                <SectionNumber />
                 <FormattedMessage
                   id='selectPaymentText'
                   defaultMessage='Select Payment Option'
                 />
-                <DeliveryTypesOptions />
               </Heading>
 
               <PaymentGroup
@@ -969,7 +865,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                     id={loading ? 'processesingCheckout' : 'processCheckout'}
                     defaultMessage='Proceed to Checkout'
                   />
-                   . ({CURRENCY}{calculatePrice(calculateDeliveryCharge(deliveryMethodSaved?.name)+calculateCCCharge())})
+                   . ({CURRENCY}{calculatePrice(calculateDeliveryCharge(deliveryMethodSelected?.name)+calculateCCCharge())})
                 </Button>
               </CheckoutSubmit>
                 <div>
@@ -1073,7 +969,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       <FormattedMessage id='deliveryChargeText' defaultMessage='Delivery charge' />
                     </Text>
                     <Text>
-                      {CURRENCY} {calculateDeliveryCharge(deliveryMethodSaved?.name)}
+                      {CURRENCY} {calculateDeliveryCharge(deliveryMethodSelected?.name)}
                     </Text>
                   </TextWrapper>
 
@@ -1082,7 +978,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                       <FormattedMessage id='totalText' defaultMessage='Total' />{' '}
                     </Bold>
                     <Bold>
-                      {CURRENCY} {calculatePrice(calculateDeliveryCharge(deliveryMethodSaved?.name)+calculateCCCharge())}
+                      {CURRENCY} {calculatePrice(calculateDeliveryCharge(deliveryMethodSelected?.name)+calculateCCCharge())}
                     </Bold>
                   </TextWrapper>
                 </CalculationWrapper>

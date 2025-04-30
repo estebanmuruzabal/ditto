@@ -15,12 +15,12 @@ interface Props {
 }
 
 
-const LocationMenu = ({ deliveryMethodSaved, isOpen }) => {
+const LocationMenu = ({ deliveryMethodSelected, isOpen }) => {
   const mobile = useMedia('(max-width: 580px)');
   const address = mobile 
-    ? deliveryMethodSaved?.details?.split('|')?.[0].substring(0, deliveryMethodSaved?.details?.split('|')?.[0]?.lengtha)
-    : deliveryMethodSaved?.details?.split('|')?.[0]
-  const time = deliveryMethodSaved?.details?.split('|')?.[1]
+    ? deliveryMethodSelected?.details?.split('|')?.[0].substring(0, deliveryMethodSelected?.details?.split('|')?.[0]?.lengtha)
+    : deliveryMethodSelected?.details?.split('|')?.[0]
+  const time = deliveryMethodSelected?.details?.split('|')?.[1]
 
   const intl = useIntl();
 
@@ -34,12 +34,12 @@ const LocationMenu = ({ deliveryMethodSaved, isOpen }) => {
         { 
 
         }
-        <DeliveryText>{deliveryMethodSaved ? deliveryMethodSaved?.isPickUp ? DeliveryMethodsConstants.PICKUP : DeliveryMethodsConstants.DELIVERY : defaultText}</DeliveryText>
-        { deliveryMethodSaved?.name && address && (
+        <DeliveryText>{deliveryMethodSelected ? deliveryMethodSelected?.isPickUp ? DeliveryMethodsConstants.PICKUP : DeliveryMethodsConstants.DELIVERY : defaultText}</DeliveryText>
+        { deliveryMethodSelected?.name && address && (
           <>
               |
             <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>
-            <BannerText>{`${deliveryMethodSaved.name} - ${address}`}</BannerText>
+            <BannerText>{`${deliveryMethodSelected.name} - ${address}`}</BannerText>
           </>
         )}
       </LocationContent>
@@ -48,12 +48,12 @@ const LocationMenu = ({ deliveryMethodSaved, isOpen }) => {
 
 
 const SubHeader: React.FC<Props> = ({ ...props  }) => {
-  const [deliveryMethodSaved, setDeliveryMethodSaved] = React.useState();
+  const [deliveryMethodSelected, setDeliveryMethodSaved] = React.useState();
 
   // useEffect(() => {
-  //   // if (getCookie(deliveryMethodCookieKeyName) && !deliveryMethodSaved) {
-  //   //   const deliveryMethodSaved = JSON.parse(getCookie(deliveryMethodCookieKeyName));
-  //   //   setDeliveryMethodSaved(deliveryMethodSaved)
+  //   // if (getCookie(deliveryMethodCookieKeyName) && !deliveryMethodSelected) {
+  //   //   const deliveryMethodSelected = JSON.parse(getCookie(deliveryMethodCookieKeyName));
+  //   //   setDeliveryMethodSaved(deliveryMethodSelected)
   //   // }
   //   console.log('window.location.href.split("?").pop()',window.location.href.split("?").pop())
   //   if (window.location.href.split("?").pop()) {
@@ -68,12 +68,12 @@ const SubHeader: React.FC<Props> = ({ ...props  }) => {
         direction="left"
         className="user-pages-dropdown"
         openHandler={<LocationMenu
-          isOpen={false} deliveryMethodSaved={deliveryMethodSaved} />
+          isOpen={false} deliveryMethodSelected={deliveryMethodSelected} />
         }
         closeHandler={<LocationMenu
-          isOpen={true} deliveryMethodSaved={deliveryMethodSaved}/>
+          isOpen={true} deliveryMethodSelected={deliveryMethodSelected}/>
         }
-        content={<DeliverySelection deliveryMethodSaved={deliveryMethodSaved} setDeliveryMethodSaved={setDeliveryMethodSaved} />}
+        content={<DeliverySelection deliveryMethodSelected={deliveryMethodSelected} setDeliveryMethodSaved={setDeliveryMethodSaved} />}
       />
     </SubHeaderWrapper>
   );
