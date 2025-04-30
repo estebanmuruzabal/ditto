@@ -907,11 +907,23 @@ export const usersResolvers: IResolvers = {
                 throw new Error("User does not exits.");
             }
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             if (userResult.delivery_address && userResult.delivery_address.length == 3) {
                 throw new Error("Already added three address. You are not allowed to add more than three address.");
             }
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const addresses = userResult.delivery_address.map(address => {
+                return {
+                    id: address.id,
+                    title: address.title,
+                    address: address.address,
+                    location: address.location,
+                    instructions: address.instructions,
+                    is_primary: false
+                }
+            });
 
             const newAddress = {
                 id: shortid.generate(),
@@ -922,9 +934,11 @@ export const usersResolvers: IResolvers = {
                 is_primary: true,
             }
 
+            addresses.push(newAddress);
+
             await db.users.updateOne(
                 {_id: new ObjectId(id)},
-                {$push: {delivery_address: newAddress}}
+                {$set: {delivery_address: addresses}}
             );
 
             return newAddress;
