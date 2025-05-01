@@ -77,8 +77,6 @@ import { DeliveryIcon } from 'assets/icons/DeliveryIcon';
 import DeliverySelection from '../checkout-two-sections/delivery-selection';
 import DeliverySchedule from '../checkout-two-sections/delivery-schedule';
 
-
-
 // The type of props Checkout Form receives
 interface MyFormProps {
   token: string;
@@ -206,10 +204,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const size = useWindowSize();
   const [deliveryMethodsSelected, setDeliveryMethodsSelected] = React.useState(null);
   const [deliveryMethodSelected, setDeliveryMethodSelected] = React.useState();
-  console.log('deliveryMethodSelected:::', deliveryMethodSelected)
 
   const setDeliveryAddress =  (deliveryAddress, addressAlreadyAdded) => { 
-
+    console.log('deliveryAddress::', deliveryAddress) 
     setSubmitResult({
       ...submitResult,
       delivery_address: deliveryAddress,
@@ -222,7 +219,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   };
 
   const setDeliveryMethodSchedule =  (methodSelected, addressAlreadyAddedSelected) => {
-    console.log('methodSelected', methodSelected)
     const delivery_date = methodSelected?.isPickUp ? methodSelected?.details.split("|")[1]?.trim() : `${methodSelected?.details.split("|")[0]?.trim()} ${methodSelected?.details.split("|")[1]?.trim()}`;
     // const deliveryDateAndTime = `${getDeliverySchedule(deliveryMethodSelected?.details)} - ${moment(deliveryDate).format('DD MMM')}`;
     setDeliveryMethodSelected(methodSelected)
@@ -284,12 +280,9 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     setHasCoupon(false);
     
     deliveryCharge = calculateDeliveryCharge(deliveryMethodSelected?.name);
-    // // const deliveryAddress = pickUpOptionSelected ? pickUpAddress : selectedAddressText;
-    // console.log('here',deliveryMethodSelected?.deliveryAddress)
+
     setSubmitResult({
       ...submitResult,
-      // delivery_address: deliveryMethodSelected?.deliveryAddress,
-      // delivery_method_id: deliveryMethodSelected?.id,
       products: cartProduct,
       contact_number: selectedContact.number
     })
@@ -326,7 +319,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   };
 
   const handleEditDelete = async (item: any, index: any, type: string, name: string) => {
-    console.log('item', item)
     if (type === 'edit') {
       const modalComponent = name === 'address' ? UpdateAddressTwo : UpdateContact;
       handleModal(modalComponent,{
@@ -439,41 +431,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       return null;
   };
 
-
-  const getDeliveryDate = () => {
-    // moment.locale('es');
-    let orderDay = moment(new Date(), 'MM/D/YYYY').day();
-    const orderHour = moment(new Date(), 'MM/D/YYYY').hour();
-    let deliveryDate = moment(new Date());
-    const lunes = 1;const martes = 2;const miercoles = 3;const jueves = 4;const viernes = 5;const sabado = 6;const domingo = 7;
-
-    const lastOrderTime = 12;
-    switch (orderDay) {
-      case viernes:
-      case sabado:
-      case domingo:
-      case lunes:
-        deliveryDate.add(1, 'days');
-        break;
-      case martes:
-        if (orderHour >= lastOrderTime) {
-            deliveryDate.add(2, 'days');
-        }
-        break;
-      case miercoles:
-          // deliveryDate.add(1, 'days');
-        break;
-      case jueves:
-        if (orderHour >= lastOrderTime) {
-            deliveryDate.add(5, 'days');
-        }
-        break;
-      default:
-        break;
-    }
-    return moment(deliveryDate).format('dddd DD MMM');
-  }
-
   const handleSubmit = async () => {
     const deliveryCharge: number = calculateDeliveryCharge(deliveryMethodSelected?.name);
     const ccCharge: number = calculateCCCharge();
@@ -502,7 +459,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       total,
       discount_amount
     } = otherSubmitResult;
-    console.log('delivery_method_id',delivery_method_id)
+
     if (!delivery_method_id) { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
     if (!deliveryMethodSelected?.isPickUp && !selectedAddress) { setErrorFor5Sec('checkoutDeliveryAddressNotComplete');return; }
     if (!contact_number) { setErrorFor5Sec('checkoutContactNumberInvalid');return; }
@@ -556,7 +513,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
           setLoading(false);
         }
       } catch (error) {
-        console.log(error)
         if (confirm('Algo salió mal! Te pedimos disculpas y que por favor, comiences de vuelta tu compra.')) {
           console.log(error)
           setLoading(false);
@@ -573,7 +529,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     setHasCoupon(false);
     Router.push({ pathname: '/' })
   }
-  console.log(deliveryMethodsSelected)
+  console.log("delivery_address", delivery_address)
   return (
     <form>
       <CheckoutWrapper>
@@ -584,7 +540,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
             <Heading>
                 <SectionNumber />
                 <FormattedMessage
-                   id={(deliveryMethodSelected) ? 'selectDeliveryMethodSelected' : 'selectDeliveryMethod'}
+                   id={(deliveryMethodsSelected) ? 'selectDeliveryMethodSelected' : 'selectDeliveryMethod'}
                    defaultMessage='Select Your Delivery Type'
                 />
               </Heading>

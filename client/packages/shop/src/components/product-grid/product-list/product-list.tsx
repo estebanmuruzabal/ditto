@@ -27,9 +27,12 @@ const QuickView = dynamic(() => import('features/quick-view/quick-view'));
 const GeneralCard = dynamic(
   import('components/product-card/product-card-one/product-card-one')
 );
-// const BookCard = dynamic(
-//   import('components/product-card/product-card-two/product-card-two')
-// );
+const OneLineCard = dynamic(
+  import('components/product-card/product-card-six/product-card-six')
+);
+const BookCard = dynamic(
+  import('components/product-card/product-card-two/product-card-two')
+);
 // const FurnitureCard = dynamic(
 //   import('components/product-card/product-card-three/product-card-three')
 // );
@@ -238,7 +241,7 @@ export const Products: React.FC<ProductsProps> = ({
   return (
     <>
       <ProductsRow>
-        {onlineProducts?.map((item: any, index: number) => (
+        {onlineProducts?.sort((a, b) => a.name.localeCompare(b.name)).map((item: any, index: number) => (
           <ProductsCol
             key={index}
             style={type === 'book' ? { paddingLeft: 0, paddingRight: 1 } : {}}
@@ -255,7 +258,7 @@ export const Products: React.FC<ProductsProps> = ({
           </ProductsCol>
         ))}
       </ProductsRow>
-      {loadMore && data.products.hasMore && (
+      {/* {loadMore && data.products.hasMore && (
         <ButtonWrapper>
           <Button
             onClick={handleLoadMore}
@@ -269,7 +272,7 @@ export const Products: React.FC<ProductsProps> = ({
             <FormattedMessage id="loadMoreButton" defaultMessage="Load More" />
           </Button>
         </ButtonWrapper>
-      )}
+      )} */}
     </>
   );
 };

@@ -44,7 +44,7 @@ const DeliverySchedule: React.FC<Props> = ({ ...props  }) => {
 
   const intl = useIntl();
 
-  console.log('schedulesOfDeliveryMethodSelected', props.schedulesOfDeliveryMethodSelected)
+
   return (
     <>
         <ButtonGroup>

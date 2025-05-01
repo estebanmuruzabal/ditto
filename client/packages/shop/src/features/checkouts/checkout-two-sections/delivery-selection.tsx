@@ -86,16 +86,21 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   };
 
   const setDelivery =  (e, deli: DeliveryMethodsConstants) => {
-    e.stopPropagation();
+    e?.stopPropagation();
     props.setDeliveryMethodType(deli)
     props.setDeliveryMethodsSelected(null)
     setZipCode('')
   };
 
   const deleteDeliveryAddress =  () => {
+
+
     props.setDeliveryMethodsSelected(null)
+    props.setDeliveryAddress(null, true);
     setDeliveryAddressAutocomplete('')
     setNotInsideDeliveryAreas(false)
+    props.setDeliveryMethodType(null)
+    setZipCode('')
   };
 
   const handleOnFocus =  (event) => {
@@ -108,10 +113,10 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   const isDeliverySelected = props.deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY;
   const intl = useIntl();
 
-  const handleSelect = async (address, addressAlreadyAdded: false) => {
+  const handleSelect = async (address, addressAlreadyAdded) => {
 
     const results = await geocodeByAddress(address);
-    console.log('results',results, address);
+
     const latLng = await getLatLng(results[0]);
     setNotInsideDeliveryAreas(false);
     let deliveryOptionsMethods = [];
@@ -141,23 +146,69 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
       console.log(inside([latLng.lat, latLng.lng], plazaNueveDeJulioPolygon));
     }
     if (!notInsideDeliveryAreas) {
-      console.log('deliveryOptionsMethods234::::', deliveryOptionsMethods, results[0]?.formatted_address, addressAlreadyAdded);
       props.setDeliveryMethodsSelected(deliveryOptionsMethods)
       props.setDeliveryAddress(results[0]?.formatted_address, addressAlreadyAdded) 
     }
   };
-console.log('props.userSavedAddresses', props.userSavedAddresses)
+  console.log('props.submitResult?.delivery_address::', props.submitResult?.delivery_address) 
   return (
       <>
-          <DeliveryMethods>
-          <Options>
-              <CardWrapper color={isPickUpSelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.PICKUP)}><FormattedMessage id="pickUpId" defaultMessage="notFoundId" /></CardWrapper> 
-              <CardWrapper color={isDeliverySelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.DELIVERY)}><FormattedMessage id="deliveryId" defaultMessage="notFoundId2" /></CardWrapper> 
+        <DeliveryMethods>
+          <Options style={{justifyContent: !props.deliveryMethodsSelected ? 'space-between' : 'space-between'}}>
+              <CardWrapper color={isPickUpSelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.PICKUP)}><FormattedMessage id="pickUpId" defaultMessage="notFoundId" /></CardWrapper>
+              <CardWrapper color={isDeliverySelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.DELIVERY)}><FormattedMessage id="deliveryId" defaultMessage="notFoundId2" /></CardWrapper>
           </Options>
-          <Wrapper>  
+        </DeliveryMethods>
+        
+        { !!props.userSavedAddresses.length && props.deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && (
+          <ButtonGroup>
+            <RadioGroupThree
+              items={props.userSavedAddresses}
+                component={(item: any, index: any) => (
+                <RadioCardTWO
+                    id={index}
+                    key={index}
+                    address={item.address}
+                    location={item.location}
+                    instructions={item.instructions}
+                    title={item.title}
+                    name='address'
+                    isChecked={props.submitResult?.delivery_address?.includes(item.address)}
+                    onChange={() => props.handlePrimary(item, 'address')}
+                    onClick={() => { 
+                      handleSelect(`${item.address?.split(",")[0]} ${item.address?.split(",")[1]}, ${item.location}, ${item.instructions}`, true);
+                    }}
+                    hasEdit={false}
+                    // onEdit={() => props.handleEditDelete(item, index, 'edit', 'address')}
+                    onDelete={() =>
+                      props.handleEditDelete(item, index, 'delete', 'address')
+                    }
+                  />
+                )}
+              secondaryComponent={ !props.submitResult?.delivery_address?.length ? null :
+                (<Button
+                    className='addButton'
+                    variant='text'
+                    type='button'
+                    onClick={() => deleteDeliveryAddress()}
+                  >
+                    <IconWrapper>
+                      <Plus width='10px' />
+                    </IconWrapper>
+                    <FormattedMessage id='changeAddress' defaultMessage='Add New' />
+                  </Button>)
+                  }
+                />
+              </ButtonGroup>
+            )}
+        
+            <Wrapper>  
               { !!props.deliveryMethodTypeSelected && (
                 <Container>
-                  <Heading  onClick={(e) => handleOnFocus(e)}>
+                  
+                    { !props.deliveryMethodsSelected && (
+                      <>
+                      <Heading  onClick={(e) => handleOnFocus(e)}>
                       { isPickUpSelected ? (
                       <FormattedMessage
                           id="pickupModalheading"
@@ -170,159 +221,100 @@ console.log('props.userSavedAddresses', props.userSavedAddresses)
                       />
                       )}
                     </Heading>
-                    { isPickUpSelected ? (
-                      <div onClick={(e) => handleOnFocus(e)}>
-                        <Input
-                            type='text'
-                            name='name'
-                            onFocus={(e) => handleOnFocus(e)}
-                            // placeholder='Código postal'
-                            value={zipCode}
-                            autoComplete="off"
-                            // we have to change the onChange because the is no one for the controller name actualy
-                            onChange={(e) => searchPickupZipCode(e)}
-                        />
-                      </div>
-                      ) : (
-                      <PlacesAutocomplete
-                        value={deliveryAddressAutocomplete}
-                        onChange={(e) => setDeliveryAddressAutocomplete(e)}
-                        onSelect={(e) => handleSelect(e, false)}
-                        searchOptions={{
-                          types: [],
-                          componentRestrictions: { country: "ar" },
-                        }}
-                      >
-                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                          <div onClick={(e) => handleOnFocus(e)} >
-                            <div style={{ width: '100%',
-                              display: 'flex',
-                              justifyContent: 'center',
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              padding: '0px 0px',}}>
-                              <input
-                                {...getInputProps({
-                                  placeholder: "Calle, altura, localidad",
-                                  className: "location-search-input",
-                                  style: {
-                                    width: '220px',
-                                    padding:'0px 8px',
-                                    appearance: 'none',
-                                    fontFamily: `'Lato', sans-serif`,
-                                    fontSize: '15',
-                                    lineHeight: 'inherit',
-                                    border: '1px solid',
-                                    borderColor: '#f7f7f7',
-                                    borderRadius: '6px',
-                                    backgroundColor: '#f7f7f7',
-                                    color: '#0D1136',
-                                    height: '48px',
-                                    transition: 'all 0.25s ease',
-                                    // mb: 3,
-                                    '&:hover,&:focus': {
-                                      outline: 0,
-                                      borderColor: '#009e7f',
+                      { isPickUpSelected ? (
+                        <div onClick={(e) => handleOnFocus(e)}>
+                          <Input
+                              type='text'
+                              name='name'
+                              onFocus={(e) => handleOnFocus(e)}
+                              // placeholder='Código postal'
+                              value={zipCode}
+                              autoComplete="off"
+                              // we have to change the onChange because the is no one for the controller name actualy
+                              onChange={(e) => searchPickupZipCode(e)}
+                          />
+                        </div>
+                        ) : (
+                        <PlacesAutocomplete
+                          value={deliveryAddressAutocomplete}
+                          onChange={(e) => setDeliveryAddressAutocomplete(e)}
+                          onSelect={(e) => handleSelect(e, false)}
+                          searchOptions={{
+                            types: [],
+                            componentRestrictions: { country: "ar" },
+                          }}
+                        >
+                          {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                            <div onClick={(e) => handleOnFocus(e)} >
+                              <div style={{ width: '100%',
+                                display: 'flex',
+                                justifyContent: 'left',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                padding: '0px 0px',}}>
+                                <input
+                                  {...getInputProps({
+                                    placeholder: "Calle, altura, localidad",
+                                    className: "location-search-input",
+                                    style: {
+                                      width: '220px',
+                                      padding:'0px 8px',
+                                      appearance: 'none',
+                                      fontFamily: `'Lato', sans-serif`,
+                                      fontSize: '15',
+                                      lineHeight: 'inherit',
+                                      border: '1px solid',
+                                      borderColor: '#f7f7f7',
+                                      borderRadius: '6px',
+                                      backgroundColor: '#f7f7f7',
+                                      color: '#0D1136',
+                                      height: '48px',
+                                      transition: 'all 0.25s ease',
+                                      // mb: 3,
+                                      '&:hover,&:focus': {
+                                        outline: 0,
+                                        borderColor: '#009e7f',
+                                      },
                                     },
-                                  },
+                                  })}
+                                />{ deliveryAddressAutocomplete?.length ? (
+                                  <ActionsButtons className='button-wrapper'>
+                                      <ActionButton onClick={() => deleteDeliveryAddress()} className='delete-btn'>
+                                          <CloseIcon />
+                                      </ActionButton>
+                                  </ActionsButtons>
+                                ): ''}
+                              </div>
+                              <div className="autocomplete-dropdown-container">
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map((suggestion) => {
+                                  const style = suggestion.active
+                                    ? { backgroundColor: "#fafafa", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px' }
+                                    : { backgroundColor: "#ffffff", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px', alignItems: "center" };
+                                  return (
+                                    <div {...getSuggestionItemProps(suggestion, { style })}>
+                                      <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>{suggestion.description?.split(",")[0]}{suggestion.description?.split(",")[1]}
+                                    </div>
+                                  );
                                 })}
-                              />{ deliveryAddressAutocomplete?.length ? (
-                                <ActionsButtons className='button-wrapper'>
-                                    <ActionButton onClick={() => deleteDeliveryAddress()} className='delete-btn'>
-                                        <CloseIcon />
-                                    </ActionButton>
-                                </ActionsButtons>
-                              ): ''}
+                              </div>
                             </div>
-                            <div className="autocomplete-dropdown-container">
-                              {loading && <div>Loading...</div>}
-                              {suggestions.map((suggestion) => {
-                                const style = suggestion.active
-                                  ? { backgroundColor: "#fafafa", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px' }
-                                  : { backgroundColor: "#ffffff", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px', alignItems: "center" };
-                                return (
-                                  <div {...getSuggestionItemProps(suggestion, { style })}>
-                                    <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>{suggestion.description?.split(",")[0]}{suggestion.description?.split(",")[1]}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
+                          )}
+                        </PlacesAutocomplete>
                         )}
-                      </PlacesAutocomplete>
+                      { !props.deliveryMethodsSelected && zipCode.length >= 4 && props.deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP && (
+                        <DeliveryText>{intl.formatMessage({ id: 'noDittoPickUpLocations', defaultMessage: 'noDittoPickUpLocations' })}</DeliveryText>
                       )}
-                    { !props.deliveryMethodsSelected && zipCode.length >= 4 && props.deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP && (
-                      <DeliveryText>{intl.formatMessage({ id: 'noDittoPickUpLocations', defaultMessage: 'noDittoPickUpLocations' })}</DeliveryText>
+                      {notInsideDeliveryAreas && (
+                        <DeliveryText>{intl.formatMessage({ id: 'noDeliveryThereYet', defaultMessage: 'noDeliveryThereYet' })}</DeliveryText>
+                      )}
+                      </>
+                        
                     )}
-                    {notInsideDeliveryAreas && (
-                      <DeliveryText>{intl.formatMessage({ id: 'noDeliveryThereYet', defaultMessage: 'noDeliveryThereYet' })}</DeliveryText>
-                    )}
+                    
                 </Container>
               )}
-              {/* <OfferSection>
-              <GiftBox />
-              <Offer>
-                  <FormattedMessage
-                  id="locationModalFooter"
-                  defaultMessage="Free Delivery For 1st Order"
-                  values={{ number: 1 }}
-                  />
-              </Offer>
-              </OfferSection> */}
           </Wrapper>
-      </DeliveryMethods>
-
-        { !!props.userSavedAddresses.length && props.deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && (
-          <ButtonGroup>
-            {"o selecciona una direccion"}
-            <RadioGroupThree
-              items={props.userSavedAddresses}
-                component={(item: any, index: any) => (
-                <RadioCardTWO
-                    id={index}
-                    key={index}
-                    address={item.address}
-                    location={item.location}
-                    instructions={item.instructions}
-                    title={item.title}
-                    name='address'
-                    isChecked={item.is_primary === true}
-                    onChange={() => props.handlePrimary(item, 'address')}
-                    onClick={() => { 
-                      handleSelect(`${item.address?.split(",")[0]} ${item.address?.split(",")[1]}, ${item.location}, ${item.instructions}`, true);
-                    }}
-                    hasEdit={false}
-                    // onEdit={() => props.handleEditDelete(item, index, 'edit', 'address')}
-                    onDelete={() =>
-                      props.handleEditDelete(item, index, 'delete', 'address')
-                    }
-                  />
-                )}
-              secondaryComponent={ props.deliveryMethodSelected ? null :
-                (<Button
-                className='addButton'
-                variant='text'
-                type='button'
-                onClick={() => props.setDeliveryAddress(null)}
-                // onClick={() =>
-                //   handleModal(UpdateAddressTwo,
-                //     {
-                //       item:{ address: props.deliveryMethodSelected?.deliveryAddress },
-                //       id
-                //     },
-                //     'add-address-modal')
-                // }
-              >
-                <IconWrapper>
-                  <Plus width='10px' />
-                </IconWrapper>
-                <FormattedMessage id='completeAddress' defaultMessage='Add New' />
-              </Button>)
-              }
-            />
-          </ButtonGroup>
-        )}
-        
       </>
     );
 

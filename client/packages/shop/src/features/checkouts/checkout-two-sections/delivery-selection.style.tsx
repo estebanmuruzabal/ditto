@@ -211,12 +211,13 @@ export const LocationContent = styled.div`
 export const DeliveryMethods = styled.div`
   display: flex;
   flex-direction: column;
+  width: 400px;
 `;
 
 export const Options = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  
   padding: 0px 20px;
 `;
 
@@ -279,7 +280,7 @@ line-height: 0;
 // `;
 
 export const Wrapper = styled.div`
-  text-align: center;
+  text-align: left;
   background-color: ${themeGet('colors.white', '#ffffff')};
 `;
 export const Container = styled.div`
