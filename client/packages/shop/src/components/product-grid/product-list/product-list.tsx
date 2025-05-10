@@ -258,7 +258,7 @@ export const Products: React.FC<ProductsProps> = ({
           </ProductsCol>
         ))}
       </ProductsRow>
-      {/* {loadMore && data.products.hasMore && (
+      {loadMore && data.products.hasMore && (
         <ButtonWrapper>
           <Button
             onClick={handleLoadMore}
@@ -272,7 +272,7 @@ export const Products: React.FC<ProductsProps> = ({
             <FormattedMessage id="loadMoreButton" defaultMessage="Load More" />
           </Button>
         </ButtonWrapper>
-      )} */}
+      )}
     </>
   );
 };

@@ -44,8 +44,8 @@ const FormEnhancer = withFormik<MyFormProps, FormValues>({
     };
   },
   validationSchema: Yup.object().shape({
-    name: Yup.string().required('Required!'),
-    info: Yup.string().required('Required'),
+    name: Yup.string().required('Requerido!'),
+    info: Yup.string().required('Requerido'),
   }),
   handleSubmit: (values) => {
     // do submitting things

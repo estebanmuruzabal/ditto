@@ -131,7 +131,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [couponCode, setCouponCode] = useState('');
   const [couponError, setError] = useState('');
   const [orderError, setOrderError] = useState('');
-  const [deliveryMethodTypeSelected, setDeliveryMethodType] = React.useState();
+  const [deliveryMethodTypeSelected, setDeliveryMethodType] = React.useState('');
   const [checkoutError, setCheckoutError] = useState('');
   const { state, dispatch } = useContext(ProfileContext);
   const { isRtl } = useLocale();
@@ -206,7 +206,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
   const [deliveryMethodSelected, setDeliveryMethodSelected] = React.useState();
 
   const setDeliveryAddress =  (deliveryAddress, addressAlreadyAdded) => { 
-    console.log('deliveryAddress::', deliveryAddress) 
     setSubmitResult({
       ...submitResult,
       delivery_address: deliveryAddress,
@@ -214,7 +213,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     })
 
     if (!addressAlreadyAdded) {
-      handleModal(UpdateAddressTwo,  { item:{ address: deliveryAddress?.split(",")[0], location: deliveryAddress?.split(",")[1] }, id }, 'add-address-modal');
+      handleModal(UpdateAddressTwo,  { item:{ address: deliveryAddress?.split(",")[0], location: deliveryAddress?.split(",")[1].includes('Resistencia') ? 'Resistencia' : deliveryAddress?.split(",")[1] }, id }, 'add-address-modal');
     }
   };
 
@@ -459,11 +458,16 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
       total,
       discount_amount
     } = otherSubmitResult;
+    
+    console.log("deliveryMethodTypeSelected", deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP, !submitResult?.delivery_address)
 
-    if (!delivery_method_id) { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
-    if (!deliveryMethodSelected?.isPickUp && !selectedAddress) { setErrorFor5Sec('checkoutDeliveryAddressNotComplete');return; }
+    if (deliveryMethodTypeSelected === '') { setErrorFor5Sec('checkoutDeliveryMethodInvalid');return; }
+    if (deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && !submitResult?.delivery_address) { setErrorFor5Sec('checkoutDeliveryAddressInvalid');return; }
+    if (deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP && !deliveryMethodsSelected) { setErrorFor5Sec('checkoutDeliveryZipcodeInvalid');return; }
+    if (deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP && !delivery_method_id) { setErrorFor5Sec('checkoutDeliveryPickupDateNotSelected');return; }
+    if (deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && submitResult?.delivery_address && !submitResult?.delivery_date) { setErrorFor5Sec('checkoutDeliveryDateNotSelected');return; }
     if (!contact_number) { setErrorFor5Sec('checkoutContactNumberInvalid');return; }
-    if (!payment_option_id) { setErrorFor5Sec(pickUpAddress ? 'checkoutPaymentMethodInvalidOption3' : 'checkoutPaymentMethodInvalidOption4');return; }
+    if (!payment_option_id) { setErrorFor5Sec(pickUpAddress ? 'checkoutPaymentMethodInvalidOption4' : 'checkoutPaymentMethodInvalidOption4');return; }
 
     if (!customer_id || !products) {
       setCheckoutError('Please place a valid order!');
@@ -529,7 +533,7 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
     setHasCoupon(false);
     Router.push({ pathname: '/' })
   }
-  console.log("delivery_address", delivery_address)
+
   return (
     <form>
       <CheckoutWrapper>
@@ -798,16 +802,6 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                 </Link>
               </TermConditionText>
 
-              {/* CheckoutSubmit */}
-              {checkoutError && (
-                        <ErrorMsg>
-                            <FormattedMessage
-                                id='checkoutError'
-                                defaultMessage={checkoutError}
-                            />
-                        </ErrorMsg>
-                    )}
-
               <CheckoutSubmit>
                 <Button
                     type='button'
@@ -823,6 +817,16 @@ const CheckoutWithSidebar: React.FC<MyFormProps> = ({ token, deviceType }) => {
                   />
                    . ({CURRENCY}{calculatePrice(calculateDeliveryCharge(deliveryMethodSelected?.name)+calculateCCCharge())})
                 </Button>
+                      {/* CheckoutSubmit */}
+              {checkoutError && (
+                        <ErrorMsg>
+                            <FormattedMessage
+                                id='checkoutError'
+                                defaultMessage={checkoutError}
+                            />
+                        </ErrorMsg>
+                    )}
+
               </CheckoutSubmit>
                 <div>
                     

@@ -180,9 +180,12 @@ const RadioCardTWO: React.FC<RadioCardProps> = ({
         onClick={onClick}
       />
       {title && <CardTitle>{title}</CardTitle>}
-      {address && <CardContent>{intl.formatMessage({ id: 'addressTitleId', defaultMessage: 'Address:' })} {address}</CardContent>}
+      {/* {address && <CardContent>{intl.formatMessage({ id: 'addressTitleId', defaultMessage: 'Address:' })} {address}</CardContent>}
       {location && <CardContent>{intl.formatMessage({ id: 'localidadTitleId', defaultMessage: 'Location:' })} {location}</CardContent>}
-      {instructions && <CardContent>{intl.formatMessage({ id: 'instructionsTitleId', defaultMessage: 'Instructions:' })} {instructions}</CardContent>}
+      {instructions && <CardContent>{intl.formatMessage({ id: 'instructionsTitleId', defaultMessage: 'Instructions:' })} {instructions}</CardContent>} */}
+      {address && <CardContent>{address}</CardContent>}
+      {location && <CardContent>{location}</CardContent>}
+      {instructions && <CardContent>{instructions}</CardContent>}
       {withActionButtons && (
         <CardButtons className='button-wrapper'>
           {hasEdit && (

@@ -235,12 +235,12 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                               </div>
                               <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
-                                {suggestions.map((suggestion) => {
+                                {suggestions.map((suggestion, i) => {
                                   const style = suggestion.active
                                     ? { backgroundColor: "#fafafa", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px' }
                                     : { backgroundColor: "#ffffff", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px', alignItems: "center" };
                                   return (
-                                    <div {...getSuggestionItemProps(suggestion, { style })}>
+                                    <div key={`${i}-suggestion`} {...getSuggestionItemProps(suggestion, { style })}>
                                       <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>{suggestion.description?.split(",")[0]}{suggestion.description?.split(",")[1]}
                                     </div>
                                   );

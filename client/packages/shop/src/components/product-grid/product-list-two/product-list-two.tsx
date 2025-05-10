@@ -34,7 +34,7 @@ type ProductsProps = {
 export const Products: React.FC<ProductsProps> = ({
   deviceType,
   type,
-  fetchLimit = 8,
+  fetchLimit = 26,
   loadMore = true,
 }) => {
   const router = useRouter();

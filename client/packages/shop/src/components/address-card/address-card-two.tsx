@@ -48,9 +48,9 @@ const FormEnhancer = withFormik<MyFormProps, FormValues>({
     };
   },
   validationSchema: Yup.object().shape({
-    title: Yup.string().required('Required!'),
-    address: Yup.string().required('Required'),
-    location: Yup.string().required('Required'),
+    title: Yup.string().required('Requerido!'),
+    address: Yup.string().required('Requerido'),
+    location: Yup.string().required('Requerido'),
   }),
   handleSubmit: (values) => {
     // do submitting things
@@ -102,7 +102,7 @@ const UpdateAddressTwo = (props: FormikProps<FormValues> & MyFormProps) => {
     if (isValid) {
       const {id, addressId, title, address, location, instructions} = addressValue;
       // addressItem puede pre-cargar address solamente para luego el usuario completar el resto de los datos
-
+      if (title === '' || address === '' || location === '') return;
       if (Object.keys(addressItem).length === 0 || Object.keys(addressItem).length === 2) {
         const {data}  = await addAddressMutation({
           variables: { 
@@ -185,13 +185,13 @@ const handleSelect = async (address) => {
     });
   } else {
     setNotInsideDeliveryAreas(true);
-    console.log(inside([latLng.lat, latLng.lng], plazaNueveDeJulioPolygon));
+
   }
-  console.log('setDeliveryAddress(address?.split(',')[0]);', address?.split(',')[0])
+
   setDeliveryAddress(address?.split(',')[0]);
   setSearchResult(deliveryOptionsMethods)
 };
-  console.log(values)
+
   return (
     <Form>
       <Heading>{intl.formatMessage({ id: addressItem?.id ? 'editAddressId' : 'addNewAddressId', defaultMessage: 'Address name' })}</Heading>

@@ -41,7 +41,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   const [zipCode, setZipCode] = React.useState('');
   const [searchResult, setSearchResult] = React.useState([]);
   const [deliveryAddressAutocomplete, setDeliveryAddressAutocomplete] = useState("");
-  const [notInsideDeliveryAreas, setNotInsideDeliveryAreas] = useState(false);
+  const [insideDeliveryArea, setInsideDeliveryArea] = useState(true);
 
   // const setDeliveryMethod =  (deliveryOrPickupMethodSelected) => {
   //   const deliveryMethod = isPickUpSelected ? deliveryOrPickupMethodSelected : {...deliveryOrPickupMethodSelected, deliveryAddressAutocomplete};
@@ -93,12 +93,16 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   };
 
   const deleteDeliveryAddress =  () => {
+    setDeliveryAddressAutocomplete('')
+    setInsideDeliveryArea(true)
+    setZipCode('')
+  };
 
-
+  const deleteDeliverySelection =  () => {
     props.setDeliveryMethodsSelected(null)
     props.setDeliveryAddress(null, true);
     setDeliveryAddressAutocomplete('')
-    setNotInsideDeliveryAreas(false)
+    setInsideDeliveryArea(true)
     props.setDeliveryMethodType(null)
     setZipCode('')
   };
@@ -116,41 +120,51 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   const handleSelect = async (address, addressAlreadyAdded) => {
 
     const results = await geocodeByAddress(address);
-
+    console.log('results', results);
     const latLng = await getLatLng(results[0]);
-    setNotInsideDeliveryAreas(false);
     let deliveryOptionsMethods = [];
+    let insideDeliveryArea = false;
 
     if (inside([latLng.lat, latLng.lng], plazadoceDeOctubrePolygon)) {
+      console.log('inside plazadoceDeOctubrePolygon');
+      insideDeliveryArea = true;
       deliveryOptionsMethods = props.deliveryMethods?.filter(deliveryMethod => {
         if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Lunes')) { deliveryMethod.name = 'GRATIS'; return true;}
         return !deliveryMethod.isPickUp;
       });
     } else if (inside([latLng.lat, latLng.lng], plazaBelgranoPolygon)) {
+      console.log('inside plazaBelgranoPolygon');
+      insideDeliveryArea = true;
       deliveryOptionsMethods = props.deliveryMethods?.filter(deliveryMethod => {
         if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Martes')) { deliveryMethod.name = 'GRATIS'; return true;}
         return !deliveryMethod.isPickUp;
       });
     } else if (inside([latLng.lat, latLng.lng], plazaNueveDeJulioPolygon)) {
+      console.log('inside plazaNueveDeJulioPolygon');
+      insideDeliveryArea = true;
         deliveryOptionsMethods = props.deliveryMethods?.filter(deliveryMethod => {
           if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Miercoles')) { deliveryMethod.name = 'GRATIS'; return true;}
           return !deliveryMethod.isPickUp;
         });
     } else if (inside([latLng.lat, latLng.lng], plazaEspañaPolygon)) {
+      insideDeliveryArea = true;
+      console.log('inside plazaEspañaPolygon');
       deliveryOptionsMethods = props.deliveryMethods?.filter(deliveryMethod => {
         if (!deliveryMethod.isPickUp && deliveryMethod.details.includes('Jueves')) { deliveryMethod.name = 'GRATIS'; return true;}
         return !deliveryMethod.isPickUp;
       });
-    } else {
-      setNotInsideDeliveryAreas(true);
-      console.log(inside([latLng.lat, latLng.lng], plazaNueveDeJulioPolygon));
     }
-    if (!notInsideDeliveryAreas) {
+
+    if (insideDeliveryArea) {
+      console.log('sad');
+      setInsideDeliveryArea(true)
       props.setDeliveryMethodsSelected(deliveryOptionsMethods)
       props.setDeliveryAddress(results[0]?.formatted_address, addressAlreadyAdded) 
+    } else {
+      setInsideDeliveryArea(false)
     }
   };
-  console.log('props.submitResult?.delivery_address::', props.submitResult?.delivery_address) 
+
   return (
       <>
         <DeliveryMethods>
@@ -166,7 +180,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
               items={props.userSavedAddresses}
                 component={(item: any, index: any) => (
                 <RadioCardTWO
-                    id={index}
+                    id={`${index}-addresses`}
                     key={index}
                     address={item.address}
                     location={item.location}
@@ -190,7 +204,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                     className='addButton'
                     variant='text'
                     type='button'
-                    onClick={() => deleteDeliveryAddress()}
+                    onClick={() => deleteDeliverySelection()}
                   >
                     <IconWrapper>
                       <Plus width='10px' />
@@ -287,12 +301,12 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                               </div>
                               <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
-                                {suggestions.map((suggestion) => {
+                                {suggestions.map((suggestion, i) => {
                                   const style = suggestion.active
                                     ? { backgroundColor: "#fafafa", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px' }
                                     : { backgroundColor: "#ffffff", cursor: "pointer", borderBottom: "1px solid gray",justifyContent: "flex-start", display: 'flex', maxWidth: '320px', alignItems: "center" };
                                   return (
-                                    <div {...getSuggestionItemProps(suggestion, { style })}>
+                                    <div key={`${i}-suggestion`} {...getSuggestionItemProps(suggestion, { style })}>
                                       <BannerIcon><img src={DeliveryIcon} alt="" /></BannerIcon>{suggestion.description?.split(",")[0]}{suggestion.description?.split(",")[1]}
                                     </div>
                                   );
@@ -305,7 +319,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                       { !props.deliveryMethodsSelected && zipCode.length >= 4 && props.deliveryMethodTypeSelected === DeliveryMethodsConstants.PICKUP && (
                         <DeliveryText>{intl.formatMessage({ id: 'noDittoPickUpLocations', defaultMessage: 'noDittoPickUpLocations' })}</DeliveryText>
                       )}
-                      {notInsideDeliveryAreas && (
+                      {!insideDeliveryArea && (
                         <DeliveryText>{intl.formatMessage({ id: 'noDeliveryThereYet', defaultMessage: 'noDeliveryThereYet' })}</DeliveryText>
                       )}
                       </>
