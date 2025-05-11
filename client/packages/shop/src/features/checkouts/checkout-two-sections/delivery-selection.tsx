@@ -174,7 +174,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
           </Options>
         </DeliveryMethods>
         
-        { !!props.userSavedAddresses.length && props.deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && (
+        { !!props?.userSavedAddresses?.length && props?.deliveryMethodTypeSelected === DeliveryMethodsConstants.DELIVERY && (
           <ButtonGroup>
             <RadioGroupThree
               items={props.userSavedAddresses}
