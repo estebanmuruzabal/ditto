@@ -48,12 +48,14 @@ type ProductsProps = {
     desktop: boolean;
   };
   fetchLimit?: number;
+  category?: string;
   loadMore?: boolean;
   type?: string;
 };
 export const Products: React.FC<ProductsProps> = ({
   deviceType,
   fetchLimit = 20,
+  category = 'frutas-y-verduras',
   loadMore = true,
   type,
 }) => {
@@ -64,8 +66,8 @@ export const Products: React.FC<ProductsProps> = ({
     {
       variables: {
         type: router.query.type,
+        category: 'frutas-y-verduras',
         text: router.query.text,
-        category: router.query.category,
         offset: 0,
         limit: fetchLimit,
       },
