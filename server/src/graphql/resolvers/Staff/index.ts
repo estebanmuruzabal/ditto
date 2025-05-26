@@ -32,7 +32,7 @@ export const staffMethodsResolvers: IResolvers = {
     Mutation: {
         staffSignUp: async (
             _root: undefined,
-            {phone, password, role}: { phone: string, password: string, role: Roles },
+            {phone, password, name, role}: { phone: string, password: string, name: string, role: Roles },
             {db}: { db: Database }
         ): Promise<ICommonMessageReturnType> => {
             const userResult = await db.users.findOne({"phones.number": phone});
@@ -52,7 +52,7 @@ export const staffMethodsResolvers: IResolvers = {
             const otp = generateOTPCode();
             const user: IUser = {
                 _id: new ObjectId(),
-                name: "",
+                name,
                 email: "",
                 password: await hashPassword(password),
                 phones: [{id: shortid.generate(), number: phone, status: false, is_primary: true}],

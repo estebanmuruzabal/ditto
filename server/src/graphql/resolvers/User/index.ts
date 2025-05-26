@@ -282,6 +282,7 @@ export const usersResolvers: IResolvers = {
                 tasks: [],
                 chatHistory: [],
                 shoppingCart: undefined,
+                delivery_address: [],
                 plants: [],
                 logs: []
             };

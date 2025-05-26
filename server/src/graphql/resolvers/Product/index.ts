@@ -51,7 +51,7 @@ export const productsResolvers: IResolvers = {
             const hasMore = products.length > offset + limit;
 
             return {
-                items: limit == 0 ? products: products.slice(offset, offset + limit),
+                items: products,
                 totalCount: products.length,
                 hasMore,
             }
