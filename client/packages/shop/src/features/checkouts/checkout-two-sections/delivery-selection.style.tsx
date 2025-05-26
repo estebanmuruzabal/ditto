@@ -212,7 +212,7 @@ export const DeleteButtonsContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  margin-top: -60px;
+  margin-top: -50px;
   margin-left: 200px;
   @media (max-width: 767px) {
     margin-left: 0px;

@@ -69,7 +69,11 @@ export default function SignInModal() {
           user
         });
         closeModal();
-        Router.push('/[type]', router.asPath);
+        if (router.asPath === '/checkout') {
+          Router.push({ pathname: '/checkout', query: { shouldRefresh: true } })
+        } else {
+          Router.push({ pathname: '/home' })
+        }
       }
     },
     onError: (error) => {
