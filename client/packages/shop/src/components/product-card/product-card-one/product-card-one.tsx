@@ -21,6 +21,7 @@ import { useCart } from 'contexts/cart/use-cart';
 import { Counter } from 'components/counter/counter';
 import { cartAnimation } from 'utils/cart-animation';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { isMobile } from 'react-device-detect';
 import { CartIcon } from 'assets/icons/CartIcon';
 import { ProductQuantityExceededMsg } from '../product-card.style';
 import CartPopUp from 'features/carts/cart-popup-two';
@@ -210,7 +211,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const noRecicledQuantityInCart = getItem(data.id)?.quantity;
   const reclicledQuantityInCart = getItem(data.id)?.recicledQuantity;
   return (
-    <ProductCardWrapper onClick={onClick} className="product-card">
+    <ProductCardWrapper onClick={onClick} className="product-card" style={isMobile ? { display: 'flex' } : {}}>
       <ProductImageWrapper>
         <Image
           url={image}

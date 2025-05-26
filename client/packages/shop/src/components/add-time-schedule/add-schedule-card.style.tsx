@@ -27,6 +27,13 @@ export const ButtonsContainer = styled.div`
   margin-top: 30px;
 `;
 
+export const DeleteButtonsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 30px;
+`;
+
 export const WeekContainer = styled.div`
   display: flex;
   flex-direction: row;

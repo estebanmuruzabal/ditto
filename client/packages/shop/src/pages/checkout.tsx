@@ -45,11 +45,14 @@ const CheckoutPage: NextPage<Props> = ({deviceType}) => {
     const intl = useIntl();
     const router = useRouter();
 
-    // React.useEffect(() => {
-    //     if (router.query.shouldRefresh) {
-    //         userRefetch();
-    //     }
-    //   }, []);
+    React.useEffect(() => {
+        if (error?.toString()?.includes('no token sent')) {
+            setTimeout(() => {
+                toggleSignInForm();
+                console.log('no token sent');
+              }, 500);
+        }
+      }, [error]);
 
     const {authDispatch} = useContext<any>(AuthContext);
 

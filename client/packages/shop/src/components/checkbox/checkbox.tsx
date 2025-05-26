@@ -12,7 +12,7 @@ type CheckBoxProps = {
   id: string;
   disabled?: boolean;
   isChecked?: boolean;
-  labelText: string;
+  labelText?: string;
   className?: string;
   keyName: string;
   labelPosition?: 'left' | 'right';

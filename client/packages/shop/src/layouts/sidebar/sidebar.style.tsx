@@ -72,7 +72,7 @@ export const SidebarWrapper = styled.div`
   }
 
   @media (max-width: 990px) {
-    display: none;
+    // display: none;
     padding: 0;
   }
 `;

@@ -65,7 +65,8 @@ export const Heading = styled.h3`
   align-items: center;
 
   @media (max-width: 600px) {
-    font-size: ${themeGet('fontSizes.md', '19')}px;
+    font-size: 16px;
+    font-weight: ${themeGet('fontWeights.bold', '700')};
   }
 `;
 export const HeadingWider = styled.h3`
@@ -104,7 +105,7 @@ export const InformationBox = styled.div`
   box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.08);
 
   @media (max-width: 767px) {
-    padding: 20px;
+    padding: 10px;
   }
 
   &.paymentBox {
@@ -135,7 +136,7 @@ export const InformationBox = styled.div`
       @media (max-width: 600px) {
         width: 30px;
         height: 30px;
-        font-size: calc(${themeGet('fontSizes.base', '15')}px - 1px);
+        font-size: 16px;
       }
     }
   }
@@ -160,7 +161,7 @@ export const InformationBox = styled.div`
       @media (max-width: 600px) {
         width: 30px;
         height: 30px;
-        font-size: calc(${themeGet('fontSizes.base', '15')}px - 1px);
+        font-size: 16px;
       }
     }
   }

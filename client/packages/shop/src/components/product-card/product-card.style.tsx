@@ -50,7 +50,8 @@ export const ProductImageWrapper = styled.div`
     display: inline-block;
   }
   @media (max-width: 767px) {
-    height: 145px;
+    height: 80px;
+    width: 80px;
   }
 `;
 
@@ -108,8 +109,9 @@ export const OutOfStock = styled.span`
 export const ProductInfo = styled.div`
   padding: 10px 18px 20px;
   @media (max-width: 767px) {
-    padding: 15px 20px;
-    min-height: 123px;
+    display: flex;
+    padding: 5px 10px;
+    // min-height: 123px;
   }
   .eco-detail {
     font-family: ${themeGet('fonts.body', 'sans-serif')};
@@ -130,10 +132,11 @@ export const ProductInfo = styled.div`
     // white-space: nowrap;
     min-height: 45px;
     @media (max-width: 767px) {
-      font-size: 14px;
-      min-height: 63px;
-      margin-left: -12px;
-      margin-right: -12px;
+      font-size: 16px;
+      min-height: 0px;
+      // min-height: 63px;
+      // margin-left: -12px;
+      // margin-right: -12px;
     }
   }
   .product-weight {
@@ -471,7 +474,8 @@ export const FoodImageWrapper = styled.div`
     z-index: 1;
   }
   @media (max-width: 767px) {
-    height: 145px;
+    height: 60px;
+    width: 60px;
   }
 `;
 
@@ -607,6 +611,9 @@ export const ProductTitle = styled.h1`
 export const PriceContainer = styled.div`
   display: flex;
   flex-direction: column;
+  @media (max-width: 767px) {
+    padding: 5px 10px;
+  }
 `;
 
 export const PriceContainerRow = styled.div`

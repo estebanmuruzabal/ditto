@@ -41,10 +41,10 @@ export default function SignOutModal() {
 
   //signup
   const [phone, setPhone] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [password, setPassword] = React.useState('123456');
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
-  const [repeatPassword, setRepeatPassword] = React.useState('');
+  const [repeatPassword, setRepeatPassword] = React.useState('123456');
   
   const [errorMessage, setErrorMessage] = React.useState(null);
 
@@ -165,6 +165,8 @@ export default function SignOutModal() {
               oninvalid="this.setCustomValidity('Please Enter valid name')"
               oninput="setCustomValidity('')"
               height='48px'
+              fontSize='16px'
+              
               backgroundColor='#F7F7F7'
               mb='10px'
               required
@@ -219,7 +221,7 @@ export default function SignOutModal() {
               </SubrequirementContainer>
             )}
             
-            <Input
+            {/* <Input
               type="text"
               name="password"
               value={password}
@@ -254,14 +256,14 @@ export default function SignOutModal() {
                 <Dot />
                 <Requirement>{intl.formatMessage({ id: 'atLeast6Char', defaultMessage: 'At least 6 characters' })}</Requirement>
               </SubrequirementContainer>
-            )}
+            )} */}
 
-             {!passwordsAreEqual && (
+             {/* {!passwordsAreEqual && (
               <SubrequirementContainer>
                 <Dot />
                 <Requirement>{intl.formatMessage({ id: 'passShouldBeEqual', defaultMessage: 'Passwords does not match' })}</Requirement>
               </SubrequirementContainer>
-            )}
+            )} */}
             {/*
             {!this.hasSecurity() && (
               <div>

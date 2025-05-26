@@ -6,7 +6,7 @@ import { DELIVERY_METHOD } from 'graphql/query/delivery';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import Checkbox from 'components/checkbox/checkbox';
 import { getCookie, setCookie } from 'utils/session';
-import { ActionButton, ActionsButtons, BannerIcon, Button, ButtonGroup, CardWrapper, Container, DeliveryMethods, DeliveryText, Heading, Input, Offer, OfferSection, Options, PickUpOptions, Wrapper } from './delivery-selection.style';
+import { ActionButton, ActionsButtons, BannerIcon, Button, ButtonGroup, CardWrapper, Container, DeleteButtonsContainer, DeliveryMethods, DeliveryText, Heading, Input, Offer, OfferSection, Options, PickUpOptions, Wrapper } from './delivery-selection.style';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import { alignContent, borderRadius, display, flexDirection, justifyContent, textAlign, width } from 'styled-system';
 import { ProfileContext } from 'contexts/profile/profile.context';
@@ -18,6 +18,7 @@ import RadioCardTWO from 'components/radio-card/radio-card-two';
 import RadioGroupThree from 'components/radio-group/radio-group-three';
 import RadioGroupTwo from 'components/radio-group/radio-group-two';
 import { IconWrapper } from '../checkout-two/checkout-two.style';
+import { ButtonsContainer } from 'components/add-time-schedule/add-schedule-card.style';
 
 
 interface Props {
@@ -168,7 +169,22 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
   return (
       <>
         <DeliveryMethods>
-          <Options style={{justifyContent: !props.deliveryMethodsSelected ? 'space-between' : 'space-between'}}>
+          { props.deliveryMethodsSelected && (
+            <DeleteButtonsContainer>
+              <Button
+                className='addButton'
+                variant='text'
+                type='button'
+                onClick={() => deleteDeliverySelection()}
+              >
+                <IconWrapper>
+                  <Plus width='10px' />
+                </IconWrapper>
+                <FormattedMessage id='changeAddress' defaultMessage='Add New' />
+              </Button>
+            </DeleteButtonsContainer>
+          )}
+          <Options style={{justifyContent: !props.deliveryMethodsSelected ? 'space-between' : 'space-between', marginTop: props.deliveryMethodsSelected ? '30px' : '0px'}}>
               <CardWrapper color={isPickUpSelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.PICKUP)}><FormattedMessage id="pickUpId" defaultMessage="notFoundId" /></CardWrapper>
               <CardWrapper color={isDeliverySelected ? '#009E7F' : '#e4f4fc'} onClick={(e) => setDelivery(e, DeliveryMethodsConstants.DELIVERY)}><FormattedMessage id="deliveryId" defaultMessage="notFoundId2" /></CardWrapper>
           </Options>
@@ -199,19 +215,6 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                     }
                   />
                 )}
-              secondaryComponent={ !props.submitResult?.delivery_address?.length ? null :
-                (<Button
-                    className='addButton'
-                    variant='text'
-                    type='button'
-                    onClick={() => deleteDeliverySelection()}
-                  >
-                    <IconWrapper>
-                      <Plus width='10px' />
-                    </IconWrapper>
-                    <FormattedMessage id='changeAddress' defaultMessage='Add New' />
-                  </Button>)
-                  }
                 />
               </ButtonGroup>
             )}
@@ -271,7 +274,7 @@ const DeliverySelection: React.FC<Props> = ({ ...props  }) => {
                                     placeholder: "Calle, altura, localidad",
                                     className: "location-search-input",
                                     style: {
-                                      width: '220px',
+                                      width: '100%',
                                       padding:'0px 8px',
                                       appearance: 'none',
                                       fontFamily: `'Lato', sans-serif`,

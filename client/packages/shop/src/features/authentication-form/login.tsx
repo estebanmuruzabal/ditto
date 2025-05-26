@@ -31,7 +31,8 @@ export default function SignInModal() {
   const intl = useIntl();
   const { authDispatch } = useContext<any>(AuthContext);
   const [phone, setPhone] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [password, setPassword] = React.useState('123456');
+  const [errorMessage, setErrorMessage] = React.useState(null);
 
   const toggleSignUpForm = () => {
     authDispatch({
@@ -74,13 +75,22 @@ export default function SignInModal() {
     onError: (error) => {
       setPhone('');
       setPassword('');
+      if (error?.toString() && error?.toString().includes('User does not exits')) setErrorMessage(intl.formatMessage({ id: 'userNotFound', defaultMessage: 'Usuario inexistente' }))
+      else if (error?.toString() && error?.toString().includes('Incorrect length')) setErrorMessage(intl.formatMessage({ id: 'atLeast6Char', defaultMessage: 'Mínimo 6 caracteres' }))
+      else if (error?.toString() && error?.toString().includes('Anteponer el número 54')) setErrorMessage(intl.formatMessage({ id: 'a', defaultMessage: 'Anteponer el número 54' }))
+      else if (error?.toString() && error?.toString().includes('Todos los campos son requeridos')) setErrorMessage(intl.formatMessage({ id: 'a', defaultMessage: 'Todos los campos son requeridos' }))
+      else setErrorMessage(error?.toString())
     }
   });
 
   const handlePhoneChange = (value, data, event, formattedValue) => {
     setPhone(value)
   }
-  const authError = error?.toString()?.includes("User dose not exits.") || error?.toString()?.includes("Password dose not match");
+
+    // {authError && <p style={{
+    //   marginTop: "15px", fontSize: '16px'
+    // }}> {intl.formatMessage({ id: 'userNotFound', defaultMessage: 'Invalid user/password' })}</p>}
+    
   return (
     <Wrapper>
       <Container>
@@ -119,7 +129,7 @@ export default function SignInModal() {
               onChange={handlePhoneChange}
           />
 
-          <Input
+          {/* <Input
             type='password'
             placeholder={intl.formatMessage({
               id: 'passwordPlaceholder',
@@ -132,7 +142,7 @@ export default function SignInModal() {
             backgroundColor='#F7F7F7'
             width='100%'
             mb='10px'
-          />
+          /> */}
 
           <Button
             variant='primary'
@@ -149,26 +159,32 @@ export default function SignInModal() {
           </Button>
         </form>
         
-        {authError && <p style={{
+        {errorMessage &&<p style={{
           marginTop: "15px", fontSize: '16px'
-        }}> {intl.formatMessage({ id: 'userNotFound', defaultMessage: 'Invalid user/password' })}</p>}
-        
-        {error && !authError &&<p style={{
-          marginTop: "15px", fontSize: '16px'
-        }}> {`${error?.message || error}. Please try again`}</p>}
+        }}> {errorMessage}</p>}
       
         <Offer style={{ padding: '20px 0', fontSize: '20px' }}>
           <FormattedMessage
             id='dontHaveAccount'
             defaultMessage="Don't have an account?"
-          />{' '}
-          <LinkButton onClick={toggleSignUpForm}>
+          />
+           <Button
+            variant='primary'
+            size='big'
+            disable={loading}
+            style={{ width: '100%' }}
+            type='button'
+            onClick={toggleSignUpForm}
+          >
+              <FormattedMessage id='signUpBtnText' defaultMessage='signUpBtnText' />
+          </Button>
+          {/* <LinkButton onClick={toggleSignUpForm}>
             <FormattedMessage id='signUpBtnText' defaultMessage='Sign Up' />
-          </LinkButton>
+          </LinkButton> */}
         </Offer>
       </Container>
-
-      <OfferSection>
+  
+  {/*   <OfferSection>
         <Offer>
           <FormattedMessage
             id='phoneVerifyText'
@@ -178,7 +194,7 @@ export default function SignInModal() {
             <FormattedMessage id='verifyNowText' defaultMessage='Verify Now' />
           </LinkButton>
         </Offer>
-      </OfferSection>
+      </OfferSection> */}
 
       {/*<OfferSection>
         <Offer>

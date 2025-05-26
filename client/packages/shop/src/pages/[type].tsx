@@ -30,7 +30,9 @@ import { OPEN_CAGE_KEY, SHOP_IMAGE_HOST } from 'utils/images-path';
 import { useIntl } from 'react-intl';
 import { useLocale } from 'contexts/language/language.provider';
 import { Locales } from 'utils/constant';
+import { useMedia } from 'utils/use-media';
 const Sidebar = dynamic(() => import('layouts/sidebar/sidebar'));
+const Topbar = dynamic(() => import('layouts/topbar/topbar'));
 const Products = dynamic(() =>
   import('components/product-grid/product-list/product-list')
 );
@@ -45,6 +47,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
   const intl = useIntl();
   const PAGE_TYPE: any = query.type;
   const page = sitePages[PAGE_TYPE];
+  const isMobile = useMedia('(max-width: 580px)');
   
   const { data: categoriesData, loading: categoriesLoading } = useQuery(GET_CATEGORIES, {
     variables: { 
@@ -55,7 +58,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
   const { elRef: targetRef, scroll } = useRefScroll({
     percentOfElement: 0,
     percentOfContainer: 0,
-    offsetPX: -110,
+    offsetPX: isMobile ? -200 : -110,
   });
 
   React.useEffect(() => {
@@ -106,7 +109,7 @@ const CategoryPage: React.FC<any> = ({ deviceType }) => {
         <MobileCarouselDropdown>
           {/* if wanna show categories, fix the component to display them */}
           {/* <StoreNav items={categoriesData.categories.items} />  */}
-          <Sidebar type={PAGE_TYPE} deviceType={deviceType} />
+          <Topbar type={PAGE_TYPE} deviceType={deviceType} />
         </MobileCarouselDropdown>
         {/* {homeCardsData.getHomeCards.length > 0 ? (<OfferSection>
           <div style={{margin: '0 -10px'}}>

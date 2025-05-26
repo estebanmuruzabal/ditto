@@ -20,6 +20,7 @@ import { FormattedMessage } from 'react-intl';
 import { Button } from 'components/button/button';
 import { GET_PRODUCTS } from 'graphql/query/products.query';
 import { SHOP_IMAGE_HOST } from 'utils/images-path';
+import { useMedia } from 'utils/use-media';
 const ErrorMessage = dynamic(() =>
   import('components/error-message/error-message')
 );
@@ -57,6 +58,7 @@ export const Products: React.FC<ProductsProps> = ({
   type,
 }) => {
   const router = useRouter();
+  const isMobile = useMedia('(max-width: 580px)');
   const { data, error, loading, fetchMore, networkStatus } = useQuery(
     GET_PRODUCTS,
     {
@@ -240,13 +242,13 @@ export const Products: React.FC<ProductsProps> = ({
 
   return (
     <>
-      <ProductsRow>
+      <ProductsRow style={{ display: isMobile ? 'block' : 'flex' }}>
         {onlineProducts?.sort((a, b) => a.name.localeCompare(b.name)).map((item: any, index: number) => (
           <ProductsCol
             key={index}
-            style={type === 'book' ? { paddingLeft: 0, paddingRight: 1 } : {}}
+            style={isMobile ? { maxWidth: '100%', paddingRight: 1 } : {}}
           >
-            <ProductCardWrapper>
+            <ProductCardWrapper style={isMobile ? { display: 'flex' } : {}}>
               <Fade
                 duration={800}
                 delay={index * 10}

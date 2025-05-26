@@ -15,7 +15,7 @@ import {
   Input,
 } from './location-modal.style';
 import { GiftBox } from 'assets/icons/GiftBox';
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+// import { GoogleMap, useJsApiLoader, Marker, LoadScript } from "@react-google-maps/api";
 import {
   setKey,
   setDefaults,
@@ -30,8 +30,7 @@ import {
 } from "react-geocode";
 const googleApiKey = process.env.GOOGLE_API_KEY;
 
-// import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
-// import { useJsApiLoader } from '@react-google-maps/api';
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 
 
 export default function LocationModal({ isPickUp }) {
@@ -138,101 +137,105 @@ export default function LocationModal({ isPickUp }) {
   }, []);
   console.log('addresss', address)
 
+  const containerStyle = {
+    width: '100%',
+    height: '400px'
+  };
+  
+  const center = {
+    lat: 37.437041393899676,
+    lng: -4.191635586788259
+  };
 
   return (
-    <Wrapper>
-      <Container>
-        <Heading>
-          { isPickUp ? (
-            <FormattedMessage
-              id="pickupModalheading"
-              defaultMessage="Select Your Location"
-            />
-          ) : (
-            <FormattedMessage
-              id="deliveryModalheading"
-              defaultMessage="Select Your Location"
-            />
-          )}
-        </Heading>
-        {/* <SubHeading>
-          <FormattedMessage
-            id="locationModalSubHeading"
-            defaultMessage="You have to select your location for deliver service perpous"
-          />
-        </SubHeading> */}
-        {/* <PlacesAutocomplete
-          value={address}
-          onChange={(e) => setAddress(e)}
-          onSelect={handleSelect}
-          searchOptions={{
-            types: [],
-            componentRestrictions: { country: "us" },
-          }}
-        >
-          {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-            <div>
-              <input
-                {...getInputProps({
-                  placeholder: "Enter address",
-                  className: "location-search-input",
-                  style: {
-                    display: 'block',
-                    width: '220px',
+    <></>
+      //   <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
+      //   <GoogleMap
+      //     mapContainerStyle={containerStyle}
+      //     center={center}
+      //     zoom={10}
+      //   >
+      //     <Marker position={center} />
+      //   </GoogleMap>
+      // </LoadScript>
+    //     {/* <SubHeading>
+    //       <FormattedMessage
+    //         id="locationModalSubHeading"
+    //         defaultMessage="You have to select your location for deliver service perpous"
+    //       />
+    //     </SubHeading> */}
+    //     {/* <PlacesAutocomplete
+    //       value={address}
+    //       onChange={(e) => setAddress(e)}
+    //       onSelect={handleSelect}
+    //       searchOptions={{
+    //         types: [],
+    //         componentRestrictions: { country: "us" },
+    //       }}
+    //     >
+    //       {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+    //         <div>
+    //           <input
+    //             {...getInputProps({
+    //               placeholder: "Enter address",
+    //               className: "location-search-input",
+    //               style: {
+    //                 display: 'block',
+    //                 width: '220px',
 
-                    padding:'0px 8px',
-                    appearance: 'none',
-                    fontFamily: `'Lato', sans-serif`,
-                    fontSize: 'base',
-                    lineHeight: 'inherit',
-                    border: '1px solid',
-                    borderColor: '#f1f1f1',
-                    borderRadius: '3px',
-                    backgroundColor: 'white',
-                    color: 'text.bold',
-                    height: '48px',
-                    transition: 'all 0.25s ease',
-                    // mb: 3,
-                    '&:focus': {
-                      borderColor: '#009E7F',
-                    },
-                  },
-                })}
-              />
-              <div className="autocomplete-dropdown-container">
-                {loading && <div>Loading...</div>}
-                {suggestions.map((suggestion) => {
-                  const style = suggestion.active
-                    ? { backgroundColor: "#fafafa", cursor: "pointer" }
-                    : { backgroundColor: "#ffffff", cursor: "pointer" };
-                  return (
-                    <div {...getSuggestionItemProps(suggestion, { style })}>
-                      {suggestion.description}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </PlacesAutocomplete> */}
-        <Button
-          fullwidth
-          radius={100}
-          onClick={handleZipCode}
-        >
-          <FormattedMessage id='continueBtn' defaultMessage='Continue' />
-        </Button>
-      </Container>
-      <OfferSection>
-        <GiftBox />
-        <Offer>
-          <FormattedMessage
-            id="locationModalFooter"
-            defaultMessage="Free Delivery For 1st Order"
-            values={{ number: 1 }}
-          />
-        </Offer>
-      </OfferSection>
-    </Wrapper>
+    //                 padding:'0px 8px',
+    //                 appearance: 'none',
+    //                 fontFamily: `'Lato', sans-serif`,
+    //                 fontSize: 'base',
+    //                 lineHeight: 'inherit',
+    //                 border: '1px solid',
+    //                 borderColor: '#f1f1f1',
+    //                 borderRadius: '3px',
+    //                 backgroundColor: 'white',
+    //                 color: 'text.bold',
+    //                 height: '48px',
+    //                 transition: 'all 0.25s ease',
+    //                 // mb: 3,
+    //                 '&:focus': {
+    //                   borderColor: '#009E7F',
+    //                 },
+    //               },
+    //             })}
+    //           />
+    //           <div className="autocomplete-dropdown-container">
+    //             {loading && <div>Loading...</div>}
+    //             {suggestions.map((suggestion) => {
+    //               const style = suggestion.active
+    //                 ? { backgroundColor: "#fafafa", cursor: "pointer" }
+    //                 : { backgroundColor: "#ffffff", cursor: "pointer" };
+    //               return (
+    //                 <div {...getSuggestionItemProps(suggestion, { style })}>
+    //                   {suggestion.description}
+    //                 </div>
+    //               );
+    //             })}
+    //           </div>
+    //         </div>
+    //       )}
+    //     </PlacesAutocomplete> */}
+    //     <Button
+    //       fullwidth
+    //       radius={100}
+    //       onClick={handleZipCode}
+    //     >
+    //       <FormattedMessage id='continueBtn' defaultMessage='Continue' />
+    //     </Button>
+    //   </Container>
+    //   <OfferSection>
+    //     <GiftBox />
+    //     <Offer>
+    //       <FormattedMessage
+    //         id="locationModalFooter"
+    //         defaultMessage="Free Delivery For 1st Order"
+    //         values={{ number: 1 }}
+    //       />
+    //     </Offer>
+    //   </OfferSection>
+    // </Wrapper>
   );
 }

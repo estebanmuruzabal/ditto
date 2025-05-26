@@ -208,10 +208,25 @@ export const LocationContent = styled.div`
   justify-content: space-between;
 `;
 
+export const DeleteButtonsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -60px;
+  margin-left: 200px;
+  @media (max-width: 767px) {
+    margin-left: 0px;
+  }
+`;
+
 export const DeliveryMethods = styled.div`
   display: flex;
   flex-direction: column;
   width: 400px;
+  
+  @media (max-width: 767px) {
+    width: auto;
+  }
 `;
 
 export const Options = styled.div`
@@ -219,6 +234,9 @@ export const Options = styled.div`
   flex-direction: row;
   
   padding: 0px 20px;
+  @media (max-width: 767px) {
+    
+  }
 `;
 
 export const PickUpOptions = styled.div`
@@ -229,7 +247,6 @@ export const PickUpOptions = styled.div`
 
 export const CardWrapper = styled.span`
   display: flex;
-  width: 100px;
   flex-direction: column;
   position: relative;
   cursor: pointer;
@@ -242,6 +259,9 @@ export const CardWrapper = styled.span`
   border-color: ${(props) => props.color || '#e4f4fc'};
   
   text-align: center;
+  @media (max-width: 767px) {
+    width: auto;
+  }
 `;
 export const MethodOption = styled.div`
   display: flex;
@@ -282,12 +302,14 @@ line-height: 0;
 export const Wrapper = styled.div`
   text-align: left;
   background-color: ${themeGet('colors.white', '#ffffff')};
+  padding: 0px 20px;
 `;
+
 export const Container = styled.div`
   padding: 10px 20px;
 
   @media (max-width: 768px) {
-    padding: 10px 20px;
+    padding: 0px 0px;
   }
 `;
 
@@ -368,7 +390,6 @@ export const Offer = styled.p`
   margin-left: 10px;
 `;
 export const Input = styled.input`
-  // width: 100%;
   height: 48px;
   cursor: pointer;
   border-radius: ${themeGet('radii.base', '6px')};
@@ -410,12 +431,15 @@ export const Input = styled.input`
       opacity: 0.6;
     }
   }
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-
+  padding: 0 20px;
   .radioGroup {
     display: flex;
     flex-wrap: wrap;
