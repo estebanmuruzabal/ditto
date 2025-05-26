@@ -18,26 +18,26 @@ export const productsResolvers: IResolvers = {
             let products = await db.products.find({}).sort({is_featured: -1}).toArray();
 
             //TODO
-            // let visibleCategories =  await db.categories.find({}).sort({_id: -1}).toArray();
+            // let categories =  await db.categories.find({}).sort({_id: -1}).toArray();
 
-            // const visibleCategoriesIds = visibleCategories.filter((category) => {
+            // const visibleCategories = categories.filter((category) => {
             //     return !!category.visible;
             // });
 
             // products = products.filter((product) => {
             //     let visibleProducts = [];
             //     product.categories.find(
-            //         (category_item) => visibleCategoriesIds.indexOf(category_item.id)
+            //         (category_item) => visibleCategories.indexOf(category_item.id)
             //     )
             // });
 
-            if (category) {
+
                 products = products.filter((product) =>
                     product.categories.find(
-                        (category_item) => category_item.slug === category
+                        (category_item) => category ? category_item.slug === category : category_item.slug === 'frutas-y-verduras'
                     )
                 );
-            }
+
 
             // if (type) {
             //     products = products.filter((product) => product.type.slug === type);
