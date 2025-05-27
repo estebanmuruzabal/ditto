@@ -38,7 +38,7 @@ const Tree = React.memo(
                 labelText={`${name}`}
                 id={`deliveryMethod-${name}`}
                 onChange={e => {
-                  e.stopPropagation();
+                  // e.stopPropagation();
                   onClick();
                 }}
             />
